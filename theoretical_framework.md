@@ -171,3 +171,9 @@ These ML predictions directly inform the proposed mechanism for room-temperature
 - Y. Zhang et al., Nat. Commun. 13, 1234 (2022).
 - K. Choudhary et al., npj Comput. Mater. 4, 51 (2018).
 - T. O. Owolabi et al., J. Supercond. Nov. Magn. 33, 123 (2020).
+
+
+## 9. Cross-References
+
+- The Eliashberg formalism and McMillan-Allen-Dynes equation are discussed in Section 2.2. For practical implementation of Tc predictions using these equations, see `scripts/predict_tc.py`.
+- Machine learning approaches for Tc prediction, including crystal graph neural networks and random forests, are covered in Section 8. For a broader discovery strategy integrating these methods, see `discovery_strategy.md`.
