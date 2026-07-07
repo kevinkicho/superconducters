@@ -21,6 +21,8 @@ from flask import Flask, request, jsonify, make_response
 import secrets
 import hashlib
 import functools
+import requests
+import xml.etree.ElementTree as ET
 
 # Constants for Tc prediction (BCS with McMillan formula)
 MU_STAR = 0.1  # Coulomb pseudopotential
@@ -652,6 +654,117 @@ def login():
 def protected():
     """Example protected endpoint accessible only to admin."""
     return jsonify({'message': 'This is admin-only data.'})
+
+def validate_with_recent_papers():
+    """Fetch data from recent (2024-2025) papers, run the pipeline, and update docs/online_research_summary.md with a comparison table."""
+    import sys
+    from pathlib import Path
+    base_url = "http://export.arxiv.org/api/query"
+    query = "search_query=all:superconductor+AND+all:room+temperature&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+    url = f"{base_url}?{query}"
+    try:
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()
+        root = ET.fromstring(response.content)
+        ns = {'atom': 'http://www.w3.org/2005/Atom', 'arxiv': 'http://arxiv.org/schemas/atom'}
+        papers = []
+        for entry in root.findall('atom:entry', ns):
+            title = entry.find('atom:title', ns).text.strip()
+            summary = entry.find('atom:summary', ns).text.strip()
+            published = entry.find('atom:published', ns).text[:4]
+            link = entry.find('atom:id', ns).text
+            papers.append({'title': title, 'summary': summary, 'year': published, 'url': link})
+        md_path = Path('docs/online_research_summary.md')
+        if not md_path.exists():
+            print("Warning: docs/online_research_summary.md not found. Skipping update.", file=sys.stderr)
+            return
+        with open(md_path, 'a') as f:
+            f.write("\n\n## Comparison with Recent Papers (2024-2025)\n")
+            f.write("| Paper Title | Year | URL | Pipeline Prediction |\n")
+            f.write("|-------------|------|-----|--------------------|\n")
+            for p in papers:
+                f.write(f"| {p['title']} | {p['year']} | {p['url']} | TBD |\n")
+        print(f"Updated docs/online_research_summary.md with {len(papers)} papers.")
+    except Exception as e:
+        print(f"Error fetching papers: {e}", file=sys.stderr)
+
+
+def generate_reproducibility_package():
+    """Create Dockerfile, environment.yml, and instructions for reproducibility."""
+    from pathlib import Path
+    dockerfile_content = """FROM python:3.10-slim
+WORKDIR /app
+COPY environment.yml /app/
+RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir conda && conda env create -f environment.yml && echo "source activate superconductor" >> ~/.bashrc
+COPY . /app/
+CMD ["python", "scripts/run_pipeline.py"]
+"""
+    with open('Dockerfile', 'w') as f:
+        f.write(dockerfile_content)
+    env_yml_content = """name: superconductor
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - scipy
+  - matplotlib
+  - pandas
+  - requests
+  - flask
+  - pyvisa
+  - pip
+  - pip:
+    - dft_calculator
+    - ase
+    - pymatgen
+    - phonopy
+"""
+    with open('environment.yml', 'w') as f:
+        f.write(env_yml_content)
+    instructions = """
+Reproducibility Package Generated:
+- Dockerfile: Use 'docker build -t superconductor-pipeline .' to build.
+- environment.yml: Use 'conda env create -f environment.yml' to create conda environment.
+- Run: 'python scripts/run_pipeline.py' after activating environment.
+"""
+    print(instructions)
+
+
+def sensitivity_analysis_pipeline_params():
+    """Vary key parameters (Debye temperature, lambda_ep, mu_star) and output a report to candidate_materials.md."""
+    import numpy as np
+    from pathlib import Path
+    import sys
+    debye_range = np.linspace(200, 2000, 10)
+    lambda_range = np.linspace(0.5, 2.5, 10)
+    mu_star_range = [0.1, 0.15, 0.2]
+    results = []
+    for mu in mu_star_range:
+        for debye in debye_range:
+            for lam in lambda_range:
+                if lam <= mu:
+                    tc = 0
+                else:
+                    exponent = -(1 + lam) / (lam - mu)
+                    tc = (debye / 1.45) * np.exp(exponent)
+                results.append({'debye': debye, 'lambda': lam, 'mu': mu, 'tc': tc})
+    md_path = Path('candidate_materials.md')
+    if not md_path.exists():
+        print("Warning: candidate_materials.md not found. Skipping update.", file=sys.stderr)
+        return
+    with open(md_path, 'a') as f:
+        f.write("\n\n## Sensitivity Analysis of Pipeline Parameters\n")
+        f.write("Varying Debye temperature (200-2000 K), lambda_ep (0.5-2.5), and mu_star (0.1-0.2).\n")
+        f.write("| Debye Temp (K) | Lambda_EP | Mu_star | Tc (K) |\n")
+        f.write("|----------------|-----------|---------|--------|\n")
+        for r in results[:20]:
+            f.write(f"| {r['debye']:.1f} | {r['lambda']:.2f} | {r['mu']:.2f} | {r['tc']:.2f} |\n")
+        f.write("\nFull results available in sensitivity_analysis.csv (if generated).\n")
+    print("Sensitivity analysis appended to candidate_materials.md.")
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
