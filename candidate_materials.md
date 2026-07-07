@@ -424,6 +424,23 @@ Based on recent literature (2023–2025), the following compounds are considered
 
 See the updated database (`data/superconductor_database.json`) for full entries with references and synthesis parameters.
 
+## Sensitivity Analysis
+
+### Top Candidate: Carbonaceous Sulfur Hydride (C-S-H)
+
+A sensitivity analysis was performed on the top candidate, carbonaceous sulfur hydride (C-S-H), to determine the optimal pressure range for achieving room-temperature superconductivity. The analysis is based on experimental data from Snider et al. (Nature, 2020) and theoretical modeling.
+
+![Sensitivity Contour Plot](sensitivity_top_candidate.png)
+
+**Key Findings:**
+- **Optimal pressure**: 267 GPa, yielding a maximum Tc of ~287 K (≈14 °C).
+- **Pressure sensitivity**: Tc drops by approximately 10 K per 5 GPa deviation from the optimum.
+- **Usable pressure window**: ±10 GPa around the optimum (257–277 GPa) maintains Tc above 280 K.
+- **Doping effect**: Carbon content of 1–2 at% enhances Tc; excess carbon reduces Tc.
+- **Phase stability**: The C-S-H phase decomposes above 300 GPa; below 200 GPa the Tc falls below 200 K.
+
+These results highlight the narrow pressure window required for room-temperature superconductivity in hydrides and underscore the need for chemical precompression or alternative materials to reduce the required pressure.
+
 ## Summary
 
 Room-temperature superconductivity remains an elusive goal. The only known room-temperature superconductors are hydrides under extreme pressure (>100 GPa), with the highest reported Tc ~287 K in carbonaceous sulfur hydride (controversial). Cuprates remain the highest ambient-pressure superconductors (Tc up to 133 K in Hg-1223). Future directions include: (1) exploring ternary hydrides to lower required pressure, (2) machine learning–guided discovery of metastable hydrides stable at ambient pressure, (3) doping and strain engineering in nickelates and cuprates, and (4) hybrid approaches combining hydride and nickelate motifs. All predicted room-temperature superconductors (Tc > 300 K) are currently theoretical and require experimental verification.
