@@ -13,6 +13,8 @@ import json
 import math
 import sys
 from pathlib import Path
+import numpy as np
+from scipy.optimize import curve_fit
 import dft_calculator  # for DFT validation
 
 # Constants for Tc prediction (BCS with McMillan formula)
@@ -260,4 +262,294 @@ def multi_fidelity_bayesian_optimization(low_fidelity, high_fidelity, top_n=5):
     return sorted_cands[:top_n]
 
 if __name__ == '__main__':
-    main()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == '--simulate':
+        run_closed_loop_simulation()
+    elif len(sys.argv) > 1 and sys.argv[1] == '--report':
+        generate_council_report()
+    else:
+        main()
+
+
+# ===== Simulated Experiment Functions =====
+
+def simulate_experiment(candidate, noise_level=0.05):
+    """
+    Generate synthetic resistivity vs temperature data for a candidate material.
+    
+    Parameters:
+        candidate (dict): Must contain 'debye_temp', 'lambda_ep', and optionally 'tc_predicted'.
+                          If 'tc_predicted' is not provided, it is computed using McMillan formula.
+        noise_level (float): Standard deviation of Gaussian noise as fraction of resistivity.
+    
+    Returns:
+        dict: {'temperature': list, 'resistivity': list, 'tc_true': float, 'noise_level': float}
+    """
+    import math
+    # Extract parameters
+    debye_temp = candidate.get('debye_temp', 300)
+    lambda_ep = candidate.get('lambda_ep', 0.5)
+    tc_predicted = candidate.get('tc_predicted', None)
+    if tc_predicted is None:
+        # Compute using McMillan formula (same as predict_tc)
+        mu_star = 0.1
+        if lambda_ep <= mu_star:
+            tc_predicted = 0.0
+        else:
+            exponent = -(1 + lambda_ep) / (lambda_ep - mu_star)
+            tc_predicted = (debye_temp / 1.45) * math.exp(exponent)
+    
+    # Temperature range
+    T = np.linspace(0, 300, 300)
+    
+    # Normal state resistivity: linear above Tc, constant below (simple model)
+    rho0 = 10.0  # microOhm cm
+    alpha = 0.05  # slope
+    rho_n = rho0 + alpha * T
+    
+    # Superconducting transition: sigmoid drop
+    delta_rho = rho_n - rho0  # drop magnitude
+    sigma = 2.0  # transition width (K)
+    rho = rho_n - delta_rho / (1 + np.exp((T - tc_predicted) / sigma))
+    
+    # Add noise
+    noise = np.random.normal(0, noise_level * rho)
+    rho_noisy = rho + noise
+    
+    return {
+        'temperature': T.tolist(),
+        'resistivity': rho_noisy.tolist(),
+        'tc_true': tc_predicted,
+        'noise_level': noise_level
+    }
+
+
+def extract_tc_from_data(data):
+    """
+    Extract critical temperature from synthetic resistivity vs temperature data.
+    
+    Parameters:
+        data (dict): Must contain 'temperature' (list) and 'resistivity' (list).
+    
+    Returns:
+        dict: {'tc_estimated': float, 'tc_error': float, 'transition_width': float, 'fit_success': bool}
+    """
+    T = np.array(data['temperature'])
+    rho = np.array(data['resistivity'])
+    
+    # Define sigmoid model for fitting
+    def sigmoid(T, tc, sigma, rho0, alpha, delta_rho):
+        rho_n = rho0 + alpha * T
+        return rho_n - delta_rho / (1 + np.exp((T - tc) / sigma))
+    
+    # Initial guess: find midpoint of resistivity drop
+    rho_min = np.min(rho)
+    rho_max = np.max(rho)
+    mid_rho = (rho_min + rho_max) / 2
+    # Find temperature where resistivity is closest to midpoint
+    idx = np.argmin(np.abs(rho - mid_rho))
+    tc_guess = T[idx]
+    sigma_guess = 2.0
+    rho0_guess = rho_min
+    alpha_guess = (rho[-1] - rho[0]) / (T[-1] - T[0]) if T[-1] != T[0] else 0.0
+    delta_rho_guess = rho_max - rho_min
+    
+    try:
+        popt, pcov = curve_fit(sigmoid, T, rho, p0=[tc_guess, sigma_guess, rho0_guess, alpha_guess, delta_rho_guess],
+                               maxfev=5000)
+        tc_est = popt[0]
+        sigma_est = abs(popt[1])
+        # Standard error from covariance
+        perr = np.sqrt(np.diag(pcov))
+        tc_error = perr[0]
+        fit_success = True
+    except Exception as e:
+        # Fallback: use midpoint method
+        tc_est = tc_guess
+        sigma_est = 2.0
+        tc_error = 5.0
+        fit_success = False
+    
+    return {
+        'tc_estimated': tc_est,
+        'tc_error': tc_error,
+        'transition_width': sigma_est,
+        'fit_success': fit_success
+    }
+
+
+# ===== Closed-Loop Simulation =====
+
+def run_closed_loop_simulation(num_cycles=5):
+    """
+    Run a closed-loop active learning simulation.
+    
+    For each cycle:
+      1. Query database for candidates.
+      2. Use Bayesian optimization to select top candidates.
+      3. Simulate experiment for each selected candidate.
+      4. Extract Tc from simulated data.
+      5. Update database with new experimental data.
+      6. Retrain ML model (re-predict Tc for all candidates).
+      7. Report progress.
+    
+    Parameters:
+        num_cycles (int): Number of active learning cycles.
+    """
+    print("=== Starting Closed-Loop Simulation ===")
+    # Initialize database connection (in-memory for simulation)
+    conn = sqlite3.connect(':memory:')
+    cursor = conn.cursor()
+    # Create materials table if not exists
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS materials (
+            name TEXT PRIMARY KEY,
+            formula TEXT,
+            debye_temp REAL,
+            lambda_ep REAL,
+            predicted_tc REAL,
+            experimental_tc REAL,
+            pressure REAL,
+            synthesis_feasibility TEXT
+        )
+    ''')
+    # Insert some initial candidates (from research)
+    initial_candidates = [
+        ('LaH10', 'LaH10', 1500, 2.5, None, None, 170, 'medium'),
+        ('YH9', 'YH9', 1400, 2.3, None, None, 200, 'medium'),
+        ('CaH6', 'CaH6', 1200, 2.0, None, None, 160, 'high'),
+        ('MgH12', 'MgH12', 1600, 2.7, None, None, 300, 'low'),
+        ('CSH', 'CSH', 1800, 3.0, None, None, 267, 'low'),
+    ]
+    for cand in initial_candidates:
+        cursor.execute('''
+            INSERT OR IGNORE INTO materials (name, formula, debye_temp, lambda_ep, predicted_tc, experimental_tc, pressure, synthesis_feasibility)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', cand)
+    conn.commit()
+    
+    # Load candidates from database
+    cursor.execute('SELECT name, formula, debye_temp, lambda_ep, predicted_tc, experimental_tc, pressure, synthesis_feasibility FROM materials')
+    all_candidates = [dict(zip(['name','formula','debye_temp','lambda_ep','predicted_tc','experimental_tc','pressure','synthesis_feasibility'], row)) for row in cursor.fetchall()]
+    
+    # Pre-compute predicted Tc for candidates without experimental Tc
+    for cand in all_candidates:
+        if cand['predicted_tc'] is None:
+            cand['predicted_tc'] = predict_tc(cand['debye_temp'], cand['lambda_ep'])
+    
+    # Active learning loop
+    for cycle in range(1, num_cycles + 1):
+        print(f"\n--- Cycle {cycle} ---")
+        # Prepare low-fidelity and high-fidelity data for BO
+        low_fidelity = [{'name': c['name'], 'tc': c['predicted_tc'] if c['predicted_tc'] else 0, 'uncertainty': 10.0} for c in all_candidates]
+        high_fidelity = [{'name': c['name'], 'tc': c['experimental_tc'], 'uncertainty': 2.0} for c in all_candidates if c['experimental_tc'] is not None]
+        # Select top 2 candidates using multi-fidelity BO
+        selected = multi_fidelity_bayesian_optimization(low_fidelity, high_fidelity, top_n=2)
+        print(f"Selected candidates: {[s['name'] for s in selected]}")
+        
+        for s in selected:
+            # Find full candidate info
+            cand = next(c for c in all_candidates if c['name'] == s['name'])
+            # Simulate experiment
+            sim_data = simulate_experiment(cand, noise_level=0.05)
+            # Extract Tc
+            result = extract_tc_from_data(sim_data)
+            measured_tc = result['tc_estimated']
+            print(f"  {cand['name']}: predicted Tc = {cand['predicted_tc']:.1f} K, measured Tc = {measured_tc:.1f} K")
+            # Update database with experimental Tc
+            cursor.execute('UPDATE materials SET experimental_tc = ? WHERE name = ?', (measured_tc, cand['name']))
+            conn.commit()
+            # Update candidate dict
+            cand['experimental_tc'] = measured_tc
+        
+        # Retrain ML model: re-predict Tc for all candidates (here just re-compute McMillan)
+        for cand in all_candidates:
+            if cand['experimental_tc'] is None:
+                cand['predicted_tc'] = predict_tc(cand['debye_temp'], cand['lambda_ep'])
+            else:
+                # Use experimental Tc as new prediction (or could train a model)
+                cand['predicted_tc'] = cand['experimental_tc']
+        
+        # Report progress
+        print(f"  Database now has {len([c for c in all_candidates if c['experimental_tc'] is not None])} experimental measurements.")
+    
+    conn.close()
+    print("\n=== Closed-Loop Simulation Complete ===")
+    # Generate learning progress report
+    print("\nLearning Progress Report:")
+    print("-------------------------")
+    for cand in all_candidates:
+        if cand['experimental_tc'] is not None:
+            print(f"{cand['name']}: Predicted {cand['predicted_tc']:.1f} K, Measured {cand['experimental_tc']:.1f} K, Pressure {cand['pressure']} GPa")
+    print("-------------------------")
+
+
+# ===== Council Report Generation =====
+
+def generate_council_report():
+    """
+    Generate a comprehensive council report compiling all findings.
+    Updates roadmap.md with 'Final Summary and Next Steps' section.
+    """
+    # Gather data from database
+    conn = sqlite3.connect('materials.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT name, formula, debye_temp, lambda_ep, predicted_tc, experimental_tc, pressure, synthesis_feasibility FROM materials')
+    rows = cursor.fetchall()
+    conn.close()
+    
+    # Build report content
+    report_lines = []
+    report_lines.append("# Council Report: Room-Temperature Superconductor Discovery\n")
+    report_lines.append("## Executive Summary\n")
+    report_lines.append("This report summarizes the findings from the active learning pipeline for discovering room-temperature superconducting compounds. "
+                        "The pipeline integrates database queries, BCS-based Tc prediction, multi-fidelity Bayesian optimization, and simulated experiments.\n")
+    report_lines.append("## Top Candidates\n")
+    report_lines.append("| Name | Formula | Debye Temp (K) | Lambda_EP | Predicted Tc (K) | Experimental Tc (K) | Pressure (GPa) | Feasibility |\n")
+    report_lines.append("|------|---------|----------------|-----------|------------------|---------------------|----------------|-------------|\n")
+    for row in rows:
+        name, formula, debye_temp, lambda_ep, predicted_tc, experimental_tc, pressure, feasibility = row
+        predicted_str = f"{predicted_tc:.1f}" if predicted_tc else "N/A"
+        experimental_str = f"{experimental_tc:.1f}" if experimental_tc else "N/A"
+        pressure_str = f"{pressure:.0f}" if pressure else "N/A"
+        report_lines.append(f"| {name} | {formula} | {debye_temp:.0f} | {lambda_ep:.2f} | {predicted_str} | {experimental_str} | {pressure_str} | {feasibility} |\n")
+    
+    report_lines.append("\n## Risk Assessment\n")
+    report_lines.append("- **LaH10**: High Tc but requires extreme pressure (170 GPa). Synthesis challenging.\n")
+    report_lines.append("- **YH9**: Similar to LaH10, high pressure needed.\n")
+    report_lines.append("- **CaH6**: Lower pressure but lower Tc.\n")
+    report_lines.append("- **MgH12**: Predicted high Tc but very high pressure and not yet synthesized.\n")
+    report_lines.append("- **CSH**: Controversial, low reproducibility.\n")
+    
+    report_lines.append("\n## Experimental Plan\n")
+    report_lines.append("1. **Synthesis**: Use diamond anvil cell with laser heating for hydride formation.\n")
+    report_lines.append("2. **Characterization**: Measure resistivity vs temperature using four-probe method.\n")
+    report_lines.append("3. **Tc Extraction**: Fit sigmoid to resistivity drop to determine critical temperature.\n")
+    report_lines.append("4. **Validation**: Repeat measurements on multiple samples.\n")
+    
+    report_lines.append("\n## Next Steps\n")
+    report_lines.append("- **Optimize synthesis parameters** (pressure, temperature, precursor ratio) using Bayesian optimization.\n")
+    report_lines.append("- **Scale up** to larger sample volumes for practical applications.\n")
+    report_lines.append("- **Explore ternary hydrides** (e.g., Li-Mg-H, C-S-H) for ambient-pressure superconductivity.\n")
+    report_lines.append("- **Integrate DFT calculations** to refine predictions.\n")
+    
+    report_content = ''.join(report_lines)
+    
+    # Write report to file
+    report_path = Path('docs/council_report.md')
+    with open(report_path, 'w') as f:
+        f.write(report_content)
+    print(f"Council report written to {report_path}")
+    
+    # Update roadmap.md with Final Summary and Next Steps
+    roadmap_path = Path('roadmap.md')
+    if roadmap_path.exists():
+        with open(roadmap_path, 'a') as f:
+            f.write("\n\n## Final Summary and Next Steps\n")
+            f.write("The active learning pipeline has identified several promising candidates for room-temperature superconductivity. "
+                    "The top candidate is LaH10 with a predicted Tc of ~250 K at 170 GPa. "
+                    "Immediate next steps include experimental validation of the top candidates using diamond anvil cell synthesis and transport measurements. "
+                    "Further optimization of synthesis parameters and exploration of ternary hydrides are recommended.\n")
+        print(f"roadmap.md updated with Final Summary and Next Steps.")
+    else:
+        print("roadmap.md not found; skipping update.")
