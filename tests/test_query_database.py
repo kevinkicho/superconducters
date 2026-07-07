@@ -66,3 +66,58 @@ def test_query_no_match():
         synthesis=None, synthesis_method=None, mechanism=None
     ))
     assert results == []
+
+def test_query_by_feasibility_score():
+    mock_db = [
+        {"name": "A", "Tc": 50, "feasibility_score": 0.9, "material_class": "cuprate"},
+        {"name": "B", "Tc": 150, "feasibility_score": 0.3, "material_class": "iron-based"},
+        {"name": "C", "Tc": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
+    ]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=0.5, feasibility_score_max=None,
+        material_class=None
+    ))
+    assert len(results) == 2
+    for r in results:
+        assert r['feasibility_score'] >= 0.5
+
+def test_query_by_material_class():
+    mock_db = [
+        {"name": "A", "Tc": 50, "feasibility_score": 0.9, "material_class": "cuprate"},
+        {"name": "B", "Tc": 150, "feasibility_score": 0.3, "material_class": "iron-based"},
+        {"name": "C", "Tc": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
+    ]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=None, feasibility_score_max=None,
+        material_class="cuprate"
+    ))
+    assert len(results) == 2
+    for r in results:
+        assert r['material_class'] == "cuprate"
+
+def test_query_combined_filters():
+    mock_db = [
+        {"name": "A", "Tc": 50, "feasibility_score": 0.9, "material_class": "cuprate"},
+        {"name": "B", "Tc": 150, "feasibility_score": 0.3, "material_class": "iron-based"},
+        {"name": "C", "Tc": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
+        {"name": "D", "Tc": 120, "feasibility_score": 0.6, "material_class": "cuprate"},
+    ]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=100, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=0.5, feasibility_score_max=None,
+        material_class="cuprate"
+    ))
+    assert len(results) == 2
+    for r in results:
+        assert r['Tc'] >= 100
+        assert r['feasibility_score'] >= 0.5
+        assert r['material_class'] == "cuprate"
+
