@@ -181,3 +181,58 @@ def test_query_synthesis_method_filter():
     assert len(results) == 2
     for r in results:
         assert r["synthesis_method"] == "CVD"
+
+
+def test_load_database_permission_error():
+    from unittest.mock import patch, MagicMock
+    with patch('builtins.open', MagicMock(side_effect=PermissionError("Permission denied"))):
+        with pytest.raises(PermissionError):
+            qdb.load_database("dummy.json")
+
+
+def test_query_missing_tc_key():
+    mock_db = [{"name": "A", "pressure": 10}]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=None, feasibility_score_max=None,
+        material_class=None
+    ))
+    assert len(results) == 1
+
+
+def test_query_invalid_pressure_min_type():
+    mock_db = [{"name": "A", "Tc": 50, "pressure": 10}]
+    with pytest.raises(TypeError):
+        qdb.query(mock_db, argparse.Namespace(
+            name=None, tc_min=None, tc_max=None, pressure=None,
+            pressure_min="low", pressure_max=None, composition=None,
+            synthesis=None, synthesis_method=None, mechanism=None,
+            feasibility_score_min=None, feasibility_score_max=None,
+            material_class=None
+        ))
+
+
+def test_query_invalid_feasibility_score_min_type():
+    mock_db = [{"name": "A", "Tc": 50, "feasibility_score": 0.9}]
+    with pytest.raises(TypeError):
+        qdb.query(mock_db, argparse.Namespace(
+            name=None, tc_min=None, tc_max=None, pressure=None,
+            pressure_min=None, pressure_max=None, composition=None,
+            synthesis=None, synthesis_method=None, mechanism=None,
+            feasibility_score_min="high", feasibility_score_max=None,
+            material_class=None
+        ))
+
+
+def test_query_invalid_material_class_type():
+    mock_db = [{"name": "A", "Tc": 50, "material_class": "cuprate"}]
+    with pytest.raises(TypeError):
+        qdb.query(mock_db, argparse.Namespace(
+            name=None, tc_min=None, tc_max=None, pressure=None,
+            pressure_min=None, pressure_max=None, composition=None,
+            synthesis=None, synthesis_method=None, mechanism=None,
+            feasibility_score_min=None, feasibility_score_max=None,
+            material_class=123
+        ))

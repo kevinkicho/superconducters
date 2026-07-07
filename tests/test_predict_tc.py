@@ -214,3 +214,34 @@ def test_predict_tc_type_mismatch_pressure():
 def test_predict_tc_type_mismatch_composition():
     with pytest.raises(TypeError):
         ptc.predict_tc(123, pressure=100)
+
+
+def test_load_data_empty_database(tmp_path):
+    db_path = tmp_path / "empty.json"
+    db_path.write_text("[]")
+    with patch.object(ptc, 'DATABASE_PATH', str(db_path)):
+        result = ptc.load_data()
+        assert result == []
+
+
+def test_load_data_permission_error():
+    with patch.object(ptc, 'DATABASE_PATH', 'no_permission.json'):
+        with patch('builtins.open', MagicMock(side_effect=PermissionError("Permission denied"))):
+            with pytest.raises(PermissionError):
+                ptc.load_data()
+
+
+def test_predict_tc_whitespace_composition():
+    with pytest.raises(ValueError):
+        ptc.predict_tc("   ", pressure=100)
+
+
+def test_predict_tc_special_char_composition():
+    with pytest.raises(ValueError):
+        ptc.predict_tc("H3S!", pressure=100)
+
+
+def test_predict_tc_empty_database():
+    with patch.object(ptc, 'load_data', return_value=[]):
+        with pytest.raises(ValueError):
+            ptc.predict_tc("H3S", pressure=155)
