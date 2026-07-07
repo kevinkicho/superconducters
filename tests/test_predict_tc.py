@@ -163,3 +163,31 @@ def test_integration_full_pipeline():
             model2 = ptc.train_model()
             pred_new = model2.predict([[ptc.average_valence("YBa2Cu3O7"), ptc.average_debye("YBa2Cu3O7")]])[0]
             assert abs(pred_new - 93) < 20
+
+
+def test_predict_uncertainty():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        model = ptc.train_model()
+        uncertainty = ptc.predict_uncertainty("H3S", model=model)
+        assert isinstance(uncertainty, float)
+        assert uncertainty >= 0
+
+
+def test_generate_candidates():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+        {"name": "YBa2Cu3O7", "Tc": 93, "composition": "YBa2Cu3O7", "pressure": 0},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        candidates = ptc.generate_candidates(n=2)
+        assert isinstance(candidates, list)
+        assert len(candidates) == 2
+        for c in candidates:
+            assert "name" in c
+            assert "Tc" in c
+            assert "uncertainty" in c
