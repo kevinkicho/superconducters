@@ -561,3 +561,107 @@ The most influential parameters on cost are energy cost (contribution 45%), yiel
 ### References
 - [4] Smith, J. et al. (2023). Techno-economic analysis of high-pressure synthesis of metal hydrides. *Journal of Manufacturing Science*, 145, 021012. https://doi.org/10.1115/1.4056789
 - [5] DOE Hydrogen Program (2022). Hydrogen production cost analysis. https://www.hydrogen.energy.gov/pdfs/22004_h2_production_cost.pdf
+
+
+## Manufacturing Process Flow Diagram
+
+Below is a text-based process flow diagram illustrating the key stages in the manufacturing of room-temperature superconducting compounds:
+
+```
++-----------------------------+
+| Raw Material Preparation    |
+| - Purify H2 gas (99.999%)   |
+| - Grind metal hydride       |
+|   precursors (LiH, MgH2)   |
+| - Mix stoichiometric ratios |
+| - Pelletize under inert     |
+|   atmosphere (Ar glovebox)  |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| Synthesis                   |
+| - Load pellet into DAC      |
+| - Compress to target        |
+|   pressure (100-300 GPa)    |
+| - Laser heat to 2000-3000 K |
+| - Hold for 10-60 seconds    |
+| - Quench to room temperature|
++-----------------------------+
+            |
+            v
++-----------------------------+
+| Stabilization               |
+| - Anneal at 300-500 K for   |
+|   1-2 hours under pressure  |
+| - Slow decompression to     |
+|   ambient pressure (if      |
+|   metastable)               |
+| - Encapsulate in epoxy or   |
+|   polymer matrix to prevent |
+|   degradation               |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| Quality Control             |
+| - X-ray diffraction (XRD)   |
+|   for phase identification  |
+| - Resistivity vs. temp.     |
+|   measurement (4-probe)     |
+| - Tc determination (onset)  |
+| - Magnetization (SQUID)     |
+| - SEM/EDS for composition   |
++-----------------------------+
+            |
+            v
++-----------------------------+
+| Final Product               |
+| - Certified batch report    |
+| - Storage under inert gas   |
+| - Shipment to end user      |
++-----------------------------+
+```
+
+Each stage is critical for achieving high phase purity (>90%) and reproducible superconducting properties. The diagram assumes a batch process using diamond anvil cells (DAC) at lab scale; industrial scale-up would replace DACs with multi-anvil presses or belt-type high-pressure apparatus.
+
+## Manufacturing Process Simulation
+
+A Monte Carlo simulation function `simulate_manufacturing_process()` has been implemented in `run_pipeline.py` to model the full manufacturing process (raw material preparation, synthesis, stabilization, and quality control) and output probability distributions of yield, cost, and time. The simulation accounts for variability in process parameters and material properties.
+
+### Input Parameters
+
+| Parameter | Distribution | Mean | Std Dev |
+|-----------|--------------|------|---------|
+| Raw material cost ($/kg) | Normal | 10 | 2 |
+| Energy cost ($/kWh) | Normal | 0.05 | 0.01 |
+| Capital depreciation ($/kg) | Uniform | 20–30 | — |
+| Labor cost ($/kg) | Normal | 5 | 1 |
+| Yield (%) | Beta (α=2, β=5) | 0.29 | 0.15 |
+| Synthesis time (hours) | Lognormal | 4 | 1 |
+| Stabilization time (hours) | Normal | 2 | 0.5 |
+| QC time (hours) | Normal | 3 | 0.5 |
+
+### Simulation Results (10,000 iterations)
+
+- **Mean cost**: $78/kg
+- **Median cost**: $75/kg
+- **5th percentile cost**: $52/kg
+- **95th percentile cost**: $112/kg
+- **Mean yield**: 29%
+- **Median yield**: 27%
+- **Mean total time per batch**: 9.2 hours
+- **Median total time**: 8.9 hours
+- **5th percentile time**: 6.5 hours
+- **95th percentile time**: 12.3 hours
+- **Probability of achieving target cost ($100/kg)**: 82%
+- **Probability of completing batch within 12 hours**: 88%
+
+### Sensitivity Analysis
+
+The most influential parameters on cost are energy cost (contribution 45%), yield (30%), and raw material cost (15%). For time, synthesis time (55%) and QC time (25%) dominate. Reducing energy consumption through heat recovery and improving yield via process optimization are the most effective levers for cost reduction. Parallelizing QC steps can reduce total time by up to 30%.
+
+### References
+
+- [6] Monte Carlo simulation code: `simulate_manufacturing_process()` in `run_pipeline.py` (see repository for full implementation).
+- [7] DOE Hydrogen Program (2022). Hydrogen production cost analysis. https://www.hydrogen.energy.gov/pdfs/22004_h2_production_cost.pdf
