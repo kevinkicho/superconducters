@@ -15,6 +15,11 @@
 - **Nd0.8Sr0.2NiO2**: Tc up to 15 K (Nature, 2019). Similar phase diagram to cuprates, suggesting common mechanism via antiferromagnetic spin fluctuations. [Source](https://www.nature.com/articles/s41586-019-1496-5)
 - **Nickelate review**: Similarities and differences with cuprates (Science, 2020). [Source](https://www.science.org/doi/10.1126/science.abb7554)
 
+### Bilayer Nickelates (La3Ni2O7)
+- **La3Ni2O7 under pressure**: Tc ~80 K at ~14 GPa (Nature, 2023). Bilayer Ruddlesden-Popper phase with NiO2 planes. Superconductivity emerges from a metallic state with resistivity upturn, suggesting a density-wave precursor. The bilayer structure and strong interlayer coupling are key to the high Tc. [Source](https://www.nature.com/articles/s41586-023-06424-7)
+- **Theoretical analysis**: DFT+DMFT calculations show Ni-3d bands become nearly degenerate under pressure, leading to strong interlayer hybridization and possible s± pairing symmetry. [Source](https://arxiv.org/abs/2307.14876)
+- **Comparison with cuprates**: Tc comparable to bilayer cuprate La2-xSrxCaCu2O6 (Tc ~60 K). Suggests high-Tc superconductivity may be more universal. [Source](https://www.science.org/doi/10.1126/science.adk4242)
+
 ## 2. Physical Mechanisms
 
 ### Electron-Phonon Coupling (Hydrides)
