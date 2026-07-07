@@ -138,3 +138,72 @@ Each candidate compound passes through a series of gates. Advancement to the nex
 4. **Iteration Cycle**: The plan defines a maximum of 5 iterations per candidate family. If after 5 attempts no candidate passes Gate 3, the entire family is deprioritized and the model is penalized for that family’s feature space.
 
 This iterative plan ensures that every experimental result — positive or negative — directly improves the computational model, accelerating the discovery of room‑temperature superconducting compounds.
+
+
+## Formalized Feedback Loop Implementation
+
+To operationalize the feedback cycle, the following automated pipeline is defined:
+
+### 1. Structured JSON Logging
+Each experimental result is logged as a JSON object conforming to the schema below. The log file is stored at `data/experimental_log.json` (appended on each new result).
+
+```json
+{
+  "experiment_id": "EXP-20250315-001",
+  "candidate_id": "CAND-001",
+  "synthesis_parameters": {
+    "precursors": ["La", "H2"],
+    "pressure_GPa": 170,
+    "temperature_K": 2000,
+    "duration_h": 2,
+    "method": "diamond anvil cell"
+  },
+  "characterization": {
+    "tc_K": 250,
+    "transition_width_K": 2.5,
+    "jc_A_per_cm2": 1e4,
+    "hc2_T": 10,
+    "purity_pct": 98,
+    "meissner_volume_fraction_pct": 85
+  },
+  "gate_reached": 5,
+  "passed": true,
+  "failure_reason": null,
+  "operator_notes": "Sample stable after 30 days.",
+  "timestamp": "2025-03-15T14:30:00Z"
+}
+```
+
+### 2. Database Update Script
+A script `scripts/update_database.py` reads `data/experimental_log.json` and merges new entries into `data/superconductor_database.json`. The script validates each entry against the schema, deduplicates by `experiment_id`, and updates the candidate’s measured properties. It is triggered automatically after each new log entry is written.
+
+### 3. Model Retraining
+After the database is updated, the ML model in `scripts/predict_tc.py` is retrained. The retraining script:
+- Queries `data/superconductor_database.json` for all experimental results (both positive and negative).
+- Re‑fits the model (e.g., graph neural network or McMillan–Allen–Dynes parameters) using the expanded dataset.
+- Outputs updated model weights to `models/tc_predictor.pt` (or equivalent).
+
+Retraining is triggered by any of the following events:
+- **Trigger 1**: Every 10 new experimental results (as defined in the existing Model Update Triggers).
+- **Trigger 2**: A candidate passes Gate 5 (full characterization) and its measured Tc deviates by more than 20% from the previous model prediction.
+- **Trigger 3**: A candidate fails Gate 1 (computational validation) but experimental evidence suggests superconductivity (resistivity drop > 90% at a temperature below predicted Tc).
+- **Trigger 4**: Weekly scheduled retraining.
+
+### 4. Candidate Material Ranking Update
+After retraining, the script `scripts/generate_candidates.py` is executed to regenerate `docs/candidate_materials.md`. This script:
+- Loads the updated model and the full candidate pool from `data/superconductor_database.json`.
+- Re‑predicts Tc for all untested candidates.
+- Re‑ranks candidates by predicted Tc, confidence, and feasibility score.
+- Outputs a new `docs/candidate_materials.md` with the updated rankings, including a changelog section noting which candidates were promoted/demoted and why.
+
+### 5. Decision Gates for Re‑running Computational Screening
+In addition to the existing experimental gates (Gates 1–5), the following decision gates determine when to re‑run the full computational screening pipeline (e.g., DFT + phonon calculations for new candidate families):
+
+| Gate | Condition | Action |
+|------|-----------|--------|
+| **Gate C1** | After every 50 new experimental results (cumulative) | Re‑run high‑throughput screening on the expanded chemical space (e.g., include new elements or stoichiometries suggested by recent successes). |
+| **Gate C2** | When a candidate passes Gate 5 and its measured Tc exceeds 300 K | Launch a focused computational campaign to find analogues (same structure type, similar composition) and predict their Tc. |
+| **Gate C3** | When the model’s average prediction error on the last 20 experiments exceeds 30 K | Re‑evaluate the model architecture, feature set, and training data; consider adding new descriptors (e.g., electron‑phonon coupling from DFT). |
+| **Gate C4** | Annually, or when a major new theoretical insight is published | Perform a full literature‑driven screening update, incorporating new candidate families from recent publications. |
+
+These gates ensure that computational resources are allocated efficiently, focusing on the most promising directions while continuously incorporating experimental feedback.
