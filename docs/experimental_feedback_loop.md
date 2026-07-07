@@ -265,3 +265,56 @@ In addition to the existing experimental gates (Gates 1–5), the following de
 | **Gate C4** | Annually, or when a major new theoretical insight is published | Perform a full literature‑driven screening update, incorporating new candidate families from recent publications. |
 
 These gates ensure that computational resources are allocated efficiently, focusing on the most promising directions while continuously incorporating experimental feedback.
+
+## Computational Feedback Loop
+
+The computational feedback loop integrates machine learning uncertainty quantification, density functional theory (DFT) validation, and experimental synthesis into a continuous cycle that prioritizes the most promising candidates.
+
+### 1. ML Uncertainty Identification
+
+The ML model (`scripts/predict_tc.py`) not only predicts Tc but also estimates prediction uncertainty (e.g., via Monte Carlo dropout or ensemble variance). Candidates with high predicted Tc and low uncertainty are considered high-value targets. Candidates with high predicted Tc but high uncertainty are flagged for additional DFT validation.
+
+### 2. DFT Validation
+
+For candidates flagged by the ML uncertainty module, DFT calculations are performed using `scripts/dft_calculator.py`. These calculations refine the predicted Tc by computing electron-phonon coupling constants, phonon spectra, and the Eliashberg function. The DFT results are used to adjust the candidate's predicted Tc and confidence score.
+
+### 3. Prioritized Candidate List
+
+The updated predictions and confidence scores are compiled into a prioritized list (`docs/candidate_materials.md`). This list is sorted by a composite score that balances predicted Tc, confidence, and experimental feasibility. The top candidates are forwarded to the experimental synthesis team.
+
+### 4. Experimental Synthesis and Characterization
+
+The experimental team synthesizes the top candidates using the protocols in `docs/synthesis_methods.md`. Characterization results (XRD, resistivity, magnetization) are ingested into the database as described in the Data Ingestion Protocol section.
+
+### 5. Database Update and Model Retraining
+
+After characterization, the database is updated with the measured properties. The ML model is retrained using the expanded dataset (see Section 3: Model Retraining). The retrained model is then used in the next iteration of the feedback loop.
+
+### Workflow Pseudocode
+
+```
+loop:
+    candidates = load_candidates()
+    for candidate in candidates:
+        pred, uncertainty = ml_model.predict_with_uncertainty(candidate)
+        if uncertainty > threshold:
+            dft_result = dft_calculator.run(candidate)
+            candidate.score = combine(pred, dft_result)
+        else:
+            candidate.score = pred
+    prioritized = sort(candidates, by='score')
+    for candidate in prioritized[:top_n]:
+        synthesize(candidate)
+        characterize(candidate)
+        update_database(candidate)
+    retrain_ml_model()
+```
+
+### Cross-References
+
+- `scripts/run_pipeline.py` orchestrates the entire feedback loop, calling the ML model, DFT calculator, and database update scripts.
+- `scripts/dft_calculator.py` performs the DFT validation step.
+- `docs/candidate_materials.md` contains the prioritized list.
+- `docs/synthesis_methods.md` details experimental protocols.
+
+This loop ensures that computational resources are focused on the most promising candidates while continuously learning from experimental outcomes.
