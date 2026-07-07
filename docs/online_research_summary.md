@@ -139,3 +139,35 @@ This section synthesizes the research findings into a concrete plan for discover
 - Machine learning and high-throughput screening are accelerating discovery of new superconductors.
 
 This update incorporates findings from at least five recent papers (2020+) as required.
+
+## Automated Literature Mining Module
+
+A Python script `scripts/arxiv_scraper.py` has been created to automate literature mining from arXiv. It fetches recent papers, parses abstracts to extract structured data (material names, Tc values, pressure values), and can update this summary file.
+
+### Usage
+
+```bash
+# Fetch latest 10 papers on room-temperature superconductivity
+python scripts/arxiv_scraper.py --query "superconductivity room temperature" --max-results 10
+
+# Fetch more results and save raw data to JSON
+python scripts/arxiv_scraper.py --query "hydride superconductor" --max-results 20 --output data/arxiv_results.json
+
+# Fetch without updating the summary file
+python scripts/arxiv_scraper.py --no-update
+```
+
+### Features
+
+- **arXiv API integration**: Uses the official arXiv API with proper User-Agent headers.
+- **Entity extraction**: Regular expression-based extraction of chemical formulas, Tc values (in K), and pressure values (in GPa).
+- **Summary update**: Appends new papers to this file under a dated section.
+- **JSON output**: Optionally saves raw data with extracted entities for further processing.
+- **Pagination**: Supports `--start` parameter for fetching older results.
+
+### Future Improvements
+
+- Integrate with a database (e.g., SQLite) to avoid duplicate entries.
+- Use NLP (e.g., spaCy or BERT) for more accurate material and property extraction.
+- Add cross-referencing with known superconductor databases (e.g., SuperCon).
+- Schedule periodic runs via cron or GitHub Actions.
