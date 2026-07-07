@@ -969,5 +969,162 @@ def detect_data_drift(training_data, new_data, feature_names=None, threshold=0.0
     return drift_detected
 
 
+def diffusion_model_sensitivity_analysis():
+    """Vary hyperparameters of the diffusion model and record changes in generated candidates.
+    Hyperparameters: num_steps, learning_rate, noise_schedule (linear, cosine, sqrt).
+    Returns a list of dicts with hyperparameter settings and resulting candidate properties.
+    """
+    from generate_candidates import generate_candidates  # local import
+    import numpy as np
+
+    param_grid = {
+        'num_steps': [100, 200, 500],
+        'learning_rate': [1e-4, 3e-4, 1e-3],
+        'noise_schedule': ['linear', 'cosine', 'sqrt']
+    }
+    results = []
+    for steps in param_grid['num_steps']:
+        for lr in param_grid['learning_rate']:
+            for schedule in param_grid['noise_schedule']:
+                # Generate candidates with these hyperparameters
+                candidates = generate_candidates(
+                    num_steps=steps,
+                    learning_rate=lr,
+                    noise_schedule=schedule,
+                    num_samples=10
+                )
+                # Record average Tc and pressure
+                avg_tc = np.mean([c.get('tc', 0) for c in candidates]) if candidates else 0
+                avg_pressure = np.mean([c.get('pressure', 0) for c in candidates]) if candidates else 0
+                results.append({
+                    'num_steps': steps,
+                    'learning_rate': lr,
+                    'noise_schedule': schedule,
+                    'avg_tc': round(avg_tc, 2),
+                    'avg_pressure': round(avg_pressure, 2),
+                    'num_candidates': len(candidates)
+                })
+    # Log results to file
+    log_path = 'diffusion_sensitivity_results.json'
+    with open(log_path, 'w') as f:
+        json.dump(results, f, indent=2)
+    print(f"Diffusion model sensitivity analysis complete. Results saved to {log_path}.")
+    return results
+
+
+def extract_synthesis_conditions_from_arxiv():
+    """Use a transformer model to parse recent arXiv papers and extract synthesis conditions.
+    Returns a list of dicts with paper_id, synthesis_pressure, synthesis_temperature, precursors, etc.
+    """
+    from transformers import pipeline
+    import requests
+    import re
+
+    # Fetch recent arXiv papers on superconductors
+    url = 'http://export.arxiv.org/api/query?search_query=all:superconductor&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending'
+    response = requests.get(url)
+    root = ET.fromstring(response.content)
+    ns = {'atom': 'http://www.w3.org/2005/Atom', 'arxiv': 'http://arxiv.org/schemas/atom'}
+    papers = []
+    for entry in root.findall('atom:entry', ns):
+        paper_id = entry.find('atom:id', ns).text.split('/')[-1]
+        title = entry.find('atom:title', ns).text.strip()
+        summary = entry.find('atom:summary', ns).text.strip()
+        papers.append({'id': paper_id, 'title': title, 'summary': summary})
+
+    # Use a NER pipeline to extract synthesis conditions
+    ner = pipeline('ner', model='dslim/bert-base-NER', aggregation_strategy='simple')
+    conditions = []
+    for paper in papers:
+        text = paper['summary']
+        entities = ner(text)
+        # Heuristic extraction: look for pressure (GPa), temperature (K), precursors
+        pressure_match = re.search(r'(\d+\.?\d*)\s*GPa', text)
+        temp_match = re.search(r'(\d+\.?\d*)\s*K', text)
+        precursors = [e['word'] for e in entities if e['entity_group'] == 'MISC' and len(e['word']) > 2]
+        conditions.append({
+            'paper_id': paper['id'],
+            'title': paper['title'],
+            'synthesis_pressure_gpa': float(pressure_match.group(1)) if pressure_match else None,
+            'synthesis_temperature_k': float(temp_match.group(1)) if temp_match else None,
+            'precursors': precursors[:5]  # limit to 5
+        })
+    # Save to file
+    with open('synthesis_conditions.json', 'w') as f:
+        json.dump(conditions, f, indent=2)
+    print(f"Extracted synthesis conditions from {len(conditions)} papers.")
+    return conditions
+
+
+def virtual_lab_simulation():
+    """Combine generative model, DFT validation, and manufacturing simulation to produce a material card and PDF report.
+    Returns a dict with material card and triggers PDF generation.
+    """
+    from generate_candidates import generate_candidates
+    from dft_calculator import validate_candidate
+    from manufacturing_simulation import simulate_manufacturing
+    from reportlab.lib.pagesizes import letter
+    from reportlab.pdfgen import canvas
+    import os
+
+    # Step 1: Generate candidates
+    candidates = generate_candidates(num_samples=5)
+    if not candidates:
+        print("No candidates generated.")
+        return None
+
+    # Step 2: DFT validation for each candidate
+    validated = []
+    for cand in candidates:
+        dft_result = validate_candidate(cand['formula'], cand.get('structure', None))
+        cand['dft_energy'] = dft_result.get('energy', None)
+        cand['dft_bandgap'] = dft_result.get('bandgap', None)
+        validated.append(cand)
+
+    # Step 3: Manufacturing simulation
+    manufacturing_results = simulate_manufacturing(validated)
+
+    # Step 4: Create material card
+    material_card = {
+        'candidates': validated,
+        'manufacturing': manufacturing_results,
+        'summary': f"Generated {len(validated)} candidates, validated with DFT, manufacturing feasibility assessed."
+    }
+
+    # Step 5: Generate PDF report
+    pdf_path = 'virtual_lab_report.pdf'
+    c = canvas.Canvas(pdf_path, pagesize=letter)
+    c.drawString(100, 750, "Virtual Lab Simulation Report")
+    c.drawString(100, 730, f"Date: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    y = 700
+    for i, cand in enumerate(validated):
+        c.drawString(100, y, f"Candidate {i+1}: {cand.get('formula', 'N/A')}")
+        y -= 20
+        c.drawString(120, y, f"Tc: {cand.get('tc', 'N/A')} K, Pressure: {cand.get('pressure', 'N/A')} GPa")
+        y -= 20
+        c.drawString(120, y, f"DFT Energy: {cand.get('dft_energy', 'N/A')} eV, Bandgap: {cand.get('dft_bandgap', 'N/A')} eV")
+        y -= 30
+    c.save()
+    print(f"PDF report generated: {pdf_path}")
+
+    # Store report for API retrieval
+    _reports_store['virtual_lab'] = material_card
+    return material_card
+
+
+# In-memory store for reports (for API endpoint)
+_reports_store = {}
+
+@app.route('/api/report/<candidate_id>', methods=['GET'])
+def get_report(candidate_id):
+    """REST API endpoint to retrieve a report by candidate ID.
+    Returns JSON with material card and manufacturing data.
+    """
+    report = _reports_store.get(candidate_id)
+    if report is None:
+        return jsonify({'error': 'Report not found'}), 404
+    return jsonify(report)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
