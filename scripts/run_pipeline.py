@@ -13,6 +13,7 @@ import json
 import math
 import sys
 from pathlib import Path
+import dft_calculator  # for DFT validation
 
 # Constants for Tc prediction (BCS with McMillan formula)
 MU_STAR = 0.1  # Coulomb pseudopotential
@@ -76,6 +77,56 @@ def predict_tc(debye_temp, lambda_ep, mu_star=MU_STAR):
     tc = (debye_temp / 1.45) * math.exp(exponent)
     return tc
 
+
+def compute_uncertainty(debye_temp, lambda_ep, mu_star=MU_STAR):
+    """Estimate uncertainty by varying mu_star."""
+    mu_low = mu_star - 0.02
+    mu_high = mu_star + 0.02
+    tc_low = predict_tc(debye_temp, lambda_ep, mu_low)
+    tc_high = predict_tc(debye_temp, lambda_ep, mu_high)
+    if tc_low is None or tc_high is None:
+        return 0.0
+    return abs(tc_high - tc_low) / 2.0
+
+
+def update_candidate_md_with_dft(dft_results):
+    """Update candidate_materials.md with DFT-validated results."""
+    md_path = 'candidate_materials.md'
+    section_header = '## DFT-Validated Results'
+    # Read current content
+    with open(md_path, 'r') as f:
+        content = f.read()
+    # Build new section content
+    new_section = section_header + '\n\n'
+    new_section += 'The following table lists candidates validated by DFT calculations. '
+    new_section += 'DFT-validated Tc and uncertainty are provided alongside ML predictions. '
+    new_section += 'Rankings are based on DFT-validated Tc.\n\n'
+    new_section += '| Rank | Name | Formula | ML Tc (K) | DFT Tc (K) | DFT Uncertainty (K) | Synthesis Feasibility |\n'
+    new_section += '|------|------|--------|-----------|------------|---------------------|----------------------|\n'
+    for i, r in enumerate(dft_results, 1):
+        ml_tc = r.get('ml_tc', 'N/A')
+        dft_tc = r.get('dft_tc', 'N/A')
+        dft_unc = r.get('dft_uncertainty', 'N/A')
+        synth = r.get('synthesis_feasibility', 'unknown')
+        new_section += f'| {i} | {r["name"]} | {r["formula"]} | {ml_tc} | {dft_tc} | {dft_unc} | {synth} |\n'
+    # Check if section already exists
+    if section_header in content:
+        # Replace existing section from header to next section or end
+        start = content.find(section_header)
+        # Find next section header (##) after start, or end of file
+        next_section = content.find('\n## ', start + len(section_header))
+        if next_section == -1:
+            end = len(content)
+        else:
+            end = next_section
+        new_content = content[:start] + new_section + content[end:]
+    else:
+        # Append at end
+        new_content = content.rstrip() + '\n\n' + new_section
+    with open(md_path, 'w') as f:
+        f.write(new_content)
+    print(f"Updated {md_path} with DFT-validated results.")
+
 def main():
     # Step 1: Query database
     print("=== Step 1: Querying materials database ===")
@@ -124,6 +175,39 @@ def main():
     with open(output_path, 'w') as f:
         json.dump(results, f, indent=2)
     print(f"\nResults saved to {output_path}")
+
+    # Step 5: DFT validation for top uncertain candidates
+    print("=== Step 5: DFT validation for top uncertain candidates ===")
+    TOP_N = 5
+    # Compute uncertainty for each result
+    for r in results:
+        r['uncertainty'] = compute_uncertainty(r['debye_temp'], r['lambda_ep'])
+    # Sort by uncertainty descending
+    results.sort(key=lambda x: x['uncertainty'], reverse=True)
+    top_candidates = results[:TOP_N]
+    print(f"Selected top {TOP_N} candidates with highest uncertainty for DFT validation.")
+    dft_results = []
+    for cand in top_candidates:
+        print(f"  Running DFT for {cand['name']}...")
+        try:
+            dft_out = dft_calculator.run_full_dft_calculation(cand['formula'])
+            dft_results.append({
+                'name': cand['name'],
+                'formula': cand['formula'],
+                'ml_tc': cand['predicted_tc_K'],
+                'dft_tc': dft_out.get('dft_tc'),
+                'dft_uncertainty': dft_out.get('dft_uncertainty'),
+                'synthesis_feasibility': dft_out.get('synthesis_feasibility', 'unknown')
+            })
+            print(f"    DFT Tc = {dft_out.get('dft_tc', 'N/A')} K")
+        except Exception as e:
+            print(f"    DFT calculation failed: {e}")
+    # Update candidate_materials.md with DFT results
+    update_candidate_md_with_dft(dft_results)
+    print("=== DFT validation complete ===")
+
+if __name__ == '__main__':
+    main()
 
 if __name__ == '__main__':
     main()

@@ -427,3 +427,8 @@ See the updated database (`data/superconductor_database.json`) for full entries 
 ## Summary
 
 Room-temperature superconductivity remains an elusive goal. The only known room-temperature superconductors are hydrides under extreme pressure (>100 GPa), with the highest reported Tc ~287 K in carbonaceous sulfur hydride (controversial). Cuprates remain the highest ambient-pressure superconductors (Tc up to 133 K in Hg-1223). Future directions include: (1) exploring ternary hydrides to lower required pressure, (2) machine learning–guided discovery of metastable hydrides stable at ambient pressure, (3) doping and strain engineering in nickelates and cuprates, and (4) hybrid approaches combining hydride and nickelate motifs. All predicted room-temperature superconductors (Tc > 300 K) are currently theoretical and require experimental verification.
+
+
+## DFT-Validated Results
+
+*This section is automatically populated by the pipeline after DFT validation. See scripts/run_pipeline.py for details.*
