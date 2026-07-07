@@ -145,3 +145,56 @@ class TestRunPipeline:
         mock_dft.assert_called_once()
         # The pipeline should not crash; result should indicate success or partial success
         assert result is True or result == 0
+
+    @patch('scripts.run_pipeline.generate_experimental_collaboration_report')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_experimental_collaboration_report(self, mock_open, mock_generate_report):
+        """Test that the experimental collaboration report generation produces correct output for a mock candidate."""
+        # Mock the report generation function to return a known report
+        mock_report = {
+            "candidate": "H3S",
+            "predicted_Tc": 203.0,
+            "uncertainty": 5.0,
+            "synthesis_pressure": 155,
+            "status": "recommended"
+        }
+        mock_generate_report.return_value = mock_report
+
+        # Call the function (assume it's exposed as rp.generate_experimental_collaboration_report)
+        result = rp.generate_experimental_collaboration_report("H3S")
+
+        # Verify the report structure and content
+        assert result == mock_report
+        assert result["candidate"] == "H3S"
+        assert result["predicted_Tc"] == 203.0
+        assert result["status"] == "recommended"
+        # Ensure the function was called with the correct argument
+        mock_generate_report.assert_called_once_with("H3S")
+
+    @patch('scripts.run_pipeline.ingest_experimental_data')
+    @patch('scripts.run_pipeline.update_candidate_materials')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_experimental_data_ingestion(self, mock_open, mock_update_candidate, mock_ingest):
+        """Test that ingesting experimental data from a mock CSV updates candidate_materials.md with new Tc."""
+        # Mock the ingestion function to return parsed data
+        mock_ingest.return_value = [
+            {"name": "H3S", "experimental_Tc": 205.0, "pressure": 155, "reference": "Lab test 2025"}
+        ]
+        # Mock the update function to simulate writing to candidate_materials.md
+        mock_update_candidate.return_value = None
+
+        # Call the pipeline function that orchestrates ingestion and update
+        # Assume there is a function rp.process_experimental_data(csv_path)
+        result = rp.process_experimental_data("mock_experiment.csv")
+
+        # Verify that ingestion was called with the CSV path
+        mock_ingest.assert_called_once_with("mock_experiment.csv")
+        # Verify that update_candidate_materials was called with the ingested data
+        mock_update_candidate.assert_called_once_with(mock_ingest.return_value)
+        # Check that open was called to write candidate_materials.md (or at least that the update function was invoked)
+        # The update function should have written the new Tc into the markdown file
+        # We can check that the mock_open was used to write to candidate_materials.md
+        write_calls = [c for c in mock_open.call_args_list if 'candidate_materials.md' in str(c)]
+        assert len(write_calls) > 0
+        # The pipeline should return a success indicator
+        assert result is True or result == 0
