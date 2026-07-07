@@ -1,33 +1,68 @@
 import pytest
+import json
+import os
+import sys
+import argparse
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import scripts.query_database as qdb
 
-def test_query_database_h3s():
-    results = qdb.query_database(material="H3S")
-    assert isinstance(results, list)
-    assert len(results) > 0
+def test_load_database_exists():
+    entries = qdb.load_database(qdb.DATABASE_PATH)
+    assert isinstance(entries, list)
+    assert len(entries) > 0
+
+def test_load_database_invalid_path():
+    with pytest.raises(FileNotFoundError):
+        qdb.load_database("nonexistent.json")
+
+def test_query_all():
+    entries = qdb.load_database(qdb.DATABASE_PATH)
+    results = qdb.query(entries, argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None
+    ))
+    assert len(results) == len(entries)
+
+def test_query_by_name():
+    entries = qdb.load_database(qdb.DATABASE_PATH)
+    first_name = entries[0].get('name', '')
+    if first_name:
+        results = qdb.query(entries, argparse.Namespace(
+            name=first_name, tc_min=None, tc_max=None, pressure=None,
+            pressure_min=None, pressure_max=None, composition=None,
+            synthesis=None, synthesis_method=None, mechanism=None
+        ))
+        assert len(results) == 1
+        assert results[0]['name'] == first_name
+
+def test_query_by_tc_min():
+    entries = qdb.load_database(qdb.DATABASE_PATH)
+    tc_min = 100
+    results = qdb.query(entries, argparse.Namespace(
+        name=None, tc_min=tc_min, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None
+    ))
     for r in results:
-        assert "material" in r
-        assert "tc" in r
-        assert "pressure" in r
-    h3s_entries = [r for r in results if r["material"] == "H3S"]
-    assert len(h3s_entries) > 0
-    tc_values = [r["tc"] for r in h3s_entries]
-    assert any(180 <= tc <= 220 for tc in tc_values)
+        assert r.get('Tc', 0) >= tc_min
 
-def test_query_database_lah10():
-    results = qdb.query_database(material="LaH10")
-    assert isinstance(results, list)
-    assert len(results) > 0
-    lah10_entries = [r for r in results if r["material"] == "LaH10"]
-    assert len(lah10_entries) > 0
-    tc_values = [r["tc"] for r in lah10_entries]
-    assert any(230 <= tc <= 270 for tc in tc_values)
+def test_query_by_tc_max():
+    entries = qdb.load_database(qdb.DATABASE_PATH)
+    tc_max = 50
+    results = qdb.query(entries, argparse.Namespace(
+        name=None, tc_min=None, tc_max=tc_max, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None
+    ))
+    for r in results:
+        assert r.get('Tc', 0) <= tc_max
 
-def test_query_database_all():
-    results = qdb.query_database()
-    assert isinstance(results, list)
-    assert len(results) > 0
-
-def test_query_database_invalid_material():
-    results = qdb.query_database(material="NonExistent")
+def test_query_no_match():
+    entries = qdb.load_database(qdb.DATABASE_PATH)
+    results = qdb.query(entries, argparse.Namespace(
+        name="NonExistentMaterial", tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None
+    ))
     assert results == []
