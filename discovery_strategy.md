@@ -177,5 +177,31 @@ Integration of synthesis with screening involves combinatorial thin‑film depos
 ## 6. Conclusion
 A systematic, multi-pronged approach combining ML, high-throughput DFT, and an iterative experimental feedback loop offers the best chance to discover room-temperature superconductors. The retractions of recent high-profile claims underscore the need for rigorous validation and open data sharing. The path forward involves screening thousands of hydride candidates, synthesizing the most promising at high pressure, and gradually reducing the required pressure through chemical design. Collaboration between computational and experimental groups, along with publication of negative results, will accelerate progress. The field remains challenging but promising, with active learning and high-throughput experimentation poised to accelerate discovery.
 
+
+## 7. Computational Screening Pipeline
+
+### 7.1 Overview
+The computational screening pipeline is implemented in `scripts/predict_tc.py`. It automates the generation of candidate compounds, calculation of electronic and phononic properties via DFT, and ranking by predicted superconducting transition temperature (Tc).
+
+### 7.2 Candidate Generation
+- **Combinatorial generation:** Starting from known high-pressure hydride structures (e.g., clathrate cages, binary hydrides), the script generates ternary and quaternary variants by substituting elements (e.g., replacing La with Y, Ce, or Pr in LaH10).
+- **Template-based approach:** Uses a library of prototype structures (e.g., H3S-type, LaH10-type, YH6-type) and enumerates chemical substitutions within allowed stoichiometries.
+- **Constraints:** Filters out compounds that violate known chemical rules (e.g., electronegativity differences, valence electron count) or are thermodynamically unstable at ambient pressure (using convex hull data from the Materials Project).
+
+### 7.3 Property Prediction and Ranking
+- **DFT calculations:** For each candidate, the script runs a series of DFT calculations (using VASP or Quantum ESPRESSO) to obtain the electronic density of states at the Fermi level, phonon dispersion, and electron-phonon coupling matrix elements.
+- **Tc prediction:** The Allen-Dynes modified McMillan equation is used to estimate Tc from the Eliashberg function α²F(ω). The script outputs a ranked list of candidates with predicted Tc, along with confidence intervals based on the accuracy of the DFT functional (e.g., PBE vs. SCAN).
+- **Uncertainty quantification:** Monte Carlo sampling of input parameters (e.g., Coulomb pseudopotential μ*) provides a range of Tc values. Candidates with Tc > 300 K at pressures below 50 GPa are flagged for experimental synthesis.
+
+### 7.4 Integration with Experimental Feedback
+The pipeline is designed to be run iteratively: experimental results (synthesis success, measured Tc) are fed back into the model to refine the ranking. The script supports a "retrain" mode that updates a surrogate model (e.g., a random forest or neural network) to improve predictions over time.
+
+### 7.5 Usage
+To run the pipeline:
+```bash
+python scripts/predict_tc.py --input candidates.csv --output results.json --pressure 50 --max-candidates 1000
+```
+The script accepts a CSV of candidate formulas or a list of prototype structures. Output includes a JSON file with predicted Tc, confidence intervals, and recommended synthesis conditions.
+
 ---
 *This document was generated based on online research conducted in 2025. All sources are cited with URLs. The strategy is intended to be a living document, updated as new results emerge.*
