@@ -360,29 +360,29 @@ def main():
             [args.target_tc, args.target_pressure + 50],
         ]
         candidates = generate_candidates(model, conditions, num_per_condition=args.num_candidates)
-    else:  # ddpm
-        model = DenoisingDiffusion()
+    else:  # ddpm (conditional)
+        model = ConditionalDenoisingDiffusion(cond_dim=COND_DIM)
         if args.train:
-            print("Training DDPM...")
-            train_ddpm(model, dataloader, epochs=args.epochs)
+            print("Training conditional DDPM...")
+            train_conditional_ddpm(model, dataloader, epochs=args.epochs)
             os.makedirs(MODEL_DIR, exist_ok=True)
-            torch.save(model.state_dict(), os.path.join(MODEL_DIR, "ddpm_model.pt"))
-            print(f"DDPM model saved to {os.path.join(MODEL_DIR, 'ddpm_model.pt')}")
+            torch.save(model.state_dict(), os.path.join(MODEL_DIR, "conditional_ddpm_model.pt"))
+            print(f"Conditional DDPM model saved to {os.path.join(MODEL_DIR, 'conditional_ddpm_model.pt')}")
         else:
-            ddpm_path = os.path.join(MODEL_DIR, "ddpm_model.pt")
+            ddpm_path = os.path.join(MODEL_DIR, "conditional_ddpm_model.pt")
             if not os.path.exists(ddpm_path):
-                print(f"Error: No trained DDPM model found at {ddpm_path}. Use --train first.", file=sys.stderr)
+                print(f"Error: No trained conditional DDPM model found at {ddpm_path}. Use --train first.", file=sys.stderr)
                 sys.exit(1)
             model.load_state_dict(torch.load(ddpm_path, map_location="cpu"))
-            print(f"Loaded DDPM model from {ddpm_path}")
+            print(f"Loaded conditional DDPM model from {ddpm_path}")
 
-        # Generate candidates
+        # Generate candidates conditioned on target properties (Tc>300K, pressure<10GPa)
         conditions = [
-            [args.target_tc, args.target_pressure],
-            [args.target_tc + 50, args.target_pressure],
-            [args.target_tc, args.target_pressure + 50],
+            [300.0, 10.0],  # ambient-pressure-stable target
+            [350.0, 5.0],
+            [400.0, 1.0],
         ]
-        candidates = generate_ddpm_candidates(model, conditions, num_per_condition=args.num_candidates)
+        candidates = generate_conditional_ddpm_candidates(model, conditions, num_per_condition=args.num_candidates)
 
     # If --rank, predict Tc using predict_tc and sort
     if args.rank:
@@ -406,3 +406,82 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Conditional Denoising Diffusion Probabilistic Model (cDDPM)
+class ConditionalDenoisingDiffusion(nn.Module):
+    """DDPM conditioned on target properties (Tc, pressure)."""
+    def __init__(self, cond_dim=2, hidden_dim=256, num_steps=1000):
+        super().__init__()
+        self.num_steps = num_steps
+        # Simple MLP with condition embedding
+        self.net = nn.Sequential(
+            nn.Linear(NUM_ELEMENTS + cond_dim + 1, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, NUM_ELEMENTS)
+        )
+        # Precompute noise schedule
+        self.beta = torch.linspace(1e-4, 0.02, num_steps)
+        self.alpha = 1.0 - self.beta
+        self.alpha_bar = torch.cumprod(self.alpha, dim=0)
+
+    def forward(self, x, t, cond):
+        # x: [batch, num_elements], t: [batch], cond: [batch, cond_dim]
+        # Simple conditioning: concatenate cond and time embedding to input
+        t_embed = t.float().unsqueeze(1) / self.num_steps
+        x_cond = torch.cat([x, cond, t_embed], dim=1)
+        return self.net(x_cond)
+
+
+def train_conditional_ddpm(model, dataloader, epochs=100, lr=1e-3):
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    mse = nn.MSELoss()
+    for epoch in range(epochs):
+        total_loss = 0.0
+        for batch in dataloader:
+            x, cond = batch  # x: compositions, cond: [Tc, pressure]
+            batch_size = x.size(0)
+            t = torch.randint(0, model.num_steps, (batch_size,))
+            noise = torch.randn_like(x)
+            # Forward diffusion
+            alpha_bar_t = model.alpha_bar[t].unsqueeze(1)
+            x_noisy = torch.sqrt(alpha_bar_t) * x + torch.sqrt(1 - alpha_bar_t) * noise
+            # Predict noise
+            noise_pred = model(x_noisy, t, cond)
+            loss = mse(noise_pred, noise)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        if (epoch+1) % 10 == 0:
+            print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(dataloader):.6f}")
+
+
+def generate_conditional_ddpm_candidates(model, conditions, num_per_condition=10):
+    model.eval()
+    candidates = []
+    with torch.no_grad():
+        for cond in conditions:
+            cond_tensor = torch.tensor(cond, dtype=torch.float32).unsqueeze(0).repeat(num_per_condition, 1)
+            x = torch.randn(num_per_condition, NUM_ELEMENTS)
+            for t in reversed(range(model.num_steps)):
+                t_tensor = torch.full((num_per_condition,), t, dtype=torch.long)
+                noise_pred = model(x, t_tensor, cond_tensor)
+                # Reverse step
+                alpha_t = model.alpha[t]
+                alpha_bar_t = model.alpha_bar[t]
+                if t > 0:
+                    beta_t = model.beta[t]
+                    noise = torch.randn_like(x)
+                else:
+                    noise = 0
+                x = (1 / torch.sqrt(alpha_t)) * (x - (1 - alpha_t) / torch.sqrt(1 - alpha_bar_t) * noise_pred) + torch.sqrt(beta_t) * noise
+            # Convert to formula (simplified: take argmax over elements)
+            for i in range(num_per_condition):
+                vec = x[i].numpy()
+                idx = np.argmax(vec)
+                element = ELEMENTS[idx]
+                formula = f"{element}H10"  # placeholder, should be more sophisticated
+                candidates.append((formula, cond))
+    return candidates
