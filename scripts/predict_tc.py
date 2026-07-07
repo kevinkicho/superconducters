@@ -1234,3 +1234,240 @@ def main_pinn(args):
         with open(args.output, 'w') as f:
             json.dump(predictions, f, indent=2)
         print(f"Predictions saved to {args.output}")
+
+
+# ===== GNN Model for Tc Prediction (using pymatgen + PyTorch Geometric) =====
+
+def generate_structure_from_formula(formula: str) -> Structure:
+    """
+    Generate a simple cubic structure from a chemical formula.
+    This is a placeholder for demonstration; real usage requires actual crystal structures.
+    """
+    import re
+    pattern = r'([A-Z][a-z]*)(\d*)'
+    matches = re.findall(pattern, formula)
+    elements = []
+    for elem, count in matches:
+        count = int(count) if count else 1
+        elements.extend([elem] * count)
+    # Create a simple cubic lattice with lattice constant 5.0 Å
+    # Place atoms at fractional coordinates along a line (1D chain) for simplicity
+    n_atoms = len(elements)
+    lattice = np.eye(3) * 5.0
+    frac_coords = np.zeros((n_atoms, 3))
+    for i in range(n_atoms):
+        frac_coords[i] = [i / max(n_atoms, 1), 0.0, 0.0]
+    species = elements
+    structure = Structure(lattice, species, frac_coords, coords_are_cartesian=False)
+    return structure
+
+def structure_to_graph(structure: Structure) -> Data:
+    """
+    Convert a pymatgen Structure to a PyTorch Geometric Data object.
+    Uses VoronoiNN to determine neighbor edges.
+    """
+    # Node features: atomic number, valence electrons, atomic mass, Debye temperature
+    node_features = []
+    for site in structure.sites:
+        elem = site.specie.symbol
+        atomic_num = site.specie.Z
+        valence = VALENCE.get(elem, 0)
+        mass = ATOMIC_MASS.get(elem, 1.0)
+        debye = DEBYE_TEMP.get(elem, 100.0)
+        node_features.append([atomic_num, valence, mass, debye])
+    x = torch.tensor(node_features, dtype=torch.float32)
+
+    # Get edges using VoronoiNN
+    vnn = VoronoiNN()
+    edges = []
+    for i, site in enumerate(structure.sites):
+        # VoronoiNN returns a dict of {neighbor_index: ...}
+        try:
+            neighbors = vnn.get_nn_info(structure, i)
+            for neighbor in neighbors:
+                j = neighbor['site_index']
+                if i != j:
+                    edges.append([i, j])
+        except Exception:
+            # Fallback: connect to nearest neighbors by distance
+            for j, other in enumerate(structure.sites):
+                if i != j:
+                    dist = site.distance(other)
+                    if dist < 4.0:  # arbitrary cutoff
+                        edges.append([i, j])
+    if not edges:
+        # Fallback: create a simple chain
+        n = len(structure.sites)
+        for i in range(n - 1):
+            edges.append([i, i+1])
+            edges.append([i+1, i])
+    edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()
+
+    return Data(x=x, edge_index=edge_index)
+
+class CrystalGNN(nn.Module):
+    """
+    Graph Neural Network for predicting Tc from crystal structure.
+    Uses GCNConv layers and global mean pooling.
+    """
+    def __init__(self, node_feat_dim: int = 4, hidden_dim: int = 64, num_layers: int = 3):
+        super().__init__()
+        self.convs = nn.ModuleList()
+        self.convs.append(GCNConv(node_feat_dim, hidden_dim))
+        for _ in range(num_layers - 1):
+            self.convs.append(GCNConv(hidden_dim, hidden_dim))
+        self.fc = nn.Sequential(
+            nn.Linear(hidden_dim, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1)
+        )
+
+    def forward(self, data: Data) -> torch.Tensor:
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+        for conv in self.convs:
+            x = conv(x, edge_index)
+            x = torch.relu(x)
+        x = global_mean_pool(x, batch)  # [batch_size, hidden_dim]
+        out = self.fc(x)
+        return out
+
+def train_gnn(database: List[Dict], epochs: int = 200, lr: float = 0.001) -> CrystalGNN:
+    """
+    Train the CrystalGNN on a database of formulas with Tc values.
+    Generates placeholder structures from formulas.
+    """
+    # Build dataset
+    data_list = []
+    targets = []
+    for entry in database:
+        formula = entry['formula']
+        tc = entry['tc']
+        try:
+            structure = generate_structure_from_formula(formula)
+            graph = structure_to_graph(structure)
+            graph.y = torch.tensor([tc], dtype=torch.float32)
+            data_list.append(graph)
+        except Exception as e:
+            print(f"Skipping {formula}: {e}")
+            continue
+    if not data_list:
+        raise ValueError("No valid structures generated from database.")
+
+    # Create DataLoader
+    loader = DataLoader(data_list, batch_size=16, shuffle=True)
+
+    model = CrystalGNN()
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    loss_fn = nn.MSELoss()
+
+    for epoch in range(epochs):
+        total_loss = 0.0
+        for batch in loader:
+            optimizer.zero_grad()
+            pred = model(batch)
+            loss = loss_fn(pred, batch.y.view(-1, 1))
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        if (epoch + 1) % 50 == 0:
+            print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(loader):.4f}")
+    return model
+
+def compare_gnn_vs_pinn(database: List[Dict], test_size: float = 0.2):
+    """
+    Train both GNN and PINN on a train/test split and report MAE/RMSE.
+    """
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+    # Split database
+    train_data, test_data = train_test_split(database, test_size=test_size, random_state=42)
+    print(f"Training samples: {len(train_data)}, Test samples: {len(test_data)}")
+
+    # Train PINN
+    print("\nTraining BCSPINN...")
+    pinn_model = train_pinn(train_data, epochs=500)
+
+    # Train GNN
+    print("\nTraining CrystalGNN...")
+    gnn_model = train_gnn(train_data, epochs=200)
+
+    # Evaluate on test set
+    def extract_features(formula):
+        import re
+        pattern = r'([A-Z][a-z]*)(\d*)'
+        matches = re.findall(pattern, formula)
+        elements = []
+        for elem, count in matches:
+            count = int(count) if count else 1
+            elements.extend([elem] * count)
+        debye_avg = sum(DEBYE_TEMP.get(e, 100) for e in elements) / len(elements)
+        mass_avg = sum(ATOMIC_MASS.get(e, 1.0) for e in elements) / len(elements)
+        valence_avg = sum(VALENCE.get(e, 0) for e in elements) / len(elements)
+        return [debye_avg, mass_avg, valence_avg]
+
+    y_true = []
+    y_pinn = []
+    y_gnn = []
+    for entry in test_data:
+        formula = entry['formula']
+        tc = entry['tc']
+        y_true.append(tc)
+        # PINN prediction
+        feats = extract_features(formula)
+        x = torch.tensor(feats, dtype=torch.float32).view(1, -1)
+        with torch.no_grad():
+            pinn_pred = pinn_model.predict_tc(x).item()
+        y_pinn.append(pinn_pred)
+        # GNN prediction
+        try:
+            structure = generate_structure_from_formula(formula)
+            graph = structure_to_graph(structure)
+            graph.batch = torch.zeros(graph.x.size(0), dtype=torch.long)  # single graph
+            with torch.no_grad():
+                gnn_pred = gnn_model(graph).item()
+        except Exception as e:
+            print(f"GNN prediction failed for {formula}: {e}")
+            gnn_pred = 0.0
+        y_gnn.append(gnn_pred)
+
+    # Compute metrics
+    mae_pinn = mean_absolute_error(y_true, y_pinn)
+    rmse_pinn = np.sqrt(mean_squared_error(y_true, y_pinn))
+    mae_gnn = mean_absolute_error(y_true, y_gnn)
+    rmse_gnn = np.sqrt(mean_squared_error(y_true, y_gnn))
+
+    print("\n========== Comparison Results ==========")
+    print(f"PINN  - MAE: {mae_pinn:.3f} K, RMSE: {rmse_pinn:.3f} K")
+    print(f"GNN   - MAE: {mae_gnn:.3f} K, RMSE: {rmse_gnn:.3f} K")
+    print("========================================")
+
+    return {
+        'pinn': {'mae': mae_pinn, 'rmse': rmse_pinn},
+        'gnn': {'mae': mae_gnn, 'rmse': rmse_gnn}
+    }
+
+def main_gnn():
+    """Main entry point for GNN training and comparison."""
+    import argparse
+    parser = argparse.ArgumentParser(description='GNN-based Tc prediction and comparison with PINN')
+    parser.add_argument('--compare', action='store_true', help='Run comparison between GNN and PINN')
+    parser.add_argument('--train-gnn', action='store_true', help='Train GNN on hydride database')
+    parser.add_argument('--epochs', type=int, default=200, help='Number of training epochs')
+    args = parser.parse_args()
+
+    if args.compare:
+        print("Running GNN vs PINN comparison on hydride database...")
+        compare_gnn_vs_pinn(HYDRIDE_DATABASE)
+    elif args.train_gnn:
+        print("Training CrystalGNN on hydride database...")
+        model = train_gnn(HYDRIDE_DATABASE, epochs=args.epochs)
+        print("Training complete.")
+    else:
+        print("No action specified. Use --compare or --train-gnn.")
+
+# Allow running GNN pipeline via --gnn flag
+if __name__ == "__main__" and "--gnn" in sys.argv:
+    # Remove --gnn and pass remaining args to main_gnn
+    sys.argv.remove("--gnn")
+    main_gnn()
