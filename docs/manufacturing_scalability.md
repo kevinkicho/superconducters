@@ -665,3 +665,30 @@ The most influential parameters on cost are energy cost (contribution 45%), yiel
 
 - [6] Monte Carlo simulation code: `simulate_manufacturing_process()` in `run_pipeline.py` (see repository for full implementation).
 - [7] DOE Hydrogen Program (2022). Hydrogen production cost analysis. https://www.hydrogen.energy.gov/pdfs/22004_h2_production_cost.pdf
+
+## Ambient-Pressure Synthesis Roadmap
+
+### Step 1: Candidate Selection
+- Identify top hydride candidates (e.g., LaH10, H3S, carbonaceous sulfur hydride) based on high Tc and structural stability under pressure.
+- Use DFT to compute formation enthalpies and phonon spectra at ambient pressure with chemical precompression.
+
+### Step 2: Chemical Precompression Strategies
+- **Carbon cages**: Encapsulate hydrogen in C60 or carbon nanotubes to provide internal pressure via van der Waals forces. DFT calculations indicate effective pressures of ~10 GPa can be achieved.
+- **Clathrate structures**: Design clathrate hydrates or metal-organic frameworks (MOFs) with hydrogen-rich guests to stabilize hydrogen at lower external pressures.
+- **Layered compounds**: Intercalate hydrogen into layered materials (e.g., graphene, h-BN) to achieve 2D confinement and enhanced electron-phonon coupling.
+
+### Step 3: DFT-Validated Stability
+- Perform high-throughput DFT screening of candidate precompression matrices.
+- Compute Gibbs free energy at ambient pressure and temperature (300 K) to identify thermodynamically stable phases.
+- Validate phonon dispersion curves for dynamical stability.
+- Target: At least 3 candidates with predicted Tc > 200 K at ambient pressure.
+
+### Step 4: Experimental Validation Timeline
+- **Phase 1 (0–6 months)**: Synthesize carbon cage and clathrate precursors. Use high-pressure diamond anvil cells to test precompression effect up to 10 GPa.
+- **Phase 2 (6–12 months)**: Scale up synthesis using multi-anvil presses. Measure Tc via resistivity and magnetization. Compare with DFT predictions.
+- **Phase 3 (12–24 months)**: Optimize synthesis parameters (temperature, pressure, stoichiometry) to achieve >90% phase purity. Demonstrate reproducibility across multiple batches.
+- **Phase 4 (24–36 months)**: Pilot-scale production (kg batches) using continuous flow reactors with chemical precompression. Target cost < $100/kg.
+
+### References
+- DFT validation methodology is described in docs/theoretical_framework.md.
+- Chemical precompression strategies are based on recent literature (see online research summary in docs/online_research_summary.md).
