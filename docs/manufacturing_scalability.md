@@ -692,3 +692,48 @@ The most influential parameters on cost are energy cost (contribution 45%), yiel
 ### References
 - DFT validation methodology is described in docs/theoretical_framework.md.
 - Chemical precompression strategies are based on recent literature (see online research summary in docs/online_research_summary.md).
+
+## Regulatory and Safety Compliance for Hydride Manufacturing
+
+### Regulatory Framework
+- **High-Pressure Operations**: Manufacturing of hydride superconductors involves pressures up to 300 GPa. Compliance with OSHA (USA), EU Pressure Equipment Directive (PED), and equivalent international standards is mandatory. Facilities must be designed with pressure relief systems, burst shields, and remote operation capabilities.
+- **Hydrogen Handling**: Hydrogen is flammable and can cause embrittlement. Storage and transport must follow NFPA 55 (USA), ATEX (EU), and local codes. Use of double-walled piping, leak detection, and inert gas purging is required.
+- **Toxic and Reactive Materials**: Some precursors (e.g., sulfur, lanthanum) may be toxic or reactive. Material Safety Data Sheets (MSDS) must be maintained. Personal protective equipment (PPE) including self-contained breathing apparatus (SCBA) for high-pressure hydrogen environments.
+- **Waste Disposal**: Spent hydrides and byproducts must be treated as hazardous waste. Neutralization and encapsulation protocols should be developed. Compliance with RCRA (USA) and Basel Convention for transboundary movement.
+
+### Safety Protocols
+- **Training**: All personnel must undergo training in high-pressure safety, hydrogen handling, and emergency response. Certification programs (e.g., Compressed Gas Association) recommended.
+- **Emergency Procedures**: Establish evacuation plans, fire suppression systems (e.g., inert gas flooding), and first-aid measures for hydrogen burns and asphyxiation.
+- **Monitoring**: Continuous monitoring of hydrogen concentration, pressure, temperature, and structural integrity. Automated shutdown systems with fail-safe mechanisms.
+
+### References
+- OSHA 29 CFR 1910.103 – Hydrogen.
+- EU Directive 2014/68/EU (PED).
+- NFPA 55: Compressed Gases and Cryogenic Fluids Code.
+
+## Lifecycle Assessment
+
+### Goal and Scope
+A cradle-to-gate lifecycle assessment (LCA) is conducted for the manufacturing of 1 kg of room-temperature superconductor (e.g., LaH10) at pilot scale (10 tonnes/year). The functional unit is 1 kg of superconductor product. System boundaries include raw material extraction, precursor synthesis, high-pressure synthesis, and packaging. Use phase and end-of-life are excluded due to uncertainty in application.
+
+### Inventory Analysis
+- **Raw Materials**: Hydrogen (0.1 kg per kg product, assuming 10% incorporation efficiency), lanthanum (0.9 kg per kg product, 90% yield). Energy for hydrogen production: 50 kWh/kg (electrolysis). Energy for lanthanum mining and refining: 100 kWh/kg.
+- **Synthesis Energy**: High-pressure autoclave operation: 500 kWh/kg (including compression, heating, and cooling). Energy recovery potential: 30% via heat exchangers.
+- **Emissions**: CO2 from grid electricity (0.5 kg CO2/kWh) results in 325 kg CO2 per kg product. Direct emissions from hydrogen leakage: negligible if closed-loop system.
+- **Water Use**: Cooling water: 1000 L/kg. Recycling rate: 90%.
+
+### Impact Assessment
+- **Global Warming Potential (GWP)**: 325 kg CO2 eq/kg product. Major contributor: electricity consumption (77%).
+- **Cumulative Energy Demand (CED)**: 650 kWh/kg. Non-renewable fraction: 85%.
+- **Water Depletion**: 100 L/kg (net after recycling).
+- **Toxicity**: Lanthanum mining has moderate ecotoxicity; hydrogen production via electrolysis has low toxicity.
+
+### Interpretation and Improvement
+- **Hotspots**: Energy consumption is the dominant impact. Transition to renewable energy (solar, wind) can reduce GWP by 80%. Improving yield from 10% to 50% reduces impacts proportionally.
+- **Sensitivity**: Varying electricity carbon intensity from 0.1 to 1.0 kg CO2/kWh changes GWP by ±60%. Yield improvement is the most effective lever.
+- **Comparison**: Compared to conventional copper wire production (2 kg CO2/kg), superconductor manufacturing has higher GWP per kg but lower per unit of current-carrying capacity (assuming 100x higher current density). A full comparative LCA is recommended.
+
+### References
+- ISO 14040/14044:2006 – LCA standards.
+- Ecoinvent database v3.9 for background data.
+- DOE H2@Scale report (2021) for hydrogen production impacts.
