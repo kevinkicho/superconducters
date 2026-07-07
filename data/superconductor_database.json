@@ -1002,6 +1002,226 @@
     "doi": "10.1007/BF01303701",
     "synthesis_method": "solid state reaction",
     "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+  },
+  {
+    "name": "Tl2Ba2CuO6",
+    "composition": "Tl2Ba2CuO6",
+    "Tc": 90,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Shimakawa et al., Phys. Rev. B 42, 10165 (1990)",
+    "doi": "10.1103/PhysRevB.42.10165",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "HgBa2CuO4",
+    "composition": "HgBa2CuO4",
+    "Tc": 97,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Putilin et al., Nature 362, 226 (1993)",
+    "doi": "10.1038/362226a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "HgBa2CaCu2O6",
+    "composition": "HgBa2CaCu2O6",
+    "Tc": 128,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Schilling et al., Nature 363, 56 (1993)",
+    "doi": "10.1038/363056a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "SmFeAsO0.85F0.15",
+    "composition": "SmFeAsO0.85F0.15",
+    "Tc": 56,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Ren et al., Chin. Phys. Lett. 25, 2215 (2008)",
+    "doi": "10.1088/0256-307X/25/6/080",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "LaFeAsO0.9F0.1",
+    "composition": "LaFeAsO0.9F0.1",
+    "Tc": 26,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Kamihara et al., J. Am. Chem. Soc. 130, 3296 (2008)",
+    "doi": "10.1021/ja800073m",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "BaFe2As2 (Co-doped)",
+    "composition": "Ba(Fe0.9Co0.1)2As2",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Sefat et al., Phys. Rev. Lett. 101, 117004 (2008)",
+    "doi": "10.1103/PhysRevLett.101.117004",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "LiFeAs",
+    "composition": "LiFeAs",
+    "Tc": 18,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Wang et al., EPL 83, 67006 (2008)",
+    "doi": "10.1209/0295-5075/83/67006",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 800 °C"
+  },
+  {
+    "name": "YH6",
+    "composition": "YH6",
+    "Tc": 224,
+    "pressure": 166,
+    "structure": "cubic, Fm-3m",
+    "reference": "Kong et al., Nat. Commun. 12, 2820 (2021)",
+    "doi": "10.1038/s41467-021-23147-3",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 166 GPa, temperature 2000 K"
+  },
+  {
+    "name": "CaC6",
+    "composition": "CaC6",
+    "Tc": 11.5,
+    "pressure": 0,
+    "structure": "hexagonal, R-3m",
+    "reference": "Weller et al., Nat. Phys. 1, 39 (2005)",
+    "doi": "10.1038/nphys0010",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 600 °C"
+  },
+  {
+    "name": "K3C60",
+    "composition": "K3C60",
+    "Tc": 19,
+    "pressure": 0,
+    "structure": "cubic, Fm-3m",
+    "reference": "Hebard et al., Nature 350, 600 (1991)",
+    "doi": "10.1038/350600a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 400 °C"
+  },
+  {
+    "name": "Rb3C60",
+    "composition": "Rb3C60",
+    "Tc": 29,
+    "pressure": 0,
+    "structure": "cubic, Fm-3m",
+    "reference": "Rosseinsky et al., Phys. Rev. Lett. 66, 2830 (1991)",
+    "doi": "10.1103/PhysRevLett.66.2830",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 400 °C"
+  },
+  {
+    "name": "Cs3C60",
+    "composition": "Cs3C60",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "cubic, Fm-3m",
+    "reference": "Ganin et al., Nature 408, 560 (2000)",
+    "doi": "10.1038/35046035",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 400 °C"
+  },
+  {
+    "name": "NbN",
+    "composition": "NbN",
+    "Tc": 16,
+    "pressure": 0,
+    "structure": "cubic, Fm-3m",
+    "reference": "Gavaler et al., J. Appl. Phys. 42, 54 (1971)",
+    "doi": "10.1063/1.1659644",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1200 °C"
+  },
+  {
+    "name": "NbTi",
+    "composition": "NbTi",
+    "Tc": 9.5,
+    "pressure": 0,
+    "structure": "hexagonal, P6/mmm",
+    "reference": "Berlincourt & Hake, Phys. Rev. 131, 140 (1963)",
+    "doi": "10.1103/PhysRev.131.140",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+  },
+  {
+    "name": "V3Si",
+    "composition": "V3Si",
+    "Tc": 17,
+    "pressure": 0,
+    "structure": "cubic, Pm-3n",
+    "reference": "Hardy & Hulm, Phys. Rev. 93, 1004 (1954)",
+    "doi": "10.1103/PhysRev.93.1004",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+  },
+  {
+    "name": "Nb3Sn",
+    "composition": "Nb3Sn",
+    "Tc": 18.3,
+    "pressure": 0,
+    "structure": "cubic, Pm-3n",
+    "reference": "Matthias et al., Phys. Rev. 95, 1435 (1954)",
+    "doi": "10.1103/PhysRev.95.1435",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+  },
+  {
+    "name": "PbMo6S8",
+    "composition": "PbMo6S8",
+    "Tc": 15,
+    "pressure": 0,
+    "structure": "rhombohedral, R-3",
+    "reference": "Fischer et al., Phys. Rev. Lett. 32, 104 (1974)",
+    "doi": "10.1103/PhysRevLett.32.104",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+  },
+  {
+    "name": "YNi2B2C",
+    "composition": "YNi2B2C",
+    "Tc": 15.5,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Cava et al., Nature 367, 252 (1994)",
+    "doi": "10.1038/367252a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "LuNi2B2C",
+    "composition": "LuNi2B2C",
+    "Tc": 16.5,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Cava et al., Nature 367, 252 (1994)",
+    "doi": "10.1038/367252a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "PrOs4Sb12",
+    "composition": "PrOs4Sb12",
+    "Tc": 1.85,
+    "pressure": 0,
+    "structure": "cubic, Im-3",
+    "reference": "Bauer et al., Phys. Rev. B 65, 100506 (2002)",
+    "doi": "10.1103/PhysRevB.65.100506",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 800 °C"
   }
 ]
 
