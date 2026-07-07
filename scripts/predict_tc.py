@@ -483,6 +483,25 @@ def average_debye(formula):
         raise ValueError("No atoms parsed")
     return total_debye / total_atoms
 
+def average_atomic_mass(formula):
+    import re
+    pattern = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
+    total_mass = 0
+    total_atoms = 0
+    for elem, count in pattern:
+        if count == '':
+            count = 1
+        else:
+            count = int(count)
+        if elem in ATOMIC_MASS:
+            total_mass += ATOMIC_MASS[elem] * count
+            total_atoms += count
+        else:
+            raise ValueError(f"Unknown element {elem}")
+    if total_atoms == 0:
+        raise ValueError("No atoms parsed")
+    return total_mass / total_atoms
+
 DATABASE_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
 
 def load_data():
@@ -521,6 +540,7 @@ def train_model():
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import r2_score, mean_squared_error
     import numpy as np
+    import joblib
     data = load_data()
     X = []
     y = []
@@ -531,10 +551,12 @@ def train_model():
         try:
             avg_val = average_valence(formula)
             avg_deb = average_debye(formula)
+            avg_mass = average_atomic_mass(formula)
+            num_elements = len(set(re.findall(r'[A-Z][a-z]*', formula)))
             tc = entry.get('Tc', None)
             if tc is None:
                 continue
-            X.append([avg_val, avg_deb])
+            X.append([avg_val, avg_deb, avg_mass, num_elements])
             y.append(tc)
         except:
             continue
@@ -549,4 +571,37 @@ def train_model():
     r2 = r2_score(y_test, y_pred)
     rmse = mean_squared_error(y_test, y_pred, squared=False)
     print(f"Model trained. Test R² = {r2:.4f}, RMSE = {rmse:.4f} K")
+    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    joblib.dump(rf, model_path)
+    print(f"Model saved to {model_path}")
     return rf
+
+
+def screen_candidates(candidates: List[str], model_path: str = None) -> List[Dict]:
+    """
+    Given a list of candidate formulas (e.g., ['YBa2Cu3O7', 'MgB2']),
+    compute features and use the trained RandomForest model to predict Tc.
+    Returns a list of dicts sorted by predicted Tc descending.
+    """
+    import numpy as np
+    if model_path is None:
+        model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
+    if not os.path.exists(model_path):
+        rf = train_model()
+    else:
+        rf = joblib.load(model_path)
+    results = []
+    for formula in candidates:
+        try:
+            avg_val = average_valence(formula)
+            avg_deb = average_debye(formula)
+            avg_mass = average_atomic_mass(formula)
+            num_elements = len(set(re.findall(r'[A-Z][a-z]*', formula)))
+            features = np.array([[avg_val, avg_deb, avg_mass, num_elements]])
+            tc_pred = rf.predict(features)[0]
+            results.append({'formula': formula, 'predicted_tc': round(tc_pred, 2)})
+        except Exception as e:
+            results.append({'formula': formula, 'error': str(e)})
+    results.sort(key=lambda x: x.get('predicted_tc', -1), reverse=True)
+    return results
