@@ -414,3 +414,48 @@ To ensure continuous operation of the experimental feedback loop, the pipeline c
 ```
 
 This ensures the pipeline runs reliably and its health is observable.
+
+
+## Real-Time Lab Instrument Integration
+
+To enable real-time data acquisition from laboratory instruments, the feedback loop integrates directly with measurement devices via standardized communication protocols. The following protocols are supported:
+
+- **GPIB (IEEE-488)**: Used for legacy instruments (e.g., Keithley sourcemeters, Lakeshore temperature controllers). The `pyvisa` library provides a Python interface for GPIB communication. A dedicated script `scripts/instrument_gpib.py` handles device discovery, command sending, and data retrieval.
+- **TCP/IP (Ethernet)**: Modern instruments (e.g., Quantum Design PPMS, MPMS, SQUID magnetometers) expose TCP/IP sockets or REST APIs. The `scripts/instrument_tcp.py` module implements a client that connects to the instrument's IP address and port, sends measurement commands (e.g., temperature sweep, field ramp), and streams data back to the ingestion pipeline.
+- **Serial (RS-232)**: For instruments with serial ports (e.g., cryogenic temperature controllers, pressure gauges), the `pyserial` library is used. The `scripts/instrument_serial.py` script handles baud rate, parity, and data framing.
+
+All instrument drivers are registered in a central configuration file (`config/instruments.yaml`) that maps instrument IDs to their communication parameters. The pipeline's file watcher (`scripts/watch_experimental_data.py`) can also be configured to listen for instrument-triggered events (e.g., a measurement completion signal) to initiate data ingestion immediately.
+
+## Docker Deployment
+
+The entire experimental feedback loop pipeline can be containerized using Docker for reproducible and portable deployment. A `Dockerfile` is provided at the project root that builds an image containing:
+
+- Python 3.10 runtime with all dependencies (numpy, scipy, pandas, psycopg2, pyvisa, pyserial, scikit-learn, etc.)
+- The project source code (`scripts/`, `config/`, `models/`)
+- A PostgreSQL client for database connectivity
+
+A `docker-compose.yml` file orchestrates the following services:
+
+- **pipeline**: The main container that runs `scripts/run_pipeline.py` as a scheduled cron job (or continuously with a sleep loop). It mounts the host directories for raw data (`/data/raw`) and logs (`/data/logs`).
+- **database**: A PostgreSQL container (official image) with persistent volume for data storage. The schema is initialized via an SQL script (`config/init_db.sql`).
+- **monitoring**: (Optional) A Prometheus + Grafana stack to visualize pipeline metrics (e.g., ingestion rate, Tc distribution, error counts).
+
+To deploy, run:
+
+```bash
+docker-compose up -d
+```
+
+Environment variables (e.g., database URL, instrument IPs) are configured in a `.env` file. The Docker setup ensures that the pipeline can be deployed on any Linux server or cloud VM with minimal configuration.
+
+## Authentication and API Security
+
+If the feedback loop is exposed as a REST API (e.g., for remote experiment submission or querying candidate rankings), authentication and authorization are enforced. The API is built with FastAPI and uses the following security measures:
+
+- **JWT-based authentication**: Users obtain a token by POSTing credentials to `/auth/login`. The token is signed with a secret key and includes an expiration time. All subsequent API requests must include the token in the `Authorization: Bearer <token>` header.
+- **Role-based access control (RBAC)**: Two roles are defined: `admin` (can ingest data, trigger retraining, manage users) and `viewer` (can only read candidate rankings and experiment summaries). Permissions are enforced via FastAPI dependencies.
+- **HTTPS**: In production, the API is served behind a reverse proxy (e.g., Nginx) that terminates TLS. The Docker Compose file includes a `nginx` service with a self-signed certificate for development; for production, a Let's Encrypt certificate should be configured.
+- **Rate limiting**: To prevent abuse, the API applies rate limiting (e.g., 100 requests per minute per user) using the `slowapi` middleware.
+- **Input validation**: All API endpoints validate request bodies against Pydantic schemas, rejecting malformed or out-of-range data.
+
+Authentication credentials and API keys are stored in environment variables (not in the codebase) and are loaded at runtime. The `config/auth.yaml` file defines the role mappings and token expiration settings.
