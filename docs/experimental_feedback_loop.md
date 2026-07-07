@@ -318,3 +318,35 @@ loop:
 - `docs/synthesis_methods.md` details experimental protocols.
 
 This loop ensures that computational resources are focused on the most promising candidates while continuously learning from experimental outcomes.
+
+## Automated Experiment Planning via Bayesian Optimization
+
+Bayesian optimization (BO) provides a principled framework for selecting the next experiment to maximize information gain or expected improvement in Tc. The BO surrogate model (e.g., Gaussian process) is trained on the existing database of experimental results and computational predictions. The acquisition function (e.g., expected improvement, upper confidence bound) balances exploration of uncertain regions with exploitation of high-performing candidates.
+
+### Integration with Active Learning Loop
+
+The BO module (`scripts/bayesian_optimizer.py`) is called after each round of experimental characterization. It takes as input:
+- The current database of measured Tc and synthesis parameters.
+- The candidate pool from `docs/candidate_materials.md`.
+- Uncertainty estimates from the ML model and DFT validation.
+
+The optimizer outputs a ranked list of the next experiments to perform, including suggested synthesis parameters (e.g., pressure, temperature, doping level). These recommendations are forwarded to the experimental team via the prioritized candidate list.
+
+### Workflow
+
+1. **Update database** with latest experimental results (as described in Data Ingestion Protocol).
+2. **Retrain surrogate model** on the expanded dataset.
+3. **Compute acquisition function** for all candidates in the pool.
+4. **Select top-N candidates** with highest acquisition value.
+5. **Generate synthesis parameters** for each selected candidate (e.g., via parameter optimization within BO).
+6. **Append to prioritized list** in `docs/candidate_materials.md` with BO score and suggested parameters.
+7. **Experimental team** executes the planned experiments.
+8. **Loop back** to step 1.
+
+This automated planning reduces human bias and accelerates the discovery of optimal synthesis conditions for room-temperature superconductors.
+
+### Cross-References
+
+- `scripts/bayesian_optimizer.py` implements the BO loop.
+- `scripts/run_pipeline.py` orchestrates the integration of BO with the existing feedback loop.
+- `docs/candidate_materials.md` receives the BO-ranked candidates.
