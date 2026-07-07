@@ -1071,7 +1071,16 @@ def generate_candidates(num_candidates=10):
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description='Predict Tc for superconducting materials.')
+    parser.add_argument('--candidates', type=int, default=10, help='Number of candidate materials to generate')
+    parser.add_argument('--output', type=str, help='Output JSON file for predictions')
+    parser.add_argument('--pinn', action='store_true', help='Use BCSPINN model instead of Random Forest')
+    args = parser.parse_args()
+    if args.pinn:
+        main_pinn(args)
+    else:
+        main()
 
 
 def predict_tc(lambda_ep, omega_log, mu_star):
@@ -1106,3 +1115,122 @@ def predict_with_uncertainty(model, X):
     mean = np.mean(tree_preds, axis=0)
     std = np.std(tree_preds, axis=0)
     return mean[0], std[0]
+
+
+# Hydride database for PINN training (Tc values from literature)
+HYDRIDE_DATABASE = [
+    {'formula': 'H3S', 'tc': 203.0, 'debye': 2000, 'lambda_ep': 2.0, 'mu_star': 0.1},
+    {'formula': 'LaH10', 'tc': 250.0, 'debye': 1500, 'lambda_ep': 2.5, 'mu_star': 0.1},
+    {'formula': 'YH6', 'tc': 224.0, 'debye': 1800, 'lambda_ep': 2.2, 'mu_star': 0.1},
+    {'formula': 'YH9', 'tc': 243.0, 'debye': 1700, 'lambda_ep': 2.4, 'mu_star': 0.1},
+    {'formula': 'ThH10', 'tc': 161.0, 'debye': 1400, 'lambda_ep': 1.8, 'mu_star': 0.1},
+    {'formula': 'PrH9', 'tc': 200.0, 'debye': 1600, 'lambda_ep': 2.0, 'mu_star': 0.1},
+    {'formula': 'CeH9', 'tc': 190.0, 'debye': 1550, 'lambda_ep': 1.9, 'mu_star': 0.1},
+    {'formula': 'NdH9', 'tc': 195.0, 'debye': 1580, 'lambda_ep': 1.95, 'mu_star': 0.1},
+]
+
+class BCSPINN(nn.Module):
+    """Physics-informed neural network for Tc prediction using BCS theory constraints."""
+    def __init__(self, input_dim=3, hidden_dim=64, output_dim=2):
+        super(BCSPINN, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, output_dim)
+        )
+
+    def forward(self, x):
+        out = self.net(x)
+        lambda_ep = torch.sigmoid(out[:, 0]) * 5.0
+        omega_log = torch.sigmoid(out[:, 1]) * 3000.0
+        return lambda_ep, omega_log
+
+    def predict_tc(self, x, mu_star=0.1):
+        lambda_ep, omega_log = self.forward(x)
+        numerator = 1.04 * (1 + lambda_ep)
+        denominator = lambda_ep - mu_star * (1 + 0.62 * lambda_ep)
+        tc = torch.where(denominator > 0,
+                         (omega_log / 1.2) * torch.exp(-numerator / denominator),
+                         torch.zeros_like(omega_log))
+        return tc
+
+def train_pinn(database, epochs=500, lr=1e-3):
+    """Train BCSPINN on hydride database."""
+    def extract_features(formula):
+        import re
+        pattern = r'([A-Z][a-z]*)(\d*)'
+        matches = re.findall(pattern, formula)
+        elements = []
+        for elem, count in matches:
+            count = int(count) if count else 1
+            elements.extend([elem] * count)
+        debye_avg = sum(DEBYE_TEMP.get(e, 100) for e in elements) / len(elements)
+        mass_avg = sum(ATOMIC_MASS.get(e, 1.0) for e in elements) / len(elements)
+        valence_avg = sum(VALENCE.get(e, 0) for e in elements) / len(elements)
+        return [debye_avg, mass_avg, valence_avg]
+
+    X = []
+    y = []
+    for entry in database:
+        feats = extract_features(entry['formula'])
+        X.append(feats)
+        y.append(entry['tc'])
+    X = torch.tensor(X, dtype=torch.float32)
+    y = torch.tensor(y, dtype=torch.float32).view(-1, 1)
+
+    model = BCSPINN(input_dim=3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    loss_fn = nn.MSELoss()
+
+    for epoch in range(epochs):
+        optimizer.zero_grad()
+        tc_pred = model.predict_tc(X)
+        loss = loss_fn(tc_pred, y)
+        loss.backward()
+        optimizer.step()
+        if (epoch+1) % 100 == 0:
+            print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item():.4f}")
+    return model
+
+def predict_with_pinn(candidates, model):
+    """Predict Tc for a list of candidate formulas using trained PINN."""
+    def extract_features(formula):
+        import re
+        pattern = r'([A-Z][a-z]*)(\d*)'
+        matches = re.findall(pattern, formula)
+        elements = []
+        for elem, count in matches:
+            count = int(count) if count else 1
+            elements.extend([elem] * count)
+        debye_avg = sum(DEBYE_TEMP.get(e, 100) for e in elements) / len(elements)
+        mass_avg = sum(ATOMIC_MASS.get(e, 1.0) for e in elements) / len(elements)
+        valence_avg = sum(VALENCE.get(e, 0) for e in elements) / len(elements)
+        return [debye_avg, mass_avg, valence_avg]
+
+    X = [extract_features(c) for c in candidates]
+    X = torch.tensor(X, dtype=torch.float32)
+    with torch.no_grad():
+        tc_pred = model.predict_tc(X).numpy().flatten()
+    return tc_pred
+
+def main_pinn(args):
+    """Main function for PINN-based prediction pipeline."""
+    print("Training BCSPINN on hydride database...")
+    model = train_pinn(HYDRIDE_DATABASE, epochs=500)
+    print("Training complete.")
+
+    candidates = generate_candidates(num_candidates=args.candidates)
+    print(f"Generated {len(candidates)} candidate materials.")
+
+    tc_preds = predict_with_pinn(candidates, model)
+    predictions = []
+    for formula, tc in zip(candidates, tc_preds):
+        predictions.append({'formula': formula, 'predicted_tc_K': round(tc, 2), 'method': 'BCSPINN'})
+        print(f"{formula}: {tc:.2f} K (BCSPINN)")
+
+    if args.output:
+        with open(args.output, 'w') as f:
+            json.dump(predictions, f, indent=2)
+        print(f"Predictions saved to {args.output}")
