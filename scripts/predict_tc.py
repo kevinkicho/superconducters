@@ -21,6 +21,11 @@ import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
+import torch
+import torch.nn as nn
+import torch_geometric
+from torch_geometric.nn import GCNConv, global_mean_pool
+from torch_geometric.data import Data, DataLoader
 
 # Standard valence electron counts for common elements
 VALENCE: Dict[str, int] = {
@@ -747,3 +752,144 @@ def retrain_from_new_data(data_path=None):
     joblib.dump(rf, model_path)
     print(f"Model saved to {model_path}")
     return rf
+
+
+# ===== Graph Neural Network for Tc prediction =====
+
+class GraphNeuralNetwork(nn.Module):
+    def __init__(self, node_features=4, hidden_dim=64, num_layers=3, dropout=0.2):
+        super().__init__()
+        self.convs = nn.ModuleList()
+        self.convs.append(GCNConv(node_features, hidden_dim))
+        for _ in range(num_layers - 1):
+            self.convs.append(GCNConv(hidden_dim, hidden_dim))
+        self.lin = nn.Linear(hidden_dim, 1)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, data):
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+        for conv in self.convs:
+            x = conv(x, edge_index)
+            x = torch.relu(x)
+            x = self.dropout(x)
+        x = global_mean_pool(x, batch)
+        x = self.lin(x)
+        return x.squeeze(-1)
+
+def formula_to_graph(formula: str) -> Data:
+    """Convert a chemical formula to a PyG graph where each atom is a node."""
+    pattern = r'([A-Z][a-z]*)(\d*\.?\d*)'
+    elements = re.findall(pattern, formula)
+    node_features = []
+    for elem, count_str in elements:
+        count = float(count_str) if count_str else 1.0
+        for _ in range(int(count)):
+            feats = [
+                VALENCE.get(elem, 0),
+                DEBYE_TEMP.get(elem, 100),
+                ATOMIC_MASS.get(elem, 50),
+                float(len(elements))
+            ]
+            node_features.append(feats)
+    if not node_features:
+        node_features = [[0, 100, 50, 1]]
+    x = torch.tensor(node_features, dtype=torch.float)
+    num_nodes = x.size(0)
+    edge_index = []
+    for i in range(num_nodes):
+        for j in range(num_nodes):
+            if i != j:
+                edge_index.append([i, j])
+    edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+    return Data(x=x, edge_index=edge_index)
+
+def train_gnn(data_list, epochs=100, lr=0.001, batch_size=16):
+    """Train the GNN on a list of (formula, Tc) pairs."""
+    graphs = []
+    targets = []
+    for formula, tc in data_list:
+        try:
+            g = formula_to_graph(formula)
+            g.y = torch.tensor([tc], dtype=torch.float)
+            graphs.append(g)
+        except:
+            continue
+    if len(graphs) < 5:
+        raise ValueError("Not enough data to train GNN")
+    loader = DataLoader(graphs, batch_size=batch_size, shuffle=True)
+    model = GraphNeuralNetwork()
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    criterion = nn.MSELoss()
+    model.train()
+    for epoch in range(epochs):
+        total_loss = 0
+        for batch in loader:
+            optimizer.zero_grad()
+            out = model(batch)
+            loss = criterion(out, batch.y)
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        if (epoch+1) % 20 == 0:
+            print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(loader):.4f}")
+    return model
+
+def predict_with_uncertainty_gnn(model, formula, n_samples=20):
+    """Predict Tc with uncertainty using Monte Carlo dropout."""
+    g = formula_to_graph(formula)
+    g.batch = torch.zeros(g.x.size(0), dtype=torch.long)
+    model.train()
+    preds = []
+    with torch.no_grad():
+        for _ in range(n_samples):
+            pred = model(g)
+            preds.append(pred.item())
+    mean = np.mean(preds)
+    std = np.std(preds)
+    return mean, std
+
+def active_learning_loop_gnn(candidates: list, alpha: float = 1.0, top_n: int = 5, model=None) -> list:
+    """
+    Active learning loop using GNN with uncertainty.
+    Scores candidates as predicted_tc + alpha * uncertainty.
+    """
+    if model is None:
+        raise ValueError("GNN model must be provided")
+    results = []
+    for formula in candidates:
+        try:
+            mean, std = predict_with_uncertainty_gnn(model, formula)
+            score = mean + alpha * std
+            results.append({'formula': formula, 'predicted_tc': round(mean, 2), 'uncertainty': round(std, 2), 'score': round(score, 2)})
+        except Exception as e:
+            results.append({'formula': formula, 'error': str(e)})
+    results.sort(key=lambda x: x.get('score', -1e9), reverse=True)
+    return results[:top_n]
+
+def generate_candidates(base_elements=None, max_elements=3, num_candidates=50):
+    """
+    Generate candidate formulas by combining elements from a list.
+    Simple combinatorial generation for demonstration.
+    """
+    if base_elements is None:
+        base_elements = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne',
+                         'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',
+                         'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn',
+                         'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr',
+                         'Rb', 'Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru', 'Rh', 'Pd', 'Ag', 'Cd',
+                         'In', 'Sn', 'Sb', 'Te', 'I', 'Xe',
+                         'Cs', 'Ba', 'La', 'Hf', 'Ta', 'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg',
+                         'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn']
+    import random
+    candidates = set()
+    while len(candidates) < num_candidates:
+        n_elements = random.randint(1, max_elements)
+        elems = random.sample(base_elements, n_elements)
+        formula = ''
+        for e in elems:
+            count = random.randint(1, 4)
+            formula += e + (str(count) if count > 1 else '')
+        candidates.add(formula)
+    return list(candidates)
+
+# End of GNN additions
