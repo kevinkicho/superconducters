@@ -366,3 +366,31 @@ def test_integration_full_pipeline_with_feedback_loop(tmp_path):
         assert model2 is not model
     finally:
         monkeypatch.undo()
+
+
+def test_confidence_interval():
+    """Test that predict_tc_with_uncertainty returns a valid confidence interval."""
+    tc, ci = ptc.predict_tc_with_uncertainty("H3S", pressure=155)
+    assert isinstance(tc, float)
+    assert 180 <= tc <= 220
+    assert isinstance(ci, float)
+    assert ci > 0
+    assert ci < 50  # reasonable uncertainty bound
+
+
+def test_single_input_uncertainty():
+    """Edge case: single candidate returns valid uncertainty."""
+    tc, ci = ptc.predict_tc_with_uncertainty("H3S", pressure=155)
+    assert isinstance(tc, float)
+    assert isinstance(ci, float)
+    assert ci > 0
+
+
+def test_missing_features():
+    """Edge case: missing Debye temperature raises appropriate error or returns None."""
+    # Assume a material without Debye temperature data raises ValueError
+    with pytest.raises(ValueError):
+        ptc.predict_tc_with_uncertainty("UnknownMaterial", pressure=100)
+    # Alternatively, if the function returns None for missing features, test that
+    # result = ptc.predict_tc_with_uncertainty("UnknownMaterial", pressure=100)
+    # assert result is None
