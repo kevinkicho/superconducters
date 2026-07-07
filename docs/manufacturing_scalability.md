@@ -383,3 +383,12 @@ We analyze the break-even production volume required to achieve a target selling
 - At $100/kg, break-even is reached at 4,920 tonnes/year.
 - At $50/kg, break-even is reached at 12,780 tonnes/year.
 - All scenarios assume baseline variable cost; further cost reductions (e.g., cheaper precursors, higher yield) would lower break-even volumes.
+
+
+## Dynamic Cost Model
+
+The static cost estimates above assume fixed parameters. In practice, costs fluctuate with market conditions, feedstock prices, and process efficiencies. To capture this, we have implemented a dynamic cost model in `run_pipeline.py` that simulates cost trajectories under varying scenarios. The model uses Monte Carlo sampling of key input distributions (precursor cost, energy cost, yield, capital depreciation rate) to produce probabilistic cost forecasts. It also incorporates a learning curve effect: for each doubling of cumulative production, unit cost decreases by a configurable percentage (default 15%). The model outputs a range of expected costs (P10, P50, P90) at target production volumes, enabling risk-aware decision-making.
+
+### Reference Implementation
+
+The dynamic cost model is implemented in the `DynamicCostModel` class in `run_pipeline.py`. The class is instantiated with a configuration dictionary (e.g., `config.yaml`) and exposes a `simulate(volume, n_trials=10000)` method that returns a dictionary of percentiles. The script also includes a CLI entry point to run sensitivity analyses and generate plots. See `run_pipeline.py` for full documentation and usage examples.
