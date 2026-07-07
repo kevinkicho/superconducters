@@ -1,19 +1,9 @@
 {
   "schemaVersion": 1,
   "runId": "e0660fdb-c383-420f-91a2-a8c4bc671ef2",
-  "updatedAt": 1783456555806,
-  "lastCycle": 36,
+  "updatedAt": 1783456621734,
+  "lastCycle": 37,
   "observations": [
-    {
-      "kind": "finding",
-      "text": "Scheduled pipeline execution function (e.g., using schedule library) is missing from scripts/run_pipeline.py, and docs/experimental_feedback_loop.md does not include scheduling details. — Add a function `run_pipeline_scheduled()` that uses the `schedule` library to run the pipeline at configurable intervals (e.g., daily). Update docs/experimental_feedback_loop.md with a new subsection 'Scheduled A",
-      "cycle": 25,
-      "agentId": "agent-2",
-      "files": [
-        "scripts/run_pipeline.py"
-      ],
-      "at": 1783455592516
-    },
     {
       "kind": "finding",
       "text": "Comprehensive HTML report generation using Jinja2 templates is not implemented in scripts/run_pipeline.py, and docs/experimental_feedback_loop.md lacks a description of report generation. — Add a function `generate_html_report()` that uses Jinja2 to create an HTML report with plots and tables from the latest pipeline run. Update docs/experimental_feedback_loop.md with a subsection 'Automated Repor",
@@ -1155,6 +1145,15 @@
         "tests/test_run_pipeline.py"
       ],
       "at": 1783456545981
+    },
+    {
+      "kind": "commit",
+      "text": "Add a new integration test in tests/test_run_pipeline.py that runs the full pipeline with real experimental data from a recent (2025) paper on room-temperature superconductivity (e.g., from arXiv) and verifies that the pipeline's top candidate matches the paper's reported compound within a tolerance, ensuring the pipeline is validated against the latest experimental results.",
+      "cycle": 37,
+      "files": [
+        "tests/test_run_pipeline.py"
+      ],
+      "at": 1783456604211
     }
   ]
 }

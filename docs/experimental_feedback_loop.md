@@ -539,3 +539,74 @@ curl -X POST https://pipeline.example.com/api/v1/experiments/exp-5678/results \
 ```
 
 This case study demonstrates how the experimental feedback loop can be extended to external high-pressure synthesis labs, enabling rapid iteration and data-driven discovery of room-temperature superconductors.
+
+## Failure Recovery and Resilience
+
+### Failure Modes
+
+The experimental feedback loop is subject to several failure modes that can disrupt the cycle:
+
+1. **Data Ingestion Failures**: Raw data files may be malformed, incomplete, or fail schema validation. Network interruptions can cause partial uploads. Parser scripts may encounter unexpected formats.
+2. **Model Training Failures**: ML model retraining may fail due to insufficient data, numerical instability, or resource exhaustion (e.g., GPU memory). Updated candidate rankings may not be generated.
+3. **Lab API Failures**: External lab partners may experience downtime, authentication errors, or return invalid payloads. The central pipeline must handle timeouts and retries gracefully.
+4. **Database Failures**: Connection loss, deadlocks, or schema migrations can block ingestion and query operations.
+5. **File Watcher Failures**: The file watcher may miss new files due to permission issues, disk full, or race conditions.
+
+### Recovery Strategy
+
+#### 1. Retry with Exponential Backoff
+
+All network-dependent operations (API calls, database connections, file transfers) implement automatic retry with exponential backoff (initial delay 1s, max 5 retries, jitter). The retry logic is centralized in `scripts/retry_utils.py` and applied to:
+
+- Lab API experiment submission and result retrieval
+- Database insert and update operations
+- File watcher polling and parsing
+
+#### 2. Dead Letter Queue (DLQ)
+
+Failed ingestion records are moved to a dead letter queue (DLQ) stored in the `failed_ingestions` table. Each record includes:
+
+- Original payload (raw data)
+- Error type and message
+- Timestamp of failure
+- Retry count
+
+A periodic job (`scripts/retry_failed_ingestions.py`) attempts to reprocess DLQ entries every 6 hours. After 3 consecutive failures, the record is flagged for manual review and an alert is sent to the operations team.
+
+#### 3. Fallback Model Versions
+
+If model retraining fails, the pipeline retains the previous model version and continues serving candidate rankings from it. A warning is logged and the `model_versions` table records the failed attempt with error details. The system automatically retries training on the next batch of experiments.
+
+#### 4. Health Checks and Alerts
+
+A health check endpoint (`GET /api/v1/health`) monitors:
+
+- Database connectivity and replication lag
+- File watcher status (last file processed, queue depth)
+- Model training service availability
+- Lab API reachability (via periodic ping)
+
+Alerts are sent via email and Slack webhook when any health check fails for more than 5 minutes. Critical failures (e.g., database down) trigger an immediate page to the on-call engineer.
+
+#### 5. Manual Override Procedures
+
+For cases where automated recovery fails, operators can:
+
+- Manually re-ingest data via the admin panel (`POST /api/v1/admin/ingest`)
+- Force a model retrain with specific parameters
+- Roll back to a previous model version
+- Edit or delete erroneous experiment records
+
+All manual actions are logged in an audit trail for traceability.
+
+### Resilience Testing
+
+The recovery strategy is validated through periodic resilience tests:
+
+- **Chaos Engineering**: Randomly inject failures (network drops, database disconnects, malformed files) in a staging environment and verify the system recovers within defined SLAs.
+- **Load Testing**: Simulate high-throughput ingestion (100+ experiments per minute) to ensure the pipeline does not degrade under stress.
+- **Disaster Recovery Drill**: Quarterly full recovery test from a backup, including database restore and model re-deployment.
+
+### Continuous Improvement
+
+All failure events are recorded in a centralized log (Elasticsearch) and analyzed weekly to identify patterns. Root cause analysis is performed for each class of failure, and the recovery strategy is updated accordingly. The `docs/failure_recovery_log.md` tracks historical incidents and lessons learned.
