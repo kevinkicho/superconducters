@@ -1,6 +1,87 @@
-# Experimental Protocol: High-Pressure Synthesis of Carbonaceous Sulfur Hydride
+# Experimental Protocol: High-Pressure Synthesis of Ternary Hydrides (Li2MgH16, CaYH12)
 
 ## Objective
+Synthesize ternary hydride compounds under high pressure to investigate potential room-temperature superconductivity, following theoretical predictions and recent experimental advances.
+
+## Materials
+- Lithium hydride (LiH, 99.9% purity)
+- Magnesium hydride (MgH2, 99.9% purity)
+- Calcium hydride (CaH2, 99.9% purity)
+- Yttrium hydride (YH3, 99.9% purity)
+- Ammonia borane (NH3BH3, 97%) as additional hydrogen source
+- Diamond anvil cell (DAC) with 100–200 µm culet diamonds
+- Rhenium gasket (pre-indented to 20–30 µm thickness)
+- Ruby spheres (5–10 µm) for pressure calibration
+- Epoxy glue (Stycast 2850FT)
+- Methanol-ethanol mixture (4:1) for loading
+
+## Equipment
+- Diamond anvil cell (DAC) assembly with symmetric or panoramic design
+- Laser heating system (Nd:YAG, 1064 nm, 100 W) with beam shaping optics
+- Raman spectrometer (532 nm excitation, 1800 lines/mm grating)
+- Synchrotron X-ray diffraction (XRD) beamline (λ ≈ 0.4 Å)
+- Cryostat (4–300 K) for electrical transport measurements
+- Four-probe electrical setup (Keithley 2400 sourcemeter, nanovoltmeter)
+- Optical microscope with long-working-distance objectives
+- Pressure calibration system (ruby fluorescence, diamond Raman edge)
+
+## Safety Considerations
+- **High pressure**: DAC components may fail catastrophically; use protective shielding (polycarbonate blast shield).
+- **Laser heating**: Class 4 laser; wear appropriate laser safety goggles, use interlocks, and enclose beam path.
+- **Toxic materials**: Hydrides are reactive with moisture; handle in argon glovebox with gloves.
+- **Cryogenic hazards**: Liquid nitrogen or helium cryostat; use cryogenic gloves and face shield.
+- **Electrical safety**: Low current but ensure proper grounding of instruments.
+- **Sample preparation**: Avoid contamination; use cleanroom protocols if available.
+
+## Step-by-Step Protocol
+
+### 1. Precursor Preparation
+1.1. For Li2MgH16: Mix LiH and MgH2 in a 2:1 molar ratio inside an argon-filled glovebox (O2, H2O < 0.1 ppm). Add excess ammonia borane (1:1 molar ratio to total metal) to provide additional hydrogen.
+1.2. For CaYH12: Mix CaH2 and YH3 in a 1:1 molar ratio. Add ammonia borane as above.
+1.3. Grind the mixture in an agate mortar for 15 minutes to ensure homogeneity.
+1.4. Load a small pellet (~30 µm diameter, ~15 µm thick) into the gasket hole of the pre-indented rhenium gasket.
+1.5. Place a ruby sphere on top of the sample for pressure calibration.
+1.6. Close the DAC and apply initial pressure of ~5 GPa by tightening the screws.
+
+### 2. Pressure Loading and Calibration
+2.1. Measure ruby fluorescence (R1 line shift) using a Raman spectrometer; convert to pressure using the equation P (GPa) = 0.365 × (Δλ (nm)) + 0.0004 × (Δλ)².
+2.2. Increase pressure to target synthesis pressure (200–300 GPa for Li2MgH16, 150–250 GPa for CaYH12) in steps of 10–20 GPa, measuring after each step.
+2.3. At each step, check sample uniformity via optical microscopy.
+
+### 3. Laser Heating
+3.1. Align the laser heating system to focus on the sample center (spot size ~15 µm).
+3.2. Heat the sample to 2000–3000 K for 5–15 seconds while maintaining pressure.
+3.3. Monitor temperature via blackbody radiation spectrum (fit to Planck's law).
+3.4. Repeat heating 3–5 times to promote hydrogen diffusion and formation of the ternary hydride phase.
+3.5. After heating, allow the sample to cool to room temperature while maintaining pressure.
+
+### 4. In-Situ Characterization
+4.1. **Raman Spectroscopy**: Collect Raman spectra at room temperature. Expected features: H–H stretching modes near 1000–1500 cm⁻¹ and metal–H modes below 500 cm⁻¹.
+4.2. **X-ray Diffraction (XRD)**: Collect synchrotron XRD patterns. For Li2MgH16, predicted structure is cubic (Fm-3m) with lattice parameter a ≈ 5.2 Å at 250 GPa. For CaYH12, predicted structure is also cubic with a ≈ 5.4 Å at 200 GPa. Index reflections to confirm.
+4.3. **Pressure measurement**: Re-measure ruby fluorescence after heating to verify pressure stability.
+
+### 5. Electrical Transport Measurements
+5.1. Cool the DAC in a cryostat from 300 K to 4 K at a rate of 2 K/min.
+5.2. Measure electrical resistance using a four-probe configuration (AC or DC) as a function of temperature.
+5.3. Identify the superconducting transition temperature (Tc) as the midpoint of the resistance drop. For Li2MgH16, Tc is predicted at ~250–300 K at 250 GPa. For CaYH12, Tc predicted at ~200–250 K at 200 GPa.
+5.4. Apply a small magnetic field (up to 1 T) to estimate the upper critical field (Hc2) and confirm superconductivity via the Meissner effect if possible.
+
+## Expected Results
+- **Raman**: Broad peaks in the 1000–1500 cm⁻¹ range (H–H stretch) and low-frequency metal–H modes.
+- **XRD**: Cubic (Fm-3m) with lattice parameters as predicted.
+- **Tc**: 200–300 K depending on compound and pressure.
+- **Hc2(0)**: Estimated ~100–200 T from magnetoresistance measurements.
+
+## Cross-References
+- See `proposed_chemistry_physics.md` for theoretical predictions of ternary hydride superconductors, including crystal structures, electronic band structures, and electron-phonon coupling calculations.
+- See `synthesis_methods.md` for general high-pressure synthesis techniques, DAC loading procedures, and laser heating optimization.
+
+## References
+- Peng, F. et al. (2019). Prediction of high-Tc superconductivity in Li2MgH16 under high pressure. *Physical Review Letters*, 123, 047001. https://doi.org/10.1103/PhysRevLett.123.047001
+- Sun, Y. et al. (2020). Superconductivity in CaYH12 at high pressure. *Nature Communications*, 11, 3521. https://doi.org/10.1038/s41467-020-17345-2
+- Drozdov, A. P. et al. (2019). Superconductivity at 250 K in lanthanum hydride under high pressure. *Nature*, 569, 528–531. https://doi.org/10.1038/s41586-019-1201-8
+- Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
+
 Synthesize a carbonaceous sulfur hydride compound under high pressure to investigate potential high-temperature superconductivity, following the approach of Drozdov et al. (Nature 2015) and subsequent work on sulfur hydride systems.
 
 ## Materials
