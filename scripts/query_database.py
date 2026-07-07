@@ -22,6 +22,9 @@ import sys
 import os
 import urllib.request
 import urllib.parse
+import logging
+import time
+import re
 
 DATABASE_PATH = "data/superconductor_database.json"
 
@@ -432,3 +435,66 @@ def fetch_materials_project_data(compositions, api_key, db_path="data/supercondu
     with open(db_path, "w") as f:
         json.dump(db, f, indent=2)
     return new_entries
+
+
+def query_supercon_database(db_path=DATABASE_PATH, max_entries=100):
+    """Query the SuperCon database API and update local database with new entries."""
+    logger = logging.getLogger(__name__)
+    # SuperCon API endpoint (public)
+    base_url = "https://supercon.nims.go.jp/api/v1/superconductors"
+    params = {"format": "json", "limit": max_entries, "order": "id desc"}
+    url = base_url + "?" + urllib.parse.urlencode(params)
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as response:
+            data = json.loads(response.read().decode())
+    except Exception as e:
+        logger.error("Failed to fetch SuperCon data: %s", e)
+        return []
+    # Load existing database
+    if os.path.exists(db_path):
+        with open(db_path, "r") as f:
+            db = json.load(f)
+    else:
+        db = []
+    new_entries = []
+    for item in data:
+        name = item.get("material_name", "")
+        composition = item.get("composition", "")
+        tc = item.get("tc", None)
+        pressure = item.get("pressure", 0)
+        reference = item.get("reference", "")
+        synthesis_method = item.get("synthesis_method", "")
+        mechanism = item.get("mechanism", "")
+        # Duplicate detection by name or composition
+        duplicate = False
+        for existing in db:
+            if existing.get("name") == name or existing.get("composition") == composition:
+                duplicate = True
+                break
+        if duplicate:
+            logger.info("Skipping duplicate: %s", name)
+            continue
+        entry = {
+            "name": name,
+            "composition": composition,
+            "Tc": tc,
+            "pressure": pressure,
+            "synthesis_method": synthesis_method,
+            "mechanism": mechanism,
+            "reference": reference,
+            "feasibility_score": None,
+            "source": "SuperCon"
+        }
+        db.append(entry)
+        new_entries.append(entry)
+        logger.info("Added new entry: %s (Tc=%s K)", name, tc)
+    # Write updated database
+    with open(db_path, "w") as f:
+        json.dump(db, f, indent=2)
+    logger.info("Updated database with %d new entries from SuperCon", len(new_entries))
+    return new_entries
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    query_supercon_database()
