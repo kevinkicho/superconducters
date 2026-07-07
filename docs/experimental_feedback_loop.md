@@ -459,3 +459,83 @@ If the feedback loop is exposed as a REST API (e.g., for remote experiment submi
 - **Input validation**: All API endpoints validate request bodies against Pydantic schemas, rejecting malformed or out-of-range data.
 
 Authentication credentials and API keys are stored in environment variables (not in the codebase) and are loaded at runtime. The `config/auth.yaml` file defines the role mappings and token expiration settings.
+
+
+## External Lab Integration Case Study
+
+This case study describes a hypothetical collaboration with a high-pressure synthesis lab (e.g., a diamond anvil cell facility) to accelerate the discovery of room-temperature superconductors. The lab specializes in synthesizing materials under extreme pressures (up to 300 GPa) and measuring superconducting properties in situ.
+
+### API Endpoints
+
+The lab exposes a REST API (secured via JWT as described above) for automated data exchange:
+
+- **`POST /api/v1/experiments`** — Submit a new experiment request. Payload:
+  ```json
+  {
+    "candidate_id": "cand-1234",
+    "compound": "LaH10",
+    "pressure_range": [150, 200],
+    "temperature_range": [4, 300],
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "precursors": ["La", "H2"],
+    "requested_measurements": ["resistivity", "XRD", "SQUID"]
+  }
+  ```
+- **`GET /api/v1/experiments/{id}`** — Retrieve experiment status and results. Response includes synthesis parameters, measured Tc, transition width, and raw data file URLs.
+- **`POST /api/v1/experiments/{id}/results`** — Push results back to the central database. Payload:
+  ```json
+  {
+    "experiment_id": "exp-5678",
+    "candidate_id": "cand-1234",
+    "tc_onset": 250.0,
+    "tc_midpoint": 248.5,
+    "tc_zero": 247.0,
+    "transition_width": 3.0,
+    "critical_current_density": 1.2e6,
+    "upper_critical_field": 80.0,
+    "sample_purity": 98.5,
+    "meissner_fraction": 0.85,
+    "xrd_pattern_url": "https://lab.example.com/data/exp-5678/xrd.csv",
+    "resistivity_url": "https://lab.example.com/data/exp-5678/resistivity.csv",
+    "operator_notes": "Sample showed sharp transition; minor impurity phase at 2θ=28°"
+  }
+  ```
+
+### Data Format
+
+All experimental data is exchanged in JSON format conforming to the schema defined in `config/experiment_schema.json`. Raw data files (XRD patterns, resistivity curves) are uploaded to a secure S3-compatible object store and referenced by URL. The central pipeline validates the JSON payload against the schema before ingestion.
+
+### Step-by-Step Protocol
+
+1. **Candidate Selection**: The ML pipeline identifies the top 5 candidate compounds (e.g., from `candidate_materials.md`) and sends a batch request to the lab API (`POST /api/v1/experiments` with an array of experiment objects).
+2. **Synthesis and Measurement**: The lab synthesizes each candidate under the specified pressure and temperature conditions using a laser-heated diamond anvil cell. In situ resistivity and XRD measurements are performed as a function of temperature.
+3. **Data Return**: Upon completion, the lab pushes results via `POST /api/v1/experiments/{id}/results`. The payload includes all measured properties and links to raw data.
+4. **Ingestion and Validation**: The central pipeline's file watcher detects the incoming results, parses the JSON, and validates against the schema. Valid records are inserted into the `experiments` and `measurements` tables.
+5. **Model Retraining**: After a configurable batch size (e.g., 10 new experiments), the pipeline triggers automatic retraining of the ML models. Updated candidate rankings are published to `candidate_materials.md`.
+6. **Feedback Loop**: The lab receives updated candidate rankings and can prioritize the next batch of experiments. The cycle repeats, continuously refining predictions.
+
+### Security and Authentication
+
+The lab API uses the same JWT-based authentication as the central pipeline. Each lab partner is issued a unique API key (stored in environment variables) that grants `admin` role permissions for submitting experiments and results. All communication is over HTTPS.
+
+### Example Workflow
+
+```bash
+# Submit experiment request
+curl -X POST https://lab.example.com/api/v1/experiments \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"candidate_id":"cand-1234","compound":"LaH10","pressure_range":[150,200],"temperature_range":[4,300],"synthesis_method":"laser-heated diamond anvil cell","precursors":["La","H2"],"requested_measurements":["resistivity","XRD","SQUID"]}'
+
+# Check status
+curl -X GET https://lab.example.com/api/v1/experiments/exp-5678 \
+  -H "Authorization: Bearer <token>"
+
+# Push results (from lab side)
+curl -X POST https://pipeline.example.com/api/v1/experiments/exp-5678/results \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"experiment_id":"exp-5678","candidate_id":"cand-1234","tc_onset":250.0,"tc_midpoint":248.5,"tc_zero":247.0,"transition_width":3.0,"critical_current_density":1.2e6,"upper_critical_field":80.0,"sample_purity":98.5,"meissner_fraction":0.85,"xrd_pattern_url":"https://lab.example.com/data/exp-5678/xrd.csv","resistivity_url":"https://lab.example.com/data/exp-5678/resistivity.csv","operator_notes":"Sample showed sharp transition; minor impurity phase at 2θ=28°"}'
+```
+
+This case study demonstrates how the experimental feedback loop can be extended to external high-pressure synthesis labs, enabling rapid iteration and data-driven discovery of room-temperature superconductors.
