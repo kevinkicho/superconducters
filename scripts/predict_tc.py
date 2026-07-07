@@ -1471,3 +1471,61 @@ if __name__ == "__main__" and "--gnn" in sys.argv:
     # Remove --gnn and pass remaining args to main_gnn
     sys.argv.remove("--gnn")
     main_gnn()
+
+
+class ModelEnsemble:
+    """Ensemble model combining PINN, GNN, and transformer predictions with validation-performance-based weights."""
+    def __init__(self, pinn_model, gnn_model, transformer_model):
+        self.pinn_model = pinn_model
+        self.gnn_model = gnn_model
+        self.transformer_model = transformer_model
+        self.weights = None
+
+    def compute_weights(self, validation_data):
+        """Compute weights based on validation MAE (inverse of MAE)."""
+        y_true = [entry['tc'] for entry in validation_data]
+        mae_list = []
+        for model in [self.pinn_model, self.gnn_model, self.transformer_model]:
+            preds = []
+            for entry in validation_data:
+                pred = model.predict(entry['formula'])
+                preds.append(pred)
+            mae = np.mean(np.abs(np.array(y_true) - np.array(preds)))
+            mae_list.append(mae)
+        inv_mae = [1.0 / (m + 1e-8) for m in mae_list]
+        total = sum(inv_mae)
+        self.weights = [w / total for w in inv_mae]
+        return self.weights
+
+    def predict(self, formula):
+        """Predict Tc using weighted ensemble."""
+        if self.weights is None:
+            raise ValueError("Weights not computed. Call compute_weights first.")
+        preds = [
+            self.pinn_model.predict(formula),
+            self.gnn_model.predict(formula),
+            self.transformer_model.predict(formula)
+        ]
+        return sum(w * p for w, p in zip(self.weights, preds))
+
+    def compare_models(self, test_data):
+        """Compare ensemble MAE/RMSE with individual models."""
+        y_true = [entry['tc'] for entry in test_data]
+        model_names = ['PINN', 'GNN', 'Transformer', 'Ensemble']
+        model_preds = {}
+        for name, model in zip(model_names[:3], [self.pinn_model, self.gnn_model, self.transformer_model]):
+            preds = [model.predict(entry['formula']) for entry in test_data]
+            model_preds[name] = preds
+        ensemble_preds = [self.predict(entry['formula']) for entry in test_data]
+        model_preds['Ensemble'] = ensemble_preds
+
+        print("\n========== Model Comparison ==========")
+        for name in model_names:
+            preds = model_preds[name]
+            mae = np.mean(np.abs(np.array(y_true) - np.array(preds)))
+            rmse = np.sqrt(np.mean((np.array(y_true) - np.array(preds))**2))
+            print(f"{name:12s} - MAE: {mae:.3f} K, RMSE: {rmse:.3f} K")
+        print("======================================")
+        return {name: {'mae': np.mean(np.abs(np.array(y_true) - np.array(model_preds[name]))),
+                        'rmse': np.sqrt(np.mean((np.array(y_true) - np.array(model_preds[name]))**2))}
+                for name in model_names}
