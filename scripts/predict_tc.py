@@ -1045,5 +1045,30 @@ def main():
         print(f"Predictions saved to {args.output}")
 
 
+# Embedded database of known A15 superconducting compounds (formula, Tc in K)
+DATABASE = [
+    {'formula': 'Nb3Sn', 'tc': 18.3},
+    {'formula': 'Nb3Al', 'tc': 18.9},
+    {'formula': 'Nb3Ge', 'tc': 23.2},
+    {'formula': 'V3Si', 'tc': 17.1},
+    {'formula': 'V3Ga', 'tc': 16.5},
+    {'formula': 'Nb3Ga', 'tc': 20.3},
+    {'formula': 'Nb3In', 'tc': 9.2},
+    {'formula': 'Mo3Os', 'tc': 12.0},
+    {'formula': 'Mo3Ir', 'tc': 8.0},
+    {'formula': 'Ta3Sn', 'tc': 8.4},
+]
+
+
+def generate_candidates(num_candidates=10):
+    """Generate candidate A15 materials for prediction."""
+    candidates = [
+        'Nb3Sn', 'Nb3Al', 'Nb3Ge', 'V3Si', 'V3Ga',
+        'Nb3Ga', 'Nb3In', 'Mo3Os', 'Mo3Ir', 'Ta3Sn',
+        'Nb3Sb', 'V3Ge', 'Ta3Ge', 'Nb3Pt', 'V3Pt',
+    ]
+    return candidates[:num_candidates]
+
+
 if __name__ == '__main__':
     main()
