@@ -79,3 +79,10 @@
 - **M14 (Year 2-5)**: Expand test coverage to include regression tests for ML models and data pipelines. Automate deployment of model retraining with CI/CD. Achieve >90% coverage.
 - **M15 (Year 5-10)**: Integrate CI with experimental data validation: automated checks for data quality and reproducibility. Implement continuous monitoring of test results.
 - **M16 (Year 10+)**: Extend CI to manufacturing QC data pipelines. Ensure all software and firmware updates pass rigorous testing before deployment.
+
+
+## GNN Implementation and Validation Milestones
+- **M17 (Year 1-2)**: Implement graph neural network (GNN) model for crystal structure representation and property prediction. Validate on known superconductors from open databases (e.g., SuperCon, Materials Project). Achieve >90% accuracy in predicting Tc for known compounds.
+- **M18 (Year 2-3)**: Integrate GNN with active learning loop to prioritize synthesis of top candidates. Use uncertainty quantification to guide experimental testing. Target 3x improvement in candidate hit rate over random screening.
+- **M19 (Year 3-5)**: Experimental testing of top 100 GNN-predicted candidates using high-throughput synthesis (e.g., combinatorial thin-film deposition) and characterization (resistivity, magnetic susceptibility). Validate predictions and feed results back to retrain GNN.
+- **M20 (Year 5-10)**: Deploy GNN-based screening in manufacturing QC to predict material performance from process parameters. Reduce time-to-market for new wire batches by 50%.
