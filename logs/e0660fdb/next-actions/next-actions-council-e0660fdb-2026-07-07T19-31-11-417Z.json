@@ -1,0 +1,58 @@
+{
+  "preset": "council",
+  "runId": "e0660fdb-c383-420f-91a2-a8c4bc671ef2",
+  "generatedAt": "2026-07-07T19:31:11.418Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "<think>We need to produce a JSON array of up to 8 todos, each with a description and expectedFiles list. The findings from the 4 agents are very consistent. The main issues are:",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Consolidate duplicate documents: move canonical versions to docs/, remove root duplicates, update README links.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Implement predict_tc function in scripts/predict_tc.py using McMillan-Allen-Dynes equation.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Delete duplicate test file tests/tests_predict_tc.py.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Add detailed synthesis protocols for YH10, CaH12, MgH16 in proposed_chemistry_physics.md.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Add sections on electron-phonon coupling, DMFT, and spin fluctuations to theoretical_framework.md.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Fix broken link in README.md to discovery_strategy.md (move file or update link).",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Update docs/online_research_summary.md with findings from at least 5 recent papers (2020+) on hydrides, nickelates, carbon-based systems.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Each todo should reference the files that will be modified/created. For consolidation, expectedFiles should include README.md and the docs/ files that will be updated (and root files to be removed). But we can list the main files.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "\"issue\": \"tests/tests_predict_tc.py is a duplicate test file (likely a typo of test_predict_tc.py). It should be removed to avoid confusion and duplicate test execution.\",",
+      "source": "Agent 4"
+    }
+  ]
+}

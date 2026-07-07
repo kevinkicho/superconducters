@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "e0660fdb-c383-420f-91a2-a8c4bc671ef2",
+  "writtenAt": 1783452671415,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Populate data/superconductor_database.json with verified entries for known superconductors (e.g., NbTi, YBCO, MgB2, FeSe, H3S, LaH10) including Tc, structure, pressure, and reference fields.",
+      "expectedFiles": [
+        "data/superconductor_database.json"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement predict_tc function in scripts/predict_tc.py using the McMillan-Allen-Dynes equation, including parameters for electron-phonon coupling constant, logarithmic average frequency, and Coulomb pseudopotential.",
+      "expectedFiles": [
+        "scripts/predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Delete duplicate test file tests/tests_predict_tc.py (the correct test file is tests/test_predict_tc.py).",
+      "expectedFiles": [
+        "tests/tests_predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Consolidate duplicate documents: move canonical versions to docs/ directory, remove root duplicates (candidate_materials.md, characterization_techniques.md, literature_review.md, synthesis_methods.md, theoretical_framework.md, roadmap.md), and update all cross-references in README.md to point to docs/ versions.\n\nAlso (council-synthesis): Add sections on electron-phonon coupling, dynamical mean-field theory (DMFT), and spin fluctuations to theoretical_framework.md, with equations and references.\n\nAlso (council-synthesis): Fix broken link in README.md to discovery_strategy.md by either moving discovery_strategy.md into docs/ and updating the link, or updating the link to the correct relative path.",
+      "expectedFiles": [
+        "README.md",
+        "docs/candidate_materials.md",
+        "docs/characterization_techniques.md",
+        "docs/literature_review.md",
+        "docs/synthesis_methods.md",
+        "docs/theoretical_framework.md",
+        "docs/roadmap.md",
+        "discovery_strategy.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Add detailed synthesis protocols for YH10, CaH12, and MgH16 in proposed_chemistry_physics.md, including high-pressure synthesis conditions, precursor materials, and characterization steps.",
+      "expectedFiles": [
+        "proposed_chemistry_physics.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update docs/online_research_summary.md with findings from at least 5 recent papers (2020+) on hydrides, nickelates, and carbon-based superconductors, including key results and implications for room-temperature superconductivity.",
+      "expectedFiles": [
+        "docs/online_research_summary.md"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}

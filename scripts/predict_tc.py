@@ -1072,3 +1072,26 @@ def generate_candidates(num_candidates=10):
 
 if __name__ == '__main__':
     main()
+
+
+def predict_tc(lambda_ep, omega_log, mu_star):
+    """
+    Predict superconducting critical temperature (Tc) using the McMillan-Allen-Dynes equation.
+
+    Parameters:
+    lambda_ep (float): Electron-phonon coupling constant (lambda).
+    omega_log (float): Logarithmic average frequency (K).
+    mu_star (float): Coulomb pseudopotential (mu*).
+
+    Returns:
+    float: Predicted Tc in Kelvin.
+    """
+    if lambda_ep <= mu_star:
+        return 0.0  # No superconductivity if lambda <= mu*
+    numerator = 1.04 * (1 + lambda_ep)
+    denominator = lambda_ep - mu_star * (1 + 0.62 * lambda_ep)
+    if denominator <= 0:
+        return 0.0
+    exponent = -numerator / denominator
+    tc = (omega_log / 1.2) * math.exp(exponent)
+    return tc
