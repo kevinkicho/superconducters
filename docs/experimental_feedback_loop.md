@@ -402,3 +402,15 @@ This real-time analysis pipeline complements the existing automated ingestion wo
 - `scripts/update_database.py` — module for inserting parsed data into the database.
 - `scripts/watch_experimental_data.py` — file watcher that triggers parsing.
 - `docs/experimental_feedback_loop.md` — this document (see "Automated Ingestion Workflow" for the broader context).
+
+
+### Deployment as Scheduled Job and Monitoring
+
+To ensure continuous operation of the experimental feedback loop, the pipeline can be deployed as a scheduled job (e.g., cron) that runs at regular intervals. The main entry point is `scripts/run_pipeline.py`, which orchestrates data ingestion, parsing, database updates, and active learning triggers. A function `log_pipeline_status()` is implemented in `run_pipeline.py` to record each execution's outcome. It writes a timestamp, success/failure status, and key metrics (e.g., number of experiments processed, average Tc, pipeline duration) to a log file (e.g., `logs/pipeline_status.log`). This log file can be monitored by external monitoring tools (e.g., Prometheus, Grafana, or simple log watchers) to detect failures, track performance, and trigger alerts. The cron job can be configured as:
+
+```bash
+# Run every hour
+0 * * * * cd /path/to/project && python scripts/run_pipeline.py >> logs/pipeline_cron.log 2>&1
+```
+
+This ensures the pipeline runs reliably and its health is observable.
