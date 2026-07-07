@@ -222,3 +222,50 @@ Based on computational predictions and experimental feasibility, we prioritize t
 | Hydrides (candidate >300 K) | DFT structure prediction (USPEX, AIRSS), EPC, ML for Tc prediction | *PNAS* 117, 23515 (2020); *Phys. Rev. B* 102, 174104 (2020) |
 
 **Note:** Machine learning (ML) is increasingly used for high-throughput screening of candidate materials, predicting Tc from structural and electronic features, and accelerating DFT calculations via surrogate models. See review: *npj Comput. Mater.* 8, 1 (2022).
+
+
+## 3. High-Pressure Hydride Superconductors: H₃S and LaH₁₀
+
+### H₃S (Sulfur Hydride)
+- **Discovery**: First reported by Drozdov et al. (2015) with Tc ~203 K at 155 GPa, marking the first high-temperature superconductor above 200 K. [Source](https://www.nature.com/articles/nature14964)
+- **Structure**: Decomposes to H₃S with a cubic Im3̅m structure at high pressure; sulfur atoms form a body-centered cubic lattice with hydrogen atoms occupying tetrahedral and octahedral sites. [Source](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.114.247001)
+- **Mechanism**: Phonon-mediated pairing via strong electron-phonon coupling (λ ~2.0) from hydrogen vibrational modes; the high Tc is explained by the McMillan-Allen-Dynes equation with μ* ~0.1. [Source](https://www.nature.com/articles/nature14964)
+- **Implications**: Demonstrated that simple hydrides can achieve Tc >200 K under pressure, validating the BCS-based prediction of high Tc in hydrogen-rich compounds. Paved the way for exploration of other hydrides (LaH₁₀, YH₁₀, CaH₁₂).
+- **Challenges**: Requires extreme pressure (>150 GPa) for synthesis; sample volumes are microscopic; reproducibility is difficult; the phase is metastable upon decompression.
+
+### LaH₁₀ (Lanthanum Decahydride)
+- **Discovery**: Reported by Drozdov et al. (2019) with Tc ~250 K at 170 GPa, the highest confirmed Tc in any hydride to date. [Source](https://www.nature.com/articles/s41586-019-1201-8)
+- **Structure**: Clathrate-like structure with La atoms forming a face-centered cubic lattice and hydrogen atoms forming H₂ units and H⁻ ions; space group Fm3̅m. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.99.224511)
+- **Mechanism**: Strong electron-phonon coupling (λ ~3.0) from hydrogen vibrations; the high Tc is attributed to the high hydrogen content and the clathrate structure that enhances the density of states at the Fermi level. [Source](https://www.nature.com/articles/s41586-019-1201-8)
+- **Implications**: LaH₁₀ demonstrates that rare-earth hydrides can achieve Tc near room temperature under pressure. It has become a benchmark for computational predictions and experimental verification. The success of LaH₁₀ has motivated searches for ternary hydrides (e.g., La-Y-H, La-Ce-H) that might achieve Tc >300 K at lower pressures.
+- **Challenges**: Requires pressures >150 GPa; synthesis via laser-heated diamond anvil cell (DAC) from La metal and H₂; the phase is only stable above ~100 GPa; contamination from hydrogen diffusion is a concern.
+
+### Implications for Room-Temperature Superconductivity
+- **Pressure reduction strategies**: Alloying with lighter elements (e.g., C, N, O) to stabilize hydride phases at lower pressures; using ternary systems to tune electronic structure and reduce required pressure. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134512)
+- **Metastable retention**: Techniques such as rapid quenching or chemical precompression (e.g., using hydrogen-rich precursors) may allow recovery of high-Tc phases at ambient pressure. [Source](https://www.nature.com/articles/s41586-023-06616-5)
+- **High-throughput screening**: Machine learning and DFT-based structure prediction (USPEX, AIRSS) are accelerating the discovery of new hydride superconductors. [Source](https://npjcompumats.nature.com/articles/s41524-022-00733-z)
+- **Experimental verification**: The retractions of C-S-H and Lu-N-H highlight the need for rigorous replication and data transparency. Future work must prioritize independent confirmation and open data practices.
+
+## 4. Nickelate and Cuprate Analogies with Room-Temperature Potential
+
+### Structural and Electronic Similarities
+- **Cuprates**: Layered perovskite structures with CuO₂ planes; superconductivity emerges from doping an antiferromagnetic Mott insulator; Tc up to ~133 K at ambient pressure (HgBa₂Ca₂Cu₃O₈₊δ) and >150 K under pressure. [Source](https://www.science.org/doi/10.1126/science.abh2273)
+- **Nickelates**: Infinite-layer nickelates (e.g., Nd₀.₈Sr₀.₂NiO₂) have NiO₂ planes isostructural to CuO₂ planes; Tc up to 15 K. Bilayer nickelates (La₃Ni₂O₇) have NiO₂ bilayers with Tc ~80 K under pressure. [Source](https://www.nature.com/articles/s41586-023-06424-7)
+- **Common mechanism**: Both families exhibit antiferromagnetic spin fluctuations as a likely pairing glue; the phase diagrams are similar (dome-shaped Tc vs. doping). [Source](https://www.science.org/doi/10.1126/science.abb7554)
+
+### Key Differences and Opportunities
+- **Band filling**: Cuprates have a single dₓ²₋ᵧ² band crossing the Fermi level; nickelates have additional dₓᵧ and d₃z²⁻ʳ² bands, leading to more complex electronic structure. [Source](https://www.nature.com/articles/s41586-019-1496-5)
+- **Correlation strength**: Nickelates are less correlated than cuprates, which may reduce the pairing strength but also reduce the tendency toward charge ordering. [Source](https://www.science.org/doi/10.1126/science.abb7554)
+- **Pressure effects**: In bilayer nickelates, pressure drives a structural transition that enhances interlayer coupling and raises Tc to 80 K. This suggests that pressure tuning of the electronic structure could push Tc higher. [Source](https://arxiv.org/abs/2307.14876)
+- **Room-temperature potential**: If the pairing mechanism in nickelates is similar to cuprates but with reduced competition from charge order, it may be possible to achieve Tc >100 K at ambient pressure by optimizing doping and strain. The bilayer structure offers an additional tuning knob (interlayer coupling) not present in cuprates. [Source](https://www.nature.com/articles/s41586-023-06424-7)
+
+### Strategies for Room-Temperature Nickelates
+- **Doping optimization**: Systematic exploration of hole and electron doping in infinite-layer and bilayer nickelates using chemical substitution (Sr, Ca, Ba) and oxygen stoichiometry control.
+- **Strain engineering**: Epitaxial strain from substrates (e.g., SrTiO₃, LaAlO₃) can modify the Ni-O bond lengths and enhance Tc. [Source](https://www.nature.com/articles/s41586-019-1496-5)
+- **Pressure-induced phases**: Extending the pressure range for La₃Ni₂O₇ and related compounds (e.g., La₄Ni₃O₁₀) may reveal higher Tc phases. [Source](https://arxiv.org/abs/2307.14876)
+- **Heterostructures**: Artificial superlattices of nickelate and cuprate layers could combine the high Tc of cuprates with the tunability of nickelates.
+
+### Broader Implications
+- The nickelate-cuprate analogy provides a testbed for understanding the universal mechanism of high-Tc superconductivity in transition metal oxides. If a common pairing mechanism is confirmed, it would guide the search for new families with even higher Tc.
+- Room-temperature superconductivity in nickelates would require Tc >300 K, which is far beyond current observations. However, the discovery of Tc ~80 K in La₃Ni₂O₇ under pressure suggests that the potential ceiling is not yet reached.
+- Combining insights from hydrides (high Tc via strong electron-phonon coupling) and nickelates/cuprates (high Tc via electronic correlations) may lead to hybrid materials that exploit both mechanisms.
