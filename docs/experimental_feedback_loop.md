@@ -363,3 +363,42 @@ The multi-fidelity Bayesian optimization (MFBO) module in `scripts/run_pipeline.
 - `scripts/dft_calculator.py` provides high-fidelity DFT data.
 - `docs/candidate_materials.md` receives the MFBO-ranked candidates.
 - `scripts/bayesian_optimizer.py` implements the single-fidelity BO loop (legacy).
+
+## Real-Time Experimental Data Analysis
+
+This subsection describes the pipeline for parsing experimental CSV data, extracting the superconducting transition temperature (Tc), and updating the central database in real time.
+
+### Pipeline Steps
+
+1. **File Detection**: A file watcher (`scripts/watch_experimental_data.py`) monitors the designated `data/experimental/` directory for new CSV files. Each file is expected to follow a standardized naming convention: `{experiment_id}_resistivity.csv`.
+
+2. **CSV Parsing**: The parser script (`scripts/parse_resistivity.py`) reads the CSV file, which contains columns for temperature (K) and resistivity (Ω·cm). It performs the following:
+   - Validates column headers and data types.
+   - Interpolates missing values if gaps are small (< 5 K).
+   - Computes the first and second derivatives of resistivity vs. temperature to identify the onset, midpoint, and zero-resistance temperatures.
+   - Fits a sigmoid function to the transition region to extract Tc (midpoint) and transition width (ΔTc).
+
+3. **Tc Extraction**: The extracted Tc values (onset, midpoint, zero-resistance) along with the transition width are stored in a temporary data structure. The parser also calculates the normal-state resistivity (average above 1.5× Tc) and the residual resistivity ratio (RRR).
+
+4. **Database Update**: The parsed results are inserted into the `measurements` table of the central PostgreSQL database via the `scripts/update_database.py` module. The update includes:
+   - Experiment ID (foreign key to `experiments` table).
+   - Tc onset, midpoint, zero-resistance (K).
+   - Transition width (K).
+   - Normal-state resistivity (Ω·cm).
+   - RRR (dimensionless).
+   - Timestamp of ingestion.
+
+5. **Validation and Logging**: Before insertion, the data is validated against schema constraints (e.g., Tc must be between 0 and 500 K, transition width positive). Invalid records are logged to `logs/ingestion_errors.log` and flagged for manual review. Successful updates are logged with the experiment ID and extracted Tc.
+
+6. **Trigger Downstream Actions**: After a successful database update, the system automatically triggers the active learning loop (see "Automated Experiment Planning via Bayesian Optimization") to retrain the surrogate model and generate new candidate recommendations.
+
+### Integration with Existing Workflow
+
+This real-time analysis pipeline complements the existing automated ingestion workflow described in the "Automated Ingestion Workflow" section. While the existing pipeline handles synchrotron XRD and resistivity data via file watchers, this subsection focuses specifically on the real-time parsing of CSV files and the immediate extraction of Tc. The two pipelines share the same database schema and validation routines, ensuring consistency.
+
+### Cross-References
+
+- `scripts/parse_resistivity.py` — main parser for resistivity CSV files.
+- `scripts/update_database.py` — module for inserting parsed data into the database.
+- `scripts/watch_experimental_data.py` — file watcher that triggers parsing.
+- `docs/experimental_feedback_loop.md` — this document (see "Automated Ingestion Workflow" for the broader context).
