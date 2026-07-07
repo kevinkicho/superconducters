@@ -441,3 +441,46 @@ Cross-references: See [candidate_materials.md](candidate_materials.md) for detai
 | Carbonaceous sulfur hydride | 267 | 5,000 | 50–100 | High (CVD) | Medium (doping + encapsulation) |
 
 Cross-references: See [candidate_materials.md](candidate_materials.md) for detailed material properties and [synthesis_methods.md](synthesis_methods.md) for experimental protocols.
+
+
+## Detailed Experimental Protocol for Top Candidate: Li-Mg-H Ternary Hydride
+
+### Step-by-Step Synthesis Instructions
+1. **Precursor Preparation**: Mix stoichiometric amounts of LiH (99.9% purity, Sigma-Aldrich) and MgH₂ (99.9% purity, Alfa Aesar) in a 1:1 molar ratio inside an argon-filled glovebox (O₂, H₂O < 0.1 ppm). Grind the mixture in an agate mortar for 30 minutes to ensure homogeneity.
+2. **Pelletization**: Load the mixed powder into a 3 mm diameter tungsten carbide die and press at 1 GPa for 5 minutes using a hydraulic press to form a dense pellet (thickness ~0.5 mm).
+3. **High-Pressure Synthesis**: Place the pellet in a diamond anvil cell (DAC) with a rhenium gasket pre-indented to 40 μm thickness. Use a 4:1 methanol-ethanol mixture as pressure-transmitting medium. Compress to 150 GPa at room temperature over 2 hours, then heat to 2000 K using a YAG laser (10 μm spot, 50 W) for 10 seconds. Rapidly quench to room temperature (cooling rate > 1000 K/s).
+4. **Pressure Release**: Decompress slowly (0.5 GPa/min) to ambient pressure while monitoring structural integrity via in-situ Raman spectroscopy. If the sample remains metallic, it can be recovered for ex-situ characterization.
+5. **Characterization**: Measure Tc using four-probe electrical resistivity in a cryostat (1–300 K range). Confirm phase purity via synchrotron X-ray diffraction (λ = 0.6199 Å) at the Advanced Photon Source (beamline 16-ID-B).
+
+### Required Equipment
+- **Glovebox**: Argon-filled, O₂/H₂O < 0.1 ppm (e.g., MBraun Labmaster 130).
+- **Hydraulic Press**: 10-ton capacity with 3 mm die set.
+- **Diamond Anvil Cell**: Boehler-Almax type, 300 μm culet diamonds.
+- **Laser Heating System**: YAG laser (1064 nm, 50 W) with beam shaping optics.
+- **Raman Spectrometer**: Renishaw inVia, 532 nm excitation.
+- **Cryostat**: Janis ST-400, 4-probe configuration.
+- **Synchrotron Beamline**: Access to APS 16-ID-B or equivalent.
+
+### Safety Considerations
+- **High Pressure**: DACs can explode if over-pressurized; use blast shields and remote operation. Maximum safe pressure for 300 μm culet diamonds is 200 GPa.
+- **Laser Hazards**: Class 4 laser; wear appropriate eye protection and use interlocked enclosures.
+- **Hydrogen Gas**: LiH and MgH₂ react with moisture to release H₂; handle only in glovebox. Store in sealed containers under argon.
+- **Cryogenics**: Liquid helium and nitrogen; use cryogenic gloves and face shield.
+
+### Cost Estimates (per 10 mg batch)
+| Item | Cost (USD) |
+|------|------------|
+| LiH (1 g) | 50 |
+| MgH₂ (1 g) | 30 |
+| DAC consumables (gasket, diamonds) | 200 |
+| Laser operation (10 shots) | 100 |
+| Synchrotron beamtime (4 hours) | 400 |
+| Labor (2 days, 2 researchers) | 1000 |
+| **Total** | **1780** |
+
+For scaled production (10,000 tonnes/year), the cost is estimated at $50–100/kg as per the metal hydride route analysis above.
+
+### References
+- [1] Drozdov, A. P. et al. (2015). Conventional superconductivity at 203 K at high pressures in the sulfur hydride system. *Nature*, 525, 73–76. https://doi.org/10.1038/nature14964
+- [2] Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
+- [3] Sun, D. et al. (2021). High-temperature superconductivity in ternary hydrides: A review. *Materials Today Physics*, 21, 100512. https://doi.org/10.1016/j.mtphys.2021.100512
