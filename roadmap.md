@@ -67,3 +67,9 @@
 - **Regulatory and Safety**: Address toxicity (e.g., lead-free alternatives). Obtain regulatory approvals for medical and energy applications.
 - **Cost Reduction**: Optimize raw material sourcing, yield, and processing speed. Target cost < $50/m for wire.
 - **Publication**: Publish commercialization and standardization results in industry journals and conference proceedings.
+
+## Retraining Integration Milestones
+- **M9 (Year 1-2)**: Establish automated pipeline to retrain machine learning models every 6 months with new experimental and computational data. Integrate with open database of results.
+- **M10 (Year 2-5)**: Implement active learning loop: model predictions guide synthesis experiments, and results feed back to retrain models. Target 2x improvement in candidate hit rate.
+- **M11 (Year 5-10)**: Deploy continuous retraining system that updates models in real-time as characterization data is collected. Achieve >90% accuracy in predicting Tc for new compositions.
+- **M12 (Year 10+)**: Integrate retraining with manufacturing QC data to optimize process parameters and predict material performance. Reduce time-to-market for new wire batches by 50%.
