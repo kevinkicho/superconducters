@@ -49,6 +49,12 @@
 - Machine learning and high-throughput DFT are accelerating discovery.
 - Retracted claims highlight the need for rigorous replication and open data.
 
+### 8. Cuprate High-Temperature Superconductors
+- Cuprates (e.g., YBa₂Cu₃O₇, Bi₂Sr₂CaCu₂O₈) exhibit high Tc up to ~135 K at ambient pressure, but not room temperature.
+- The mechanism is unconventional (d-wave pairing, spin fluctuations).
+- Key references: Bednorz & Müller, Z. Phys. B 64, 189 (1986); Wu et al., Phys. Rev. Lett. 58, 908 (1987).
+- Implications: Cuprates demonstrate that high Tc can be achieved at ambient pressure via strong correlations; similar mechanisms may be exploited in nickelates and other layered oxides.
+
 *This summary was compiled from online research (web_search + web_fetch) on 2025-03-28. Sources are cited with URLs.*
 
 
@@ -60,3 +66,4 @@
 - **Develop thin-film deposition techniques** (MBE, PLD) to stabilize metastable phases on substrates, enabling ambient-pressure measurements.
 - **Implement rigorous replication protocols** and open data practices to avoid retracted claims.
 - **Leverage machine learning** to accelerate discovery of novel superhydrides and electride superconductors.
+- **Study cuprate analogs** to understand the role of strong correlations and d-wave pairing in achieving high Tc at ambient pressure, potentially guiding discovery of room-temperature compounds.
