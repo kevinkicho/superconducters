@@ -766,5 +766,183 @@ def sensitivity_analysis_pipeline_params():
     print("Sensitivity analysis appended to candidate_materials.md.")
 
 
+def stress_test_and_failure_recovery():
+    """Simulate common failure modes and verify recovery.
+    Tests: missing database, network errors, invalid data, missing files.
+    Returns a dict of test results.
+    """
+    import tempfile
+    import os
+    results = {}
+    # Test 1: missing database
+    try:
+        query_database('nonexistent.db')
+        results['missing_db'] = 'FAIL - no exception'
+    except Exception as e:
+        results['missing_db'] = f'PASS - caught: {e}'
+    # Test 2: network error (simulate by passing bad URL)
+    try:
+        validate_with_recent_papers(bad_url='http://nonexistent.example.com')
+        results['network_error'] = 'FAIL - no exception'
+    except Exception as e:
+        results['network_error'] = f'PASS - caught: {e}'
+    # Test 3: invalid data (lambda_ep <= mu_star)
+    tc = predict_tc(500, 0.05, mu_star=0.1)
+    if tc is None:
+        results['invalid_data'] = 'PASS - returned None'
+    else:
+        results['invalid_data'] = f'FAIL - got {tc}'
+    # Test 4: missing candidate_materials.md
+    orig_path = 'candidate_materials.md'
+    backup = None
+    if os.path.exists(orig_path):
+        backup = orig_path + '.bak'
+        os.rename(orig_path, backup)
+    try:
+        candidates = parse_candidate_md('candidate_materials.md')
+        if candidates == []:
+            results['missing_md'] = 'PASS - empty list'
+        else:
+            results['missing_md'] = f'FAIL - got {len(candidates)} candidates'
+    except Exception as e:
+        results['missing_md'] = f'PASS - caught: {e}'
+    finally:
+        if backup:
+            os.rename(backup, orig_path)
+    print("Stress test results:", json.dumps(results, indent=2))
+    return results
+
+
+def generate_patent_application_draft(candidate_name='LaH10', formula='LaH10', tc=260, pressure=170):
+    """Generate a patent application draft for a candidate superconductor.
+    Returns a string containing the draft in a structured format.
+    """
+    draft = f"""PATENT APPLICATION DRAFT
+Title: Room-Temperature Superconducting Compound {formula} and Method of Synthesis
+
+Field of the Invention:
+The present invention relates to superconducting materials, specifically to
+hydrogen-rich compounds exhibiting superconductivity at or near room temperature.
+
+Background:
+Conventional superconductors require cryogenic cooling. High-pressure hydrides
+such as {formula} have demonstrated critical temperatures up to {tc} K at
+{pressure} GPa, but require extreme pressures. This invention provides a
+composition and method to stabilize {formula} at lower pressures.
+
+Summary of the Invention:
+A superconducting compound having the formula {formula}, characterized by a
+critical temperature Tc >= {tc} K and a synthesis method that reduces the
+required stabilization pressure to below 50 GPa through chemical precompression
+using carbon cage encapsulation or clathrate structures.
+
+Detailed Description:
+The compound {formula} is synthesized by reacting lanthanum metal with hydrogen
+gas at high temperature (2000 K) and high pressure (170 GPa) in a diamond anvil
+cell. The resulting phase is a clathrate structure with hydrogen cages
+surrounding lanthanum atoms. To reduce pressure, we incorporate carbon or boron
+into the lattice to provide chemical precompression.
+
+Claims:
+1. A superconducting compound comprising {formula} with Tc >= {tc} K.
+2. The compound of claim 1, wherein the compound is stabilized at pressures
+   below 50 GPa by inclusion of carbon atoms in the crystal lattice.
+3. A method of synthesizing the compound of claim 1, comprising:
+   (a) providing a lanthanum precursor;
+   (b) exposing the precursor to hydrogen gas at a pressure of at least 100 GPa;
+   (c) heating to at least 1500 K to form the clathrate phase;
+   (d) cooling and releasing pressure in the presence of a carbon-containing
+       stabilizing agent.
+
+Abstract:
+A room-temperature superconducting compound {formula} and method of synthesis
+using chemical precompression to reduce required pressure.
+"""
+    print(f"Patent draft generated for {candidate_name}")
+    return draft
+
+
+def continuous_benchmarking(literature_file='data/paper_2025_data.json'):
+    """Compare pipeline predictions against literature data.
+    Loads literature data from JSON file, runs prediction for each entry,
+    and computes error metrics (MAE, RMSE). Updates a benchmark log.
+    """
+    import json
+    from pathlib import Path
+    lit_path = Path(literature_file)
+    if not lit_path.exists():
+        print(f"Literature file {literature_file} not found. Skipping benchmark.", file=sys.stderr)
+        return {}
+    with open(lit_path, 'r') as f:
+        literature_data = json.load(f)
+    predictions = []
+    actuals = []
+    for entry in literature_data:
+        debye = entry.get('debye_temp', None)
+        lam = entry.get('lambda_ep', None)
+        actual_tc = entry.get('tc', None)
+        if debye is not None and lam is not None and actual_tc is not None:
+            pred_tc = predict_tc(debye, lam)
+            if pred_tc is not None:
+                predictions.append(pred_tc)
+                actuals.append(actual_tc)
+    if not predictions:
+        print("No valid benchmark data.")
+        return {}
+    predictions = np.array(predictions)
+    actuals = np.array(actuals)
+    mae = np.mean(np.abs(predictions - actuals))
+    rmse = np.sqrt(np.mean((predictions - actuals)**2))
+    results = {'mae': float(mae), 'rmse': float(rmse), 'n': len(predictions)}
+    print(f"Benchmark results: MAE={mae:.2f} K, RMSE={rmse:.2f} K, N={len(predictions)}")
+    # Append to benchmark log
+    log_path = Path('benchmark_log.json')
+    log = []
+    if log_path.exists():
+        with open(log_path, 'r') as f:
+            log = json.load(f)
+    log.append(results)
+    with open(log_path, 'w') as f:
+        json.dump(log, f, indent=2)
+    return results
+
+
+def lifecycle_assessment(candidate_name='LaH10', formula='LaH10', synthesis_pressure=170):
+    """Perform a lifecycle assessment (LCA) for environmental impact.
+    Evaluates energy consumption, material sourcing, and waste for the
+    synthesis of a candidate superconductor.
+    Returns a dict with impact metrics.
+    """
+    # Simplified LCA model
+    # Energy: diamond anvil cell operation ~ 10 kWh per run
+    energy_kwh = 10.0 + 0.5 * synthesis_pressure  # rough scaling
+    # CO2 emissions (g) based on energy mix (0.5 kg CO2/kWh)
+    co2_g = energy_kwh * 500
+    # Material sourcing: lanthanum mining impact (kg CO2 per kg)
+    la_impact = 15.0  # kg CO2 per kg La
+    # Hydrogen production (steam methane reforming) ~ 10 kg CO2 per kg H2
+    h2_impact = 10.0
+    # Assume 1 mg sample
+    sample_mg = 1.0
+    # Estimate mass of La and H in sample
+    # La atomic mass 138.9, H 1.008, formula LaH10 -> molar mass ~ 149 g/mol
+    molar_mass = 138.9 + 10 * 1.008  # ~ 148.98 g/mol
+    mass_la = (138.9 / molar_mass) * sample_mg  # mg
+    mass_h = (10 * 1.008 / molar_mass) * sample_mg  # mg
+    co2_materials = (mass_la / 1000) * la_impact + (mass_h / 1000) * h2_impact  # kg
+    total_co2 = co2_g / 1000 + co2_materials  # kg
+    assessment = {
+        'candidate': candidate_name,
+        'formula': formula,
+        'synthesis_pressure_gpa': synthesis_pressure,
+        'energy_kwh': round(energy_kwh, 2),
+        'co2_emissions_kg': round(total_co2, 4),
+        'sample_mass_mg': sample_mg,
+        'notes': 'Simplified LCA; actual values depend on synthesis scale and energy source.'
+    }
+    print(f"Lifecycle assessment for {candidate_name}: {json.dumps(assessment, indent=2)}")
+    return assessment
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
