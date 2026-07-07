@@ -392,3 +392,30 @@ The static cost estimates above assume fixed parameters. In practice, costs fluc
 ### Reference Implementation
 
 The dynamic cost model is implemented in the `DynamicCostModel` class in `run_pipeline.py`. The class is instantiated with a configuration dictionary (e.g., `config.yaml`) and exposes a `simulate(volume, n_trials=10000)` method that returns a dictionary of percentiles. The script also includes a CLI entry point to run sensitivity analyses and generate plots. See `run_pipeline.py` for full documentation and usage examples.
+
+
+## Scalable Synthesis Methods for Top Candidate Materials
+
+### Ternary Hydrides (e.g., Li-Mg-H, Ca-Y-H)
+- **Pressure requirements**: Synthesis typically requires 100–250 GPa in diamond anvil cells. For example, Li₂MgH₁₆ is predicted to have Tc ~473 K at 250 GPa (see candidate_materials.md). Ambient-pressure stabilization strategies include chemical precompression using metal hydride precursors (e.g., MgH₂, CaH₂) to reduce external pressure to <50 GPa, thin-film encapsulation with diamond-like carbon coatings, and epitaxial strain engineering.
+- **Cost estimates**: Precursor costs are low (Li, Mg, Ca, Y are abundant). High-pressure synthesis energy dominates: ~$60/kg at 100 GPa (see synthesis_methods.md for energy breakdown). With chemical precompression, energy cost could drop to ~$10/kg. Capital investment for multi-anvil presses (10,000 tonnes/year) estimated at $1.5B.
+- **Scalability**: Multi-anvil presses can achieve 20–30 GPa at industrial scale; for higher pressures, laser-heated diamond anvil cells remain lab-scale. Chemical precompression routes are the most promising for scale-up.
+
+### Carbonaceous Sulfur Hydrides
+- **Pressure requirements**: The reported Tc ~288 K at 267 GPa (Snider et al., Nature 586, 373–377, 2020) requires extreme pressure. Ambient-pressure stabilization strategies include carbon doping to stabilize the metallic phase at lower pressures (e.g., C:S:H ratio tuning), encapsulation in boron nitride or diamond-like carbon, and strain from lattice mismatch with substrates.
+- **Cost estimates**: Carbon and sulfur are cheap (<$1/kg). High-pressure synthesis at >200 GPa is extremely expensive (~$500/g). Thin-film chemical vapor deposition (CVD) or plasma-enhanced CVD could produce carbonaceous sulfur hydride films at <10 GPa, reducing cost to ~$50/kg. See synthesis_methods.md for CVD protocols.
+- **Scalability**: CVD methods are inherently scalable (roll-to-roll processing). The main challenge is achieving the correct stoichiometry and phase purity. Doping and post-deposition annealing under moderate pressure (10–30 GPa) may be required.
+
+### Ambient-Pressure Stabilization Strategies
+- **Chemical precompression**: Embedding hydrogen in metal hydride lattices (e.g., MgH₂, CaH₂) provides internal chemical pressure, reducing external pressure needs to <50 GPa. This is the most mature route for ternary hydrides.
+- **Thin-film encapsulation**: Coating hydride films with diamond-like carbon or hexagonal boron nitride can maintain high internal pressure (up to 50 GPa) in a thin film, enabling ambient-pressure operation.
+- **Strain engineering**: Epitaxial growth on substrates with lattice mismatch (e.g., SrTiO₃, MgO) can induce compressive strain equivalent to several GPa, stabilizing high-pressure phases.
+- **Doping and alloying**: Substituting elements (e.g., C in sulfur hydride, Y in LaH₁₀) can lower the required external pressure by 20–50%.
+
+### Cost and Scalability Comparison
+| Material | Required Pressure (GPa) | Lab Cost ($/g) | Target Cost ($/kg) | Scalability | Ambient-Pressure Potential |
+|----------|------------------------|----------------|-------------------|-------------|---------------------------|
+| Ternary hydrides (Li-Mg-H) | 100–250 | 5,000 | 50–100 | Medium (multi-anvil) | High (chemical precompression) |
+| Carbonaceous sulfur hydride | 267 | 5,000 | 50–100 | High (CVD) | Medium (doping + encapsulation) |
+
+Cross-references: See [candidate_materials.md](candidate_materials.md) for detailed material properties and [synthesis_methods.md](synthesis_methods.md) for experimental protocols.
