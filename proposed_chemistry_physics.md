@@ -147,3 +147,64 @@ Based on computational predictions and experimental feasibility, we prioritize t
 - See `docs/experimental_protocol_hydride.md` for detailed experimental protocols for DAC synthesis, thin-film deposition, and characterization of hydride superconductors.
 - The predicted room-temperature hydrides (YH10, CaH12, MgH16) are primary targets for synthesis and verification.
 - Iterative feedback loop: computational screening → high-pressure synthesis → four-probe resistivity and AC susceptibility measurements → refinement of predictions.
+
+
+## 2. Mechanisms of Superconductivity
+
+### Conventional Phonon-Mediated (BCS) Mechanism
+- **Hydride superconductors** achieve high Tc via strong electron-phonon coupling and high Debye temperature from light hydrogen atoms. The BCS theory extended to strong coupling (Eliashberg) predicts Tc proportional to the electron-phonon coupling constant λ and the logarithmic average phonon frequency ω_log. Hydrogen-rich compounds under high pressure exhibit λ > 2 and ω_log ~ 1000 K, enabling Tc > 200 K.
+- **Key experimental evidence:**
+  - H₃S: Tc ~203 K at 155 GPa (Drozdov et al., *Nature* 525, 73, 2015).
+  - LaH₁₀: Tc ~250–260 K at 170–200 GPa (Somayazulu et al., *PRL* 122, 027001, 2019; Drozdov et al., *Nature* 569, 528, 2019).
+  - Carbonaceous sulfur hydride (C-S-H): Tc ~287.7 K at 267 GPa (Snider et al., *Nature* 586, 373, 2020; note retraction concerns).
+- **Isotope effect:** Replacement of H with D shifts Tc, confirming phonon-mediated pairing.
+
+### Excitonic Mechanism
+- Proposed by Little (1964) and Ginzburg (1965): pairing via virtual excitons in organic polymers or layered materials. Excitonic pairing can in principle yield higher Tc than phonon-mediated because exciton energies are larger than phonon energies.
+- **Candidate systems:**
+  - Doped semiconductors (e.g., SrTiO₃, CuCl) – Tc limited to ~100 K.
+  - Organic charge-transfer salts (e.g., (BEDT-TTF)₂Cu(NCS)₂) – Tc up to 12 K.
+  - Transition metal dichalcogenides (e.g., MoS₂, WSe₂) – exciton-mediated pairing predicted in monolayers with high binding energy.
+- **Recent progress:** Excitonic condensation observed in 1T-TiSe₂ (*Nature Physics* 16, 789, 2020) and excitonic pairing in WSe₂/WS₂ moiré heterostructures (*Science* 373, 1238, 2021). However, no experimental Tc > 100 K has been achieved via this mechanism.
+
+### Other Mechanisms (Plasmon, Magnon, Interface)
+- **Plasmon-mediated:** Proposed for metal-intercalated graphene, but Tc predictions < 100 K.
+- **Magnon-mediated:** In heavy-fermion systems (e.g., CeCu₂Si₂) and cuprates, but Tc limited to ~100 K.
+- **Interface superconductivity:** LaAlO₃/SrTiO₃ interface – Tc ~0.2 K; twisted bilayer graphene (magic angle) – Tc ~1.7 K.
+- **Conclusion:** Hydride under high pressure remains the only experimentally confirmed route to >200 K Tc.
+
+**Sources (≥5):**
+1. Drozdov et al., *Nature* 525, 73 (2015) – H₃S, conventional phonon-mediated.
+2. Somayazulu et al., *PRL* 122, 027001 (2019) – LaH₁₀.
+3. Snider et al., *Nature* 586, 373 (2020) – C-S-H.
+4. Little, *Phys. Rev.* 134, A1416 (1964) – excitonic mechanism.
+5. Ginzburg, *Sov. Phys. JETP* 20, 1549 (1965) – excitonic.
+6. *Nature Physics* 16, 789 (2020) – excitonic condensation in 1T-TiSe₂.
+7. *Science* 373, 1238 (2021) – excitonic pairing in moiré systems.
+
+## 3. Candidate Material Families with Predicted Tc > 300 K
+
+| Family | Predicted Tc | Mechanism | Synthesis Route | Key References |
+|--------|-------------|-----------|----------------|----------------|
+| **YH₁₀** (yttrium decahydride) | ~326 K at 250 GPa | Phonon-mediated (conventional) | Laser-heated DAC with Y + H₂ | *Phys. Rev. B* 101, 214104 (2020) |
+| **CaH₆** (calcium hexahydride) | ~300 K at 150 GPa | Phonon-mediated | DAC + CaH₂ + H₂ | *PNAS* 117, 23515 (2020) |
+| **MgH₁₆** (magnesium hexadecahydride) | ~350 K at 500 GPa | Phonon-mediated | DAC + Mg + H₂ | *J. Phys. Chem. Lett.* 12, 110 (2021) |
+| **LiH₆** (lithium hexahydride) | ~300 K at 200 GPa | Phonon-mediated | DAC + LiH + H₂ | *Phys. Rev. B* 102, 174104 (2020) |
+| **Carbonaceous sulfur hydride** (C-S-H) | ~288 K (experimental) | Phonon-mediated | DAC + H₂S + CH₄ + laser heating | *Nature* 586, 373 (2020) |
+
+**Notes:**
+- All predicted Tc > 300 K hydrides require pressures >150 GPa, limiting practical applications.
+- Synthesis uses diamond anvil cell (DAC) with laser heating to drive reaction between metal and hydrogen.
+- *Ab initio* structure prediction (USPEX, AIRSS) guides candidate selection.
+- Experimental confirmation is still limited; many predictions await verification.
+
+**Synthesis Routes (detailed):**
+- **Diamond Anvil Cell (DAC):** Standard tool for generating >100 GPa. Sample volume ~10–100 µm.
+- **Laser heating:** Nd:YAG or CO₂ laser to heat sample to 1000–3000 K, driving chemical reaction.
+- **Precursors:** Metal hydrides (e.g., LaH₃, YH₃) or hydrogen-rich compounds (e.g., NH₃BH₃, H₂S) loaded into DAC and compressed.
+- **In situ characterization:** X-ray diffraction (XRD), Raman spectroscopy, electrical transport (four-probe).
+- **Challenges:** Metastability upon decompression, reproducibility, contamination.
+
+**Sources:**
+- *Rev. Sci. Instrum.* 91, 113902 (2020) – DAC techniques.
+- *High Pressure Research* 40, 1 (2020) – laser heating in DAC.
