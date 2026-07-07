@@ -273,3 +273,45 @@ def test_predict_tc_missing_composition_key():
     with patch.object(ptc, 'load_data', return_value=mock_data):
         with pytest.raises(ValueError):
             ptc.predict_tc("Test", pressure=0)
+
+
+def test_integration_full_pipeline(tmp_path):
+    """Integration test: full pipeline with small test database and candidate set."""
+    # Create a small test database
+    db_path = tmp_path / "test_database.json"
+    test_data = [
+        {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+        {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"},
+        {"name": "YBa2Cu3O7", "Tc": 92, "pressure": 0, "composition": "YBa2Cu3O7"}
+    ]
+    db_path.write_text(json.dumps(test_data))
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(ptc, 'DATABASE_PATH', str(db_path))
+    try:
+        # Step 1: load data
+        data = ptc.load_data()
+        assert len(data) == 3
+        # Step 2: train model
+        model = ptc.train_model()
+        assert model is not None
+        # Step 3: generate candidates
+        candidates = ptc.generate_candidates(n=2)
+        assert isinstance(candidates, list)
+        assert len(candidates) == 2
+        for c in candidates:
+            assert "name" in c
+            assert "Tc" in c
+            assert "uncertainty" in c
+        # Step 4: predict Tc for a known material
+        tc_h3s = ptc.predict_tc("H3S", pressure=155)
+        assert isinstance(tc_h3s, float)
+        assert 180 <= tc_h3s <= 220
+        tc_lah10 = ptc.predict_tc("LaH10", pressure=170)
+        assert isinstance(tc_lah10, float)
+        assert 230 <= tc_lah10 <= 270
+        # Step 5: verify consistency between model prediction and direct predict_tc
+        # (predict_tc may use the model internally, so we just check they are floats)
+        assert tc_h3s > 0
+        assert tc_lah10 > 0
+    finally:
+        monkeypatch.undo()
