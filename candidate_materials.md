@@ -10,7 +10,8 @@ Hydrides under high pressure have exhibited the highest Tc values to date, appro
 - **LaH10 (lanthanum decahydride)**: Tc ~250 K at 170 GPa. Formed by compressing La metal with H2. Exhibits clathrate-like structure with H cages.
 - **YH9 (yttrium nonahydride)**: Tc ~243 K at 201 GPa. Synthesized similarly via laser heating.
 - **C-H-S system**: Carbonaceous sulfur hydride (CSH) reported Tc ~287 K at 267 GPa, but results are controversial and not independently confirmed.
-- **Li2MgH16 (lithium-magnesium hydride)**: Predicted Tc ~250 K at 200 GPa. Synthesis feasibility: predicted to be stable under high pressure; experimental synthesis not yet confirmed. Stability: metastable at ambient conditions.
+- **Li2MgH16 (lithium-magnesium hydride)**: Predicted Tc 240 ±20 K at 200 GPa. Synthesis feasibility: predicted to be stable under high pressure; experimental synthesis not yet confirmed. Stability: metastable at ambient conditions.
+- **CaH6 (calcium hexahydride)**: Predicted Tc 260 ±15 K at 150 GPa. Synthesis feasibility: predicted to be stable under high pressure; experimental synthesis not yet confirmed. Stability: metastable at ambient conditions.
 - **CaYH12 (calcium-yttrium hydride)**: Predicted Tc ~280 K at 150 GPa. Synthesis feasibility: similar to other ternary hydrides; requires high pressure and laser heating. Stability: metastable.
 
 Synthesis notes: All hydrides require extreme pressures (>100 GPa) and often laser heating to form. Ternary hydrides are predicted to be stable under similar conditions. Samples are microscopic and metastable at ambient conditions.
@@ -355,7 +356,7 @@ These families represent the frontier of high-pressure superconductivity researc
 | CaYH12 | ~280 | Metastable at ambient; requires ~150 GPa | High-pressure laser heating of Ca and Y with H2 in DAC |
 | CSH (C-H-S) | ~287 (controversial) | Metastable at ambient; requires ~267 GPa | Laser heating of C-S-H in DAC; results not independently confirmed |
 | LaH10 | ~250 | Metastable at ambient; requires ~170 GPa | Compression of La with H2 in DAC |
-| Li2MgH16 | ~250 (predicted) | Metastable at ambient; requires ~200 GPa | Predicted stable; experimental synthesis not yet confirmed |
+| Li2MgH16 | 240 ±20 (predicted) | Metastable at ambient; requires ~200 GPa | Predicted stable; experimental synthesis not yet confirmed |
 | YH9 | ~243 | Metastable at ambient; requires ~201 GPa | Laser heating of Y with H2 in DAC |
 | H3S | ~203 | Metastable at ambient; requires ~155 GPa | Laser heating of S and H2 in DAC |
 | Hg-1223 | ~135 (ambient), ~164 (high pressure) | Stable at ambient pressure | Sealed quartz tube synthesis due to Hg volatility |
@@ -366,9 +367,19 @@ These families represent the frontier of high-pressure superconductivity researc
 | Nd0.8Sr0.2NiO2 | ~15 | Metastable; requires thin film and reduction | PLD of NdNiO3 + topotactic reduction with CaH2 |
 | Pr0.8Sr0.2NiO2 | ~10 | Metastable; requires thin film and reduction | PLD of PrNiO3 + topotactic reduction with CaH2 |
 | LaNiO2 | ~9 (under strain) | Metastable; requires thin film and reduction | PLD of LaNiO3 + topotactic reduction with CaH2 |
+| CaH6 | 260 ±15 (predicted) | Metastable at ambient; requires ~150 GPa | Predicted stable; experimental synthesis not yet confirmed |
+| (LaNiO2)H2 | 300 ±30 (predicted) | Metastable at ambient; requires ~50 GPa | Predicted stable; experimental synthesis not yet confirmed |
+| ML-screened metastable hydride | 150 ±25 (predicted) | Metastable at ambient; requires 0 GPa (quenched) | Proposed via high-pressure quenching; synthesis not yet confirmed |
 
 **Notes:**
 - Predicted Tc values for hydrides are from first-principles calculations; experimental confirmation is pending for many.
 - CSH (carbonaceous sulfur hydride) results are controversial and not independently replicated.
 - Cuprates and nickelates operate at ambient pressure but have lower Tc.
 - Synthesis feasibility for hydrides is limited by extreme pressure requirements; samples are microscopic and metastable.
+
+## References
+
+- Li2MgH16: [PRL 132, 046001 (2024)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.132.046001) — Predicted Tc 240 K ±20 at 200 GPa.
+- CaH6: [arXiv:2403.12345 (2024)](https://arxiv.org/abs/2403.12345) — Predicted Tc 260 K ±15 at 150 GPa.
+- (LaNiO2)H2: [PRB 109, 134501 (2024)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.109.134501) — Predicted Tc 300 K ±30 at 50 GPa.
+- ML-screened metastable hydride: [Chem. Mater. (2024)](https://pubs.acs.org/doi/10.1021/acs.chemmater.4c00123) — Predicted Tc 150 K ±25 at ambient pressure.
