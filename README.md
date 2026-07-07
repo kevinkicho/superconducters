@@ -8,6 +8,7 @@ This repository documents a research project on room-temperature superconductivi
 - [synthesis_methods.md](synthesis_methods.md): Methods and procedures for synthesizing candidate materials.
 - [characterization_techniques.md](characterization_techniques.md): Techniques used to characterize superconducting properties.
 - [roadmap.md](roadmap.md): Project roadmap and future milestones.
+- [proposed_chemistry_physics.md](proposed_chemistry_physics.md): Proposed chemistry and physics for discovering and manufacturing room-temperature superconducting compounds.
 
 ## Navigation
 
