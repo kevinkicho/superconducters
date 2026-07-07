@@ -16,6 +16,11 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import curve_fit
 import dft_calculator  # for DFT validation
+import pyvisa
+from flask import Flask, request, jsonify, make_response
+import secrets
+import hashlib
+import functools
 
 # Constants for Tc prediction (BCS with McMillan formula)
 MU_STAR = 0.1  # Coulomb pseudopotential
@@ -553,3 +558,100 @@ def generate_council_report():
         print(f"roadmap.md updated with Final Summary and Next Steps.")
     else:
         print("roadmap.md not found; skipping update.")
+
+
+# --- Real-time experimental data ingestion via PyVISA ---
+def ingest_experimental_data(visa_address='TCPIP0::192.168.1.100::inst0::INSTR'):
+    """Connect to a measurement instrument via PyVISA and read experimental data."""
+    import pyvisa
+    rm = pyvisa.ResourceManager()
+    try:
+        instrument = rm.open_resource(visa_address)
+        # Example: read temperature and resistance
+        data = instrument.query('MEAS:RES?')  # hypothetical command
+        instrument.close()
+        return {'resistance': float(data), 'unit': 'Ohm'}
+    except Exception as e:
+        print(f"Error reading from instrument: {e}", file=sys.stderr)
+        return None
+
+# --- Docker deployment instructions ---
+def print_docker_deployment_instructions():
+    """Print instructions for deploying the pipeline as a Docker container."""
+    instructions = """
+Docker Deployment Instructions:
+1. Build the Docker image:
+   docker build -t superconductor-pipeline .
+2. Run the container:
+   docker run -v $(pwd)/data:/app/data superconductor-pipeline
+3. For Flask API (if enabled):
+   docker run -p 5000:5000 -e FLASK_ENV=production superconductor-pipeline
+"""
+    print(instructions)
+
+# --- Flask API with user authentication ---
+app = Flask(__name__)
+app.config['SECRET_KEY'] = secrets.token_hex(32)
+
+# In-memory user store (for demonstration; use database in production)
+users = {
+    'admin': {'password': hashlib.sha256('admin123'.encode()).hexdigest(), 'role': 'admin'},
+    'researcher': {'password': hashlib.sha256('researcher123'.encode()).hexdigest(), 'role': 'researcher'},
+    'viewer': {'password': hashlib.sha256('viewer123'.encode()).hexdigest(), 'role': 'viewer'}
+}
+api_keys = {}  # username -> api_key
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def generate_api_key():
+    return secrets.token_hex(32)
+
+def require_auth(role=None):
+    """Decorator to require authentication and optionally a specific role."""
+    def decorator(f):
+        @functools.wraps(f)
+        def decorated(*args, **kwargs):
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return make_response(jsonify({'error': 'Missing or invalid Authorization header'}), 401)
+            api_key = auth_header.split(' ')[1]
+            # Find user by API key
+            user = None
+            for username, key in api_keys.items():
+                if key == api_key:
+                    user = username
+                    break
+            if not user:
+                return make_response(jsonify({'error': 'Invalid API key'}), 401)
+            if role and users[user]['role'] != role:
+                return make_response(jsonify({'error': 'Insufficient permissions'}), 403)
+            return f(*args, **kwargs)
+        return decorated
+    return decorator
+
+@app.route('/login', methods=['POST'])
+def login():
+    """Login endpoint: accepts JSON with username and password, returns API key."""
+    data = request.get_json()
+    if not data or 'username' not in data or 'password' not in data:
+        return make_response(jsonify({'error': 'Username and password required'}), 400)
+    username = data['username']
+    password = data['password']
+    if username not in users:
+        return make_response(jsonify({'error': 'Invalid username or password'}), 401)
+    if users[username]['password'] != hash_password(password):
+        return make_response(jsonify({'error': 'Invalid username or password'}), 401)
+    # Generate new API key
+    api_key = generate_api_key()
+    api_keys[username] = api_key
+    return jsonify({'api_key': api_key, 'role': users[username]['role']})
+
+@app.route('/protected', methods=['GET'])
+@require_auth(role='admin')
+def protected():
+    """Example protected endpoint accessible only to admin."""
+    return jsonify({'message': 'This is admin-only data.'})
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
