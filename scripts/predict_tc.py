@@ -893,3 +893,14 @@ def generate_candidates(base_elements=None, max_elements=3, num_candidates=50):
     return list(candidates)
 
 # End of GNN additions
+
+# Global variable to hold the current model type
+_current_model = 'rf'  # default to random forest
+
+def set_model(model_type: str):
+    """Switch between 'rf' (Random Forest) and 'gnn' (Graph Neural Network) models."""
+    global _current_model
+    if model_type not in ('rf', 'gnn'):
+        raise ValueError("model_type must be 'rf' or 'gnn'")
+    _current_model = model_type
+    print(f"Model set to {model_type}")
