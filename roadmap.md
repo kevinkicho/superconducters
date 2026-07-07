@@ -73,3 +73,9 @@
 - **M10 (Year 2-5)**: Implement active learning loop: model predictions guide synthesis experiments, and results feed back to retrain models. Target 2x improvement in candidate hit rate.
 - **M11 (Year 5-10)**: Deploy continuous retraining system that updates models in real-time as characterization data is collected. Achieve >90% accuracy in predicting Tc for new compositions.
 - **M12 (Year 10+)**: Integrate retraining with manufacturing QC data to optimize process parameters and predict material performance. Reduce time-to-market for new wire batches by 50%.
+
+## Test Coverage and Continuous Integration Milestones
+- **M13 (Year 1-2)**: Establish unit and integration test suites for all computational and experimental codebases. Achieve >80% code coverage. Implement CI pipeline (e.g., GitHub Actions) to run tests on every commit.
+- **M14 (Year 2-5)**: Expand test coverage to include regression tests for ML models and data pipelines. Automate deployment of model retraining with CI/CD. Achieve >90% coverage.
+- **M15 (Year 5-10)**: Integrate CI with experimental data validation: automated checks for data quality and reproducibility. Implement continuous monitoring of test results.
+- **M16 (Year 10+)**: Extend CI to manufacturing QC data pipelines. Ensure all software and firmware updates pass rigorous testing before deployment.
