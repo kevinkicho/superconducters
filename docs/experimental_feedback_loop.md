@@ -92,3 +92,7 @@ To guide the iterative discovery and testing, the following chemistry and physic
 - **Physical criteria**: Require predicted Tc > 300 K at accessible pressures (< 200 GPa), thermodynamic stability (formation energy within 50 meV/atom of convex hull), and absence of competing phases. Validate with phonon dispersion (no imaginary modes) and electron-phonon coupling constant λ > 1.
 
 These foundations ensure that every candidate entering the feedback loop is grounded in established science, increasing the probability of successful room-temperature superconductivity.
+
+## Active Learning Integration
+
+To further accelerate discovery, the feedback loop incorporates an active learning module that selects the most informative experiments to perform next. After each model update, the active learning algorithm evaluates the candidate pool and ranks candidates by expected information gain (e.g., using uncertainty sampling, query-by-committee, or expected improvement). The top-ranked candidates are then prioritized for synthesis and characterization. This reduces the number of experiments needed to improve model accuracy and discover high-Tc compounds. The active learning module is integrated into the candidate ranking step (step 1 of the loop) and is triggered after each model retraining. The module also considers experimental cost and feasibility (e.g., pressure requirements, material availability) to balance information gain with practical constraints.
