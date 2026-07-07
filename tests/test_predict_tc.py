@@ -315,3 +315,54 @@ def test_integration_full_pipeline(tmp_path):
         assert tc_lah10 > 0
     finally:
         monkeypatch.undo()
+
+
+def test_integration_full_pipeline_with_feedback_loop(tmp_path):
+    """Integration test: full pipeline including feedback loop.
+    Simulates experimental feedback: add new data, update database, retrain model,
+    regenerate candidates, and verify consistency.
+    """
+    db_path = tmp_path / "test_database_feedback.json"
+    initial_data = [
+        {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+        {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"},
+    ]
+    db_path.write_text(json.dumps(initial_data))
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(ptc, 'DATABASE_PATH', str(db_path))
+    try:
+        # Step 1: load data and train initial model
+        data = ptc.load_data()
+        assert len(data) == 2
+        model = ptc.train_model()
+        assert model is not None
+        # Step 2: generate initial candidates
+        candidates1 = ptc.generate_candidates(n=2)
+        assert len(candidates1) == 2
+        for c in candidates1:
+            assert "name" in c and "Tc" in c and "uncertainty" in c
+        # Step 3: simulate experimental feedback — add a new measurement
+        new_entry = {"name": "YBa2Cu3O7", "Tc": 92, "pressure": 0, "composition": "YBa2Cu3O7"}
+        updated_data = initial_data + [new_entry]
+        db_path.write_text(json.dumps(updated_data))
+        # Step 4: reload data and retrain model
+        data2 = ptc.load_data()
+        assert len(data2) == 3
+        model2 = ptc.train_model()
+        assert model2 is not None
+        # Step 5: regenerate candidates after feedback
+        candidates2 = ptc.generate_candidates(n=2)
+        assert len(candidates2) == 2
+        for c in candidates2:
+            assert "name" in c and "Tc" in c and "uncertainty" in c
+        # Step 6: verify consistency — predictions for known materials remain in expected ranges
+        tc_h3s = ptc.predict_tc("H3S", pressure=155)
+        assert isinstance(tc_h3s, float) and 180 <= tc_h3s <= 220
+        tc_lah10 = ptc.predict_tc("LaH10", pressure=170)
+        assert isinstance(tc_lah10, float) and 230 <= tc_lah10 <= 270
+        tc_ybco = ptc.predict_tc("YBa2Cu3O7", pressure=0)
+        assert isinstance(tc_ybco, float) and 80 <= tc_ybco <= 100
+        # Step 7: verify that the model was retrained (model2 is different object from model)
+        assert model2 is not model
+    finally:
+        monkeypatch.undo()
