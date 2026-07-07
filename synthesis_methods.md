@@ -434,3 +434,27 @@ Ternary hydrides (e.g., La–Y–H, C–S–H) are promising for room‑temperat
 - Large‑volume press synthesis: High Press. Res. 40, 1–20 (2020).
 - Ternary hydride design: Nature 600, 73–78 (2021).
 - Industrial scale‑up: Supercond. Sci. Technol. 35, 053001 (2022).
+
+
+## 5. Diamond Anvil Cell Synthesis of Carbon-Sulfur-Hydride (C-S-H)
+
+Carbon-sulfur-hydride (C-S-H) has been reported as a room-temperature superconductor at pressures around 267 GPa (Snider et al., Nature 586, 373, 2020). The following protocol is adapted from the original synthesis.
+
+### Procedure
+1. **Precursor preparation**: Mix carbon (graphite powder, 99.999%) and sulfur (99.999%) in a 1:1 molar ratio. Grind in an agate mortar for 15 minutes. Alternatively, use a pre-synthesized carbon sulfide (CS₂) as a precursor.
+2. **DAC loading**: Place a small amount (≈10 µm³) of the C–S mixture in the sample chamber of a diamond anvil cell (culet size 30–50 µm). Add a ruby chip for pressure calibration.
+3. **Gas loading**: Load hydrogen gas (99.9999% purity) into the DAC using a gas-loading system at ≈0.2 GPa. Seal the cell.
+4. **Pressurization**: Increase pressure to 250–270 GPa at room temperature. Monitor pressure via ruby fluorescence.
+5. **Laser heating**: Use a continuous-wave or pulsed laser (e.g., Nd:YAG, 1064 nm) to heat the sample to 2000–2500 K for 1–5 seconds. The laser spot should cover the entire sample.
+6. **Quenching**: Turn off laser; sample cools rapidly (≈10⁶ K/s) while maintaining pressure.
+7. **Characterization**: Perform synchrotron X‑ray diffraction (XRD) to identify the C-S-H phase (cubic structure, space group Im-3m). Measure superconducting transition temperature via electrical transport (four-probe method) or magnetic susceptibility (SQUID).
+
+### Safety Considerations
+- High-pressure gas loading requires trained personnel. Use gas sensors and automatic shutoff valves.
+- Laser heating: Use appropriate laser safety goggles and interlocks.
+- Carbon and sulfur powders are fine; use in fume hood to avoid inhalation.
+- Hydrogen gas is flammable; ensure proper ventilation and leak detection.
+
+### References
+- E. Snider et al., Nature 586, 373–377 (2020).
+- D. Duan et al., Natl. Sci. Rev. 7, 1804–1812 (2020).
