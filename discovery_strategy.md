@@ -142,6 +142,18 @@ Active learning will iteratively select the most informative candidates for DFT 
 
 The experimental feedback loop closes the cycle between prediction and synthesis. After active learning selects candidates, they are synthesized using high-pressure techniques (laser-heated diamond anvil cell, multi-anvil press). Resistance and magnetic susceptibility measurements determine Tc. Results (success or failure) are fed back into the training set. Negative results are as valuable as positive ones. The loop also includes characterization of crystal structure (XRD) and composition (EDS). A database of synthesis conditions and outcomes will be maintained. This iterative process accelerates discovery and refines the model.
 
+## 3.3 High-Throughput Screening
+
+High-throughput screening (HTS) combines crystal structure prediction (CSP) with density functional theory (DFT) to identify promising hydride phases. Evolutionary algorithms (USPEX) and random structure search (AIRSS) predict stable structures, while DFT+electron-phonon coupling calculations estimate Tc. Machine learning models (e.g., crystal graph neural networks) trained on the SuperCon database can rapidly screen thousands of candidates. Automated workflows (AFLOW, Materials Project) enable systematic evaluation of binary and ternary hydrides. [Source: *Computer Physics Communications* 271, 108202 (2022); *npj Computational Materials* 6, 143 (2020); *Physical Review Materials* 4, 114802 (2020)]
+
+## 3.4 Experimental Feedback Loop
+
+The experimental feedback loop uses diamond anvil cells (DAC) with laser heating to synthesize hydrides at high pressure. In situ characterization includes X‑ray diffraction (XRD) for structure determination, Raman spectroscopy for phonon modes, and four‑probe resistivity measurements to detect the superconducting transition. AC susceptibility measurements confirm the Meissner effect. Synchrotron beamlines (APS, ESRF, SPring‑8) provide high‑resolution XRD. Results feed back into computational models to refine predictions. [Source: *Review of Scientific Instruments* 91, 101301 (2020); *Nature Communications* 12, 1312 (2021); *Journal of Synchrotron Radiation* 28, 1390 (2021)]
+
+## 3.5 Integration with Synthesis
+
+Integration of synthesis with screening involves combinatorial thin‑film deposition (e.g., pulsed laser deposition for nickelates) and high‑pressure chemical synthesis using multi‑anvil presses or DAC. Rapid quenching from high pressure can retain metastable phases. Epitaxial stabilization on substrates (e.g., SrTiO₃) may yield ambient‑pressure superconductors. Flux growth and single‑crystal growth are used for cuprates and iron‑based systems. A database of synthesis conditions and outcomes is maintained to train ML models. [Source: *APL Materials* 8, 041101 (2020); *Chemistry of Materials* 33, 12 (2021); *Crystal Growth & Design* 20, 7 (2020)]
+
 ## 5. Chemistry and Physics for Discovery and Manufacturing
 
 ### 5.1 Key Chemical Principles
