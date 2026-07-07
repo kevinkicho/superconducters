@@ -18,6 +18,64 @@ All experimental data must be ingested into the central database according to th
 3. **Validation**: Ingested data is validated against schema constraints (e.g., Tc must be a positive float, pressure within equipment limits). Invalid records are flagged for manual review.
 4. **Storage**: Data is stored in a relational database (e.g., PostgreSQL) with tables for experiments, candidates, synthesis runs, measurements, and model versions. All raw files are archived in a file store with pointers in the database.
 
+## Automated Ingestion Workflow
+
+### Data Sources
+
+Experimental data from synchrotron X-ray diffraction (XRD) and resistivity measurements are automatically ingested into the central database. These data types are critical for structural characterization and superconducting transition detection.
+
+- **Synchrotron XRD**: Raw diffraction patterns (e.g., .xrd files) are parsed by `scripts/parse_xrd.py` to extract peak positions, intensities, and lattice parameters. The results are stored in the `measurements` table with a reference to the experiment ID.
+- **Resistivity**: Temperature-dependent resistivity data (e.g., .csv files) are parsed by `scripts/parse_resistivity.py` to extract Tc (onset, midpoint, zero-resistance), transition width, and normal-state resistivity. These are stored in the `measurements` table.
+
+### Ingestion Pipeline
+
+1. **File Watch**: A file watcher (`scripts/watch_experimental_data.py`) monitors designated directories for new raw data files.
+2. **Parsing**: Upon detection, the appropriate parser script is invoked based on file extension.
+3. **Validation**: Parsed data is validated against schema constraints (e.g., Tc must be a positive float, pressure within equipment limits). Invalid records are flagged for manual review.
+4. **Database Insertion**: Validated data is inserted into the relational database (PostgreSQL) with appropriate foreign keys to the experiment and candidate tables.
+5. **Archival**: Raw files are moved to an archive store with a pointer in the database.
+
+### Triggering Updates to candidate_materials.md and roadmap.md
+
+After each successful ingestion, the system checks whether the new data warrants updates to the candidate materials list and the roadmap:
+
+- **candidate_materials.md**: If the new data includes a Tc measurement for a candidate that was previously untested, or if the measured Tc deviates significantly from the predicted value, the candidate ranking is recalculated. The script `scripts/generate_candidates.py` is triggered to regenerate `docs/candidate_materials.md` with updated rankings and a changelog.
+- **roadmap.md**: If the new data indicates a breakthrough (e.g., Tc > 300 K) or a systematic failure (e.g., three consecutive candidates fail at Gate 3), the roadmap milestones are adjusted. The script `scripts/update_roadmap.py` is triggered to revise `docs/roadmap.md` with updated timelines and priorities.
+
+### Workflow Diagram
+
+```mermaid
+flowchart TD
+    A[Synchrotron XRD Data] --> B[Automated Parser]
+    C[Resistivity Data] --> B
+    B --> D[Database Insertion]
+    D --> E{New Data Trigger?}
+    E -->|Yes| F[Update candidate_materials.md]
+    E -->|Yes| G[Update roadmap.md]
+    F --> H[Re-rank candidates]
+    G --> I[Adjust milestones]
+```
+
+### Pseudocode
+
+```python
+def ingest_experimental_data(raw_files):
+    for file in raw_files:
+        if file.extension == '.xrd':
+            parsed = parse_xrd(file)
+        elif file.extension == '.csv':
+            parsed = parse_resistivity(file)
+        else:
+            continue
+        if validate(parsed):
+            insert_into_database(parsed)
+            archive_file(file)
+            if should_update_candidates(parsed):
+                trigger_update_candidate_materials()
+            if should_update_roadmap(parsed):
+                trigger_update_roadmap()
+```
+
 ## Model Update Triggers
 The ML model (e.g., graph neural network predicting Tc from composition/structure) is automatically retrained when any of the following triggers occur:
 
