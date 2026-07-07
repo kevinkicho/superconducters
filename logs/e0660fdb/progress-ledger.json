@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "runId": "e0660fdb-c383-420f-91a2-a8c4bc671ef2",
-  "updatedAt": 1783453497017,
-  "lastCycle": 4,
+  "updatedAt": 1783453543949,
+  "lastCycle": 5,
   "observations": [
     {
       "kind": "commit",
@@ -571,6 +571,34 @@
         "docs/experimental_feedback_loop.md"
       ],
       "at": 1783453480444
+    },
+    {
+      "kind": "commit",
+      "text": "Add unit test for correct confidence interval calculation (e.g., using bootstrap or analytic formula) in tests/test_predict_tc.py.\n\nAlso (auditor): Add unit test for edge case: single input (one candidate) returns valid uncertainty.\n\nAlso (auditor): Add unit test for edge case: missing features (e.g., missing Debye temperature) raises appropriate error or returns None.",
+      "cycle": 5,
+      "files": [
+        "tests/test_predict_tc.py"
+      ],
+      "at": 1783453506035
+    },
+    {
+      "kind": "commit",
+      "text": "Add uncertainty quantification to predict_tc.py (e.g., confidence intervals via bootstrap or ensemble) and expose a function to get uncertainty for each candidate.",
+      "cycle": 5,
+      "files": [
+        "scripts/predict_tc.py"
+      ],
+      "at": 1783453516626
+    },
+    {
+      "kind": "commit",
+      "text": "Modify run_pipeline.py to after ML prediction, select top candidates with high uncertainty, call dft_calculator.py's run_full_dft_calculation for each, parse results, and update candidate_materials.md with DFT-validated Tc and new rankings.\n\nAlso (auditor): Update candidate_materials.md to include a section for DFT-validated results and a ranked table.",
+      "cycle": 5,
+      "files": [
+        "scripts/run_pipeline.py",
+        "candidate_materials.md"
+      ],
+      "at": 1783453526545
     }
   ]
 }
