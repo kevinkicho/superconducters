@@ -104,3 +104,62 @@ def test_screening_output_format():
             assert "composition" in item
         tcs = [r["Tc"] for r in results]
         assert tcs == sorted(tcs, reverse=True)
+
+
+def test_active_learning_selection():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+        {"name": "YBa2Cu3O7", "Tc": 93, "composition": "YBa2Cu3O7", "pressure": 0},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        candidates = ptc.select_candidates(n=2)
+        assert isinstance(candidates, list)
+        assert len(candidates) == 2
+        for c in candidates:
+            assert "name" in c
+            assert "Tc" in c
+            assert "uncertainty" in c
+
+def test_retraining():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        model1 = ptc.train_model()
+        pred1 = model1.predict([[ptc.average_valence("H3S"), ptc.average_debye("H3S")]])[0]
+        new_data = [{"name": "YBa2Cu3O7", "Tc": 93, "composition": "YBa2Cu3O7", "pressure": 0}]
+        with patch.object(ptc, 'load_data', return_value=mock_data + new_data):
+            model2 = ptc.train_model()
+            pred2 = model2.predict([[ptc.average_valence("H3S"), ptc.average_debye("H3S")]])[0]
+            assert pred1 != pred2
+
+def test_screening_empty_dataset():
+    with patch.object(ptc, 'load_data', return_value=[]):
+        results = ptc.screen_materials()
+        assert isinstance(results, list)
+        assert len(results) == 0
+
+def test_active_learning_no_candidates():
+    with patch.object(ptc, 'load_data', return_value=[]):
+        candidates = ptc.select_candidates(n=5)
+        assert isinstance(candidates, list)
+        assert len(candidates) == 0
+
+def test_integration_full_pipeline():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        model = ptc.train_model()
+        screened = ptc.screen_materials()
+        assert len(screened) == 2
+        candidates = ptc.select_candidates(n=1)
+        assert len(candidates) == 1
+        new_data = [{"name": "YBa2Cu3O7", "Tc": 93, "composition": "YBa2Cu3O7", "pressure": 0}]
+        with patch.object(ptc, 'load_data', return_value=mock_data + new_data):
+            model2 = ptc.train_model()
+            pred_new = model2.predict([[ptc.average_valence("YBa2Cu3O7"), ptc.average_debye("YBa2Cu3O7")]])[0]
+            assert abs(pred_new - 93) < 20
