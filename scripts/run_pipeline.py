@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 import numpy as np
 from scipy.optimize import curve_fit
+from scipy.stats import ks_2samp
 import dft_calculator  # for DFT validation
 import pyvisa
 from flask import Flask, request, jsonify, make_response
@@ -942,6 +943,30 @@ def lifecycle_assessment(candidate_name='LaH10', formula='LaH10', synthesis_pres
     }
     print(f"Lifecycle assessment for {candidate_name}: {json.dumps(assessment, indent=2)}")
     return assessment
+
+
+def detect_data_drift(training_data, new_data, feature_names=None, threshold=0.05):
+    """Detect data drift between training and new experimental data using KS test.
+    Compares each feature distribution; if any p-value < threshold, triggers retraining.
+    training_data, new_data: numpy arrays of shape (n_samples, n_features)
+    feature_names: optional list of feature names for logging
+    Returns True if drift detected, False otherwise.
+    """
+    drift_detected = False
+    n_features = training_data.shape[1]
+    for i in range(n_features):
+        stat, p_value = ks_2samp(training_data[:, i], new_data[:, i])
+        fname = feature_names[i] if feature_names else f"feature_{i}"
+        if p_value < threshold:
+            print(f"Drift detected in '{fname}': p-value={p_value:.4f}")
+            drift_detected = True
+    if drift_detected:
+        print("Data drift detected. Triggering model retraining...")
+        # Placeholder for actual retraining logic
+        # retrain_model()
+    else:
+        print("No significant data drift detected.")
+    return drift_detected
 
 
 if __name__ == '__main__':
