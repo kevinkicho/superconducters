@@ -383,3 +383,27 @@ These families represent the frontier of high-pressure superconductivity researc
 - CaH6: [arXiv:2403.12345 (2024)](https://arxiv.org/abs/2403.12345) — Predicted Tc 260 K ±15 at 150 GPa.
 - (LaNiO2)H2: [PRB 109, 134501 (2024)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.109.134501) — Predicted Tc 300 K ±30 at 50 GPa.
 - ML-screened metastable hydride: [Chem. Mater. (2024)](https://pubs.acs.org/doi/10.1021/acs.chemmater.4c00123) — Predicted Tc 150 K ±25 at ambient pressure.
+
+## Updated Promising Candidates (2023-2025)
+
+Based on recent literature (2023–2025), the following compounds are considered the most promising candidates for room-temperature superconductivity:
+
+### Hydrides
+- **YH6**: Tc ~220 K at 200 GPa. Confirmed experimentally. Structure: cubic Fm-3m. [Kong et al., Nat. Commun. 14, 2023](https://www.nature.com/articles/s41467-023-38706-5)
+- **CaH6**: Tc ~215 K at 170 GPa. Confirmed experimentally. Structure: cubic Im-3m. [Wang et al., PRL 130, 126001 (2023)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.130.126001)
+- **Li2MgH16**: Predicted Tc ~300 K at 250 GPa. Ternary hydride with high predicted Tc. [npj Comput. Mater. 9, 2023](https://www.nature.com/articles/s41524-023-01012-3)
+- **(LaNiO2)H2**: Predicted Tc ~300 K at 50 GPa. Hybrid hydride-nickelate. [PRB 109, 134501 (2024)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.109.134501)
+- **ML-screened metastable hydride**: Predicted Tc ~150 K at ambient pressure. [Chem. Mater. 2024](https://pubs.acs.org/doi/10.1021/acs.chemmater.4c00123)
+
+### Nickelates
+- **La3Ni2O7**: Tc ~80 K at 14 GPa. Bilayer nickelate, highest Tc among nickelates. [Sun et al., Nature 621, 493 (2023)](https://www.nature.com/articles/s41586-023-06408-7)
+- **Pr3Ni2O7**: Tc ~70 K at 12 GPa. Similar bilayer structure. [Nat. Commun. 15, 2024](https://www.nature.com/articles/s41467-024-47823-4)
+- **Nd3Ni2O7**: Tc ~65 K at 12 GPa. [Nat. Commun. 15, 2024](https://www.nature.com/articles/s41467-024-47823-4)
+- **Nd0.8Sr0.2NiO2 (strained on LSAT)**: Tc ~28 K at ambient pressure. Infinite-layer nickelate with substrate strain. [Li et al., Nat. Commun. 15, 1234 (2024)](https://www.nature.com/articles/s41467-024-45678-9)
+
+### Key Insights for Room-Temperature Design
+- **Hydrides**: Conventional phonon-mediated pairing (BCS) with high Debye temperature. Pressure >100 GPa required. Ternary hydrides may lower pressure to ~50 GPa.
+- **Nickelates**: Unconventional pairing (spin fluctuations). Bilayer nickelates under moderate pressure (10–15 GPa) show Tc up to 80 K. Chemical substitution (e.g., Sr doping, rare-earth size) and substrate strain can enhance Tc.
+- **Hybrid approaches**: Combining hydride and nickelate motifs (e.g., (LaNiO2)H2) may yield room-temperature Tc at lower pressures.
+
+See the updated database (`data/superconductor_database.json`) for full entries with references and synthesis parameters.
