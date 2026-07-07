@@ -963,3 +963,87 @@ def predict_tc_mcmillan_allen_dynes(theta_D: float, lambda_: float, mu_star: flo
     exponent = - numerator / denominator
     Tc = (omega_log / 1.2) * math.exp(exponent)
     return Tc
+
+
+def compute_features(formula: str) -> list:
+    """Compute average valence electrons per atom and average Debye temperature from formula string."""
+    import re
+    elements = re.findall(r'([A-Z][a-z]?)(\d*)', formula)
+    total_valence = 0.0
+    total_debye = 0.0
+    total_atoms = 0
+    for elem, count_str in elements:
+        count = int(count_str) if count_str else 1
+        total_valence += VALENCE.get(elem, 0) * count
+        total_debye += DEBYE_TEMP.get(elem, 100.0) * count
+        total_atoms += count
+    if total_atoms == 0:
+        return [0.0, 100.0]
+    return [total_valence / total_atoms, total_debye / total_atoms]
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Predict Tc for candidate materials using a trained model.')
+    parser.add_argument('--model', choices=['rf', 'gnn'], default='rf', help='Model type (default: rf)')
+    parser.add_argument('--candidates', type=int, default=10, help='Number of candidate materials to generate (default: 10)')
+    parser.add_argument('--output', type=str, default=None, help='Output file to save predictions (JSON format)')
+    args = parser.parse_args()
+
+    # Load the embedded database (assumed to be a list of dicts with 'formula' and 'tc')
+    try:
+        database = globals().get('DATABASE', None)
+        if database is None:
+            # Fallback: try to load from a known variable name
+            database = globals().get('known_compounds', None)
+        if database is None:
+            print("Error: No embedded database found. Please ensure DATABASE or known_compounds is defined.")
+            sys.exit(1)
+    except Exception as e:
+        print(f"Error loading database: {e}")
+        sys.exit(1)
+
+    # Extract features and targets from database
+    X = []
+    y = []
+    for entry in database:
+        formula = entry.get('formula', '')
+        tc = entry.get('tc', None)
+        if tc is None:
+            continue
+        feats = compute_features(formula)
+        X.append(feats)
+        y.append(tc)
+
+    if len(X) == 0:
+        print("Error: No valid training data in database.")
+        sys.exit(1)
+
+    # Train Random Forest model
+    from sklearn.ensemble import RandomForestRegressor
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X, y)
+    print(f"Trained Random Forest model on {len(X)} samples.")
+
+    # Generate candidate materials
+    candidates = generate_candidates(num_candidates=args.candidates)
+    print(f"Generated {len(candidates)} candidate materials.")
+
+    # Predict Tc for each candidate
+    predictions = []
+    for formula in candidates:
+        feats = compute_features(formula)
+        tc_pred = model.predict([feats])[0]
+        predictions.append({'formula': formula, 'predicted_tc_K': round(tc_pred, 2)})
+        print(f"{formula}: {tc_pred:.2f} K")
+
+    # Save to output file if specified
+    if args.output:
+        import json
+        with open(args.output, 'w') as f:
+            json.dump(predictions, f, indent=2)
+        print(f"Predictions saved to {args.output}")
+
+
+if __name__ == '__main__':
+    main()
