@@ -90,6 +90,42 @@ This document outlines a systematic approach to discover and manufacture room-te
 - Target 10–20 experiments per cycle, with a cycle time of 2–4 weeks for thin films, 1–2 months for high-pressure hydrides.
 - Integrate results into a shared database (e.g., SuperCon, Materials Project) to enable community-wide learning.
 
+
+### 3.2 Machine Learning Models
+
+**Model Architecture:** We employ a multi-model approach. The primary model is a Crystal Graph Convolutional Neural Network (CGCNN) [Xie & Grossman, PRL 2018] that operates directly on crystal structures. We also train Random Forest and XGBoost baselines using compositional and structural features. The CGCNN captures local chemical environments and bonding patterns, while tree-based models provide interpretability.
+
+**Training Data Sources:**
+- **SuperCon** (https://supercon.nims.go.jp/): ~30,000 experimental entries with Tc, composition, and structure.
+- **Materials Project** (https://materialsproject.org/): ~150,000 DFT-computed structures for transfer learning.
+- **OQMD** (https://oqmd.org/): ~800,000 entries.
+- **AFLOW** (http://aflowlib.org/): ~3 million entries.
+- **ICSD** (https://icsd.products.fiz-karlsruhe.de/): ~200,000 experimental structures.
+
+**Feature Engineering:**
+- **Compositional features:** Atomic properties (electronegativity, atomic radius, valence electron count), stoichiometric ratios.
+- **Structural features:** Space group, volume, bond lengths, coordination numbers.
+- **Electronic features:** Density of states at Fermi level, band gap, phonon frequencies (from DFT).
+- Features are computed using pymatgen and ASE, implemented in `feature_engineering.py`.
+
+**Cross-Validation Strategy:**
+- **Train/Test split:** 80/20 stratified by Tc range (low: <10 K, medium: 10–50 K, high: >50 K).
+- **K-fold cross-validation:** 5-fold CV to avoid overfitting.
+- **Metrics:** Mean Absolute Error (MAE) for Tc prediction, R² score, and classification accuracy (superconductor vs. non-superconductor).
+- **Uncertainty quantification:** Ensemble methods (bagging) and Bayesian neural networks for prediction intervals.
+- Implemented in `cross_validate.py`.
+
+**Scripts:**
+- `train_superconductor_model.py` – trains CGCNN, Random Forest, and XGBoost models on SuperCon data.
+- `feature_engineering.py` – computes features from crystal structures using pymatgen and ASE.
+- `cross_validate.py` – performs k-fold CV and reports metrics.
+- `predict_new_materials.py` – screens candidate structures from Materials Project using trained models.
+
+**References:**
+- Stanev et al. (2018) "Machine learning modeling of superconducting critical temperature" – https://www.nature.com/articles/s41524-018-0085-8
+- Matsumoto et al. (2020) "Machine learning for predicting superconducting critical temperature" – https://www.sciencedirect.com/science/article/pii/S0925838820301234
+- Xie & Grossman (2018) "Crystal Graph Convolutional Neural Networks for an Accurate and Interpretable Prediction of Material Properties" – https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.120.145301
+
 ## 5. Chemistry and Physics for Discovery and Manufacturing
 
 ### 5.1 Key Chemical Principles
