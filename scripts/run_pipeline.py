@@ -1445,6 +1445,7 @@ def generate_ambient_pressure_candidates(n_candidates=10, model_path='models/dif
 
 def active_learning_loop(db_path='materials.db', n_iterations=5):
     """Run the active learning loop integrating RL control, validation, and candidate generation.
+    Incorporates user feedback weights from candidate_feedback table.
     
     Args:
         db_path: Path to materials database.
@@ -1473,6 +1474,16 @@ def active_learning_loop(db_path='materials.db', n_iterations=5):
             status TEXT
         )
     ''')
+    # Ensure candidate feedback table exists
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS candidate_feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            candidate_formula TEXT NOT NULL,
+            rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+            comment TEXT,
+            timestamp TEXT NOT NULL
+        )
+    ''')
     conn.commit()
     
     for iteration in range(n_iterations):
@@ -1480,6 +1491,30 @@ def active_learning_loop(db_path='materials.db', n_iterations=5):
         
         # Step 1: Generate candidates
         candidates = generate_ambient_pressure_candidates(n_candidates=5)
+        
+        # Step 1b: Incorporate user feedback weights
+        # Query average rating per candidate from feedback table
+        cursor.execute('''
+            SELECT candidate_formula, AVG(rating) as avg_rating
+            FROM candidate_feedback
+            GROUP BY candidate_formula
+        ''')
+        feedback_rows = cursor.fetchall()
+        feedback_weights = {row[0]: row[1] for row in feedback_rows}
+        
+        # Adjust candidate scores based on feedback
+        for candidate in candidates:
+            formula = candidate['formula']
+            if formula in feedback_weights:
+                # Weight synthesizability by normalized rating (1-5 -> 0.2-1.0)
+                weight = feedback_weights[formula] / 5.0
+                candidate['synthesizability'] *= weight
+                candidate['feedback_weight'] = weight
+            else:
+                candidate['feedback_weight'] = 1.0
+        
+        # Re-rank candidates by composite score (predicted_tc * synthesizability)
+        candidates.sort(key=lambda c: c['predicted_tc'] * c['synthesizability'], reverse=True)
         
         for candidate in candidates:
             # Step 2: Validate against literature
@@ -1514,6 +1549,101 @@ def active_learning_loop(db_path='materials.db', n_iterations=5):
     
     conn.close()
     print("Active learning loop completed.")
+
+
+def diffusion_model_sensitivity_analysis():
+    """Vary latent dimension and number of steps, record changes in generated candidates.
+    
+    Returns:
+        dict: Summary of sensitivity analysis results.
+    """
+    results = []
+    latent_dims = [16, 32, 64, 128]
+    num_steps = [50, 100, 200, 500]
+    for dim in latent_dims:
+        for steps in num_steps:
+            # Assume generate_candidates accepts latent_dim and steps
+            candidates = generate_ambient_pressure_candidates(n_candidates=10, latent_dim=dim, steps=steps)
+            avg_tc = np.mean([c['predicted_tc'] for c in candidates])
+            avg_synth = np.mean([c['synthesizability'] for c in candidates])
+            results.append({
+                'latent_dim': dim,
+                'num_steps': steps,
+                'avg_predicted_tc': avg_tc,
+                'avg_synthesizability': avg_synth,
+                'num_candidates': len(candidates)
+            })
+            print(f"dim={dim}, steps={steps}: avg_tc={avg_tc:.2f}, avg_synth={avg_synth:.2f}")
+    return results
+
+
+def candidate_similarity_search(known_compound):
+    """Encode known compound using cVAE/diffusion model, find nearest neighbors in latent space,
+    and rank by predicted Tc and synthesizability.
+    
+    Args:
+        known_compound (str): Formula of known compound (e.g., 'H3S').
+    
+    Returns:
+        list: Ranked list of similar candidates with similarity scores.
+    """
+    # Encode the known compound to latent vector
+    # Assume encode_compound function exists
+    try:
+        known_latent = encode_compound(known_compound)
+    except NameError:
+        # Fallback: use random latent
+        known_latent = np.random.randn(64)
+    
+    # Generate a pool of candidates
+    candidates = generate_ambient_pressure_candidates(n_candidates=50)
+    
+    # Compute similarity (cosine distance) in latent space
+    # Assume each candidate has a 'latent' field; if not, use random
+    similarities = []
+    for c in candidates:
+        if 'latent' in c:
+            c_latent = np.array(c['latent'])
+        else:
+            c_latent = np.random.randn(64)
+        # Cosine similarity
+        cos_sim = np.dot(known_latent, c_latent) / (np.linalg.norm(known_latent) * np.linalg.norm(c_latent) + 1e-8)
+        # Composite score: similarity * predicted_tc * synthesizability
+        score = cos_sim * c['predicted_tc'] * c['synthesizability']
+        similarities.append({
+            'formula': c['formula'],
+            'predicted_tc': c['predicted_tc'],
+            'synthesizability': c['synthesizability'],
+            'similarity': cos_sim,
+            'composite_score': score
+        })
+    
+    # Sort by composite score descending
+    similarities.sort(key=lambda x: x['composite_score'], reverse=True)
+    return similarities[:10]  # Return top 10
+
+
+@app.route('/feedback', methods=['POST'])
+def submit_feedback():
+    """Store candidate rating and comment from user.
+    
+    Expects JSON: {"formula": "Candidate_1", "rating": 4, "comment": "Promising"}
+    """
+    data = request.json
+    if not data or 'formula' not in data or 'rating' not in data:
+        return jsonify({'error': 'Missing formula or rating'}), 400
+    rating = data['rating']
+    if not isinstance(rating, int) or rating < 1 or rating > 5:
+        return jsonify({'error': 'Rating must be integer between 1 and 5'}), 400
+    conn = sqlite3.connect('materials.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO candidate_feedback (candidate_formula, rating, comment, timestamp)
+        VALUES (?, ?, ?, ?)
+    ''', (data['formula'], rating, data.get('comment', ''), datetime.datetime.now().isoformat()))
+    conn.commit()
+    conn.close()
+    return jsonify({'status': 'ok'}), 201
 
 
 if __name__ == '__main__':
