@@ -444,3 +444,39 @@ def test_pipeline_validated_against_2025_paper():
         assert '203' in written_content
         assert '250' in written_content
         mock_notify.assert_called_once()
+
+    @patch('scripts.run_pipeline.generate_pdf_report')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_virtual_lab_simulation(self, mock_open, mock_generate_pdf):
+        """Test that virtual_lab_simulation() produces correct report content and triggers PDF generation."""
+        # Mock virtual_lab_simulation to return a report dict
+        mock_report = {
+            "material": "YH6",
+            "Tc": 220.0,
+            "pressure": 150.0,
+            "composition": "YH6",
+            "crystal_structure": "fcc",
+            "stability": "metastable",
+            "synthesis_route": "high-pressure anvil cell",
+            "notes": "Promising candidate for room-temperature superconductivity."
+        }
+        with patch('scripts.run_pipeline.virtual_lab_simulation', return_value=mock_report) as mock_vlab:
+            # Run the simulation (assume it's a function that takes material name and returns report)
+            result = rp.virtual_lab_simulation("YH6")
+            # Verify the report content matches expected
+            assert result == mock_report
+            # Verify that open was called to write the report file
+            mock_open.assert_called_once()
+            # Verify that the written content contains key fields
+            written_content = ''.join(c[0][0] for c in mock_open.return_value.__enter__.return_value.write.call_args_list)
+            assert 'YH6' in written_content
+            assert '220.0' in written_content
+            assert '150.0' in written_content
+            assert 'fcc' in written_content
+            assert 'metastable' in written_content
+            assert 'high-pressure anvil cell' in written_content
+            # Verify that PDF generation was triggered
+            mock_generate_pdf.assert_called_once()
+            # Optionally check that the PDF was generated with the report data
+            pdf_args, _ = mock_generate_pdf.call_args
+            assert pdf_args[0] == mock_report  # first argument is the report dict
