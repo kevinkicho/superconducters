@@ -283,7 +283,16 @@ We employ a Crystal Graph Convolutional Neural Network (CGCNN) as the primary su
 - **Edge features:** 41-dimensional vector encoding bond length, bond type, and interatomic distance.
 - **Convolution layers:** 3 graph convolutional layers with 64, 128, and 256 hidden units, each followed by batch normalization and ReLU activation.
 - **Global pooling:** Sum pooling over all node features to produce a graph-level representation.
-- **Fully connected layers:** 2 hidden layers (256 and 128 units) with dropout (0.2) and a final linear output for Tc.
+- **Fully connected layers:** 2 hidden layers (256 and 128 units) with dropout (0.2) and a final ## 3.3 Model Training and Validation
+We train the GNN surrogate model (Section 11) on a curated dataset of ~15,000 known superconductors from the SuperCon database and literature. The training procedure follows the details in Section 11.3. Validation is performed via 5-fold cross-validation, with a holdout test set of 2,000 compounds. Key metrics: R² ≥ 0.90, MAE ≤ 15 K for Tc prediction. We also validate against high-pressure hydride data from Drozdov et al. (Nature 2015, 2019) to ensure extrapolation to high-Tc regimes. Uncertainty quantification via Monte Carlo dropout is used to flag low-confidence predictions for experimental follow-up.
+
+## 3.4 Active Learning Loop
+The active learning loop (Section 10) iteratively selects the most informative candidates for experimental synthesis and measurement. The acquisition function balances exploration (high uncertainty) and exploitation (high predicted Tc). After each experimental batch (typically 10–20 compounds), the surrogate model is retrained on the new data. This loop continues until a room-temperature superconductor is discovered or the candidate pool is exhausted. The loop is designed to converge within 5–10 iterations based on simulations.
+
+## 3.5 Integration with Experimental Feedback
+Experimental results (Tc, pressure, structure) are fed back into the pipeline to update both the surrogate model and the generative model. The generative model (Section 12.1) is fine-tuned via transfer learning to bias toward compositions that yield high Tc in experiments. Additionally, failed experiments (no superconductivity) are used as negative examples to improve the model's discrimination. This closed-loop integration ensures that the discovery strategy continuously improves with each experimental cycle.
+
+linear output for Tc.
 - **Loss function:** Mean squared error (MSE) with L2 regularization (weight decay = 1e-5).
 
 ### 11.3 Training
