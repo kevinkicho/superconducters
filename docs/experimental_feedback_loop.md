@@ -877,3 +877,20 @@ See docs/experimental_feedback_loop.md for full details.
 ```
 
 This function can be called as part of the pipeline or as a standalone utility.
+
+
+### 9. Diffusion Model Integration for Candidate Generation
+
+A denoising diffusion probabilistic model (DDPM) is used to generate novel candidate crystal structures for room-temperature superconductivity. The workflow is as follows:
+
+1. **Training Data**: The diffusion model is trained on a curated set of known superconducting crystal structures (from ICSD, COD, and literature) augmented with high-pressure hydride structures from recent computational studies (e.g., CSH, YH₃, LaH₁₀). Each structure is represented as a periodic graph with atomic types, positions, and lattice parameters.
+
+2. **Candidate Generation**: The trained diffusion model is sampled to produce thousands of candidate structures. Sampling is conditioned on target properties (e.g., predicted Tc > 300 K, synthesizability score > 0.8) using classifier-free guidance. The model outputs are relaxed with DFT (VASP) to obtain stable geometries.
+
+3. **Property Prediction**: Each relaxed candidate is passed through the ensemble of ML models (CrystalGNN, PINN, random forest) to predict Tc, critical current density, and synthesizability. Predictions are combined with uncertainty estimates (Monte Carlo dropout, ensemble variance).
+
+4. **Selection for Validation**: Candidates are ranked by a multi-objective score: `score = w₁·Tc_pred + w₂·synthesizability - w₃·uncertainty`. The top 10–20 candidates per cycle are selected for experimental synthesis. Selection also considers chemical diversity (via fingerprint similarity) to avoid redundant exploration.
+
+5. **Feedback Loop**: Experimental results (Tc, structure, stability) are ingested into the database (see Section 1). The diffusion model is periodically fine-tuned on the new data (every 5 cycles or when data drift is detected) to bias generation toward experimentally validated regions of chemical space.
+
+This approach is inspired by recent work on generative models for materials discovery (e.g., Xie et al., *Nature Communications* 2023; Merchant et al., *Nature* 2023). The diffusion model code is located in `scripts/diffusion_candidate_generator.py` and is invoked by the active learning loop in `scripts/run_pipeline.py`.
