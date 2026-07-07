@@ -324,3 +324,48 @@ We use a conditional variational autoencoder (CVAE) trained on the Materials Pro
 
 ### 12.4 Integration with Active Learning
 The candidate generation workflow runs in parallel with the active learning loop. After each active learning round, the generative model is fine-tuned on the new experimental data (via transfer learning) to bias generation toward high-Tc regions of the latent space. This closed-loop design accelerates discovery.
+
+
+## 13. Decision Gates
+
+To ensure efficient resource allocation and avoid pursuing dead ends, the discovery pipeline incorporates a series of decision gates. Each gate evaluates candidates against predefined criteria before advancing to the next stage.
+
+### 13.1 Gate 1: Compositional Feasibility
+- **Criteria:** Candidate composition must be charge-balanced, contain only elements with known synthesis routes, and have a formation energy within 50 meV/atom of the convex hull (from fast surrogate model).
+- **Action:** Pass to DFT relaxation; otherwise discard.
+
+### 13.2 Gate 2: Structural Stability (DFT)
+- **Criteria:** After DFT relaxation, the structure must be dynamically stable (no imaginary phonon modes at Γ-point) and have a pressure derivative of Tc > 0 (i.e., Tc increases with pressure, indicating conventional mechanism).
+- **Action:** Pass to Tc prediction; otherwise flag for low-priority re-evaluation.
+
+### 13.3 Gate 3: Predicted Tc Threshold
+- **Criteria:** Predicted Tc (from GNN surrogate) must exceed 250 K at ≤50 GPa, with uncertainty < 30 K. Candidates with Tc > 300 K at any pressure are automatically promoted.
+- **Action:** Pass to experimental synthesis queue; otherwise return to generative model for re-sampling.
+
+### 13.4 Gate 4: Experimental Validation
+- **Criteria:** After synthesis, the sample must show a clear diamagnetic signal (Meissner effect) and a sharp resistivity drop to zero. Reproducibility across three independent batches is required.
+- **Action:** If confirmed, candidate is designated a lead compound for further optimization; if not, the failure mode is analyzed and fed back to the ML models.
+
+## 14. Integration with Experimental Pipeline
+
+The computational discovery pipeline is tightly coupled with an experimental synthesis and characterization workflow. The integration is designed as a closed loop:
+
+### 14.1 Synthesis Queue Management
+- Candidates passing Gate 3 are added to a priority queue. Each candidate is assigned a synthesis difficulty score based on required pressure, temperature, and precursor availability.
+- The queue is processed by a robotic high-pressure synthesis system (e.g., laser-heated diamond anvil cell or multi-anvil press) capable of running 10–20 experiments per week.
+
+### 14.2 Characterization Feedback
+- Synthesized samples are characterized by:
+  - **Resistivity:** Four-probe measurement from 2 K to 300 K.
+  - **Magnetization:** SQUID magnetometry to detect Meissner effect.
+  - **X-ray diffraction:** To confirm crystal structure and detect impurities.
+- Results (Tc, pressure, structure, purity) are recorded in a shared database and automatically compared to predictions.
+
+### 14.3 Model Retraining
+- Every 50 experimental results, the GNN surrogate and the generative CVAE are retrained on the combined computational + experimental dataset. This improves prediction accuracy and biases generation toward experimentally accessible regions.
+- Discrepancies between predicted and measured Tc are analyzed to identify systematic errors (e.g., missing anharmonic effects, incorrect stoichiometry).
+
+### 14.4 Human-in-the-Loop Review
+- A monthly review meeting evaluates the top 10 candidates from the queue, the retrained model performance, and any emerging literature. Decisions to adjust synthesis parameters, explore new chemical families, or halt unpromising lines are made collaboratively.
+
+This integrated pipeline ensures that computational predictions are continuously validated and refined by experimental reality, accelerating the discovery of room-temperature superconductors.
