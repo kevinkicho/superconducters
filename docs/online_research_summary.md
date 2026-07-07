@@ -29,12 +29,21 @@
 - **Pressure** stabilizes hydrogen-rich phases and metallizes hydrogen. Ambient-pressure synthesis requires chemical precompression (e.g., using rare-earth or alkaline-earth metals).
 - **Doping** (e.g., hole or electron doping) can tune the Fermi level to enhance Tc.
 
-### 5. Manufacturing Challenges
+### 5. Bilayer Nickelate La₃Ni₂O₇ (Tc ~80 K at 14 GPa)
+- **La₃Ni₂O₇** is a bilayer Ruddlesden–Popper nickelate that becomes superconducting at ~80 K under ~14 GPa hydrostatic pressure (Sun et al., *Nature* 621, 493–498, 2023).
+  - Source: [https://www.nature.com/articles/s41586-023-06424-7](https://www.nature.com/articles/s41586-023-06424-7)
+- The compound crystallizes in a tetragonal structure (I4/mmm) at ambient pressure, with NiO₂ bilayers separated by La–O spacer layers.
+- Pressure suppresses a density-wave-like transition near 120 K and induces superconductivity.
+- The superconducting mechanism is debated; likely involves strong electron correlations and possibly spin fluctuations, with Ni 3d–O 2p hybridization.
+- Confirmed by multiple groups, but sample synthesis (high-pressure floating zone) is challenging and oxygen non-stoichiometry can affect Tc.
+- This material is a promising platform for exploring room-temperature superconductivity via chemical substitution (e.g., Sr, Ca) or epitaxial strain.
+
+### 6. Manufacturing Challenges
 - **High-pressure synthesis** (diamond anvil cells, multi-anvil presses) is not scalable. Current record Tc materials require >100 GPa.
 - **Metastable retention** — some high-pressure phases can be quenched to ambient pressure (e.g., H₃S decomposes upon decompression).
 - **Thin-film deposition** (e.g., MBE, PLD) may allow stabilization of metastable phases on substrates.
 
-### 6. Conclusions and Open Questions
+### 7. Conclusions and Open Questions
 - No confirmed room-temperature ambient-pressure superconductor exists as of 2025.
 - The hydride route is the most promising but requires pressure reduction by orders of magnitude.
 - Machine learning and high-throughput DFT are accelerating discovery.

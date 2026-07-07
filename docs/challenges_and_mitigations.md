@@ -16,6 +16,10 @@ RTS materials are often sensitive to air, moisture, and temperature fluctuations
 Laboratory-scale synthesis methods (e.g., diamond anvil cells) are not amenable to mass production. Reproducibility of superconducting transitions across batches remains a challenge.
 - **Mitigation**: Transition to scalable techniques such as chemical vapor deposition (CVD) or high-pressure high-temperature (HPHT) sintering. Establish standardized protocols and in-situ monitoring to ensure batch-to-batch consistency.
 
+## Data Reproducibility and Fraud Risk
+The superconductivity field has been plagued by high-profile retractions (e.g., Ranga Dias’s room-temperature claims, LK-99) due to data fabrication, insufficient sample characterization, and lack of independent replication. These incidents undermine trust and slow progress.
+- **Mitigation**: Implement independent replication by multiple labs before publication. Adopt open data and code sharing (e.g., Zenodo, Figshare) to allow scrutiny. Encourage pre-registration of experimental protocols and analysis plans. Establish community standards for reporting resistance and magnetic susceptibility data. [8]
+
 ## Sample Purity
 The presence of impurities and defects in synthesized samples can significantly suppress the superconducting transition temperature (Tc) and introduce spurious signals. Recent studies on hydride superconductors have shown that even trace amounts of unreacted precursors or byproducts can mimic or mask true superconductivity.
 - **Mitigation**: Employ high-purity starting materials and rigorous purification steps (e.g., zone refining, distillation). Use advanced characterization techniques such as synchrotron X‑ray diffraction and energy‑dispersive spectroscopy to verify phase purity. Implement combinatorial synthesis to rapidly screen for optimal purity conditions. [1]
