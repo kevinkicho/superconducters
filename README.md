@@ -32,3 +32,89 @@ Ensure you have the required dependencies installed. For test coverage, you can 
 ## How to Contribute
 
 We welcome contributions! To propose changes, please open an issue describing your idea before submitting a pull request. Report bugs by creating a detailed issue with steps to reproduce. When submitting a pull request, ensure your code follows the project's style and includes relevant tests. All new features must include unit tests in the `tests/` directory. Run the full test suite before submitting to ensure nothing is broken. For more information, see our [experimental feedback loop guide](docs/experimental_feedback_loop.md).
+
+
+## User Manual
+
+### Installation
+
+Ensure you have Python 3.8+ installed. Clone the repository and install required packages:
+
+```
+pip install -r requirements.txt
+```
+
+If you do not have a `requirements.txt`, install the core dependencies manually:
+
+```
+pip install numpy scipy matplotlib pandas scikit-learn pytest
+```
+
+### Configuration
+
+The pipeline uses a configuration file `config.yaml` (if present) or environment variables. Key settings include:
+
+- `DATA_DIR`: Directory for input data (default: `data/`)
+- `OUTPUT_DIR`: Directory for output reports (default: `output/`)
+- `MAX_CANDIDATES`: Maximum number of candidates to evaluate (default: 10)
+
+You can override these by setting environment variables or editing `config.yaml`.
+
+### Running the Pipeline
+
+Execute the main pipeline script:
+
+```
+python scripts/run_pipeline.py
+```
+
+This will:
+
+1. Load candidate materials from `candidate_materials.md` (or a database).
+2. Run simulations (Monte Carlo for manufacturing, active learning for discovery).
+3. Generate updated reports in `candidate_materials.md`, `roadmap.md`, and other output files.
+
+To run a specific candidate, use:
+
+```
+python scripts/run_pipeline.py --candidate "YH3"
+```
+
+### Interpreting Results
+
+After running the pipeline, check the following files:
+
+- `candidate_materials.md`: Updated list of candidates with predicted Tc, synthesis parameters, and sensitivity analysis.
+- `roadmap.md`: Updated project roadmap with milestones and validation plan.
+- `output/`: Contains log files, plots (e.g., `sensitivity_top_candidate.png`), and simulation results.
+
+Key metrics to look for:
+
+- **Predicted Tc**: The critical temperature from the PINN model.
+- **Yield**: Manufacturing yield from Monte Carlo simulation.
+- **Cost**: Estimated cost per gram.
+
+### Examples
+
+**Example 1: Basic run**
+
+```
+python scripts/run_pipeline.py
+```
+
+Expected output: Console logs showing progress, and updated markdown files.
+
+**Example 2: Run with custom configuration**
+
+```
+CONFIG_PATH=my_config.yaml python scripts/run_pipeline.py
+```
+
+### Troubleshooting
+
+- **ModuleNotFoundError**: Ensure all dependencies are installed. Run `pip install -r requirements.txt`.
+- **FileNotFoundError**: Check that `candidate_materials.md` exists in the project root. If not, create it with initial candidates.
+- **Simulation fails**: Check the log file `output/pipeline.log` for error details. Ensure input data is valid.
+- **Unexpected results**: Verify that the configuration parameters are reasonable. For Tc predictions, ensure the candidate material is in the supported list.
+
+For further assistance, open an issue on the repository.
