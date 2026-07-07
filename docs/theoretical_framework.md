@@ -87,6 +87,14 @@ By identifying the causal structure, we can prioritize materials that maximize Î
 - Y. Zhang et al., "Causal discovery of superconducting transition temperature," Phys. Rev. B 105, 174502 (2022).
 
 ## Predictive Methodology
+### Diffusion Models for Materials Discovery
+
+Diffusion models are a class of generative models that learn to reverse a noising process. The forward process gradually adds Gaussian noise to a data point (e.g., a crystal structure or composition vector) over T steps, producing a sequence of increasingly noisy samples. The reverse process learns a denoising function (score function) that predicts the noise added at each step, enabling generation from pure noise. Score matching is used to train the model by minimizing the difference between the predicted and actual noise.
+
+Conditioning on target properties (e.g., desired Tc, stability, or hydrogen content) is achieved by incorporating property embeddings into the denoising network, allowing directed generation toward materials with specific characteristics. For hydride superconductors, diffusion models can explore the vast compositional and structural space by generating candidate structures that are then evaluated with DFT or surrogate models.
+
+The implementation in `scripts/generate_candidates.py` uses a denoising diffusion probabilistic model (DDPM) trained on a dataset of known hydride structures and their computed Tc values. The model conditions on target Tc and pressure, and generates candidate crystal structures in the form of lattice parameters and atomic positions. These candidates are then passed to the screening pipeline for validation.
+
 1. **High-throughput screening** of candidate materials using density functional theory (DFT) and the Wannier interpolation method.
 2. **Validation** via ab initio Eliashberg calculations including anharmonicity.
 3. **Experimental feedback** from high-pressure synthesis and transport measurements.

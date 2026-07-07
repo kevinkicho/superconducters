@@ -14,6 +14,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
+from predict_tc import predict_tc
 
 # Paths
 DATA_DIR = "data"
@@ -217,50 +218,190 @@ def generate_candidates(model, conditions, num_per_condition=10):
     return candidates
 
 
+class DenoisingDiffusion(nn.Module):
+    """Denoising Diffusion Probabilistic Model for composition generation."""
+    def __init__(self, input_dim=NUM_ELEMENTS, cond_dim=COND_DIM, hidden_dim=256, num_timesteps=1000):
+        super().__init__()
+        self.input_dim = input_dim
+        self.num_timesteps = num_timesteps
+        # Cosine noise schedule
+        betas = self.cosine_beta_schedule(num_timesteps)
+        self.register_buffer('betas', betas)
+        alphas = 1. - betas
+        self.register_buffer('alphas', alphas)
+        self.register_buffer('alphas_cumprod', torch.cumprod(alphas, dim=0))
+        self.register_buffer('sqrt_alphas_cumprod', torch.sqrt(self.alphas_cumprod))
+        self.register_buffer('sqrt_one_minus_alphas_cumprod', torch.sqrt(1. - self.alphas_cumprod))
+        # Denoiser network (MLP with time and condition conditioning)
+        self.denoiser = nn.Sequential(
+            nn.Linear(input_dim + cond_dim + 1, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, input_dim)
+        )
+
+    def cosine_beta_schedule(self, timesteps, s=0.008):
+        steps = timesteps + 1
+        x = torch.linspace(0, timesteps, steps)
+        alphas_cumprod = torch.cos(((x / timesteps) + s) / (1 + s) * torch.pi * 0.5) ** 2
+        alphas_cumprod = alphas_cumprod / alphas_cumprod[0]
+        betas = 1 - (alphas_cumprod[1:] / alphas_cumprod[:-1])
+        return torch.clip(betas, 0.0001, 0.9999)
+
+    def forward_diffusion(self, x0, t, noise=None):
+        if noise is None:
+            noise = torch.randn_like(x0)
+        sqrt_alpha_cumprod_t = self.sqrt_alphas_cumprod[t].view(-1, 1)
+        sqrt_one_minus_alpha_cumprod_t = self.sqrt_one_minus_alphas_cumprod[t].view(-1, 1)
+        return sqrt_alpha_cumprod_t * x0 + sqrt_one_minus_alpha_cumprod_t * noise, noise
+
+    def denoise(self, x_t, t, cond):
+        # t: (batch,) long, cond: (batch, cond_dim)
+        t_embed = t.float().view(-1, 1) / self.num_timesteps  # normalize to [0,1]
+        input_vec = torch.cat([x_t, cond, t_embed], dim=-1)
+        return self.denoiser(input_vec)
+
+    def sample(self, cond, num_samples=1, device='cpu'):
+        """Generate samples from noise."""
+        batch_size = cond.shape[0]
+        x = torch.randn(batch_size, self.input_dim, device=device)
+        for t in reversed(range(self.num_timesteps)):
+            t_tensor = torch.full((batch_size,), t, device=device, dtype=torch.long)
+            predicted_noise = self.denoise(x, t_tensor, cond)
+            alpha_t = self.alphas[t]
+            alpha_cumprod_t = self.alphas_cumprod[t]
+            beta_t = self.betas[t]
+            if t > 0:
+                noise = torch.randn_like(x)
+            else:
+                noise = 0
+            x = (1 / torch.sqrt(alpha_t)) * (x - (beta_t / torch.sqrt(1 - alpha_cumprod_t)) * predicted_noise) + torch.sqrt(beta_t) * noise
+        return x
+
+
+def train_ddpm(model, dataloader, epochs=100, lr=1e-3, device='cpu'):
+    model.to(device)
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    model.train()
+    for epoch in range(epochs):
+        total_loss = 0.0
+        for batch in dataloader:
+            x0, cond = batch
+            x0 = x0.to(device)
+            cond = cond.to(device)
+            batch_size = x0.shape[0]
+            t = torch.randint(0, model.num_timesteps, (batch_size,), device=device)
+            noise = torch.randn_like(x0)
+            x_t, noise = model.forward_diffusion(x0, t, noise)
+            predicted_noise = model.denoise(x_t, t, cond)
+            loss = nn.functional.mse_loss(predicted_noise, noise)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        if (epoch+1) % 10 == 0:
+            print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(dataloader.dataset):.4f}")
+
+
+def generate_ddpm_candidates(model, conditions, num_per_condition=10, device='cpu'):
+    model.eval()
+    candidates = []
+    with torch.no_grad():
+        for cond in conditions:
+            cond_tensor = torch.tensor(cond, dtype=torch.float32, device=device).unsqueeze(0).repeat(num_per_condition, 1)
+            samples = model.sample(cond_tensor, num_samples=num_per_condition, device=device)
+            for vec in samples.cpu().numpy():
+                formula = vector_to_formula(vec)
+                if formula:
+                    candidates.append((formula, cond))
+    return candidates
+
+
 def main():
-    parser = argparse.ArgumentParser(description="cVAE candidate generation")
+    parser = argparse.ArgumentParser(description="Candidate generation with cVAE or DDPM")
     parser.add_argument("--train", action="store_true", help="Train the model from scratch")
     parser.add_argument("--epochs", type=int, default=100, help="Number of training epochs")
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
-    parser.add_argument("--latent_dim", type=int, default=32, help="Latent dimension")
+    parser.add_argument("--latent_dim", type=int, default=32, help="Latent dimension (cVAE only)")
     parser.add_argument("--num_candidates", type=int, default=10, help="Number of candidates per condition")
     parser.add_argument("--target_tc", type=float, default=300.0, help="Target Tc (K)")
     parser.add_argument("--target_pressure", type=float, default=0.0, help="Target pressure (GPa)")
+    parser.add_argument("--model_type", type=str, default="cvae", choices=["cvae", "ddpm"], help="Model type")
+    parser.add_argument("--rank", action="store_true", help="Rank candidates by predicted Tc using predict_tc")
     args = parser.parse_args()
 
     # Load dataset
     dataset = load_data(DB_FILE)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
 
-    # Initialize model
-    model = ConditionalVAE(latent_dim=args.latent_dim)
+    if args.model_type == "cvae":
+        # Initialize cVAE model
+        model = ConditionalVAE(latent_dim=args.latent_dim)
+        if args.train:
+            print("Training cVAE...")
+            train(model, dataloader, epochs=args.epochs)
+            os.makedirs(MODEL_DIR, exist_ok=True)
+            torch.save(model.state_dict(), MODEL_PATH)
+            print(f"Model saved to {MODEL_PATH}")
+        else:
+            if not os.path.exists(MODEL_PATH):
+                print(f"Error: No trained model found at {MODEL_PATH}. Use --train first.", file=sys.stderr)
+                sys.exit(1)
+            model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu"))
+            print(f"Loaded cVAE model from {MODEL_PATH}")
 
-    if args.train:
-        print("Training cVAE...")
-        train(model, dataloader, epochs=args.epochs)
-        # Save model
-        os.makedirs(MODEL_DIR, exist_ok=True)
-        torch.save(model.state_dict(), MODEL_PATH)
-        print(f"Model saved to {MODEL_PATH}")
+        # Generate candidates
+        conditions = [
+            [args.target_tc, args.target_pressure],
+            [args.target_tc + 50, args.target_pressure],
+            [args.target_tc, args.target_pressure + 50],
+        ]
+        candidates = generate_candidates(model, conditions, num_per_condition=args.num_candidates)
+    else:  # ddpm
+        model = DenoisingDiffusion()
+        if args.train:
+            print("Training DDPM...")
+            train_ddpm(model, dataloader, epochs=args.epochs)
+            os.makedirs(MODEL_DIR, exist_ok=True)
+            torch.save(model.state_dict(), os.path.join(MODEL_DIR, "ddpm_model.pt"))
+            print(f"DDPM model saved to {os.path.join(MODEL_DIR, 'ddpm_model.pt')}")
+        else:
+            ddpm_path = os.path.join(MODEL_DIR, "ddpm_model.pt")
+            if not os.path.exists(ddpm_path):
+                print(f"Error: No trained DDPM model found at {ddpm_path}. Use --train first.", file=sys.stderr)
+                sys.exit(1)
+            model.load_state_dict(torch.load(ddpm_path, map_location="cpu"))
+            print(f"Loaded DDPM model from {ddpm_path}")
+
+        # Generate candidates
+        conditions = [
+            [args.target_tc, args.target_pressure],
+            [args.target_tc + 50, args.target_pressure],
+            [args.target_tc, args.target_pressure + 50],
+        ]
+        candidates = generate_ddpm_candidates(model, conditions, num_per_condition=args.num_candidates)
+
+    # If --rank, predict Tc using predict_tc and sort
+    if args.rank:
+        print("\nRanking candidates by predicted Tc...")
+        ranked = []
+        for formula, cond in candidates:
+            try:
+                predicted_tc = predict_tc(formula)
+                ranked.append((formula, cond, predicted_tc))
+            except Exception as e:
+                print(f"Warning: Could not predict Tc for {formula}: {e}")
+        ranked.sort(key=lambda x: x[2], reverse=True)
+        print(f"\nRanked candidates (top {min(10, len(ranked))}):")
+        for i, (formula, cond, tc) in enumerate(ranked[:10]):
+            print(f"  {i+1}. {formula}  (Tc_pred={tc:.1f}K, target Tc={cond[0]:.0f}K, P={cond[1]:.0f}GPa)")
     else:
-        # Load pre-trained model
-        if not os.path.exists(MODEL_PATH):
-            print(f"Error: No trained model found at {MODEL_PATH}. Use --train first.", file=sys.stderr)
-            sys.exit(1)
-        model.load_state_dict(torch.load(MODEL_PATH, map_location="cpu"))
-        print(f"Loaded model from {MODEL_PATH}")
-
-    # Generate candidates for target conditions
-    conditions = [
-        [args.target_tc, args.target_pressure],
-        [args.target_tc + 50, args.target_pressure],
-        [args.target_tc, args.target_pressure + 50],
-    ]
-    candidates = generate_candidates(model, conditions, num_per_condition=args.num_candidates)
-
-    print(f"\nGenerated {len(candidates)} candidate compositions:")
-    for formula, cond in candidates:
-        print(f"  {formula}  (Tc={cond[0]:.0f}K, P={cond[1]:.0f}GPa)")
+        print(f"\nGenerated {len(candidates)} candidate compositions:")
+        for formula, cond in candidates:
+            print(f"  {formula}  (Tc={cond[0]:.0f}K, P={cond[1]:.0f}GPa)")
 
 
 if __name__ == "__main__":
