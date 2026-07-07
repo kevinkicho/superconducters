@@ -49,6 +49,10 @@ where \(E_{\mathbf{k}} = \sqrt{\xi_{\mathbf{k}}^2 + \Delta_{\mathbf{k}}^2}\). Fo
 - X.-L. Qi and S.-C. Zhang, Rev. Mod. Phys. 83, 1057 (2011).
 - Y. Ando and L. Fu, Annu. Rev. Condens. Matter Phys. 6, 361 (2015).
 
+## 7. Topological Superconductivity
+
+Topological superconductivity is a paradigm where the superconducting gap exhibits nontrivial topology, hosting Majorana bound states at edges or vortices. These Majorana modes are non-Abelian anyons with potential for fault-tolerant quantum computing. Topological insulators, such as Bi2Se3, provide a platform for inducing superconductivity via proximity effect or doping, leading to p-wave pairing and protected edge states. Candidate materials include doped topological insulators (e.g., Cu_xBi2Se3), heterostructures of topological insulators with conventional superconductors, and transition metal dichalcogenides with strong spin-orbit coupling. For a detailed treatment of the pairing mechanism and BdG formalism, see Section 6.
+
 ## Predictive Methodology
 1. **High-throughput screening** of candidate materials using density functional theory (DFT) and the Wannier interpolation method.
 2. **Validation** via ab initio Eliashberg calculations including anharmonicity.
