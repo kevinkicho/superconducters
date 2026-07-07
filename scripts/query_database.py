@@ -52,6 +52,12 @@ def query(entries, args):
             continue
         if args.mechanism and entry.get("mechanism") != args.mechanism:
             continue
+        if args.feasibility_score_min is not None and entry.get("feasibility_score", 0) < args.feasibility_score_min:
+            continue
+        if args.feasibility_score_max is not None and entry.get("feasibility_score", 0) > args.feasibility_score_max:
+            continue
+        if args.material_class and entry.get("material_class") != args.material_class:
+            continue
         results.append(entry)
     return results
 

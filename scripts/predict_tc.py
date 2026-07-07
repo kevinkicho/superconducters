@@ -47,6 +47,7 @@ DEBYE_TEMP: Dict[str, float] = {
     'Si': 645, 'Sn': 200, 'Sr': 147, 'Ta': 240, 'Tc': 411, 'Te': 153,
     'Ti': 420, 'Tl': 78, 'V': 380, 'W': 400, 'Y': 280, 'Zn': 327,
     'Zr': 291,
+    'H': 100, 'He': 20, 'N': 100, 'O': 100, 'F': 100, 'S': 100,
 }
 
 # Atomic masses (amu) for common elements (approximate)
@@ -481,3 +482,71 @@ def average_debye(formula):
     if total_atoms == 0:
         raise ValueError("No atoms parsed")
     return total_debye / total_atoms
+
+DATABASE_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
+
+def load_data():
+    with open(DATABASE_PATH, 'r') as f:
+        return json.load(f)
+
+def mcmillan_tc(lam, theta_D, mu_star=0.1):
+    if lam <= mu_star:
+        return 0.0
+    exponent = -1.04 * (1 + lam) / (lam - mu_star * (1 + 0.62 * lam))
+    return (theta_D / 1.2) * math.exp(exponent)
+
+def allen_dynes_tc(lam, theta_D, mu_star=0.1):
+    if lam <= mu_star:
+        return 0.0
+    f1 = (1 + (lam / (2.46 * (1 + 3.8 * mu_star)))**1.5)**(1/3)
+    f2 = 1 + (lam**2 * (1 - 0.1 * mu_star)) / (lam**2 + 1.5 * (1 + 0.5 * mu_star))
+    exponent = -1.04 * (1 + lam) / (lam - mu_star * (1 + 0.62 * lam))
+    return (theta_D / 1.2) * f1 * f2 * math.exp(exponent)
+
+def predict_tc(formula, pressure=0):
+    data = load_data()
+    for entry in data:
+        comp = entry.get('composition', entry.get('name', ''))
+        if comp == formula and entry.get('pressure', 0) == pressure:
+            return entry.get('Tc', 0)
+    avg_val = average_valence(formula)
+    avg_deb = average_debye(formula)
+    lam = 0.5 * avg_val + 0.001 * avg_deb - 0.5
+    if pressure > 0:
+        lam += 0.001 * pressure
+    return allen_dynes_tc(lam, avg_deb, mu_star=0.1)
+
+def train_model():
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import r2_score, mean_squared_error
+    import numpy as np
+    data = load_data()
+    X = []
+    y = []
+    for entry in data:
+        formula = entry.get('composition', entry.get('name', ''))
+        if not formula:
+            continue
+        try:
+            avg_val = average_valence(formula)
+            avg_deb = average_debye(formula)
+            tc = entry.get('Tc', None)
+            if tc is None:
+                continue
+            X.append([avg_val, avg_deb])
+            y.append(tc)
+        except:
+            continue
+    if len(X) < 5:
+        raise ValueError("Not enough data to train model")
+    X = np.array(X)
+    y = np.array(y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    rf = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf.fit(X_train, y_train)
+    y_pred = rf.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    print(f"Model trained. Test R² = {r2:.4f}, RMSE = {rmse:.4f} K")
+    return rf
