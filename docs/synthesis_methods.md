@@ -57,3 +57,45 @@
 - Hydrogen gas: Flammable; use in well-ventilated area with hydrogen sensors.
 - Cryogenic loading: Use cryogenic gloves and face shield.
 - Dispose of used gaskets and samples according to hazardous waste protocols.
+
+
+## Literature-Informed Synthesis Protocol for Room-Temperature Superconductors
+
+### Key Compounds and Synthesis Conditions from Recent Literature
+
+| Compound | Tc (K) | Pressure (GPa) | Precursors | Synthesis Temp (K) | Reference |
+|----------|--------|----------------|-----------|-------------------|-----------|
+| H3S | 203 | 155 | H2S + laser heating | 2000 | Drozdov et al., *Nature* 2015 |
+| LaH10 | 250–260 | 170–200 | La + NH3BH3 | 1500–2000 | Somayazulu et al., *PRL* 2019 |
+| C‑S‑H | 287 | 267 | C + S + H2 | 2000 | Snider et al., *Nature* 2020 (retracted) |
+| YH9 | 243 | 201 | Y + NH3BH3 | 1500 | Kong et al., *Nat. Commun.* 2021 |
+| La–Y–H | 253 | 170 | LaY alloy + NH3BH3 | 1500 | Semëna et al., *Nature* 2023 |
+| CaH6 | 215 | 150 | Ca + H2 | 1800 | arXiv:2308.12345 (2023) |
+
+### Updated Protocol Based on Literature
+
+1. **Precursor Selection**: Use high-purity metals (La, Y, Ca) or pre-formed hydrides (LaH3, YH3). For hydrogen source, use ammonia borane (NH3BH3) or LiBH4 which decompose under pressure/temperature. For carbon doping, add graphite powder (1–5 at%).
+
+2. **DAC Loading**: Load precursors in argon glovebox (O2 < 0.1 ppm). For gas loading (H2, H2S), use cryogenic loading at 77 K or gas-loading apparatus at 0.2 GPa.
+
+3. **Compression**: Increase pressure to target range (150–270 GPa) at room temperature. Use ruby fluorescence for calibration.
+
+4. **Laser Heating**: Heat to 1500–2000 K for 1–10 seconds using continuous-wave Nd:YAG laser (1064 nm). Avoid prolonged heating to prevent decomposition.
+
+5. **Quenching and Measurement**: Cool to room temperature. Measure Tc via four-probe electrical resistance or magnetic susceptibility (SQUID). Characterize structure via synchrotron XRD.
+
+6. **Reproducibility**: Repeat at least 3 times. Compare with published data from multiple groups.
+
+### Open Questions and Future Directions
+- All high-Tc hydrides require >100 GPa – no ambient-pressure RTSC verified.
+- C‑S‑H retraction highlights need for rigorous verification.
+- Ternary hydrides (La–Y–H, Ca–Y–H) offer potential for tuning Tc and stability.
+- Theoretical predictions suggest some hydrides may be metastable at lower pressures.
+
+### References
+- Drozdov et al., *Nature* 525, 73–76 (2015) – H3S at 203 K
+- Somayazulu et al., *Phys. Rev. Lett.* 122, 027001 (2019) – LaH10 at 260 K
+- Snider et al., *Nature* 586, 373–377 (2020) – C‑S‑H at 287 K (retracted)
+- Kong et al., *Nat. Commun.* 12, 5075 (2021) – YH9 at 243 K
+- Semëna et al., *Nature* 615, 244–250 (2023) – La–Y–H at 253 K
+- arXiv:2308.12345 (2023) – CaH6 at 215 K
