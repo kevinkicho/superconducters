@@ -610,3 +610,256 @@ The recovery strategy is validated through periodic resilience tests:
 ### Continuous Improvement
 
 All failure events are recorded in a centralized log (Elasticsearch) and analyzed weekly to identify patterns. Root cause analysis is performed for each class of failure, and the recovery strategy is updated accordingly. The `docs/failure_recovery_log.md` tracks historical incidents and lessons learned.
+
+
+## Production Deployment Guide
+
+This section provides step-by-step instructions for deploying the experimental feedback loop pipeline to a production cloud environment (AWS/GCP) using Docker, Kubernetes, auto-scaling, monitoring with Prometheus/Grafana, and alerting.
+
+### 1. Containerization with Docker
+
+Create a `Dockerfile` in the project root:
+
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+CMD ["python", "scripts/run_pipeline.py"]
+```
+
+Build and tag the image:
+
+```bash
+docker build -t feedback-loop:latest .
+```
+
+### 2. Kubernetes Deployment
+
+Create a Kubernetes deployment manifest (`k8s/deployment.yaml`):
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedback-loop
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: feedback-loop
+  template:
+    metadata:
+      labels:
+        app: feedback-loop
+    spec:
+      containers:
+      - name: pipeline
+        image: feedback-loop:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: url
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+```
+
+Apply the deployment:
+
+```bash
+kubectl apply -f k8s/deployment.yaml
+```
+
+### 3. Auto-Scaling
+
+Configure Horizontal Pod Autoscaler (HPA) to scale based on CPU/memory:
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: feedback-loop-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: feedback-loop
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+```
+
+Apply:
+
+```bash
+kubectl apply -f k8s/hpa.yaml
+```
+
+### 4. Monitoring with Prometheus and Grafana
+
+Deploy Prometheus to scrape metrics from the pipeline (expose `/metrics` endpoint). Use the Prometheus Operator or helm chart:
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install prometheus prometheus-community/kube-prometheus-stack
+```
+
+Configure a ServiceMonitor to scrape the feedback-loop pods:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: feedback-loop-monitor
+spec:
+  selector:
+    matchLabels:
+      app: feedback-loop
+  endpoints:
+  - port: http
+    interval: 15s
+```
+
+Grafana dashboards can be imported to visualize:
+- Pipeline throughput (experiments ingested per minute)
+- Model retraining latency
+- Error rates (DLQ entries, retry counts)
+- Resource utilization (CPU, memory, disk I/O)
+- Health check status (database, file watcher, lab API)
+
+### 5. Alerting
+
+Configure alerting rules in Prometheus (e.g., `alerts.yaml`):
+
+```yaml
+groups:
+- name: feedback-loop-alerts
+  rules:
+  - alert: HighErrorRate
+    expr: rate(pipeline_errors_total[5m]) > 0.1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Pipeline error rate exceeds 10% over 5 minutes"
+  - alert: DatabaseDown
+    expr: up{job="database"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Database is unreachable"
+  - alert: ModelRetrainingFailed
+    expr: model_retraining_success == 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Model retraining job failed"
+```
+
+Route alerts to Slack, email, or PagerDuty via Alertmanager configuration.
+
+### 6. Serverless Alternative (AWS Lambda / GCP Cloud Functions)
+
+For lightweight ingestion tasks, consider serverless deployment:
+
+- **AWS Lambda**: Package the parser scripts as Lambda functions triggered by S3 events (new raw data files). Use DynamoDB for metadata and SQS for DLQ.
+- **GCP Cloud Functions**: Trigger on Cloud Storage bucket events, use Firestore for state.
+
+Serverless is suitable for sporadic data ingestion but may not be ideal for long-running model retraining jobs.
+
+### 7. CI/CD Pipeline
+
+Integrate with GitHub Actions or GitLab CI to:
+- Run tests on every commit
+- Build and push Docker image to container registry (ECR, GCR)
+- Deploy to Kubernetes using `kubectl` or Helm
+- Run integration tests against a staging environment
+
+Example GitHub Actions workflow (`.github/workflows/deploy.yml`):
+
+```yaml
+name: Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Docker image
+      run: docker build -t feedback-loop:${{ github.sha }} .
+    - name: Push to ECR
+      run: |
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.us-east-1.amazonaws.com
+        docker tag feedback-loop:${{ github.sha }} ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.us-east-1.amazonaws.com/feedback-loop:${{ github.sha }}
+        docker push ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.us-east-1.amazonaws.com/feedback-loop:${{ github.sha }}
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl set image deployment/feedback-loop pipeline=${{ secrets.AWS_ACCOUNT }}.dkr.ecr.us-east-1.amazonaws.com/feedback-loop:${{ github.sha }}
+```
+
+### 8. Function `print_deployment_instructions()`
+
+In `scripts/run_pipeline.py`, implement the following function to output the deployment guide to the console or a file:
+
+```python
+def print_deployment_instructions(output_file=None):
+    """Print or write the production deployment guide."""
+    guide = """
+Production Deployment Guide
+===========================
+1. Containerize with Docker
+2. Deploy to Kubernetes
+3. Configure auto-scaling (HPA)
+4. Set up monitoring with Prometheus/Grafana
+5. Configure alerting (Slack, email, PagerDuty)
+6. Optionally use serverless for ingestion
+7. Set up CI/CD pipeline
+
+See docs/experimental_feedback_loop.md for full details.
+"""
+    if output_file:
+        with open(output_file, 'w') as f:
+            f.write(guide)
+    else:
+        print(guide)
+```
+
+This function can be called as part of the pipeline or as a standalone utility.
