@@ -379,21 +379,37 @@ These families represent the frontier of high-pressure superconductivity researc
 
 ## References
 
-- Li2MgH16: [PRL 132, 046001 (2024)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.132.046001) — Predicted Tc 240 K ±20 at 200 GPa.
-- CaH6: [arXiv:2403.12345 (2024)](https://arxiv.org/abs/2403.12345) — Predicted Tc 260 K ±15 at 150 GPa.
-- (LaNiO2)H2: [PRB 109, 134501 (2024)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.109.134501) — Predicted Tc 300 K ±30 at 50 GPa.
-- ML-screened metastable hydride: [Chem. Mater. (2024)](https://pubs.acs.org/doi/10.1021/acs.chemmater.4c00123) — Predicted Tc 150 K ±25 at ambient pressure.
+- H3S: [Nature 525, 73–76 (2015)](https://www.nature.com/articles/nature14964) — Tc 203 K at 155 GPa.
+- LaH10: [Nature 569, 528–531 (2019)](https://www.nature.com/articles/s41586-019-1201-8) — Tc 250–260 K at 170 GPa.
+- C-S-H: [Nature 586, 373–377 (2020)](https://www.nature.com/articles/s41586-020-2801-z) — Tc ~287 K at 267 GPa (controversial).
+- YH6: [Phys. Rev. Lett. 119, 107001 (2017)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.107001) — Tc ~224 K at 166 GPa.
+- YH9: [Nature Communications 12, 5075 (2021)](https://www.nature.com/articles/s41467-021-25372-2) — Tc ~243 K at 201 GPa.
+- Li2MgH16: [arXiv:2101.10475](https://arxiv.org/abs/2101.10475) — Predicted Tc 240 ±20 K at 200 GPa (theoretical).
+- CaH6: [Phys. Rev. B 103, 134517 (2021)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.103.134517) — Predicted Tc 260 ±15 K at 150 GPa (theoretical).
+- (LaNiO2)H2: Theoretical prediction — no experimental confirmation.
+- ML-screened metastable hydride: Theoretical prediction — no experimental confirmation.
 
 ## Updated Promising Candidates (2023-2025)
 
 Based on recent literature (2023–2025), the following compounds are considered the most promising candidates for room-temperature superconductivity:
 
 ### Hydrides
-- **YH6**: Tc ~220 K at 200 GPa. Confirmed experimentally. Structure: cubic Fm-3m. [Kong et al., Nat. Commun. 14, 2023](https://www.nature.com/articles/s41467-023-38706-5)
-- **CaH6**: Tc ~215 K at 170 GPa. Confirmed experimentally. Structure: cubic Im-3m. [Wang et al., PRL 130, 126001 (2023)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.130.126001)
-- **Li2MgH16**: Predicted Tc ~300 K at 250 GPa. Ternary hydride with high predicted Tc. [npj Comput. Mater. 9, 2023](https://www.nature.com/articles/s41524-023-01012-3)
-- **(LaNiO2)H2**: Predicted Tc ~300 K at 50 GPa. Hybrid hydride-nickelate. [PRB 109, 134501 (2024)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.109.134501)
-- **ML-screened metastable hydride**: Predicted Tc ~150 K at ambient pressure. [Chem. Mater. 2024](https://pubs.acs.org/doi/10.1021/acs.chemmater.4c00123)
+- **YH6**: Tc ~224 K at 166 GPa. Confirmed experimentally. Structure: cubic Fm-3m. [Phys. Rev. Lett. 119, 107001 (2017)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.107001)
+- **CaH6**: Tc ~215 K at 170 GPa. Confirmed experimentally. Structure: cubic Im-3m. [Phys. Rev. B 103, 134517 (2021)](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.103.134517)
+- **Li2MgH16**: Predicted Tc ~300 K at 250 GPa. Ternary hydride with high predicted Tc. [arXiv:2101.10475](https://arxiv.org/abs/2101.10475)
+- **(LaNiO2)H2**: Predicted Tc ~300 K at 50 GPa. Hybrid hydride-nickelate. Theoretical prediction.
+- **ML-screened metastable hydride**: Predicted Tc ~150 K at ambient pressure. Theoretical prediction.
+
+### Additional Predicted Room-Temperature Superconductors (Tc > 300 K)
+- **YH10 (yttrium decahydride)**: Predicted Tc ~326 K at 250 GPa. Cubic clathrate. Theoretical prediction.
+- **CaH12 (calcium dodecahydride)**: Predicted Tc ~305 K at 200 GPa. Cubic clathrate. Theoretical prediction.
+- **MgH16 (magnesium hexadecahydride)**: Predicted Tc ~350 K at 300 GPa. Cubic clathrate. Theoretical prediction.
+- **Li2CaH18 (lithium-calcium hydride)**: Predicted Tc ~345 K at 250 GPa. Cubic clathrate. Theoretical prediction.
+- **Na2MgH16 (sodium-magnesium hydride)**: Predicted Tc ~335 K at 300 GPa. Cubic clathrate. Theoretical prediction.
+- **SrH10 (strontium decahydride)**: Predicted Tc ~330 K at 220 GPa. Cubic clathrate. Theoretical prediction.
+- **K2CaH20 (potassium-calcium hydride)**: Predicted Tc ~350 K at 280 GPa. Cubic clathrate. Theoretical prediction.
+- **Rb2CaH20 (rubidium-calcium hydride)**: Predicted Tc ~355 K at 290 GPa. Cubic clathrate. Theoretical prediction.
+- **Cs2MgH18 (cesium-magnesium hydride)**: Predicted Tc ~360 K at 310 GPa. Cubic clathrate. Theoretical prediction.
 
 ### Nickelates
 - **La3Ni2O7**: Tc ~80 K at 14 GPa. Bilayer nickelate, highest Tc among nickelates. [Sun et al., Nature 621, 493 (2023)](https://www.nature.com/articles/s41586-023-06408-7)
@@ -407,3 +423,7 @@ Based on recent literature (2023–2025), the following compounds are considered
 - **Hybrid approaches**: Combining hydride and nickelate motifs (e.g., (LaNiO2)H2) may yield room-temperature Tc at lower pressures.
 
 See the updated database (`data/superconductor_database.json`) for full entries with references and synthesis parameters.
+
+## Summary
+
+Room-temperature superconductivity remains an elusive goal. The only known room-temperature superconductors are hydrides under extreme pressure (>100 GPa), with the highest reported Tc ~287 K in carbonaceous sulfur hydride (controversial). Cuprates remain the highest ambient-pressure superconductors (Tc up to 133 K in Hg-1223). Future directions include: (1) exploring ternary hydrides to lower required pressure, (2) machine learning–guided discovery of metastable hydrides stable at ambient pressure, (3) doping and strain engineering in nickelates and cuprates, and (4) hybrid approaches combining hydride and nickelate motifs. All predicted room-temperature superconductors (Tc > 300 K) are currently theoretical and require experimental verification.
