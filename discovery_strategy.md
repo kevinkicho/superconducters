@@ -247,3 +247,71 @@ To run model evaluation:
 python scripts/evaluate_model.py --data data/training_set.csv --model models/surrogate.pkl --output results/evaluation.json
 ```
 The script outputs cross-validation scores, feature importance rankings, and a calibration plot.
+
+
+## 10. Active Learning Pipeline
+
+### 10.1 Overview
+The active learning pipeline iteratively selects the most informative candidates for synthesis and measurement, minimizing the number of experiments needed to discover high-Tc compounds. The pipeline is implemented in `scripts/active_learning.py` and integrates with the surrogate models described in Section 7.
+
+### 10.2 Acquisition Function
+- **Expected Improvement (EI):** The primary acquisition function balances exploitation (high predicted Tc) and exploration (high uncertainty). EI is computed as:
+  \[ \text{EI}(x) = \mathbb{E}[\max(0, f(x) - f^*)] \]
+  where \(f^*\) is the current best observed Tc. Source: Mockus et al., *Bayesian Optimization*, 1978.
+- **Upper Confidence Bound (UCB):** Used as a secondary acquisition function for comparison: \[ \text{UCB}(x) = \mu(x) + \kappa \sigma(x) \] with \(\kappa = 2.0\).
+- **Batch selection:** To propose multiple candidates per round, we use a batch-BO strategy with a determinantal point process (DPP) to ensure diversity. Source: https://arxiv.org/abs/1902.10675
+
+### 10.3 Iterative Workflow
+1. **Initial pool:** 50,000 candidate compositions from the generative model (Section 12).
+2. **Score:** Surrogate model predicts Tc and uncertainty for each candidate.
+3. **Select:** Top 20 candidates by acquisition function.
+4. **Synthesize & measure:** Experimental team synthesizes and characterizes (Section 8).
+5. **Update:** Results are added to the training set; model is retrained (Section 8.3).
+6. **Repeat:** Until convergence or a target Tc is achieved.
+
+### 10.4 Stopping Criteria
+- **Plateau detection:** If the maximum acquisition value does not increase by more than 1% over 5 consecutive rounds, the pipeline stops.
+- **Target reached:** If a candidate achieves Tc ≥ 273 K at ≤ 10 GPa, the pipeline terminates early.
+
+## 11. GNN Architecture
+
+### 11.1 Model Choice
+We employ a Crystal Graph Convolutional Neural Network (CGCNN) as the primary surrogate model for Tc prediction. CGCNN operates directly on the crystal graph, where nodes represent atoms and edges represent bonds (within a cutoff radius of 4 Å). Source: Xie & Grossman, *Physical Review Letters*, 2018 (https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.120.145301).
+
+### 11.2 Architecture Details
+- **Node features:** 89-dimensional feature vector including atomic number, group, period, electronegativity, covalent radius, valence electrons, and ionization energy.
+- **Edge features:** 41-dimensional vector encoding bond length, bond type, and interatomic distance.
+- **Convolution layers:** 3 graph convolutional layers with 64, 128, and 256 hidden units, each followed by batch normalization and ReLU activation.
+- **Global pooling:** Sum pooling over all node features to produce a graph-level representation.
+- **Fully connected layers:** 2 hidden layers (256 and 128 units) with dropout (0.2) and a final linear output for Tc.
+- **Loss function:** Mean squared error (MSE) with L2 regularization (weight decay = 1e-5).
+
+### 11.3 Training
+- **Optimizer:** Adam with learning rate 1e-3, reduced by factor 0.5 on plateau.
+- **Batch size:** 64.
+- **Epochs:** 200 with early stopping (patience = 20).
+- **Data augmentation:** Random rotations and translations of crystal structures during training to improve robustness.
+
+### 11.4 Alternative Architectures
+- **SchNet:** A continuous-filter convolutional network that uses interatomic distances directly. Tested as a secondary model; yields comparable performance (R² = 0.91). Source: Schütt et al., *Journal of Chemical Physics*, 2018 (https://doi.org/10.1063/1.5019779).
+- **MEGNet:** A matErials Graph Network that incorporates global state features. Currently under evaluation for multi-task learning (Tc + pressure). Source: Chen et al., *Journal of Physical Chemistry C*, 2019 (https://doi.org/10.1021/acs.jpcc.9b00899).
+
+## 12. Candidate Generation Workflow
+
+### 12.1 Generative Model
+We use a conditional variational autoencoder (CVAE) trained on the Materials Project database (150,000+ inorganic compounds) to generate novel candidate compositions. The CVAE encodes composition and structure into a latent space and decodes to produce new crystal structures. Source: https://www.nature.com/articles/s41524-019-0226-8
+
+### 12.2 Generation Pipeline
+1. **Latent sampling:** Sample 100,000 points from the prior (standard normal) in the latent space.
+2. **Decode:** The decoder produces candidate compositions and approximate crystal structures (space group, lattice parameters, atomic positions).
+3. **Filtering:** Remove duplicates (by composition and space group) and candidates with >10 atoms per primitive cell (to keep computational cost manageable).
+4. **Stability check:** Use a fast convex hull energy model (from Materials Project) to discard candidates with energy above hull > 50 meV/atom.
+5. **Doping variants:** For each promising hydride family (e.g., LaH10), generate doped variants by substituting 5–20% of La with other rare earths (Y, Ce, Pr) or adding interstitial light elements (C, N, O).
+
+### 12.3 High-Throughput Screening
+- **DFT relaxation:** The top 5,000 filtered candidates are relaxed using DFT (VASP) with a coarse k-point grid (2×2×2) and a force convergence of 0.05 eV/Å.
+- **Tc prediction:** The relaxed structures are fed into the GNN surrogate model (Section 11) to predict Tc and uncertainty.
+- **Ranking:** Candidates are ranked by predicted Tc, with a penalty for high pressure (>50 GPa). The top 500 are passed to the active learning pipeline (Section 10).
+
+### 12.4 Integration with Active Learning
+The candidate generation workflow runs in parallel with the active learning loop. After each active learning round, the generative model is fine-tuned on the new experimental data (via transfer learning) to bias generation toward high-Tc regions of the latent space. This closed-loop design accelerates discovery.
