@@ -203,8 +203,30 @@ _training_targets = [tc for _, tc in TRAINING_DATA]
 _coefficients = train_linear_regression(_training_features, _training_targets)
 _rf_model = train_random_forest(_training_features, _training_targets)
 
-def predict_tc(formula: str) -> float:
-    """
+def predict_tc(formula, pressure=0):
+    """Predict Tc using the Allen-Dynes equation with parameters from the database."""
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
+    try:
+        with open(db_path, 'r') as f:
+            entries = json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Database file '{db_path}' not found.")
+    for entry in entries:
+        if entry.get('name') == formula:
+            lam = entry.get('lambda')
+            omega_log = entry.get('omega_log')
+            if lam is None or omega_log is None:
+                raise ValueError(f"Database entry for {formula} missing lambda or omega_log.")
+            mu_star = 0.1
+            numerator = 1.04 * (1.0 + lam)
+            denominator = lam - mu_star * (1.0 + 0.62 * lam)
+            if denominator <= 0:
+                return 0.0
+            tc = (omega_log / 1.2) * math.exp(-numerator / denominator)
+            if tc < 0:
+                tc = 0.0
+            return tc
+    raise ValueError(f"Material {formula} not found in database.")    """
     Predict Tc using a linear regression model trained on external database.
     Features: average valence electrons per atom, average Debye temperature.
     """
@@ -329,3 +351,13 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def allen_dynes_tc(lambda_ep, omega_log, mu_star=0.1):
+    """Compute Tc using the Allen-Dynes equation."""
+    numerator = 1.04 * (1.0 + lambda_ep)
+    denominator = lambda_ep - mu_star * (1.0 + 0.62 * lambda_ep)
+    if denominator <= 0:
+        return 0.0
+    tc = (omega_log / 1.2) * math.exp(-numerator / denominator)
+    return max(tc, 0.0)

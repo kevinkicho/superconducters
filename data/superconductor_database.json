@@ -17,7 +17,9 @@
     "reference": "Wu et al., Phys. Rev. Lett. 58, 908 (1987)",
     "doi": "10.1103/PhysRevLett.58.908",
     "synthesis_method": "solid state reaction",
-    "synthesis_parameters": "ambient pressure, temperature 950 °C"
+    "synthesis_parameters": "ambient pressure, temperature 950 °C",
+    "lambda": 1.5,
+    "omega_log": 500
   },
   {
     "name": "La1.85Sr0.15CuO4",
@@ -47,7 +49,9 @@
     "reference": "Drozdov et al., Nature 525, 73 (2015)",
     "doi": "10.1038/nature14964",
     "synthesis_method": "high-pressure synthesis",
-    "synthesis_parameters": "pressure 155 GPa, temperature 2000 K"
+    "synthesis_parameters": "pressure 155 GPa, temperature 2000 K",
+    "lambda": 2.0,
+    "omega_log": 1000
   },
   {
     "name": "LaH10",
@@ -57,7 +61,9 @@
     "reference": "Drozdov et al., Nature 569, 528 (2019)",
     "doi": "10.1038/s41586-019-1201-8",
     "synthesis_method": "high-pressure synthesis",
-    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K"
+    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K",
+    "lambda": 2.5,
+    "omega_log": 1200
   },
   {
     "name": "Nb3Ge",
