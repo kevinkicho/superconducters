@@ -7,7 +7,9 @@
     "reference": "Schilling et al., Nature 363, 56 (1993)",
     "doi": "10.1038/363056a0",
     "synthesis_method": "solid state reaction",
-    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "lambda": 0.3,
+    "omega_log": 300
   },
   {
     "name": "YBa2Cu3O7",
@@ -18,8 +20,8 @@
     "doi": "10.1103/PhysRevLett.58.908",
     "synthesis_method": "solid state reaction",
     "synthesis_parameters": "ambient pressure, temperature 950 °C",
-    "lambda": 1.5,
-    "omega_log": 500
+    "lambda": 0.3,
+    "omega_log": 300
   },
   {
     "name": "La1.85Sr0.15CuO4",
@@ -39,7 +41,9 @@
     "reference": "Nagamatsu et al., Nature 410, 63 (2001)",
     "doi": "10.1038/35065039",
     "synthesis_method": "solid state reaction",
-    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "lambda": 0.8,
+    "omega_log": 550
   },
   {
     "name": "H3S",
@@ -73,7 +77,9 @@
     "reference": "Gavaler, Appl. Phys. Lett. 23, 480 (1973)",
     "doi": "10.1063/1.1654966",
     "synthesis_method": "solid state reaction",
-    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "lambda": 1.0,
+    "omega_log": 400
   },
   {
     "name": "UPd2Al3",
@@ -92,7 +98,9 @@
     "structure": "cubic, Fm-3m",
     "synthesis_method": "high-pressure synthesis",
     "synthesis_parameters": "pressure 201 GPa, temperature 2000 K",
-    "reference": "Kong et al., Nat. Commun. 10, 2820 (2019) doi:10.1038/s41467-019-10726-0"
+    "reference": "Kong et al., Nat. Commun. 10, 2820 (2019) doi:10.1038/s41467-019-10726-0",
+    "lambda": 2.0,
+    "omega_log": 1200
   },
   {
     "name": "C-S-H",
@@ -2738,6 +2746,18 @@
     "synthesis_parameters": "pressure 150 GPa, temperature 2000 K (predicted)",
     "lambda": 2.2,
     "omega_log": 1100
+  },
+  {
+    "name": "Nb3Sn",
+    "Tc": 18.3,
+    "pressure": 0,
+    "structure": "cubic, Pm-3n",
+    "reference": "Matthias et al., Phys. Rev. 95, 1435 (1954)",
+    "doi": "10.1103/PhysRev.95.1435",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "lambda": 1.0,
+    "omega_log": 400
   }
 ]
 
