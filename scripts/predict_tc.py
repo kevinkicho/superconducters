@@ -26,6 +26,8 @@ import torch.nn as nn
 import torch_geometric
 from torch_geometric.nn import GCNConv, global_mean_pool
 from torch_geometric.data import Data, DataLoader
+from pymatgen.core import Structure
+from pymatgen.analysis.local_env import VoronoiNN
 
 # Standard valence electron counts for common elements
 VALENCE: Dict[str, int] = {
@@ -803,13 +805,12 @@ def formula_to_graph(formula: str) -> Data:
     edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
     return Data(x=x, edge_index=edge_index)
 
-def train_gnn(data_list, epochs=100, lr=0.001, batch_size=16):
-    """Train the GNN on a list of (formula, Tc) pairs."""
+def train_gnn(structures, tcs, epochs=100, lr=0.001, batch_size=16):
+    """Train the GNN on a list of structures and corresponding Tc values."""
     graphs = []
-    targets = []
-    for formula, tc in data_list:
+    for s, tc in zip(structures, tcs):
         try:
-            g = formula_to_graph(formula)
+            g = structure_to_graph(s)
             g.y = torch.tensor([tc], dtype=torch.float)
             graphs.append(g)
         except:
@@ -834,9 +835,9 @@ def train_gnn(data_list, epochs=100, lr=0.001, batch_size=16):
             print(f"Epoch {epoch+1}/{epochs}, Loss: {total_loss/len(loader):.4f}")
     return model
 
-def predict_with_uncertainty_gnn(model, formula, n_samples=20):
+def predict_with_uncertainty_gnn(model, structure, n_samples=20):
     """Predict Tc with uncertainty using Monte Carlo dropout."""
-    g = formula_to_graph(formula)
+    g = structure_to_graph(structure)
     g.batch = torch.zeros(g.x.size(0), dtype=torch.long)
     model.train()
     preds = []
@@ -856,13 +857,13 @@ def active_learning_loop_gnn(candidates: list, alpha: float = 1.0, top_n: int = 
     if model is None:
         raise ValueError("GNN model must be provided")
     results = []
-    for formula in candidates:
+    for structure in candidates:
         try:
-            mean, std = predict_with_uncertainty_gnn(model, formula)
+            mean, std = predict_with_uncertainty_gnn(model, structure)
             score = mean + alpha * std
-            results.append({'formula': formula, 'predicted_tc': round(mean, 2), 'uncertainty': round(std, 2), 'score': round(score, 2)})
+            results.append({'structure': str(structure.composition.reduced_formula), 'predicted_tc': round(mean, 2), 'uncertainty': round(std, 2), 'score': round(score, 2)})
         except Exception as e:
-            results.append({'formula': formula, 'error': str(e)})
+            results.append({'structure': str(structure.composition.reduced_formula), 'error': str(e)})
     results.sort(key=lambda x: x.get('score', -1e9), reverse=True)
     return results[:top_n]
 
@@ -904,3 +905,38 @@ def set_model(model_type: str):
         raise ValueError("model_type must be 'rf' or 'gnn'")
     _current_model = model_type
     print(f"Model set to {model_type}")
+
+def structure_to_graph(structure: Structure) -> Data:
+    """Convert a pymatgen Structure to a PyTorch Geometric graph.
+
+    Args:
+        structure: pymatgen Structure object.
+
+    Returns:
+        Data object with node features (valence, debye temp, atomic mass)
+        and edge indices based on Voronoi neighbor analysis.
+    """
+    # Node features: valence, debye temp, atomic mass (same as formula_to_graph)
+    node_features = []
+    for site in structure.sites:
+        elem = site.specie.symbol
+        valence = VALENCE.get(elem, 0)
+        debye = DEBYE_TEMP.get(elem, 100.0)
+        mass = ATOMIC_MASS.get(elem, 50.0)
+        node_features.append([valence, debye, mass])
+    x = torch.tensor(node_features, dtype=torch.float)
+    # Edge indices using VoronoiNN
+    vnn = VoronoiNN()
+    edge_index = [[], []]
+    for i, site in enumerate(structure.sites):
+        neighbors = vnn.get_nn_info(structure, i)
+        for neighbor in neighbors:
+            j = neighbor['site_index']
+            if i != j:
+                edge_index[0].append(i)
+                edge_index[1].append(j)
+    # If no edges (single atom), add self-loop
+    if len(edge_index[0]) == 0:
+        edge_index = [[0], [0]]
+    edge_index = torch.tensor(edge_index, dtype=torch.long)
+    return Data(x=x, edge_index=edge_index)
