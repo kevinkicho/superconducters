@@ -236,3 +236,32 @@ def test_query_invalid_material_class_type():
             feasibility_score_min=None, feasibility_score_max=None,
             material_class=123
         ))
+
+
+def test_high_throughput_screening_basic():
+    mock_db = [
+        {"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9},
+        {"name": "B", "Tc": 150, "pressure": 100, "feasibility_score": 0.8},
+        {"name": "C", "Tc": 200, "pressure": 200, "feasibility_score": 0.7},
+        {"name": "D", "Tc": 300, "pressure": 300, "feasibility_score": 0.6},
+    ]
+    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=2)
+    assert len(results) == 2
+    assert results[0]["name"] == "C"  # Tc 200
+    assert results[1]["name"] == "B"  # Tc 150
+
+def test_high_throughput_screening_no_results():
+    mock_db = [
+        {"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9},
+    ]
+    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=10)
+    assert results == []
+
+def test_high_throughput_screening_with_feasibility():
+    mock_db = [
+        {"name": "A", "Tc": 150, "pressure": 0, "feasibility_score": 0.3},
+        {"name": "B", "Tc": 200, "pressure": 0, "feasibility_score": 0.9},
+    ]
+    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=10)
+    assert len(results) == 1
+    assert results[0]["name"] == "B"

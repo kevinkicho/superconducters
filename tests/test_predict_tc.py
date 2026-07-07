@@ -245,3 +245,31 @@ def test_predict_tc_empty_database():
     with patch.object(ptc, 'load_data', return_value=[]):
         with pytest.raises(ValueError):
             ptc.predict_tc("H3S", pressure=155)
+
+
+def test_predict_tc_negative_pressure():
+    result = ptc.predict_tc("H3S", pressure=-10)
+    assert isinstance(result, float)
+    assert result > 0
+
+def test_predict_tc_zero_pressure():
+    result = ptc.predict_tc("H3S", pressure=0)
+    assert isinstance(result, float)
+    assert result > 0
+
+def test_predict_tc_very_high_pressure():
+    result = ptc.predict_tc("H3S", pressure=10000)
+    assert isinstance(result, float)
+    assert result > 0
+
+def test_predict_tc_missing_tc_key():
+    mock_data = [{"name": "Test", "composition": "Test", "pressure": 0}]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        with pytest.raises(ValueError):
+            ptc.predict_tc("Test", pressure=0)
+
+def test_predict_tc_missing_composition_key():
+    mock_data = [{"name": "Test", "Tc": 100, "pressure": 0}]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        with pytest.raises(ValueError):
+            ptc.predict_tc("Test", pressure=0)

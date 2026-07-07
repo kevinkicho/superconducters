@@ -164,6 +164,12 @@ def main():
     parser.add_argument("--external-db", type=str, choices=["supercon", "materials_project"], help="Query external database")
     parser.add_argument("--api-key", type=str, help="API key for external database (or set env var)")
     parser.add_argument("--output", type=str, choices=["table", "json", "csv"], default="table", help="Output format (default: table)")
+    parser.add_argument("--high-throughput", action="store_true", help="Run high-throughput screening")
+    parser.add_argument("--ht-min-tc", type=float, default=100, help="Minimum Tc for screening")
+    parser.add_argument("--ht-max-tc", type=float, default=500, help="Maximum Tc for screening")
+    parser.add_argument("--ht-max-pressure", type=float, default=300, help="Maximum pressure for screening")
+    parser.add_argument("--ht-min-feasibility", type=float, default=0.5, help="Minimum feasibility score")
+    parser.add_argument("--ht-max-results", type=int, default=10, help="Maximum number of results")
     args = parser.parse_args()
 
     if args.external_db:
@@ -222,6 +228,37 @@ def main():
         print(f"Error: Invalid JSON in database: {e}", file=sys.stderr)
         sys.exit(1)
 
+    if args.high_throughput:
+        screening_results = high_throughput_screening(
+            entries,
+            min_tc=args.ht_min_tc,
+            max_tc=args.ht_max_tc,
+            max_pressure=args.ht_max_pressure,
+            min_feasibility=args.ht_min_feasibility,
+            max_results=args.ht_max_results
+        )
+        if not screening_results:
+            print("No high-throughput screening candidates found.")
+            return
+        print(f"High-throughput screening results (top {len(screening_results)}):")
+        print("-" * 120)
+        header = f"{'Name':<20} {'Tc (K)':<10} {'Pressure (GPa)':<15} {'Feasibility':<15} {'Structure':<20} {'Composition':<20} {'Synthesis Method':<20} {'Mechanism':<20} {'Reference':<20}"
+        print(header)
+        print("-" * 120)
+        for r in screening_results:
+            name = r.get('name', '')
+            tc = r.get('Tc', '')
+            pressure = r.get('pressure', '')
+            feasibility = r.get('feasibility_score', '')
+            structure = r.get('structure', '')
+            composition = r.get('composition', '')
+            synthesis_method = r.get('synthesis_method', '')
+            mechanism = r.get('mechanism', '')
+            reference = r.get('reference', '')
+            print(f"{name:<20} {tc:<10} {pressure:<15} {feasibility:<15} {structure:<20} {composition:<20} {synthesis_method:<20} {mechanism:<20} {reference:<20}")
+        print("-" * 120)
+        return
+
     results = query(entries, args)
 
     if not results:
@@ -277,3 +314,31 @@ def get_material_properties(name: str) -> dict:
         if entry.get("name") == name:
             return entry
     return None
+
+
+def high_throughput_screening(entries, min_tc=100, max_tc=500, max_pressure=300, min_feasibility=0.5, max_results=10):
+    """High-throughput screening of superconductor candidates.
+
+    Filters entries by Tc range, pressure, and feasibility score,
+    then returns top results sorted by Tc descending.
+
+    Args:
+        entries: List of database entries.
+        min_tc: Minimum Tc (K).
+        max_tc: Maximum Tc (K).
+        max_pressure: Maximum pressure (GPa).
+        min_feasibility: Minimum feasibility score.
+        max_results: Maximum number of results to return.
+
+    Returns:
+        List of candidate entries sorted by Tc descending.
+    """
+    candidates = []
+    for entry in entries:
+        tc = entry.get('Tc', 0)
+        pressure = entry.get('pressure', 0)
+        feasibility = entry.get('feasibility_score', 0)
+        if min_tc <= tc <= max_tc and pressure <= max_pressure and feasibility >= min_feasibility:
+            candidates.append(entry)
+    candidates.sort(key=lambda x: x.get('Tc', 0), reverse=True)
+    return candidates[:max_results]
