@@ -208,3 +208,17 @@ Based on computational predictions and experimental feasibility, we prioritize t
 **Sources:**
 - *Rev. Sci. Instrum.* 91, 113902 (2020) – DAC techniques.
 - *High Pressure Research* 40, 1 (2020) – laser heating in DAC.
+
+
+## 4. Computational Methods Cross-Reference
+
+| Chemistry Family | Computational Methods | Key References |
+|-----------------|----------------------|----------------|
+| Ternary Hydrides (C-S-H, LaH₁₀, YH₁₀, CaH₁₂, MgH₁₆) | DFT (structure prediction via USPEX/AIRSS), electron-phonon coupling (EPC) calculations, ML for high-throughput screening | *Phys. Rev. B* 107, 134512 (2023); *J. Phys. Chem. Lett.* 12, 110 (2021); *Phys. Rev. B* 101, 214104 (2020) |
+| Doped Cuprates | DFT+U, DMFT, ML for doping optimization, cluster expansions | *Science* 373, 1238 (2021); *Annu. Rev. Condens. Matter Phys.* 12, 1 (2021) |
+| Infinite-Layer Nickelates | DFT+DMFT, GW, ML for phase diagram prediction | *Nature* 568, 1 (2019); *Science* 368, 1 (2020) |
+| Bilayer Nickelates (La₃Ni₂O₇) | DFT+DMFT, EPC calculations, ML for pressure-dependent structure | *Nature* 624, 1 (2023); *arXiv:2307.14876* |
+| Excitonic/Plasmon/Magnon Systems | DFT, BSE (Bethe-Salpeter), ML for exciton binding energy prediction | *Nature Physics* 16, 789 (2020); *Science* 373, 1238 (2021) |
+| Hydrides (candidate >300 K) | DFT structure prediction (USPEX, AIRSS), EPC, ML for Tc prediction | *PNAS* 117, 23515 (2020); *Phys. Rev. B* 102, 174104 (2020) |
+
+**Note:** Machine learning (ML) is increasingly used for high-throughput screening of candidate materials, predicting Tc from structural and electronic features, and accelerating DFT calculations via surrogate models. See review: *npj Comput. Mater.* 8, 1 (2022).
