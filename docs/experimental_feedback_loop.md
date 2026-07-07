@@ -927,6 +927,28 @@ The digital twin is a surrogate model (trained on historical experimental data) 
 ### Experimental Feedback Loop
 The RL agent runs as a microservice (`services/rl_controller.py`) that subscribes to the experimental data stream (via Kafka). After each measurement is ingested, the agent updates its policy and may issue new synthesis parameters to the experiment controller. The loop operates with a latency of <1 second, enabling real-time optimization during long synthesis runs.
 
+#### User Feedback Integration
+
+A Flask endpoint (`POST /feedback`) accepts user ratings and comments for completed experiments. The request body includes:
+- `experiment_id` (string, required)
+- `rating` (integer, 1-5, required)
+- `comments` (string, optional)
+
+The endpoint validates the input and inserts a record into the `feedback` table in the central database. The `feedback` table schema:
+
+```sql
+CREATE TABLE feedback (
+    id SERIAL PRIMARY KEY,
+    experiment_id VARCHAR(64) NOT NULL REFERENCES experiments(id),
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comments TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+User ratings are used to adjust optimization weights in the active learning loop. Specifically, the reward function for the RL agent is modified by a multiplicative factor derived from the average rating of similar experiments. Experiments with high average ratings (≥4) increase the weight of their synthesis parameters in the candidate generation process, while low ratings (≤2) decrease the weight. This feedback loop ensures that the system prioritizes synthesis routes that yield high-quality samples as judged by human experts.
+
+
 ## Production Deployment Guide
 
 This section describes how to containerize, deploy, scale, and monitor the experimental feedback loop system in a production environment.
