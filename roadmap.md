@@ -99,3 +99,11 @@
 - **M21 (Month 1-3)**: Establish continuous online research monitoring system to automatically scrape and summarize new publications on room-temperature superconductivity. Integrate with literature review database.
 - **M22 (Month 3-6)**: Implement experimental feedback loop: after each synthesis and characterization cycle, automatically update computational models with new data. Use Bayesian optimization to suggest next candidate.
 - **M23 (Month 6-12)**: Achieve at least 3 full iteration cycles of online research -> computational prediction -> synthesis -> characterization -> model update. Target: identify at least one new promising compound not previously in literature.
+
+
+## Experimental Validation Milestones
+- **M24 (Month 1-3)**: Conduct comprehensive literature review and online research to identify promising room-temperature superconductor candidates from recent publications (2020+). Target: compile list of top 10 candidate compounds with predicted Tc, synthesis conditions, and stability data.
+- **M25 (Month 3-6)**: Perform DFT calculations and machine learning screening on candidate compounds to predict Tc, crystal structure, and thermodynamic stability. Target: identify top 3 candidates for experimental synthesis.
+- **M26 (Month 6-12)**: Synthesize top candidate using high-pressure diamond anvil cell (DAC) or thin-film deposition (e.g., pulsed laser deposition). Characterize using four-probe resistivity, AC susceptibility, and X-ray diffraction. Target: confirm or refute superconductivity above 300 K.
+- **M27 (Month 12-18)**: If superconductivity confirmed, optimize synthesis parameters (pressure, temperature, stoichiometry) to maximize Tc and critical current density. Target: achieve Tc > 300 K at ambient pressure.
+- **M28 (Month 18-24)**: Scale up synthesis to gram-scale using high-pressure multi-anvil press or chemical vapor deposition. Validate reproducibility across multiple batches. Target: consistent Tc within 5% variation.
