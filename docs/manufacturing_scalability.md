@@ -334,3 +334,52 @@ This estimate aligns with the earlier target of $50–100/kg at scale, with prec
 3. High Pressure Research, 2022, 42(3), 215–230 – Multi-anvil press operating costs.
 4. U.S. Energy Information Administration (EIA) – Industrial electricity rates 2024. https://www.eia.gov/electricity/monthly/
 5. Nature Reviews Materials, 2020, 5, 691–710 – Scalability of high-pressure synthesis.
+
+
+## Sensitivity Analysis
+
+To assess the robustness of the cost model, we perform a sensitivity analysis on three key parameters: precursor cost, energy cost, and synthesis yield. Each parameter is varied ±20% from the baseline, and the impact on total cost per kg is calculated.
+
+### Scenario 1: Precursor Cost Variation
+- Baseline precursor cost: $14.26/kg
+- +20%: $17.11/kg → total cost $21.56/kg (+15.2%)
+- -20%: $11.41/kg → total cost $15.86/kg (-15.2%)
+- **Conclusion**: Precursor cost is the dominant driver; a 20% change yields a ~15% change in total cost.
+
+### Scenario 2: Energy Cost Variation
+- Baseline energy cost: $4.20/kg
+- +20%: $5.04/kg → total cost $19.55/kg (+4.5%)
+- -20%: $3.36/kg → total cost $17.87/kg (-4.5%)
+- **Conclusion**: Energy cost has moderate impact; improvements in energy recovery or cheaper electricity (e.g., renewable sources) can reduce total cost by ~5%.
+
+### Scenario 3: Synthesis Yield Variation
+- Baseline yield: 90% (effective precursor cost adjusted to $15.84/kg after yield loss)
+- +20% yield (108% not possible; cap at 100%): 100% yield → precursor cost $14.26/kg, total $18.71/kg (-6%)
+- -20% yield (72%): effective precursor cost $19.81/kg, total $24.26/kg (+30%)
+- **Conclusion**: Yield improvements are highly beneficial; even a 10% yield drop increases total cost by ~15%.
+
+## Break-Even Analysis
+
+We analyze the break-even production volume required to achieve a target selling price of $50/kg, $100/kg, and $200/kg, assuming fixed capital investment of $2B and variable cost of $18.71/kg (baseline). Depreciation is linear over 10 years, and we assume a 10% required return on investment (ROI) per year.
+
+### Scenario A: Target Price $200/kg
+- Contribution margin per kg: $200 - $18.71 = $181.29
+- Annual fixed cost (depreciation + ROI): $2B / 10 + 0.10 × $2B = $200M + $200M = $400M
+- Break-even volume: $400M / $181.29 ≈ 2.21 million kg/year (2,210 tonnes/year)
+- **Feasibility**: Achievable at moderate scale; corresponds to ~2% of a 100,000 tonnes/year facility.
+
+### Scenario B: Target Price $100/kg
+- Contribution margin per kg: $100 - $18.71 = $81.29
+- Break-even volume: $400M / $81.29 ≈ 4.92 million kg/year (4,920 tonnes/year)
+- **Feasibility**: Requires ~5% of a 100,000 tonnes/year facility; plausible with dedicated production lines.
+
+### Scenario C: Target Price $50/kg
+- Contribution margin per kg: $50 - $18.71 = $31.29
+- Break-even volume: $400M / $31.29 ≈ 12.78 million kg/year (12,780 tonnes/year)
+- **Feasibility**: Requires ~13% of a 100,000 tonnes/year facility; challenging but possible with aggressive cost reduction and high demand.
+
+### Summary
+- At $200/kg, break-even is reached at 2,210 tonnes/year.
+- At $100/kg, break-even is reached at 4,920 tonnes/year.
+- At $50/kg, break-even is reached at 12,780 tonnes/year.
+- All scenarios assume baseline variable cost; further cost reductions (e.g., cheaper precursors, higher yield) would lower break-even volumes.
