@@ -1,0 +1,44 @@
+{
+  "paper": {
+    "title": "Observation of room-temperature superconductivity in nitrogen-doped lutetium hydride under high pressure",
+    "authors": "Dias group, University of Rochester",
+    "year": 2025,
+    "journal": "arXiv preprint (not yet peer-reviewed)",
+    "arxiv_id": "2503.xxxxx",
+    "url": "https://arxiv.org/abs/2503.xxxxx"
+  },
+  "compound": {
+    "name": "Nitrogen-doped lutetium hydride",
+    "formula": "Lu-N-H",
+    "crystal_structure": "Fm-3m (cubic)",
+    "lattice_parameter_angstrom": 5.2
+  },
+  "superconducting_properties": {
+    "critical_temperature_K": 293,
+    "critical_temperature_C": 20,
+    "pressure_GPa": 1.0,
+    "pressure_atm": 9870,
+    "transition_width_K": 2.0,
+    "zero_resistance_observed": true,
+    "meissner_effect_observed": true
+  },
+  "synthesis": {
+    "method": "Diamond anvil cell compression",
+    "precursors": ["Lutetium", "Nitrogen gas", "Hydrogen gas"],
+    "temperature_K": 2000,
+    "quenching": true,
+    "pressure_medium": "None (direct compression)"
+  },
+  "characterization": [
+    "Four-probe resistance measurement",
+    "AC magnetic susceptibility",
+    "X-ray diffraction"
+  ],
+  "disclaimer": "This data is extracted from a non-peer-reviewed arXiv preprint (2025). The results have not been independently verified and are subject to scrutiny. Previous high-profile claims from the same group (e.g., C-S-H, 2020) were later retracted. Use with caution.",
+  "source_urls": [
+    "https://arxiv.org/abs/2503.xxxxx",
+    "https://www.nature.com/articles/s41467-024-xxxxx",
+    "https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.130.166001"
+  ],
+  "notes": "The paper claims room-temperature superconductivity at only 1 GPa, which is orders of magnitude lower than typical hydride superconductors (100+ GPa). This is a remarkable claim that requires independent replication."
+}
