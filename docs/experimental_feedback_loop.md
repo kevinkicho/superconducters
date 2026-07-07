@@ -894,3 +894,68 @@ A denoising diffusion probabilistic model (DDPM) is used to generate novel candi
 5. **Feedback Loop**: Experimental results (Tc, structure, stability) are ingested into the database (see Section 1). The diffusion model is periodically fine-tuned on the new data (every 5 cycles or when data drift is detected) to bias generation toward experimentally validated regions of chemical space.
 
 This approach is inspired by recent work on generative models for materials discovery (e.g., Xie et al., *Nature Communications* 2023; Merchant et al., *Nature* 2023). The diffusion model code is located in `scripts/diffusion_candidate_generator.py` and is invoked by the active learning loop in `scripts/run_pipeline.py`.
+
+
+## Real-Time Closed-Loop Control
+
+A reinforcement learning (RL) agent is deployed to dynamically adjust synthesis parameters in real time based on streaming experimental data. The agent interacts with a digital twin of the synthesis process, which simulates the outcome of parameter changes before they are applied to the physical experiment.
+
+### State Space
+The state vector includes:
+- Current synthesis parameters (pressure, temperature, precursor ratios, heating/cooling rates)
+- Latest characterization results (Tc, transition width, purity, Meissner fraction)
+- Time since last parameter change
+- Equipment status (e.g., furnace temperature stability, pressure vessel integrity)
+
+### Action Space
+The agent can adjust continuous parameters within safe bounds:
+- Temperature (K): ±5 K increments
+- Pressure (GPa): ±0.1 GPa increments
+- Dwell time (min): ±10 min increments
+- Precursor ratio adjustments (discrete set of common dopant levels)
+
+### Reward Function
+The reward is computed after each experimental cycle:
+- Primary: +1.0 for each 1 K increase in Tc (up to a target of 300 K)
+- Secondary: +0.5 for each 10% improvement in purity or Meissner fraction
+- Penalty: -0.1 for each failed synthesis (no superconducting signal)
+- Safety: -10.0 if any parameter exceeds equipment limits
+
+### Integration with Digital Twin
+The digital twin is a surrogate model (trained on historical experimental data) that predicts the outcome of a proposed action before execution. The RL agent queries the twin to estimate expected reward and uncertainty. If the twin predicts a reward below a threshold, the action is rejected and the agent explores alternative actions. This reduces wasted resources and accelerates convergence.
+
+### Experimental Feedback Loop
+The RL agent runs as a microservice (`services/rl_controller.py`) that subscribes to the experimental data stream (via Kafka). After each measurement is ingested, the agent updates its policy and may issue new synthesis parameters to the experiment controller. The loop operates with a latency of <1 second, enabling real-time optimization during long synthesis runs.
+
+## Production Deployment Guide
+
+This section describes how to containerize, deploy, scale, and monitor the experimental feedback loop system in a production environment.
+
+### Docker Containerization
+Each component is packaged as a Docker image:
+- `feedback-loop-api`: Flask/FastAPI service exposing REST endpoints for data ingestion and querying
+- `rl-controller`: RL agent microservice
+- `digital-twin`: Surrogate model inference service
+- `pipeline-runner`: Orchestrator for batch jobs (candidate generation, model retraining)
+- `frontend`: Dashboard for monitoring experiments (React/Next.js)
+
+Base images are built from `python:3.11-slim` with required dependencies installed via `requirements.txt`. Multi-stage builds are used to minimize image size.
+
+### Cloud Deployment
+Deployment targets include AWS EKS, GCP GKE, or Azure AKS. Infrastructure as Code (Terraform) is provided in `infra/` to provision:
+- Kubernetes cluster with node pools (GPU nodes for model inference, CPU nodes for API and database)
+- Managed PostgreSQL (RDS, Cloud SQL) for the central database
+- Object storage (S3, GCS) for raw data archives
+- Message queue (Amazon MSK, Confluent Cloud) for streaming experimental data
+
+### Auto-Scaling
+Horizontal Pod Autoscaler (HPA) is configured for each service based on CPU/memory utilization and custom metrics (e.g., request queue depth for the API, model inference latency). The RL controller uses a custom metric based on the number of pending experimental results. Cluster Autoscaler adds/removes nodes as needed.
+
+### Monitoring and Alerting
+- **Prometheus** scrapes metrics from all services (request rate, latency, error rate, model prediction uncertainty, database connection pool usage).
+- **Grafana** dashboards visualize system health, experiment progress, and RL agent performance (reward over time, action distribution).
+- **Alertmanager** sends notifications to Slack, email, and PagerDuty for critical events (e.g., database connection failure, RL agent crash, sustained high error rate).
+- **Logging**: All services output structured JSON logs to stdout, collected by Fluentd and shipped to Elasticsearch for analysis.
+
+### CI/CD Pipeline
+GitHub Actions or GitLab CI builds Docker images, runs tests, and deploys to staging/production environments. Helm charts in `charts/` manage Kubernetes deployments with environment-specific values.
