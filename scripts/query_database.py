@@ -32,17 +32,17 @@ def load_database(path):
 def query(entries, args):
     results = []
     for entry in entries:
-        if args.name and entry["name"] != args.name:
+        if args.name and entry.get("name", "") != args.name:
             continue
-        if args.tc_min is not None and entry["Tc"] < args.tc_min:
+        if args.tc_min is not None and entry.get("Tc", 0) < args.tc_min:
             continue
-        if args.tc_max is not None and entry["Tc"] > args.tc_max:
+        if args.tc_max is not None and entry.get("Tc", 0) > args.tc_max:
             continue
-        if args.pressure is not None and entry["pressure"] != args.pressure:
+        if args.pressure is not None and entry.get("pressure", 0) != args.pressure:
             continue
-        if args.pressure_min is not None and entry["pressure"] < args.pressure_min:
+        if args.pressure_min is not None and entry.get("pressure", 0) < args.pressure_min:
             continue
-        if args.pressure_max is not None and entry["pressure"] > args.pressure_max:
+        if args.pressure_max is not None and entry.get("pressure", 0) > args.pressure_max:
             continue
         if args.composition and entry.get("composition") != args.composition:
             continue
