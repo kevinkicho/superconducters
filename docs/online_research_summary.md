@@ -50,3 +50,13 @@
 - Retracted claims highlight the need for rigorous replication and open data.
 
 *This summary was compiled from online research (web_search + web_fetch) on 2025-03-28. Sources are cited with URLs.*
+
+
+## Implications for Project Discovery Strategy
+
+- **Focus on ternary hydrides and clathrate structures** predicted by crystal structure prediction (USPEX, CALYPSO) to achieve high Tc at lower pressures. Use high-throughput DFT screening to identify promising candidates.
+- **Investigate chemical precompression** using rare-earth and alkaline-earth metals to stabilize hydrogen-rich phases at ambient or moderate pressures.
+- **Explore bilayer nickelate La₃Ni₂O₇** as a platform for chemical substitution (Sr, Ca) and epitaxial strain to raise Tc towards room temperature.
+- **Develop thin-film deposition techniques** (MBE, PLD) to stabilize metastable phases on substrates, enabling ambient-pressure measurements.
+- **Implement rigorous replication protocols** and open data practices to avoid retracted claims.
+- **Leverage machine learning** to accelerate discovery of novel superhydrides and electride superconductors.
