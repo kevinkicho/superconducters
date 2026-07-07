@@ -14,6 +14,10 @@ import math
 import os
 from typing import Dict, List, Tuple
 from sklearn.ensemble import RandomForestRegressor
+import joblib
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
 
 # Standard valence electron counts for common elements
 VALENCE: Dict[str, int] = {
@@ -319,10 +323,18 @@ def predict_from_database():
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='Predict superconducting Tc using BCS/Eliashberg models.')
+    parser = argparse.ArgumentParser(description='Predict superconducting Tc using BCS/Eliashberg models and ML.')
     parser.add_argument('formulas', nargs='*', help='Material formulas (e.g., Nb3Sn). If none, reads from stdin or file.')
     parser.add_argument('--database', action='store_true', help='Load database and predict Tc for all entries.')
+    parser.add_argument('--train', action='store_true', help='Train RandomForest model on database and save.')
+    parser.add_argument('--screen', type=str, metavar='CSV', help='CSV file with column "formula" to screen and predict Tc.')
     args = parser.parse_args()
+    if args.train:
+        train_model()
+        return
+    if args.screen:
+        screen_csv(args.screen)
+        return
     if args.database:
         predict_from_database()
         return
@@ -361,3 +373,111 @@ def allen_dynes_tc(lambda_ep, omega_log, mu_star=0.1):
         return 0.0
     tc = (omega_log / 1.2) * math.exp(-numerator / denominator)
     return max(tc, 0.0)
+
+
+def train_model():
+    """Train a RandomForestRegressor on the superconductor database and save the model."""
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
+    try:
+        with open(db_path, 'r') as f:
+            entries = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: Database file '{db_path}' not found.", file=sys.stderr)
+        sys.exit(1)
+    X = []
+    y = []
+    for entry in entries:
+        formula = entry.get('name', '')
+        tc = entry.get('Tc', 0)
+        if not formula or tc <= 0:
+            continue
+        try:
+            avg_valence = average_valence(formula)
+            avg_debye = average_debye(formula)
+        except Exception:
+            continue
+        X.append([avg_valence, avg_debye])
+        y.append(tc)
+    if len(X) < 10:
+        print("Not enough data to train model.", file=sys.stderr)
+        sys.exit(1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    rf = RandomForestRegressor(n_estimators=100, random_state=42)
+    rf.fit(X_train, y_train)
+    y_pred = rf.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    print(f"Model trained. Test R² = {r2:.4f}, RMSE = {rmse:.4f} K")
+    if r2 < 0.8:
+        print("Warning: R² below 0.8. Consider adding more features or data.")
+    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    joblib.dump(rf, model_path)
+    print(f"Model saved to {model_path}")
+
+def screen_csv(csv_path):
+    """Read candidate compositions from CSV and predict Tc using trained model."""
+    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
+    if not os.path.exists(model_path):
+        print(f"Error: Model file '{model_path}' not found. Run --train first.", file=sys.stderr)
+        sys.exit(1)
+    rf = joblib.load(model_path)
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception as e:
+        print(f"Error reading CSV: {e}", file=sys.stderr)
+        sys.exit(1)
+    if 'formula' not in df.columns:
+        print("CSV must contain a 'formula' column.", file=sys.stderr)
+        sys.exit(1)
+    print(f"{'Formula':<20} {'Predicted Tc (K)':<20}")
+    print("-" * 40)
+    for _, row in df.iterrows():
+        formula = row['formula'].strip()
+        try:
+            avg_valence = average_valence(formula)
+            avg_debye = average_debye(formula)
+            pred = rf.predict([[avg_valence, avg_debye]])[0]
+            print(f"{formula:<20} {pred:<20.2f}")
+        except Exception as e:
+            print(f"{formula:<20} Error: {e}")
+
+def average_valence(formula):
+    """Compute average valence electrons per atom from formula string."""
+    import re
+    pattern = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
+    total_valence = 0
+    total_atoms = 0
+    for elem, count in pattern:
+        if count == '':
+            count = 1
+        else:
+            count = int(count)
+        if elem in VALENCE:
+            total_valence += VALENCE[elem] * count
+            total_atoms += count
+        else:
+            raise ValueError(f"Unknown element {elem}")
+    if total_atoms == 0:
+        raise ValueError("No atoms parsed")
+    return total_valence / total_atoms
+
+def average_debye(formula):
+    """Compute average Debye temperature from formula string."""
+    import re
+    pattern = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
+    total_debye = 0
+    total_atoms = 0
+    for elem, count in pattern:
+        if count == '':
+            count = 1
+        else:
+            count = int(count)
+        if elem in DEBYE_TEMP:
+            total_debye += DEBYE_TEMP[elem] * count
+            total_atoms += count
+        else:
+            raise ValueError(f"Unknown element {elem}")
+    if total_atoms == 0:
+        raise ValueError("No atoms parsed")
+    return total_debye / total_atoms
