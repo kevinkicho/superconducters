@@ -111,3 +111,30 @@ To close the loop, the following automated retraining protocol is executed upon 
 8. **Logging and Monitoring**: Every step of the pipeline is logged with timestamps, data sizes, and performance metrics. Alerts are sent on failure (e.g., database connection error, model training divergence). A dashboard displays the current model version, retraining history, and candidate queue.
 
 This protocol ensures that the feedback loop is fully automated, reproducible, and robust, enabling rapid iteration in the discovery of room-temperature superconductors.
+
+
+## Iterative Candidate Advancement Plan
+
+This section defines a concrete iterative plan with explicit decision points, advancement criteria, and a closed-loop feedback mechanism that connects computational predictions with experimental validation.
+
+### Decision Points and Advancement Criteria
+
+Each candidate compound passes through a series of gates. Advancement to the next gate requires meeting all criteria at the current gate. If a candidate fails, the failure reason is recorded and fed back to the computational model for retraining.
+
+| Gate | Decision Point | Criteria for Advancement | Feedback to Model |
+|------|----------------|--------------------------|-------------------|
+| **Gate 0** | Computational screening | Predicted Tc ≥ 300 K (room temperature) under ambient pressure; predicted structural stability (e.g., formation energy < 0 eV/atom, no imaginary phonon modes); predicted synthesis feasibility (e.g., precursors available, pressure < 10 GPa). | If candidate fails, record composition/structure features and failure reason; update negative training set. |
+| **Gate 1** | Detailed DFT + phonon validation | Confirmed dynamic stability (no imaginary phonon modes); electronic structure shows Fermi level crossing with high density of states; predicted Tc (via McMillan–Allen–Dynes or similar) ≥ 300 K. | If predicted Tc < 300 K, flag candidate as low priority; if structural instability, add to exclusion list. |
+| **Gate 2** | Synthesis planning | Precursor materials are commercially available or synthesizable; synthesis route (e.g., high-pressure, chemical vapor deposition) is feasible within lab capabilities; estimated cost and time are acceptable. | If synthesis is infeasible, record constraint (e.g., pressure > 20 GPa) to guide future predictions. |
+| **Gate 3** | Experimental synthesis and initial characterization | Sample synthesized with purity ≥ 95% (by XRD); Meissner volume fraction ≥ 10% (indicating bulk superconductivity); resistivity drop > 90% at onset temperature. | If synthesis fails, log synthesis parameters and failure mode (e.g., phase impurity, decomposition). |
+| **Gate 4** | Transport and magnetic confirmation | Measured Tc ≥ 300 K (zero-resistance state); transition width < 5 K; critical current density Jc ≥ 10⁴ A/cm² at 77 K; upper critical field Hc2 ≥ 10 T. | If Tc < 300 K, update model with actual Tc; if Jc or Hc2 too low, flag for further optimization. |
+| **Gate 5** | Full characterization and stability | Reproducible results across multiple batches; stability under ambient conditions (no degradation over 30 days); thermal stability (no phase change up to 400 K); measured Tc, Jc, Hc2 meet or exceed Gate 4 thresholds. | If stability fails, record degradation mechanism (e.g., oxidation, phase transition) to inform future predictions. |
+
+### Feedback Loop Mechanism
+
+1. **Failure Feedback**: When a candidate fails at any gate, the specific failure reason (e.g., “predicted Tc 280 K but measured 250 K”, “structural instability under pressure”) is encoded as a structured label and appended to the training dataset. The ML model is retrained (see Automated Retraining Protocol) to incorporate this negative evidence.
+2. **Success Feedback**: When a candidate passes Gate 5, its full experimental data (Tc, structure, synthesis conditions) is added to the positive training set. The model is retrained to reinforce the features that led to success.
+3. **Active Learning Re‑ranking**: After each retraining, the active learning module (see above) re‑ranks all candidates. Candidates that failed at early gates are deprioritized; candidates with similar features to successful ones are promoted.
+4. **Iteration Cycle**: The plan defines a maximum of 5 iterations per candidate family. If after 5 attempts no candidate passes Gate 3, the entire family is deprioritized and the model is penalized for that family’s feature space.
+
+This iterative plan ensures that every experimental result — positive or negative — directly improves the computational model, accelerating the discovery of room‑temperature superconducting compounds.
