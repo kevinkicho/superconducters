@@ -198,3 +198,32 @@ class TestRunPipeline:
         assert len(write_calls) > 0
         # The pipeline should return a success indicator
         assert result is True or result == 0
+
+    @patch('scripts.run_pipeline.monte_carlo_simulation')
+    @patch('scripts.run_pipeline.generate_report_distribution')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_monte_carlo_and_report_distribution(self, mock_open, mock_generate_report, mock_monte_carlo):
+        """Test that Monte Carlo simulation and report distribution produce correct yield bounds and log file."""
+        # Mock Monte Carlo simulation to return yield bounds
+        mock_monte_carlo.return_value = {"lower_bound": 150.0, "upper_bound": 250.0, "mean": 200.0, "std": 20.0}
+        # Mock report generation to return a report dict
+        mock_generate_report.return_value = {"candidate": "H3S", "yield_bounds": [150.0, 250.0], "status": "success"}
+        # Mock open to return a file handle
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Call the pipeline function that runs Monte Carlo and report distribution
+        # Assume there is a function rp.run_monte_carlo_and_report(candidate_name)
+        result = rp.run_monte_carlo_and_report("H3S")
+
+        # Verify that Monte Carlo simulation was called with the candidate
+        mock_monte_carlo.assert_called_once_with("H3S")
+        # Verify that report generation was called with the simulation results
+        mock_generate_report.assert_called_once_with(mock_monte_carlo.return_value)
+        # Verify that a log file was created (e.g., monte_carlo_report.log)
+        log_calls = [c for c in mock_open.call_args_list if 'monte_carlo_report.log' in str(c)]
+        assert len(log_calls) > 0
+        # Verify the result contains yield bounds
+        assert result["yield_bounds"] == [150.0, 250.0]
+        # Verify the result status
+        assert result["status"] == "success"
