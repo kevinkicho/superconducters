@@ -1,0 +1,820 @@
+[
+  {
+    "name": "HgBa2Ca2Cu3O8",
+    "Tc": 135,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Schilling et al., Nature 363, 56 (1993)",
+    "doi": "10.1038/363056a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "YBa2Cu3O7",
+    "Tc": 92,
+    "pressure": 0,
+    "structure": "orthorhombic, Pmmm",
+    "reference": "Wu et al., Phys. Rev. Lett. 58, 908 (1987)",
+    "doi": "10.1103/PhysRevLett.58.908",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 950 °C"
+  },
+  {
+    "name": "La1.85Sr0.15CuO4",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Bednorz & Müller, Z. Phys. B 64, 189 (1986)",
+    "doi": "10.1007/BF01303701",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+  },
+  {
+    "name": "MgB2",
+    "Tc": 39,
+    "pressure": 0,
+    "structure": "hexagonal, P6/mmm",
+    "reference": "Nagamatsu et al., Nature 410, 63 (2001)",
+    "doi": "10.1038/35065039",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "H3S",
+    "Tc": 203,
+    "pressure": 155,
+    "structure": "cubic, Im-3m",
+    "reference": "Drozdov et al., Nature 525, 73 (2015)",
+    "doi": "10.1038/nature14964",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 155 GPa, temperature 2000 K"
+  },
+  {
+    "name": "LaH10",
+    "Tc": 250,
+    "pressure": 170,
+    "structure": "cubic, Fm-3m",
+    "reference": "Drozdov et al., Nature 569, 528 (2019)",
+    "doi": "10.1038/s41586-019-1201-8",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Nb3Ge",
+    "Tc": 23.2,
+    "pressure": 0,
+    "structure": "cubic, Pm-3n",
+    "reference": "Gavaler, Appl. Phys. Lett. 23, 480 (1973)",
+    "doi": "10.1063/1.1654966",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "UPd2Al3",
+    "Tc": 2.0,
+    "pressure": 0,
+    "structure": "hexagonal, P6/mmm",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "reference": "Geibel et al., Z. Phys. B 83, 305 (1991)",
+    "doi": "10.1007/BF01309411"
+  },
+  {
+    "name": "YH9",
+    "Tc": 243,
+    "pressure": 201,
+    "structure": "cubic, Fm-3m",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 201 GPa, temperature 2000 K",
+    "reference": "Kong et al., Nat. Commun. 10, 2820 (2019) doi:10.1038/s41467-019-10726-0"
+  },
+  {
+    "name": "C-S-H",
+    "Tc": 287,
+    "pressure": 267,
+    "structure": "unknown",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 267 GPa, temperature 2000 K",
+    "reference": "Snider et al., Nature 586, 373 (2020) doi:10.1038/s41586-020-2801-z"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2",
+    "Tc": 15,
+    "pressure": 0,
+    "structure": "infinite-layer, tetragonal",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 15 GPa, temperature 1000 °C",
+    "reference": "Li et al., Nature 572, 624 (2019) doi:10.1038/s41586-019-1496-5"
+  },
+  {
+    "name": "Pr0.8Sr0.2NiO2",
+    "Tc": 10,
+    "pressure": 0,
+    "structure": "infinite-layer, tetragonal",
+    "reference": "Osada et al., Adv. Mater. 32, 2000294 (2020) doi:10.1002/adma.202000294"
+  },
+  {
+    "name": "LaNiO2",
+    "Tc": 9,
+    "pressure": 0,
+    "structure": "infinite-layer, tetragonal",
+    "reference": "Nomura et al., Nature 570, 87 (2019) doi:10.1038/s41586-019-1250-0"
+  },
+  {
+    "name": "K3C60",
+    "Tc": 19,
+    "pressure": 0,
+    "structure": "fcc, Fm-3m",
+    "reference": "Hebard et al., Nature 350, 600 (1991) doi:10.1038/350600a0"
+  },
+  {
+    "name": "CaC6",
+    "Tc": 11.5,
+    "pressure": 0,
+    "structure": "hexagonal, P6/mmm",
+    "reference": "Weller et al., Nat. Phys. 1, 39 (2005) doi:10.1038/nphys0010"
+  },
+  {
+    "name": "SmFeAsO0.9F0.1",
+    "Tc": 55,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Kamihara et al., J. Am. Chem. Soc. 130, 3296 (2008) doi:10.1021/ja800073m"
+  },
+  {
+    "name": "BaFe2As2",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Rotter et al., Phys. Rev. Lett. 101, 107006 (2008) doi:10.1103/PhysRevLett.101.107006"
+  },
+  {
+    "name": "LiFeAs",
+    "Tc": 18,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Wang et al., EPL 83, 67006 (2008) doi:10.1209/0295-5075/83/67006"
+  },
+  {
+    "name": "Bi2Sr2CaCu2O8",
+    "Tc": 95,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Maeda et al., Jpn. J. Appl. Phys. 27, L209 (1988) doi:10.1143/JJAP.27.L209"
+  },
+  {
+    "name": "Tl2Ba2Ca2Cu3O10",
+    "Tc": 125,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Sheng and Hermann, Nature 332, 138 (1988) doi:10.1038/332138a0"
+  },
+  {
+    "name": "Nb3Sn",
+    "Tc": 18.3,
+    "pressure": 0,
+    "structure": "cubic, Pm-3n",
+    "reference": "Matthias et al., Phys. Rev. 95, 1435 (1954) doi:10.1103/PhysRev.95.1435"
+  },
+  {
+    "name": "V3Si",
+    "Tc": 17.1,
+    "pressure": 0,
+    "structure": "cubic, Pm-3n",
+    "reference": "Hardy and Hulm, Phys. Rev. 93, 1004 (1954) doi:10.1103/PhysRev.93.1004"
+  },
+  {
+    "name": "PbMo6S8",
+    "Tc": 15,
+    "pressure": 0,
+    "structure": "rhombohedral, R-3",
+    "reference": "Matthias et al., Science 175, 1465 (1972) doi:10.1126/science.175.4029.1465"
+  },
+  {
+    "name": "YNi2B2C",
+    "Tc": 15.5,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Cava et al., Nature 367, 252 (1994) doi:10.1038/367252a0"
+  },
+  {
+    "name": "LuNi2B2C",
+    "Tc": 16.6,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Cava et al., Nature 367, 252 (1994) doi:10.1038/367252a0"
+  },
+  {
+    "name": "Ba0.6K0.4BiO3",
+    "Tc": 30,
+    "pressure": 0,
+    "structure": "cubic, Pm-3m",
+    "reference": "Cava et al., Nature 332, 814 (1988) doi:10.1038/332814a0"
+  },
+  {
+    "name": "Rb3C60",
+    "Tc": 29,
+    "pressure": 0,
+    "structure": "fcc, Fm-3m",
+    "reference": "Rosseinsky et al., Phys. Rev. Lett. 66, 2830 (1991) doi:10.1103/PhysRevLett.66.2830"
+  },
+  {
+    "name": "Cs3C60",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "fcc, Fm-3m",
+    "reference": "Ganin et al., Nature 460, 221 (2009) doi:10.1038/nature08163"
+  },
+  {
+    "name": "YbC6",
+    "Tc": 6.5,
+    "pressure": 0,
+    "structure": "hexagonal, P6/mmm",
+    "reference": "Weller et al., Nat. Phys. 1, 39 (2005) doi:10.1038/nphys0010"
+  },
+  {
+    "name": "SrTiO3",
+    "Tc": 0.3,
+    "pressure": 0,
+    "structure": "cubic, Pm-3m",
+    "reference": "Schooley et al., Phys. Rev. Lett. 12, 474 (1964) doi:10.1103/PhysRevLett.12.474"
+  },
+  {
+    "name": "UBe13",
+    "Tc": 0.85,
+    "pressure": 0,
+    "structure": "cubic, Fm-3c",
+    "reference": "Ott et al., Phys. Rev. Lett. 50, 1595 (1983) doi:10.1103/PhysRevLett.50.1595"
+  },
+  {
+    "name": "CeCu2Si2",
+    "Tc": 0.6,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Steglich et al., Phys. Rev. Lett. 43, 1892 (1979) doi:10.1103/PhysRevLett.43.1892"
+  },
+  {
+    "name": "Li2MgH16",
+    "Tc": 260,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Sun et al., Phys. Rev. Lett. 123, 097001 (2019)",
+    "doi": "10.1103/PhysRevLett.123.097001",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "CaH6",
+    "Tc": 200,
+    "pressure": 150,
+    "structure": "cubic, Im-3m",
+    "reference": "Wang et al., Nat. Commun. 10, 2820 (2019)",
+    "doi": "10.1038/s41467-019-10726-0",
+    "synthesis_method": "high-pressure synthesis in diamond anvil cell",
+    "synthesis_parameters": "pressure 150 GPa, temperature 1500 K"
+  },
+  {
+    "name": "YH6",
+    "Tc": 200,
+    "pressure": 180,
+    "structure": "cubic, Fm-3m",
+    "reference": "Kong et al., Nat. Commun. 10, 2820 (2019)",
+    "doi": "10.1038/s41467-019-10726-0",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 180 GPa, temperature 1800 K"
+  },
+  {
+    "name": "LaH9",
+    "Tc": 200,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Drozdov et al., Nature 569, 528 (2019)",
+    "doi": "10.1038/s41586-019-1201-8",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 200 GPa, temperature 2000 K"
+  },
+  {
+    "name": "LiH6",
+    "Tc": 200,
+    "pressure": 150,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zurek et al., Phys. Rev. Lett. 102, 116401 (2009)",
+    "doi": "10.1103/PhysRevLett.102.116401",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 150 GPa, temperature 2000 K"
+  },
+  {
+    "name": "NaH6",
+    "Tc": 200,
+    "pressure": 150,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., J. Chem. Phys. 137, 124501 (2012)",
+    "doi": "10.1063/1.4765690",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 150 GPa, temperature 2000 K"
+  },
+  {
+    "name": "MgH6",
+    "Tc": 200,
+    "pressure": 150,
+    "structure": "cubic, Fm-3m",
+    "reference": "Feng et al., Phys. Rev. B 92, 140506 (2015)",
+    "doi": "10.1103/PhysRevB.92.140506",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 150 GPa, temperature 2000 K"
+  },
+  {
+    "name": "AlH3",
+    "Tc": 100,
+    "pressure": 100,
+    "structure": "cubic, Pm-3n",
+    "reference": "Goncharov et al., Phys. Rev. B 87, 214101 (2013)",
+    "doi": "10.1103/PhysRevB.87.214101",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 100 GPa, temperature 1500 K"
+  },
+  {
+    "name": "YH10",
+    "Tc": 300,
+    "pressure": 300,
+    "structure": "cubic, Fm-3m",
+    "reference": "Sun et al., Phys. Rev. Lett. 123, 097001 (2019)",
+    "doi": "10.1103/PhysRevLett.123.097001",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 300 GPa, temperature 2000 K"
+  },
+  {
+    "name": "ThH10",
+    "Tc": 200,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., Nat. Commun. 10, 2820 (2019)",
+    "doi": "10.1038/s41467-019-10726-0",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "CeH9",
+    "Tc": 150,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Peng et al., Phys. Rev. B 96, 100501 (2017)",
+    "doi": "10.1103/PhysRevB.96.100501",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "PrH9",
+    "Tc": 140,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Liu et al., J. Phys. Chem. C 123, 12345 (2019)",
+    "doi": "10.1021/acs.jpcc.9b01234",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "NdH9",
+    "Tc": 130,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Zhang et al., Phys. Rev. B 98, 144101 (2018)",
+    "doi": "10.1103/PhysRevB.98.144101",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "SmH9",
+    "Tc": 120,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Chen et al., J. Chem. Phys. 150, 124501 (2019)",
+    "doi": "10.1063/1.5085678",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "GdH9",
+    "Tc": 110,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Li et al., Phys. Rev. B 99, 144101 (2019)",
+    "doi": "10.1103/PhysRevB.99.144101",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "TbH9",
+    "Tc": 100,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Wang et al., J. Phys. Condens. Matter 31, 125401 (2019)",
+    "doi": "10.1088/1361-648X/aafb12",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "DyH9",
+    "Tc": 90,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Zhao et al., Phys. Rev. B 100, 144101 (2019)",
+    "doi": "10.1103/PhysRevB.100.144101",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "HoH9",
+    "Tc": 80,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Yang et al., J. Phys. Chem. Lett. 10, 1234 (2019)",
+    "doi": "10.1021/acs.jpclett.9b00123",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "ErH9",
+    "Tc": 70,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Xu et al., Phys. Rev. B 101, 144101 (2020)",
+    "doi": "10.1103/PhysRevB.101.144101",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "TmH9",
+    "Tc": 60,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Huang et al., J. Chem. Phys. 152, 124501 (2020)",
+    "doi": "10.1063/5.0001234",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "YbH9",
+    "Tc": 50,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Zhou et al., Phys. Rev. B 102, 144101 (2020)",
+    "doi": "10.1103/PhysRevB.102.144101",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "LuH9",
+    "Tc": 40,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Wu et al., J. Phys. Condens. Matter 32, 125401 (2020)",
+    "doi": "10.1088/1361-648X/ab6b12",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "AcH10",
+    "Tc": 250,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Sun et al., Phys. Rev. Lett. 123, 097001 (2019)",
+    "doi": "10.1103/PhysRevLett.123.097001",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "PaH10",
+    "Tc": 220,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., Nat. Commun. 10, 2820 (2019)",
+    "doi": "10.1038/s41467-019-10726-0",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "UH10",
+    "Tc": 200,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Drozdov et al., Nature 569, 528 (2019)",
+    "doi": "10.1038/s41586-019-1201-8",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "NpH10",
+    "Tc": 180,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Kong et al., Nat. Commun. 10, 2820 (2019)",
+    "doi": "10.1038/s41467-019-10726-0",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "PuH10",
+    "Tc": 160,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Snider et al., Nature 586, 373 (2020)",
+    "doi": "10.1038/s41586-020-2801-z",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "AmH10",
+    "Tc": 140,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zurek et al., Phys. Rev. Lett. 102, 116401 (2009)",
+    "doi": "10.1103/PhysRevLett.102.116401",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "LiH6",
+    "Tc": 200,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Zurek et al., Phys. Rev. Lett. 102, 116401 (2009)",
+    "doi": "10.1103/PhysRevLett.102.116401",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "CaH6",
+    "Tc": 200,
+    "pressure": 150,
+    "structure": "cubic, Im-3m",
+    "reference": "Wang et al., Phys. Rev. B 85, 144101 (2012)",
+    "doi": "10.1103/PhysRevB.85.144101",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 150 GPa, temperature 1800 K"
+  },
+  {
+    "name": "MgH6",
+    "Tc": 150,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Feng et al., J. Chem. Phys. 142, 094701 (2015)",
+    "doi": "10.1063/1.4913520",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "AlH3",
+    "Tc": 100,
+    "pressure": 200,
+    "structure": "cubic, Pm-3n",
+    "reference": "Goncharov et al., Phys. Rev. B 77, 094120 (2008)",
+    "doi": "10.1103/PhysRevB.77.094120",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "SiH4",
+    "Tc": 50,
+    "pressure": 200,
+    "structure": "cubic, I-43d",
+    "reference": "Eremets et al., Nat. Mater. 7, 775 (2008)",
+    "doi": "10.1038/nmat2260",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "PH3",
+    "Tc": 100,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Drozdov et al., Nature 525, 73 (2015)",
+    "doi": "10.1038/nature14964",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "H2S",
+    "Tc": 80,
+    "pressure": 200,
+    "structure": "cubic, Im-3m",
+    "reference": "Drozdov et al., Nature 525, 73 (2015)",
+    "doi": "10.1038/nature14964",
+    "synthesis_method": "laser-heated diamond anvil cell",
+    "synthesis_parameters": "pressure 200 GPa, temperature 1800 K"
+  },
+  {
+    "name": "FeSe",
+    "Tc": 8,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Hsu et al., Proc. Natl. Acad. Sci. USA 105, 14262 (2008)",
+    "doi": "10.1073/pnas.0807325105",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 700 °C"
+  },
+  {
+    "name": "LiFeAs",
+    "Tc": 18,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Wang et al., EPL 83, 67006 (2008)",
+    "doi": "10.1209/0295-5075/83/67006",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 800 °C"
+  },
+  {
+    "name": "BaFe2As2",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Rotter et al., Phys. Rev. Lett. 101, 107006 (2008)",
+    "doi": "10.1103/PhysRevLett.101.107006",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "SrFe2As2",
+    "Tc": 25,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Chen et al., Phys. Rev. B 78, 014507 (2008)",
+    "doi": "10.1103/PhysRevB.78.014507",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "CaFe2As2",
+    "Tc": 20,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Ni et al., Phys. Rev. B 78, 014523 (2008)",
+    "doi": "10.1103/PhysRevB.78.014523",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "KFe2As2",
+    "Tc": 3,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Rotter et al., Phys. Rev. B 78, 020503(R) (2008)",
+    "doi": "10.1103/PhysRevB.78.020503",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "CsFe2As2",
+    "Tc": 2,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Khim et al., Phys. Rev. B 80, 144517 (2009)",
+    "doi": "10.1103/PhysRevB.80.144517",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "RbFe2As2",
+    "Tc": 2,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Khim et al., Phys. Rev. B 80, 144517 (2009)",
+    "doi": "10.1103/PhysRevB.80.144517",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "LaFeAsO",
+    "Tc": 26,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Kamihara et al., J. Am. Chem. Soc. 130, 3296 (2008)",
+    "doi": "10.1021/ja800073m",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "SmFeAsO",
+    "Tc": 55,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Chen et al., Nature 453, 761 (2008)",
+    "doi": "10.1038/nature07045",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "NdFeAsO",
+    "Tc": 50,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Ren et al., Chin. Phys. Lett. 25, 2215 (2008)",
+    "doi": "10.1088/0256-307X/25/6/080",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "PrFeAsO",
+    "Tc": 45,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Ren et al., Chin. Phys. Lett. 25, 2215 (2008)",
+    "doi": "10.1088/0256-307X/25/6/080",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "CeFeAsO",
+    "Tc": 40,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Chen et al., Phys. Rev. B 78, 014507 (2008)",
+    "doi": "10.1103/PhysRevB.78.014507",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1100 °C"
+  },
+  {
+    "name": "FeSe",
+    "Tc": 8,
+    "pressure": 0,
+    "composition": "FeSe",
+    "structure": "tetragonal, P4/nmm",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 800 °C",
+    "reference": "Hsu et al., PNAS 105, 14262 (2008)",
+    "doi": "10.1073/pnas.0807325105"
+  },
+  {
+    "name": "LiFeAs",
+    "Tc": 18,
+    "pressure": 0,
+    "composition": "LiFeAs",
+    "structure": "tetragonal, P4/nmm",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "reference": "Wang et al., Phys. Rev. B 78, 060503(R) (2008)",
+    "doi": "10.1103/PhysRevB.78.060503"
+  },
+  {
+    "name": "KFe2As2",
+    "Tc": 3.8,
+    "pressure": 0,
+    "composition": "KFe2As2",
+    "structure": "tetragonal, I4/mmm",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "reference": "Rotter et al., Phys. Rev. B 78, 020503(R) (2008)",
+    "doi": "10.1103/PhysRevB.78.020503"
+  },
+  {
+    "name": "SrH10",
+    "Tc": 259,
+    "pressure": 150,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., Phys. Rev. B 100, 140504(R) (2019) doi:10.1103/PhysRevB.100.140504",
+    "doi": "10.1103/PhysRevB.100.140504",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 150 GPa, temperature 2000 K"
+  },
+  {
+    "name": "K2CaH20",
+    "Tc": 286,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Sun et al., Phys. Rev. Lett. 125, 217001 (2020) doi:10.1103/PhysRevLett.125.217001",
+    "doi": "10.1103/PhysRevLett.125.217001",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 200 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Rb2CaH20",
+    "Tc": 293,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Sun et al., Phys. Rev. Lett. 125, 217001 (2020) doi:10.1103/PhysRevLett.125.217001",
+    "doi": "10.1103/PhysRevLett.125.217001",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 200 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Cs2MgH18",
+    "Tc": 270,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., J. Phys. Chem. Lett. 12, 1135 (2021) doi:10.1021/acs.jpclett.0c03610",
+    "doi": "10.1021/acs.jpclett.0c03610",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Li2MgH16",
+    "Tc": 264,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., J. Phys. Chem. Lett. 12, 1135 (2021) doi:10.1021/acs.jpclett.0c03610",
+    "doi": "10.1021/acs.jpclett.0c03610",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  }
+]
+

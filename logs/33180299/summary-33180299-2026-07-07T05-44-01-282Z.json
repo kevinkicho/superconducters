@@ -1,0 +1,138 @@
+{
+  "runId": "33180299-b410-4add-bc1d-9e6e9911d434",
+  "repoUrl": "",
+  "localPath": "C:\\Users\\kevin\\workspace\\superconducters_07062026",
+  "preset": "blackboard",
+  "model": "deepseek-v4-flash:cloud",
+  "agentCount": 5,
+  "rounds": 0,
+  "startedAt": 1783403041282,
+  "endedAt": 1783403041532,
+  "wallClockMs": 250,
+  "wastedWallClockMs": 0,
+  "stopReason": "crash",
+  "stopDetail": "aborted during startup with zero progress (no agent turns, no commits)",
+  "commits": 0,
+  "staleEvents": 0,
+  "skippedTodos": 0,
+  "totalTodos": 0,
+  "filesChanged": 0,
+  "finalGitStatus": "",
+  "finalGitStatusTruncated": false,
+  "totalPromptTokens": 0,
+  "totalResponseTokens": 0,
+  "agents": [],
+  "transcript": [
+    {
+      "id": "cf16b67b-a0f7-423f-8068-9466916983e0",
+      "role": "system",
+      "text": "▸▸RUN-START▸▸|runId=33180299-b410-4add-bc1d-9e6e9911d434|preset=blackboard|plannerModel=deepseek-v4-flash:cloud|workerModel=deepseek-v4-flash:cloud|agentCount=5|repoUrl=",
+      "ts": 1783403041282
+    },
+    {
+      "id": "b92429ec-e45e-4f88-abbb-318248748547",
+      "role": "system",
+      "text": "Deliverable saved → deliverable-blackboard-33180299-2026-07-07T05-44-01-443Z.md",
+      "ts": 1783403041448,
+      "summary": {
+        "kind": "deliverable",
+        "preset": "blackboard",
+        "filename": "deliverable-blackboard-33180299-2026-07-07T05-44-01-443Z.md",
+        "fullPath": "C:\\Users\\kevin\\workspace\\superconducters_07062026\\logs\\33180299\\deliverable\\deliverable-blackboard-33180299-2026-07-07T05-44-01-443Z.md",
+        "bytes": 1392,
+        "sectionTitles": [
+          "PR description",
+          "Anti-pattern findings (diff-aware critic)",
+          "Coverage gaps",
+          "Auto-rollbacks fired",
+          "Next actions"
+        ]
+      }
+    },
+    {
+      "id": "78ff0d3f-0184-4058-bcda-348b05d5e72f",
+      "role": "system",
+      "text": "Canonical project deliverable copied to C:\\Users\\kevin\\workspace\\ollama_swarm\\server\\logs\\33180299-b410-4add-bc1d-9e6e9911d434\\deliverable\\deliverable-blackboard-33180299-2026-07-07T05-44-01-443Z.md",
+      "ts": 1783403041454
+    }
+  ],
+  "v2State": {
+    "phase": "stopped",
+    "enteredAt": 1783403041349,
+    "detail": "user-stop"
+  },
+  "v2QueueState": {
+    "counts": {
+      "pending": 0,
+      "inProgress": 0,
+      "pendingCommit": 0,
+      "completed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "total": 0
+    }
+  },
+  "topology": {
+    "agents": [
+      {
+        "index": 1,
+        "role": "planner",
+        "model": "deepseek-v4-flash:cloud",
+        "removable": false
+      },
+      {
+        "index": 2,
+        "role": "worker",
+        "model": "deepseek-v4-flash:cloud",
+        "removable": true
+      },
+      {
+        "index": 3,
+        "role": "worker",
+        "model": "deepseek-v4-flash:cloud",
+        "removable": true
+      },
+      {
+        "index": 4,
+        "role": "worker",
+        "model": "deepseek-v4-flash:cloud",
+        "removable": true
+      },
+      {
+        "index": 5,
+        "role": "worker",
+        "model": "deepseek-v4-flash:cloud",
+        "removable": true
+      },
+      {
+        "index": 6,
+        "role": "auditor",
+        "model": "deepseek-v4-flash:cloud",
+        "removable": false
+      }
+    ]
+  },
+  "rca": {
+    "needsAttention": true,
+    "primaryCause": "Run died after 0.3s — likely startup failure",
+    "secondaryCauses": [],
+    "recommendation": "Re-run with --debug for finer-grained diagnostics.",
+    "markdown": "## Auto-RCA\n\n**Primary cause:** Run died after 0.3s — likely startup failure\n\n**Recommendation:** Re-run with --debug for finer-grained diagnostics.\n\n**Run metadata:** phase=failed, commits=0, tier=0, duration=0.3s"
+  },
+  "healthScore": {
+    "score": 60,
+    "bucket": "yellow",
+    "components": {
+      "artifactPoints": 0,
+      "tierPoints": 0,
+      "retryPenalty": 0,
+      "emptyTurnPenalty": 0,
+      "capProximityPenalty": 0,
+      "errorPenalty": 0
+    },
+    "reason": "Score 60 — yellow. No major penalty contributors; low artifact count holds the score down."
+  },
+  "startCommand": "curl -X POST /api/swarm/start \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"preset\": \"blackboard\",\n  \"model\": \"deepseek-v4-flash:cloud\",\n  \"agentCount\": 5,\n  \"rounds\": 0,\n  \"plannerModel\": \"deepseek-v4-flash:cloud\",\n  \"dedicatedAuditor\": true,\n  \"userDirective\": \"study superconducting materials (with online study if necessary) then please come up with chemistry and physics to discover and manufacture room temperature superconducting compounds\",\n  \"webTools\": true\n}'",
+  "userDirective": "study superconducting materials (with online study if necessary) then please come up with chemistry and physics to discover and manufacture room temperature superconducting compounds",
+  "webTools": true
+}

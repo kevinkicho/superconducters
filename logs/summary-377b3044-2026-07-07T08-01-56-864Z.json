@@ -1,0 +1,577 @@
+{
+  "runId": "377b3044-78a2-40e9-8775-63bc313d3a17",
+  "repoUrl": "",
+  "localPath": "C:\\Users\\kevin\\workspace\\superconducters_07062026",
+  "preset": "council",
+  "model": "deepseek-v4-flash:cloud",
+  "agentCount": 4,
+  "rounds": 0,
+  "startedAt": 1783411316864,
+  "endedAt": 1783411723592,
+  "wallClockMs": 406728,
+  "wastedWallClockMs": 0,
+  "stopReason": "crash",
+  "stopDetail": "Run interrupted during \"discussing\" (no graceful close-out — e.g. server restart or stop timeout)",
+  "filesChanged": 0,
+  "finalGitStatus": "",
+  "finalGitStatusTruncated": false,
+  "totalPromptTokens": 352136,
+  "totalResponseTokens": 176608,
+  "agents": [
+    {
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "turnsTaken": 6,
+      "tokensIn": null,
+      "tokensOut": null
+    },
+    {
+      "agentId": "agent-2",
+      "agentIndex": 2,
+      "turnsTaken": 4,
+      "tokensIn": null,
+      "tokensOut": null
+    },
+    {
+      "agentId": "agent-3",
+      "agentIndex": 3,
+      "turnsTaken": 4,
+      "tokensIn": null,
+      "tokensOut": null
+    },
+    {
+      "agentId": "agent-4",
+      "agentIndex": 4,
+      "turnsTaken": 4,
+      "tokensIn": null,
+      "tokensOut": null
+    }
+  ],
+  "transcript": [
+    {
+      "id": "2ddec6d5-332d-4ec1-8883-5440b4cc5e5d",
+      "role": "system",
+      "text": "Resuming existing clone at C:\\Users\\kevin\\workspace\\superconducters_07062026",
+      "ts": 1783411316955
+    },
+    {
+      "id": "250aefee-f458-4504-a52d-49272d881745",
+      "role": "system",
+      "text": "4/4 agents ready — models: deepseek-v4-flash:cloud, deepseek-v4-flash:cloud, deepseek-v4-flash:cloud, deepseek-v4-flash:cloud.",
+      "ts": 1783411316956,
+      "summary": {
+        "kind": "agents_ready",
+        "preset": "council",
+        "readyCount": 4,
+        "requestedCount": 4,
+        "spawnElapsedMs": 0,
+        "agents": [
+          {
+            "id": "agent-1",
+            "index": 1,
+            "model": "deepseek-v4-flash:cloud",
+            "sessionId": "90b28d13-6775-4a0f-947d-5aec35ecb688",
+            "role": "Drafter"
+          },
+          {
+            "id": "agent-2",
+            "index": 2,
+            "model": "deepseek-v4-flash:cloud",
+            "sessionId": "6ca90985-b541-4f66-a681-4885a2a6ecb2",
+            "role": "Drafter"
+          },
+          {
+            "id": "agent-3",
+            "index": 3,
+            "model": "deepseek-v4-flash:cloud",
+            "sessionId": "d73f2fac-f1f1-497e-a08f-c395e8adcc37",
+            "role": "Drafter"
+          },
+          {
+            "id": "agent-4",
+            "index": 4,
+            "model": "deepseek-v4-flash:cloud",
+            "sessionId": "6ebc3b49-6748-4842-8508-a7304af1be56",
+            "role": "Drafter"
+          }
+        ]
+      }
+    },
+    {
+      "id": "b72e9fa0-442a-4547-b313-d73ba7656aa3",
+      "role": "system",
+      "text": "Project clone: C:\\Users\\kevin\\workspace\\superconducters_07062026\nRepo: \nTop-level entries: blackboard-state.json, candidate_materials.md, characterization_techniques.md, data/, docs/, literature_review.md, logs/, README.md, roadmap.md, scripts/, synthesis_methods.md, theoretical_framework.md\n\n=== USER DIRECTIVE (AUTHORITATIVE) ===\nstudy superconducting materials (with online study if necessary) then please come up with chemistry and physics to discover and manufacture room temperature superconducting compounds\n=== END DIRECTIVE ===\n\nThis directive is AUTHORITATIVE. Every file you create or modify MUST serve this directive's intent.\nDo NOT create mock/fake/placeholder data. Do NOT contradict or ignore the directive.\n\nEvery drafter answers the directive above. Round 1 = independent drafts (peers hidden); Round 2+ = reveal and revise. Synthesis at the end consolidates into a single plan.\n\n\nREADME excerpt:\n# Project Overview\n\nThis repository documents a research project on room-temperature superconductivity. It includes the following key documents:\n\n- [literature_review.md](literature_review.md): Comprehensive review of existing literature on room-temperature superconductivity.\n- [theoretical_framework.md](theoretical_framework.md): Theoretical models and frameworks guiding the research.\n- [candidate_materials.md](candidate_materials.md): List and properties of candidate materials for room-temperature superconductivity.\n- [synthesis_methods.md](synthesis_methods.md): Methods and procedures for synthesizing candidate materials.\n- [characterization_techniques.md](characterization_techniques.md): Techniques used to characterize superconducting properties.\n- [roadmap.md](roadmap.md): Project roadmap and future milestones.\n\n## Navigation\n\nStart with the literature review to understand the current state of research, then explore the theoretical framework. Next, review candidate materials and synthesis methods. The characterization techniques document explains how we verify superconductivity, and the roadmap outlines next steps.\n\n\n## How to Contribute\n\nWe welcome contributions! To propose changes, please open an issue describing your idea before submitting a pull request. Report bugs by creating a detailed issue with steps to reproduce. When submitting a pull request, ensure your code follows the project's style and includes relevant tests. For more information, see our [experimental feedback loop guide](docs/experimental_feedback_loop.md).\n\n\nProject files (21 total):\nREADME.md\ncandidate_materials.md\ncharacterization_techniques.md\nliterature_review.md\nroadmap.md\nsynthesis_methods.md\ntheoretical_framework.md\ndata/superconductor_database.json\ndocs/candidate_materials.md\ndocs/challenges_and_mitigations.md\ndocs/characterization_techniques.md\ndocs/experimental_feedback_loop.md\ndocs/experimental_protocol_hydride.md\ndocs/literature_review.md\ndocs/manufacturing_scalability.md\ndocs/novel_mechanism.md\ndocs/roadmap.md\ndocs/synthesis_methods.md\ndocs/theoretical_framework.md\nscripts/predict_tc.py\nscripts/query_database.py\n\nKey file excerpts:\n--- candidate_materials.md ---\n# Candidate Materials for Room Temperature Superconductivity\n\nThis document lists and describes compounds that have shown potential for room temperature superconductivity, including hydrides, cuprates, nickelates, and other promising systems. Transition temperatures (Tc) and synthesis notes are provided where available.\n\n## Hydrides\n\nHydrides under high pressure have exhibited the highest Tc values to date, approaching room temperature.\n\n- **H3S (sulfur hydride)**: Tc ~203 K at 155 GPa. Synthesized by laser heating sulfur and hydrogen in a diamond anvil cell. The structure is a cubic Im-3m phase.\n- **LaH10 (lanthanum decahydride)**: Tc ~250 K at 170 GPa. Formed by compressing La metal with H2. Exhibits clathrate-like structure with H cages.\n- **YH9 (yttrium nonahydride)**: Tc ~243 K at 201 GPa. Synthesized similarly via laser heating.\n- **C-H-S system**: Carbonaceous sulfur hydride (CSH) reported Tc ~287 K at 267 GPa, but results are controversial and not independently confirmed.\n- **Li2MgH16 (lithium-magnesium hydride)**: Predicted Tc ~250 K at 200 GPa. Synthesis feasibility: predicted to be stable under high pressure; experimental synthesis not yet confirmed. Stability: metastable at ambient conditions.\n- **CaYH12 (calcium-yttrium hydride)**: Predicted Tc ~280 K at 150 GPa. Synthesis feasibility: similar to other ternary hydrides; requires high pressure and laser heating. Stability: metastable.\n\nSynthesis notes: All hydrides require extreme pressures (>100 GPa) and often laser heating to form. Ternary hydrides are predicted to be stable under similar conditions. Samples are microscopic and metastable at ambient conditions.\n\n## Cuprates\n\nCuprate high-temperature superconductors operate at ambient pressure but have Tc below 200 K.\n\n- **YBa2Cu3O7-δ (YBCO)**: Tc ~93 K. Synthesized by solid-state reaction of Y2O3, BaCO3, and CuO, followed by oxygen annealing. Thin films grown by pulsed laser deposition (PLD).\n- **Bi2Sr2CaCu2O8+δ (BSCCO-2212)**: Tc ~95 K. Grown by floating zone method or thin film deposition.\n- **HgBa2Ca2Cu3O8+δ (Hg-1223)**: Tc ~135 K at ambient pressure, up to ~164 K under high pressure. Synthesis requires sealed quartz tubes due to Hg volatility.\n- **Tl2Ba2Ca2Cu3O10 (Tl-2223)**: Tc ~125 K. Similar sealed-tube synthesis.\n\nSynthesis notes: Cuprates are typically polycrystalline ceramics; single crystals require flux methods. Thin films are used for devices.\n\n## Nickelates\n\nInfinite-layer nickelates are a newer class of superconductors with structural similarity to cuprates.\n\n- **Nd0.8Sr0.2NiO2**: Tc ~15 K. Synthesized by pulsed laser deposition of NdNiO3 on SrTiO3, followed by topotactic reduction with CaH2 to remove apical oxygen.\n- **Pr0.8Sr0.2NiO2**: Tc ~10 K. Similar reduction method.\n- **LaNiO2**: Tc ~9 K (under strain). Requires careful control of oxygen content.\n- **La0.8Sr0.2NiO2 (under strain)**: Predicted Tc ~20 K. Synthesis feasibility: similar to Nd0.8Sr0.2NiO2; requires thin film growth and reduction. Stability: metastable, requires strain to maintain structure.\n- **Sr-doped infinite-layer nickelates (general)**: Recent predictions suggest Tc up to ~30 K under optimal doping and strain. Synthesis feasibility: challenging due to precise doping control. Stability: metastable.\n\nSynthesis notes: Thin films are essential; bulk synthesis is challenging due to metastability. Reduction step is critical. Strain engineering can enhance Tc.\n\n## Other Promising Systems\n\n- **MgB2**: Tc ~39 K. Simple binary compound, synthesized by solid-state reaction or chemical vapor deposition. Not room temperature but a classic high-Tc superconductor.\n- **Iron-based superconductors**: e.g., SmFeAsO1-xFx (Tc ~55 K), BaFe2As2 (Tc ~38 K). Synthesized by solid-state reaction in sealed tubes.\n- **Carbon-based superconductors**: e.g., alkali-doped fullerenes (K3C60, Tc ~19 K; Rb3C60, Tc ~29 K), graphite intercalation compounds (CaC6, Tc ~11.5 K; YbC6, Tc ~6.5 K), and carbon nanotubes (predicted Tc up to 100 K under doping). Synthesis feasibility: fullerenes require vapor deposition; graphite intercalation requires high-temperature reaction; carbon nanotubes require chemical doping. Stability: many are air-sensitive.\n- **Hydrogen-rich compounds under pressure**: Beyond hydrides, e.g., PH3, SiH4, etc., are predicted to have high Tc but not yet confirmed.\n- **Graphene-based systems**: Predicted Tc up to 30 K under specific doping and strain. Synthesis feasibility: requires exfoliation or CVD growth. Stability: sensitive to environment.\n\n## Summary\n\n---\n--- docs/candidate_materials.md ---\n# Candidate Materials for Room Temperature Superconductivity\n\nThis document lists materials and compounds that have been identified or proposed as potential candidates for room temperature superconductivity, based on theoretical predictions and experimental evidence.\n\n## High-Pressure Hydrides\n- **H3S (hydrogen sulfide)** – Predicted and observed to superconduct at ~203 K under ~150 GPa (Drozdov et al., 2015).\n- **LaH10 (lanthanum decahydride)** – Superconducting transition up to ~260 K under ~170 GPa (Drozdov et al., 2019).\n- **C-S-H (carbonaceous sulfur hydride)** – Reported superconductivity at ~287 K under ~270 GPa (Snider et al., 2020).\n- **YH6, YH9** – Yttrium hydrides predicted to exhibit high Tc under pressure.\n- **LiH, MgH2, CaH6** – Other hydrides under investigation.\n\n## Other Candidates\n- **YBCO (YBa2Cu3O7-δ)** – High-temperature cuprate superconductor (Tc ~93 K at ambient pressure), not room temperature but a key reference.\n- **Doped fullerenes (e.g., Cs3C60)** – Moderate Tc under pressure.\n- **Nickelates (e.g., Nd0.8Sr0.2NiO2)** – Recent thin-film superconductors with Tc up to ~15 K.\n- **Magic-angle twisted bilayer graphene** – Superconductivity at ~1.7 K, but tunable.\n\n## Theoretical Predictions\n- **Hydrogen-rich compounds under high pressure** – Many binary and ternary hydrides predicted via crystal structure prediction (e.g., CaH12, MgH16).\n- **Electron-phonon coupling in metallic hydrogen** – Predicted to be a room temperature superconductor at extremely high pressures (>400 GPa).\n\n*Note: Room temperature superconductivity (Tc ≥ 300 K) has not been conclusively achieved at ambient pressure as of 2025. The candidates above represent the most promising systems under extreme conditions.*\n\n---\n--- README.md ---\n# Project Overview\n\nThis repository documents a research project on room-temperature superconductivity. It includes the following key documents:\n\n- [literature_review.md](literature_review.md): Comprehensive review of existing literature on room-temperature superconductivity.\n- [theoretical_framework.md](theoretical_framework.md): Theoretical models and frameworks guiding the research.\n- [candidate_materials.md](candidate_materials.md): List and properties of candidate materials for room-temperature superconductivity.\n- [synthesis_methods.md](synthesis_methods.md): Methods and procedures for synthesizing candidate materials.\n- [characterization_techniques.md](characterization_techniques.md): Techniques used to characterize superconducting properties.\n- [roadmap.md](roadmap.md): Project roadmap and future milestones.\n\n## Navigation\n\nStart with the literature review to understand the current state of research, then explore the theoretical framework. Next, review candidate materials and synthesis methods. The characterization techniques document explains how we verify superconductivity, and the roadmap outlines next steps.\n\n\n## How to Contribute\n\nWe welcome contributions! To propose changes, please open an issue describing your idea before submitting a pull request. Report bugs by creating a detailed issue with steps to reproduce. When submitting a pull request, ensure your code follows the project's style and includes relevant tests. For more information, see our [experimental feedback loop guide](docs/experimental_feedback_loop.md).\n\n---\n--- characterization_techniques.md ---\n# Characterization Techniques for Room-Temperature Superconductivity\n\n## Overview\nVerifying room-temperature superconductivity requires a combination of electrical, magnetic, and thermal measurements to unambiguously demonstrate zero resistance, the Meissner effect, and thermodynamic signatures of the superconducting transition.\n\n## 1. Resistivity Measurements\n- **Four-probe method**: Eliminates contact resistance. A sharp drop to zero resistivity (ρ → 0) at Tc is the primary signature.\n- **Critical current density**: Measure I–V curves; superconducting state carries current without dissipation up to Ic.\n- **AC susceptibility**: Inductive method detects the onset of perfect diamagnetism.\n\n## 2. Magnetic Susceptibility\n- **DC magnetization (SQUID)**: Zero-field-cooled (ZFC) and field-cooled (FC) measurements. A diamagnetic signal (χ < 0) below Tc confirms the Meissner effect.\n- **AC susceptibility**: Real part χ' shows a sharp drop; imaginary part χ'' peaks at the transition due to energy dissipation.\n\n## 3. Specific Heat\n- **Electronic specific heat**: A jump at Tc (ΔC/γTc ≈ 1.43 for BCS) indicates bulk superconductivity.\n- **Field dependence**: Suppression of the jump with applied magnetic field confirms the superconducting nature.\n\n## 4. Thermal Conductivity\n- **Electronic contribution**: Decreases below Tc as electrons condense into Cooper pairs (unless dominated by phonons).\n- **Anomalous enhancement**: In some unconventional superconductors, thermal conductivity may show a peak.\n\n## 5. Penetration Depth and Coherence Length\n- **London penetration depth (λ)**: Measured via muon spin rotation (μSR) or microwave cavity techniques. Temperature dependence reveals pairing symmetry.\n- **Coherence length (ξ)**: Extracted from upper critical field Hc2 = Φ0/(2πξ²).\n\n## 6. Tunneling Spectroscopy\n- **Scanning tunneling microscopy (STM)**: Directly measures the superconducting gap (Δ) and density of states.\n- **Point-contact Andreev reflection**: Provides gap magnitude and symmetry information.\n\n## 7. Advanced Techniques\n- **Muon spin rotation (μSR)**: Measures the local magnetic field distribution in the sample. In the superconducting state, the field profile from the vortex lattice (in type-II superconductors) provides a direct measure of the penetration depth λ. The temperature dependence of λ reveals the pairing symmetry (e.g., s-wave vs. d-wave). Additionally, μSR can detect spontaneous magnetic fields that appear in time-reversal symmetry breaking states, confirming unconventional superconductivity.\n- **Neutron scattering**: Probes magnetic fluctuations and spin correlations. In many unconventional superconductors, magnetic fluctuations are believed to mediate Cooper pairing. Neutron scattering can reveal the spin resonance peak below Tc, a hallmark of magnetic pairing mechanisms. It also provides information on the magnetic structure and vortex lattice.\n- **Scanning SQUID microscopy**: Offers high spatial resolution imaging of local magnetic fields. It can directly visualize the Meissner effect and flux exclusion at the micron scale, as well as the formation of vortices. Scanning SQUID is particularly useful for inhomogeneous samples or to confirm the expulsion of magnetic flux in candidate materials.\n- **Optical conductivity**: Reveals the formation of a superconducting gap in the far-infrared. The missing spectral weight in the optical conductivity below Tc is transferred to the superfluid condensate, providing a measure of the superfluid density.\n\nThese advanced techniques provide complementary evidence for superconductivity, probing different aspects of the superconducting state and helping to rule out alternative explanations.\n\n## Cross-Validation\nNo single technique is sufficient. A convincing claim of room-temperature superconductivity must show:\n- Zero resistivity (with low noise floor)\n- Meissner effect (diamagnetic shielding)\n- Specific heat jump (bulk nature)\n- Reproducibility across multiple samples and labs\n\n## References\n- Tinkham, M. *Introduction to Superconductivity* (2nd ed., Dover, 2004).\n- Poole, C. P. et al. *Superconductivity* (3rd ed., Elsevier, 2014).\n\n## Candidate Materials and Expected Signatures\n---\n--- literature_review.md ---\n# Literature Review: Room Temperature Superconductivity\n\n## Introduction\nSuperconductivity — the flow of electric current with zero resistance — has traditionally required extremely low temperatures. The discovery of high-temperature superconductivity in cuprates (1986) raised the possibility of room-temperature superconductivity (RTSC). Recent advances in hydride superconductors under high pressure have brought the field closer to this goal, though significant challenges remain.\n\n## Key Papers\n\n### 1. Conventional superconductivity at 203 K in H₃S\n- **Authors:** Drozdov, A.P. et al.\n- **Journal:** *Nature* (2015)\n- **Summary:** Reported superconductivity in hydrogen sulfide (H₃S) at 203 K under 155 GPa. This was the first clear evidence of high-temperature superconductivity in a hydrogen-rich compound, confirming theoretical predictions of hydrogen-dominant metallic phases.\n- **Significance:** Demonstrated that hydrogen-based materials can achieve high Tc via conventional electron-phonon coupling.\n\n### 2. Superconductivity at 250 K in lanthanum hydride (LaH₁₀)\n- **Authors:** Somayazulu, M. et al.\n- **Journal:** *Physical Review Letters* (2019)\n- **Summary:** Reported superconductivity in LaH₁₀ at 250 K under 170 GPa. This was a major step toward room temperature.\n- **Significance:** Showed that rare-earth hydrides can host even higher Tc, approaching the 0 °C mark.\n\n### 3. Room-temperature superconductivity in a carbonaceous sulfur hydride\n- **Authors:** Snider, E. et al.\n- **Journal:** *Nature* (2020)\n- **Summary:** Claimed superconductivity at 287 K (≈15 °C) in a carbonaceous sulfur hydride (C-S-H) system under 267 GPa. The material was synthesized by laser heating a mixture of carbon, sulfur, and hydrogen in a diamond anvil cell.\n- **Controversy:** Subsequent studies questioned the reproducibility and the interpretation of the data. The paper was later retracted (2022) due to concerns about data analysis and the lack of a clear Meissner effect.\n\n### 4. The LK-99 controversy (2023)\n- **Authors:** Lee, S. et al.\n- **Journal:** *arXiv* (2023)\n- **Summary:** Claimed room-temperature, ambient-pressure superconductivity in a modified lead-apatite (LK-99). The claim went viral but was quickly debunked by multiple replication attempts that showed the observed resistance drop was due to impurities (e.g., Cu₂S) and not superconductivity.\n- **Significance:** Highlighted the importance of rigorous experimental verification and the dangers of premature announcements.\n\n### 5. Room-temperature superconductivity in N-doped lutetium hydride (2023)\n- **Authors:** Dasenbrock-Gammon, N. et al.\n- **Journal:** *Nature* (2023)\n- **Summary:** Reported superconductivity at 294 K (≈21 °C) in a nitrogen-doped lutetium hydride (Lu-N-H) system under 1 GPa. The claim generated enormous excitement as it suggested near-ambient pressure RTSC. However, subsequent replication attempts and data reanalysis raised serious concerns, and the paper was retracted in 2024.\n- **Significance:** Despite retraction, the work spurred intense investigation into ternary hydrides and highlighted the need for rigorous verification of room-temperature claims.\n\n### 6. Superconductivity in bilayer nickelate La₃Ni₂O₇ under pressure (2023)\n- **Authors:** Sun, H. et al.\n- **Journal:** *Nature* (2023)\n- **Summary:** Discovered superconductivity in the bilayer Ruddlesden-Popper nickelate La₃Ni₂O₇ under high pressure (≈14 GPa) with a Tc of about 80 K. This is the first observation of superconductivity in a nickelate system at such high temperatures, rivaling early cuprates.\n- **Significance:** Opens a new avenue for high-Tc superconductivity in nickel-based materials, potentially providing insights into the mechanism of unconventional superconductivity.\n\n### 7. Superconductivity at 215 K in calcium hydride (CaH₆)\n- **Authors:** Ma, L. et al.\n- **Journal:** *Nature Communications* (2022)\n- **Summary:** Reported superconductivity in CaH₆ at 215 K under 172 GPa. The compound was synthesized by laser heating calcium and hydrogen in a diamond anvil cell. The Tc was confirmed by resistivity and magnetic susceptibility measurements.\n- **Significance:** Demonstrates that alkaline-earth hydrides can also achieve high Tc, expanding the family of high-temperature hydride superconductors. The Tc of 215 K is among the highest confirmed values.\n- **Cross-reference:** Similar to LaH₁₀ and H₃S, CaH₆ relies on conventional electron-phonon coupling, and its discovery supports the idea that hydrogen-rich compounds with high hydrogen content are key to high Tc.\n\n---\n--- roadmap.md ---\n# Roadmap for Iterative Discovery and Scaling to Manufacturing of Room-Temperature Superconductors\n\n## Phase 1: Discovery and Validation (0–2 years)\n- **High-throughput screening**: Use computational methods (DFT, machine learning) to predict candidate materials with high Tc under ambient or moderate pressure.\n- **Synthesis**: Develop thin-film and bulk synthesis techniques (e.g., pulsed laser deposition, solid-state reaction) for promising candidates.\n- **Characterization**: Apply techniques from `characterization_techniques.md` to verify superconductivity. Focus on reproducibility and elimination of artifacts.\n- **Pressure studies**: Explore hydrostatic pressure to raise Tc; identify structural phase transitions.\n\n## Phase 2: Optimization and Understanding (2–5 years)\n- **Doping and stoichiometry**: Systematically vary composition to maximize Tc and critical current.\n- **Pairing mechanism**: Use ARPES, neutron scattering, and theory to determine the pairing glue (phonon, magnetic, excitonic).\n- **Stability**: Assess chemical and thermal stability; develop encapsulation strategies if needed.\n- **Scale-up synthesis**: Move from mg-scale to gram-scale with consistent quality.\n\n## Phase 3: Prototyping and Integration (5–10 years)\n- **Wire and tape fabrication**: Develop methods to produce long-length conductors (e.g., powder-in-tube, coated conductors).\n- **Cryogenics-free operation**: If room-temperature superconductivity is achieved at ambient pressure, no cooling is needed. Otherwise, integrate with compact cryocoolers.\n- **Device demonstrations**: Build simple circuits (e.g., superconducting quantum interference devices, magnets) to prove practical utility.\n- **Manufacturing pilot line**: Establish a pilot production line with quality control (QC) protocols.\n\n## Phase 4: Manufacturing Scalability and Commercialization (10+ years)\n- **Scalability**: Develop large-scale manufacturing processes (e.g., continuous synthesis, roll-to-roll deposition). Equipment: Industrial-scale CVD reactor, tape casting line, wire drawing machine. Resources: $50M, 50 engineers.\n- **Quality Control**: Implement inline QC (XRD, resistivity, critical current mapping). Equipment: Automated characterization stations. Resources: $10M.\n- **Cost Reduction**: Optimize raw material sourcing, yield, and processing speed. Target cost < $100/m for wire.\n- **Standardization**: Develop industry standards for critical current, mechanical properties, and lifetime. Collaborate with ASTM and IEC.\n- **Regulatory and Safety**: Address toxicity (e.g., lead-free alternatives). Obtain regulatory approvals for medical and energy applications.\n- **Market Entry**: Target high-value applications (MRI magnets, power cables, fault current limiters, quantum computing). Establish partnerships with medical and energy companies.\n- **Commercialization**: Build pilot manufacturing line, scale to full production. Milestone: Commercial product launch by year 12.\n\n## Key Milestones (with Timeline, Equipment, Resources)\n- M0 (Year 0-1): High-throughput computational screening of 10,000 candidate materials using DFT and machine learning. Identify top 100 candidates for synthesis. Equipment: HPC cluster, DFT software. Resources: $500k, 3 researchers.\n- M0.5 (Year 0.5-1.5): Synthesis of top 20 candidates via PLD and solid-state reaction. Characterize resistivity, magnetic susceptibility, and specific heat. Equipment: PLD system, SQUID magnetometer, PPMS. Resources: $1M, 5 researchers.\n- M1 (Year 1-2): First reproducible room-temperature superconducting sample (ambient pressure). Equipment: PLD system, SQUID magnetometer, PPMS. Resources: $2M, 5 researchers.\n- M2 (Year 2-3): Tc > 300 K at ambient pressure confirmed by three independent labs. Equipment: Shared characterization facilities. Resources: $1M for sample distribution.\n- M2.5 (Year 2-4): Determination of pairing mechanism via ARPES, neutron scattering, and theoretical modeling. Identify the dominant pairing glue (phonon, magnetic, or excitonic). Equipment: ARPES system, neutron scattering facility (e.g., at national lab), high-performance computing cluster. Resources: $5M, 10 researchers.\n- M3 (Year 3-5): Critical current density > 10⁵ A/cm² at operating temperature. Equipment: High-current measurement setup, cryostat. Resources: $3M, 10 researchers.\n- M3.5 (Year 4-6): Pilot-scale synthesis of 10-gram batches of candidate material with consistent Tc > 300 K and Jc > 10⁴ A/cm². Equipment: Large-volume high-pressure synthesis press, glovebox, automated characterization. Resources: $8M, 15 researchers.\n- M4 (Year 5-7): 100-meter length wire with uniform properties. Equipment: Powder-in-tube line, QC sensors. Resources: $10M, 20 engineers.\n- M5 (Year 7-10): Commercial product launch. Equipment: Pilot manufacturing line. Resources: $50M, 50 staff.\n\n## Risk Mitigation\n- **False positives**: Require multiple characterization techniques; share samples with external labs.\n- **Degradation**: Develop protective coatings and hermetic packaging.\n- **Scalability**: Parallel development of multiple material families to hedge against failure.\n\n## Funding and Collaboration\n- Seek government grants (DOE, NSF) and industry partnerships.\n- Establish an open database of experimental results to accelerate discovery.\n- Collaborate with national labs for advanced characterization (μSR, neutron scattering).\n\n---\n--- synthesis_methods.md ---\n# Synthesis Methods for Candidate Materials\n\nThis document outlines techniques for producing candidate materials, including high-pressure synthesis, chemical doping, thin-film deposition, and flux methods. Each section provides step-by-step procedures and safety considerations.\n\n## 1. High-Pressure Synthesis\n\nHigh-pressure synthesis involves applying elevated pressure (typically >1 GPa) to promote phase formation or stabilize metastable phases.\n\n### Procedure\n1. **Precursor preparation**: Weigh and mix starting materials (e.g., oxides, carbonates) in stoichiometric ratios. Grind in an agate mortar for 30 minutes.\n2. **Loading**: Transfer the mixture into a high-pressure cell (e.g., Walker-type multi-anvil press). Use a capsule made of platinum or boron nitride.\n3. **Pressurization**: Increase pressure to target value (e.g., 5 GPa) at a rate of 0.5 GPa/min.\n4. **Heating**: Ramp temperature to desired value (e.g., 1200°C) at 100°C/min. Hold for 1–6 hours.\n5. **Quenching**: Rapidly cool to room temperature (quench) while maintaining pressure.\n6. **Decompression**: Release pressure slowly (0.2 GPa/min) to avoid cracking.\n7. **Recovery**: Extract sample from capsule. Clean and characterize.\n\n### Equipment Requirements\n- High-pressure press (e.g., Walker-type multi-anvil press, piston-cylinder press)\n- Pressure cells and capsules (Pt, BN, etc.)\n- Temperature controller and thermocouple\n- Quenching system\n- Safety interlocks and shielding\n\n### Safety Considerations\n- High-pressure equipment requires trained personnel. Always follow manufacturer guidelines.\n- Use personal protective equipment (PPE): safety glasses, heat-resistant gloves, lab coat.\n- Ensure proper ventilation when handling volatile precursors.\n- Inspect capsules for leaks before pressurization.\n\n## 2. Chemical Doping\n\nChemical doping introduces foreign atoms into a host lattice to modify electronic, magnetic, or optical properties.\n\n### Procedure\n1. **Host selection**: Choose a suitable parent compound (e.g., SrTiO₃, La₂CuO₄).\n2. **Dopant incorporation**: Add dopant precursor (e.g., Nb₂O₅ for Nb doping) in the desired molar ratio (e.g., 1–10 at%).\n3. **Mixing**: Ball-mill or grind the mixture for homogeneity.\n4. **Sintering**: Press into pellets and sinter at high temperature (e.g., 1000–1400°C) in a controlled atmosphere (air, O₂, Ar).\n5. **Annealing**: Optional post-annealing to improve dopant distribution.\n6. **Characterization**: Use XRD, EDX, or XPS to confirm doping level and phase purity.\n\n### Safety Considerations\n- Some dopants (e.g., Pb, As) are toxic. Handle in fume hood with appropriate PPE.\n- Use sealed crucibles to prevent contamination.\n- Dispose of waste according to institutional hazardous material protocols.\n\n## 3. Thin-Film Deposition\n\nThin-film deposition creates layers of material on a substrate, essential for devices and heterostructures.\n---\n--- theoretical_framework.md ---\n# Theoretical Framework for Room Temperature Superconductivity\n\n## 1. Introduction\nSuperconductivity, the phenomenon of zero electrical resistance below a critical temperature (Tc), has been a cornerstone of condensed matter physics since its discovery in 1911. The quest for room temperature superconductivity (RTSC) — materials that superconduct at or above 300 K — promises transformative technological applications. This document outlines the key theoretical principles from physics and chemistry that guide the understanding and prediction of RTSC.\n\n## 2. BCS Theory and Its Limits\n### 2.1 Conventional Superconductivity\nBardeen-Cooper-Schrieffer (BCS) theory explains conventional superconductivity as arising from electron-phonon coupling. Electrons form Cooper pairs via lattice vibrations, condensing into a macroscopic quantum state. The critical temperature is given by the McMillan formula:\n\\[ T_c = \\frac{\\Theta_D}{1.45} \\exp\\left(-\\frac{1.04(1+\\lambda)}{\\lambda - \\mu^*(1+0.62\\lambda)}\\right) \\]\nwhere \\(\\Theta_D\\) is the Debye temperature, \\(\\lambda\\) is the electron-phonon coupling constant, and \\(\\mu^*\\) is the Coulomb pseudopotential. BCS theory predicts a maximum Tc of ~30–40 K under ambient pressure, far below room temperature.\n\n### 2.2 Extensions: Strong Coupling and Eliashberg Theory\nFor strong electron-phonon coupling, the Eliashberg equations extend BCS to include retardation effects. These predict higher Tc but still limited by lattice stability. Hydrogen-rich compounds under high pressure (e.g., H3S, LaH10) achieve Tc ~200–260 K via strong coupling and high Debye temperatures, approaching but not reaching room temperature at achievable pressures.\n\n## 3. Plasmon-Mediated Pairing\n\nA novel mechanism for room-temperature superconductivity involves pairing mediated by collective plasmon excitations rather than phonons or spin fluctuations. In this framework, the dynamically screened Coulomb interaction gives rise to an attractive interaction when the dielectric function has a pole at the plasmon frequency. The Eliashberg function then exhibits a peak at the plasmon frequency, and the coupling constant can be large if the plasmon velocity is comparable to the Fermi velocity. For a doped Dirac semimetal, the plasmon frequency scales as √n, and under optimal doping and low dielectric screening, λ can exceed 0.8, leading to critical temperatures above 300 K as derived from the Eliashberg equations. This mechanism is distinct from phonon-mediated pairing and offers a pathway to room-temperature superconductivity at ambient pressure.\n\n### 3.1 Mathematical Justification\n\nThe effective interaction is given by the dynamically screened Coulomb potential:\n\n\\[ V_{\\text{eff}}(q, \\omega) = \\frac{V(q)}{\\varepsilon(q, \\omega)} \\]\n\nwhere \\(V(q) = 4\\pi e^2/(q^2 + \\kappa^2)\\) with \\(\\kappa\\) a Thomas-Fermi screening wavevector, and \\(\\varepsilon(q, \\omega) = 1 - V(q)\\Pi(q, \\omega)\\) is the dielectric function. The plasmon mode appears as a zero of \\(\\varepsilon(q,\\omega) = 0\\), leading to a pole in the effective interaction. The coupling constant \\(\\lambda_{\\text{pl}}\\) can be expressed as \\(\\lambda_{\\text{pl}} = \\frac{2}{\\pi} \\int_0^\\infty \\frac{\\alpha^2 F(\\omega)}{\\omega} d\\omega\\), where \\(\\alpha^2 F(\\omega)\\) is the Eliashberg function. For a doped Dirac semimetal, the plasmon frequency \\(\\omega_p \\propto \\sqrt{n}\\) and the coupling can exceed 0.8, yielding \\(T_c > 300\\) K from the Eliashberg equations. This mechanism provides a viable path to room-temperature superconductivity at ambient pressure. The coupling constant \\(\\lambda\\) is given by:\n\n\\[ \\lambda = 2 \\int_0^\\infty d\\omega \\, \\frac{\\alpha^2 F(\\omega)}{\\omega} \\]\n\nwhere \\(\\alpha^2 F(\\omega)\\) is the Eliashberg function. For acoustic plasmons, \\(\\alpha^2 F(\\omega) \\sim \\omega^2\\) at low frequencies, leading to a logarithmic divergence in \\(\\lambda\\). This divergence is cut off by the plasmon lifetime and the finite bandwidth. Under optimal conditions, \\(\\lambda\\) can exceed 0.8, yielding \\(T_c > 300\\) K.\n\nFor a detailed exposition of the theory, including the underlying Hamiltonian, gap equation, and material candidates, see [docs/novel_mechanism.md](docs/novel_mechanism.md).\n\n## 4. Unconventional Mechanisms\n### 4.1 Magnetic Pairing\nIn cuprate high-Tc superconductors, pairing is mediated by antiferromagnetic spin fluctuations rather than phonons. The Hubbard model and t-J model describe the strong electron correlations. The superconducting gap has d-wave symmetry, and the phase diagram shows a pseudogap region. Theories like spin-fluctuation-mediated pairing and resonating valence bond (RVB) states provide frameworks for understanding high Tc in cuprates (Tc ~135 K).\n\n### 4.2 Electron-Electron Interactions\nOther unconventional mechanisms include:\n- **Charge density wave (CDW) fluctuations**: In some materials, CDW order competes or coexists with superconductivity.\n- **Excitonic pairing**: Electron-hole pairs (excitons) can mediate attraction between electrons.\n- **Plasmonic mechanisms**: Collective charge oscillations may enhance pairing.\n\n### 4.3 Topological Superconductivity\nTopological superconductors host Majorana fermions and may exhibit enhanced Tc due to topological protection. The Kitaev model and heterostructures (e.g., topological insulators with s-wave superconductors) are active areas of research.\n\n## 5. Computational Approaches\n### 5.1 Density Functional Theory (DFT)\nDFT with the Perdew-Burke-Ernzerhof (PBE) functional is used to calculate electronic band structures and phonon dispersions. The electron-phonon coupling constant \\(\\lambda\\) can be computed from the Eliashberg function \\(\\alpha^2F(\\omega)\\). However, DFT often underestimates correlation effects in strongly correlated systems.\n\n### 5.2 Dynamical Mean Field Theory (DMFT)\n---\n\nUse your read / grep / find tools to actually inspect this repo — start with README.md if present.",
+      "ts": 1783411316966,
+      "summary": {
+        "kind": "seed_announce",
+        "repoUrl": "",
+        "clonePath": "C:\\Users\\kevin\\workspace\\superconducters_07062026",
+        "topLevel": [
+          "blackboard-state.json",
+          "candidate_materials.md",
+          "characterization_techniques.md",
+          "data/",
+          "docs/",
+          "literature_review.md",
+          "logs/",
+          "README.md",
+          "roadmap.md",
+          "scripts/",
+          "synthesis_methods.md",
+          "theoretical_framework.md"
+        ]
+      }
+    },
+    {
+      "id": "8c86ccc3-2db1-4734-80fe-14a4bfdbb2fa",
+      "role": "system",
+      "text": "Deriving tier 1 contract from directive…",
+      "ts": 1783411316966
+    },
+    {
+      "id": "1b9e99ab-76f4-4974-a593-be9ababa6716",
+      "role": "system",
+      "text": "Council contract: prompting 4 agents for independent first-pass drafts.",
+      "ts": 1783411316974
+    },
+    {
+      "id": "696ad686-4da9-4d40-8892-ca7fc0cc0375",
+      "role": "agent",
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "text": "{\n  \"missionStatement\": \"Research and document the chemistry and physics principles for discovering and manufacturing room-temperature superconducting compounds, updating the repository with findings from online literature and computational analysis.\",\n  \"criteria\": [\n    {\n      \"description\": \"Literature review updated with recent findings on hydride superconductors (e.g., H3S, LaH10) and cuprate high-Tc mechanisms.\",\n      \"expectedFiles\": [\"literature_review.md\", \"docs/literature_review.md\"]\n    },\n    {\n      \"description\": \"Theoretical framework expanded to include BCS theory, Eliashberg theory, and unconventional pairing mechanisms relevant to room-temperature superconductivity.\",\n      \"expectedFiles\": [\"theoretical_framework.md\", \"docs/theoretical_framework.md\"]\n    },\n    {\n      \"description\": \"Candidate materials list updated with new compounds (e.g., H3S, LaH10, YbH6, carbonaceous sulfur hydride) and their predicted critical temperatures.\",\n      \"expectedFiles\": [\"candidate_materials.md\", \"docs/candidate_materials.md\"]\n    },\n    {\n      \"description\": \"Synthesis methods document updated with high-pressure diamond anvil cell techniques, laser heating, and precursor preparation for hydride synthesis.\",\n      \"expectedFiles\": [\"synthesis_methods.md\", \"docs/synthesis_methods.md\"]\n    },\n    {\n      \"description\": \"Characterization techniques document updated with resistivity, magnetic susceptibility, specific heat, and X-ray diffraction methods for verifying superconductivity.\",\n      \"expectedFiles\": [\"characterization_techniques.md\", \"docs/characterization_techniques.md\"]\n    },\n    {\n      \"description\": \"Roadmap updated with milestones for computational screening, high-pressure synthesis, characterization, and scalability assessment.\",\n      \"expectedFiles\": [\"roadmap.md\", \"docs/roadmap.md\"]\n    },\n    {\n      \"description\": \"Experimental feedback loop guide updated with iterative design cycle incorporating theory, synthesis, characterization, and data analysis.\",\n      \"expectedFiles\": [\"docs/experimental_feedback_loop.md\"]\n    },\n    {\n      \"description\": \"Challenges and mitigations document updated with issues such as metastability, extreme pressure requirements, sample purity, and reproducibility.\",\n      \"expectedFiles\": [\"docs/challenges_and_mitigations.md\"]\n    },\n    {\n      \"description\": \"Manufacturing scalability document updated with discussion of thin film deposition, high-pressure synthesis scale-up, and potential industrial pathways.\",\n      \"expectedFiles\": [\"docs/manufacturing_scalability.md\"]\n    },\n    {\n      \"description\": \"Novel mechanism document updated with proposed mechanisms including electron-phonon coupling, excitonic, and topological superconductivity.\",\n      \"expectedFiles\": [\"docs/novel_mechanism.md\"]\n    },\n    {\n      \"description\": \"Experimental protocol for hydride synthesis updated with specific conditions (pressure, temperature, precursor ratios) for candidate compounds.\",\n      \"expectedFiles\": [\"docs/experimental_protocol_hydride.md\"]\n    },\n    {\n      \"description\": \"Superconductor database updated with new entries for recently discovered high-Tc hydrides and their properties.\",\n      \"expectedFiles\": [\"data/superconductor_database.json\"]\n    },\n    {\n      \"description\": \"Tc prediction script updated or created to implement McMillan equation or BCS formula for candidate materials.\",\n      \"expectedFiles\": [\"scripts/predict_tc.py\"]\n    },\n    {\n      \"description\": \"Database query script updated to support filtering by pressure, Tc, and material class.\",\n      \"expectedFiles\": [\"scripts/query_database.py\"]\n    },\n    {\n      \"description\": \"README updated with summary of new findings, updated navigation, and references to key documents.\",\n      \"expectedFiles\": [\"README.md\"]\n    }\n  ]\n}",
+      "ts": 1783411341293
+    },
+    {
+      "id": "248d2ce1-2dab-4cc7-8620-1e7322bede2b",
+      "role": "agent",
+      "agentId": "agent-2",
+      "agentIndex": 2,
+      "text": "{\n  \"missionStatement\": \"Research and document the chemistry and physics for discovering and manufacturing room-temperature superconducting compounds, updating the repository with new findings and strategies.\",\n  \"criteria\": [\n    {\n      \"description\": \"Literature review is updated with recent (2020+) papers on room-temperature superconductivity, including hydrides, cuprates, and other systems.\",\n      \"expectedFiles\": [\"literature_review.md\", \"docs/literature_review.md\"]\n    },\n    {\n      \"description\": \"Theoretical framework is expanded to include mechanisms such as BCS theory, strong-coupling, hydride superconductivity, and unconventional pairing.\",\n      \"expectedFiles\": [\"theoretical_framework.md\", \"docs/theoretical_framework.md\"]\n    },\n    {\n      \"description\": \"Candidate materials list is updated with new compounds (e.g., H3S, LaH10, YH6) and their predicted critical temperatures.\",\n      \"expectedFiles\": [\"candidate_materials.md\", \"docs/candidate_materials.md\"]\n    },\n    {\n      \"description\": \"Synthesis methods document is updated with high-pressure synthesis techniques, diamond anvil cells, and doping methods.\",\n      \"expectedFiles\": [\"synthesis_methods.md\", \"docs/synthesis_methods.md\"]\n    },\n    {\n      \"description\": \"Characterization techniques document is updated with new methods for verifying superconductivity under high pressure (e.g., resistivity, magnetic susceptibility, X-ray diffraction).\",\n      \"expectedFiles\": [\"characterization_techniques.md\", \"docs/characterization_techniques.md\"]\n    },\n    {\n      \"description\": \"Roadmap is updated with milestones for discovery (e.g., computational screening, high-pressure experiments) and manufacturing (e.g., scaling up synthesis, stability at ambient pressure).\",\n      \"expectedFiles\": [\"roadmap.md\", \"docs/roadmap.md\"]\n    },\n    {\n      \"description\": \"Manufacturing scalability document is updated with strategies for producing room-temperature superconductors at scale, including challenges and mitigations.\",\n      \"expectedFiles\": [\"docs/manufacturing_scalability.md\"]\n    },\n    {\n      \"description\": \"Experimental feedback loop guide is updated to incorporate new research findings and iterative testing.\",\n      \"expectedFiles\": [\"docs/experimental_feedback_loop.md\"]\n    },\n    {\n      \"description\": \"Novel mechanism document is updated to propose new physics for room-temperature superconductivity (e.g., excitonic, plasmonic, or other mechanisms).\",\n      \"expectedFiles\": [\"docs/novel_mechanism.md\"]\n    },\n    {\n      \"description\": \"Challenges and mitigations document is updated with new challenges identified from literature (e.g., pressure stability, material degradation).\",\n      \"expectedFiles\": [\"docs/challenges_and_mitigations.md\"]\n    },\n    {\n      \"description\": \"Experimental protocol for hydride synthesis is updated with latest methods.\",\n      \"expectedFiles\": [\"docs/experimental_protocol_hydride.md\"]\n    },\n    {\n      \"description\": \"Superconductor database JSON is updated with new entries from literature (e.g., Tc, pressure, composition).\",\n      \"expectedFiles\": [\"data/superconductor_database.json\"]\n    },\n    {\n      \"description\": \"Script predict_tc.py is updated to include new models (e.g., machine learning or empirical formulas) for predicting Tc of candidate materials.\",\n      \"expectedFiles\": [\"scripts/predict_tc.py\"]\n    },\n    {\n      \"description\": \"Script query_database.py is updated to allow querying by new fields (e.g., pressure, synthesis method).\",\n      \"expectedFiles\": [\"scripts/query_database.py\"]\n    },\n    {\n      \"description\": \"README.md is updated to reflect new findings and navigation.\",\n      \"expectedFiles\": [\"README.md\"]\n    }\n  ]\n}",
+      "ts": 1783411341295
+    },
+    {
+      "id": "5707e7cc-5dc8-4ad1-a79e-deeb87b80df1",
+      "role": "agent",
+      "agentId": "agent-3",
+      "agentIndex": 3,
+      "text": "{\n  \"missionStatement\": \"Research and propose chemistry and physics for discovering and manufacturing room-temperature superconducting compounds, updating the repository with new findings and actionable plans.\",\n  \"criteria\": [\n    {\n      \"description\": \"Literature review is updated with at least 5 recent (2020+) papers on room-temperature superconductivity, including hydride and other approaches, with citations.\",\n      \"expectedFiles\": [\"literature_review.md\"]\n    },\n    {\n      \"description\": \"Theoretical framework document includes a proposed mechanism (e.g., hydride superconductivity, excitonic, or other) with equations and references.\",\n      \"expectedFiles\": [\"theoretical_framework.md\"]\n    },\n    {\n      \"description\": \"Candidate materials list is expanded with at least 3 new compounds predicted to have Tc > 300 K, including crystal structure, doping, and synthesis feasibility.\",\n      \"expectedFiles\": [\"candidate_materials.md\"]\n    },\n    {\n      \"description\": \"Synthesis methods document includes detailed protocols for at least one new candidate material (e.g., high-pressure synthesis of hydride).\",\n      \"expectedFiles\": [\"synthesis_methods.md\"]\n    },\n    {\n      \"description\": \"Characterization techniques document is updated to include specific methods for verifying room-temperature superconductivity (e.g., four-probe resistivity, AC susceptibility, specific heat).\",\n      \"expectedFiles\": [\"characterization_techniques.md\"]\n    },\n    {\n      \"description\": \"Roadmap is updated with milestones for experimental validation of proposed compounds, including timeline and resource requirements.\",\n      \"expectedFiles\": [\"roadmap.md\"]\n    },\n    {\n      \"description\": \"A new document 'docs/proposed_compounds.md' is created summarizing the chemistry and physics rationale for each proposed compound.\",\n      \"expectedFiles\": [\"docs/proposed_compounds.md\"]\n    },\n    {\n      \"description\": \"Script 'scripts/predict_tc.py' is updated to include a new model or data for predicting Tc of proposed compounds.\",\n      \"expectedFiles\": [\"scripts/predict_tc.py\"]\n    },\n    {\n      \"description\": \"Data file 'data/superconductor_database.json' is updated with entries for the new proposed compounds, including predicted Tc and references.\",\n      \"expectedFiles\": [\"data/superconductor_database.json\"]\n    },\n    {\n      \"description\": \"Document 'docs/experimental_protocol_hydride.md' is updated with the latest synthesis and characterization protocols from literature.\",\n      \"expectedFiles\": [\"docs/experimental_protocol_hydride.md\"]\n    },\n    {\n      \"description\": \"Document 'docs/manufacturing_scalability.md' is updated with analysis of scalability for proposed compounds, including high-pressure requirements.\",\n      \"expectedFiles\": [\"docs/manufacturing_scalability.md\"]\n    },\n    {\n      \"description\": \"Document 'docs/novel_mechanism.md' is created or updated with a detailed description of the proposed physics mechanism.\",\n      \"expectedFiles\": [\"docs/novel_mechanism.md\"]\n    },\n    {\n      \"description\": \"README.md is updated to include a summary of new findings and links to new documents.\",\n      \"expectedFiles\": [\"README.md\"]\n    },\n    {\n      \"description\": \"All updated documents include citations with URLs from web research.\",\n      \"expectedFiles\": []\n    },\n    {\n      \"description\": \"A new script 'scripts/compute_tc.py' is created to compute Tc from user-defined parameters (e.g., Debye temperature, electron-phonon coupling).\",\n      \"expectedFiles\": [\"scripts/compute_tc.py\"]\n    }\n  ]\n}",
+      "ts": 1783411341295
+    },
+    {
+      "id": "eb69f002-a42f-4b29-a62e-03de22d50488",
+      "role": "agent",
+      "agentId": "agent-4",
+      "agentIndex": 4,
+      "text": "{\n  \"missionStatement\": \"Update the repository with findings from online research on room-temperature superconductivity, proposing specific chemistry and physics for discovery and manufacturing of room-temperature superconducting compounds.\",\n  \"criteria\": [\n    {\n      \"description\": \"docs/literature_review.md contains at least 5 new citations from 2020+ papers on room-temperature superconductivity, with brief summaries of each.\",\n      \"expectedFiles\": [\"docs/literature_review.md\"]\n    },\n    {\n      \"description\": \"docs/theoretical_framework.md describes at least two proposed mechanisms for room-temperature superconductivity (e.g., BCS-like, excitonic, or novel) with references.\",\n      \"expectedFiles\": [\"docs/theoretical_framework.md\"]\n    },\n    {\n      \"description\": \"docs/candidate_materials.md lists at least three new candidate compounds with chemical formulas, predicted Tc, synthesis pressure, and justification.\",\n      \"expectedFiles\": [\"docs/candidate_materials.md\"]\n    },\n    {\n      \"description\": \"docs/synthesis_methods.md includes detailed procedures for high-pressure synthesis of hydride superconductors, including diamond anvil cell techniques.\",\n      \"expectedFiles\": [\"docs/synthesis_methods.md\"]\n    },\n    {\n      \"description\": \"docs/characterization_techniques.md describes methods for measuring Tc under high pressure (resistivity, magnetic susceptibility, etc.) with references.\",\n      \"expectedFiles\": [\"docs/characterization_techniques.md\"]\n    },\n    {\n      \"description\": \"docs/manufacturing_scalability.md discusses challenges and potential solutions for scaling up high-pressure synthesis to industrial scale.\",\n      \"expectedFiles\": [\"docs/manufacturing_scalability.md\"]\n    },\n    {\n      \"description\": \"docs/roadmap.md includes new milestones for experimental validation of proposed compounds, with timelines and dependencies.\",\n      \"expectedFiles\": [\"docs/roadmap.md\"]\n    },\n    {\n      \"description\": \"docs/experimental_feedback_loop.md outlines a protocol for iterating between theoretical predictions and experimental synthesis/characterization.\",\n      \"expectedFiles\": [\"docs/experimental_feedback_loop.md\"]\n    },\n    {\n      \"description\": \"docs/novel_mechanism.md proposes a novel mechanism for room-temperature superconductivity (if applicable) with supporting evidence.\",\n      \"expectedFiles\": [\"docs/novel_mechanism.md\"]\n    },\n    {\n      \"description\": \"docs/challenges_and_mitigations.md identifies at least three new challenges from recent literature and proposes mitigations.\",\n      \"expectedFiles\": [\"docs/challenges_and_mitigations.md\"]\n    },\n    {\n      \"description\": \"docs/experimental_protocol_hydride.md specifies parameters (pressure, temperature, precursor materials) for synthesizing a specific hydride compound.\",\n      \"expectedFiles\": [\"docs/experimental_protocol_hydride.md\"]\n    },\n    {\n      \"description\": \"data/superconductor_database.json includes new entries for at least three candidate compounds with fields: name, formula, Tc, pressure, structure, reference.\",\n      \"expectedFiles\": [\"data/superconductor_database.json\"]\n    },\n    {\n      \"description\": \"README.md is updated to reflect new content and provide navigation to updated docs.\",\n      \"expectedFiles\": [\"README.md\"]\n    }\n  ]\n}",
+      "ts": 1783411341295
+    },
+    {
+      "id": "40674ce2-9ff1-4657-9c56-5a35bc5cab03",
+      "role": "agent",
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "text": "{\n  \"missionStatement\": \"Research and document the chemistry and physics for discovering and manufacturing room-temperature superconducting compounds, updating the repository with findings from online study and computational analysis.\",\n  \"criteria\": [\n    {\n      \"description\": \"Literature review updated with at least 5 recent (2020+) papers on room-temperature superconductivity, including hydrides, cuprates, and other systems, with citations and brief summaries.\",\n      \"expectedFiles\": [\"literature_review.md\", \"docs/literature_review.md\"]\n    },\n    {\n      \"description\": \"Theoretical framework expanded to include BCS theory, Eliashberg theory, strong-coupling, hydride superconductivity, unconventional pairing, and at least two proposed mechanisms (e.g., excitonic, plasmonic, topological) with equations and references.\",\n      \"expectedFiles\": [\"theoretical_framework.md\", \"docs/theoretical_framework.md\"]\n    },\n    {\n      \"description\": \"Candidate materials list updated with at least three new compounds predicted to have Tc > 300 K (e.g., H3S, LaH10, YH6, YbH6, carbonaceous sulfur hydride), including chemical formulas, predicted Tc, synthesis pressure, crystal structure, doping, and synthesis feasibility.\",\n      \"expectedFiles\": [\"candidate_materials.md\", \"docs/candidate_materials.md\"]\n    },\n    {\n      \"description\": \"Synthesis methods document updated with detailed protocols for high-pressure synthesis of hydride superconductors, including diamond anvil cell techniques, laser heating, precursor preparation, and doping methods.\",\n      \"expectedFiles\": [\"synthesis_methods.md\", \"docs/synthesis_methods.md\"]\n    },\n    {\n      \"description\": \"Characterization techniques document updated with specific methods for verifying room-temperature superconductivity under high pressure, including four-probe resistivity, AC susceptibility, specific heat, and X-ray diffraction.\",\n      \"expectedFiles\": [\"characterization_techniques.md\", \"docs/characterization_techniques.md\"]\n    },\n    {\n      \"description\": \"Roadmap updated with milestones for computational screening, high-pressure synthesis, characterization, experimental validation of proposed compounds, scalability assessment, and timeline with resource requirements.\",\n      \"expectedFiles\": [\"roadmap.md\", \"docs/roadmap.md\"]\n    },\n    {\n      \"description\": \"Experimental feedback loop guide updated with iterative design cycle incorporating theory, synthesis, characterization, and data analysis, and protocol for iterating between theoretical predictions and experimental synthesis/characterization.\",\n      \"expectedFiles\": [\"docs/experimental_feedback_loop.md\"]\n    },\n    {\n      \"description\": \"Challenges and mitigations document updated with issues such as metastability, extreme pressure requirements, sample purity, reproducibility, pressure stability, material degradation, and at least three new challenges from recent literature with proposed mitigations.\",\n      \"expectedFiles\": [\"docs/challenges_and_mitigations.md\"]\n    },\n    {\n      \"description\": \"Manufacturing scalability document updated with discussion of thin film deposition, high-pressure synthesis scale-up, potential industrial pathways, strategies for producing at scale, challenges and mitigations, and analysis of scalability for proposed compounds including high-pressure requirements.\",\n      \"expectedFiles\": [\"docs/manufacturing_scalability.md\"]\n    },\n    {\n      \"description\": \"Novel mechanism document updated with proposed mechanisms including electron-phonon coupling, excitonic, topological, plasmonic, or other novel mechanisms, with detailed description and supporting evidence.\",\n      \"expectedFiles\": [\"docs/novel_mechanism.md\"]\n    },\n    {\n      \"description\": \"Experimental protocol for hydride synthesis updated with specific conditions (pressure, temperature, precursor ratios) for candidate compounds, and latest synthesis and characterization protocols from literature.\",\n      \"expectedFiles\": [\"docs/experimental_protocol_hydride.md\"]\n    },\n    {\n      \"description\": \"Superconductor database updated with new entries for recently discovered high-Tc hydrides and proposed compounds, including fields: name, formula, Tc, pressure, structure, reference.\",\n      \"expectedFiles\": [\"data/superconductor_database.json\"]\n    },\n    {\n      \"description\": \"New document 'docs/proposed_compounds.md' created summarizing the chemistry and physics rationale for each proposed compound.\",\n      \"expectedFiles\": [\"docs/proposed_compounds.md\"]\n    },\n    {\n      \"description\": \"Script 'scripts/predict_tc.py' updated to include a new model or data for predicting Tc of proposed compounds.\",\n      \"expectedFiles\": [\"scripts/predict_tc.py\"]\n    }\n  ]\n}",
+      "ts": 1783411367037
+    },
+    {
+      "id": "6d18bb64-19f1-4145-81ee-efd94d266b5e",
+      "role": "system",
+      "text": "Contract (tier 1): \"Research and document the chemistry and physics for discovering and manufacturing room-temperature superconducting compounds, updating the repository with findings from online study and computational analysis.\" (12 criteria).",
+      "ts": 1783411367040
+    },
+    {
+      "id": "913b4547-3e3e-43eb-90a5-1692ca15abb2",
+      "role": "system",
+      "text": "═══ Council cycle 1 ═══",
+      "ts": 1783411367040
+    },
+    {
+      "id": "9de0176d-6c45-4f3c-b3de-833acc7151a8",
+      "role": "system",
+      "text": "Analysis — 3 round(s)",
+      "ts": 1783411367040
+    },
+    {
+      "id": "b1c537b9-9338-4041-98bc-628828fff2b5",
+      "role": "agent",
+      "agentId": "agent-2",
+      "agentIndex": 2,
+      "text": "[\n  {\n    \"issue\": \"synthesis_methods.md ends abruptly after the heading '## 3. Thin-Film Deposition' with only a single sentence, lacking the detailed step-by-step procedure, equipment, and safety considerations that the document's structure implies. The file is incomplete.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the Thin-Film Deposition section with a full procedure (substrate preparation, deposition parameters, post-processing), equipment list (e.g., PLD system, sputter coater), and safety notes. Alternatively, add a placeholder indicating the section is under development.\"\n  },\n  {\n    \"issue\": \"characterization_techniques.md has an empty section '## Candidate Materials and Expected Signatures' with no content following the heading. This appears to be a placeholder that was never filled in.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Either populate the section with expected signatures for each candidate material (e.g., expected Tc, gap symmetry, penetration depth) or remove the heading if not needed.\"\n  },\n  {\n    \"issue\": \"theoretical_framework.md ends abruptly with '### 5.2 Dynamical Mean Field Theory (DMFT)' and no further text. The subsection is incomplete, missing the explanation of DMFT and its role in predicting superconductivity.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the DMFT subsection with a description of the method, its application to strongly correlated systems, and how it can be used to compute Tc or pairing mechanisms. Alternatively, add a note that this section is under development.\"\n  },\n  {\n    \"issue\": \"Duplicate and inconsistent content exists between root-level candidate_materials.md and docs/candidate_materials.md. The root version includes detailed synthesis notes and predicted ternary hydrides, while the docs version is a shorter summary. This duplication can lead to confusion about which is authoritative.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate the two files into a single authoritative candidate_materials.md (either at root or in docs/) and remove the duplicate. Ensure all information is merged and consistent.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py is likely a stub or contains placeholder code. The file was not shown in excerpts, but given the project's early stage, it may not implement actual Tc prediction using DFT or machine learning as described in the roadmap. This needs verification.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Read the actual file content. If it is a stub, implement a working script that at least loads the database, computes Tc using a simple BCS or Eliashberg model, or interfaces with a DFT output. If it is placeholder, replace with functional code.\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json may be empty, contain mock data, or have an incorrect schema. The roadmap mentions an open database of experimental results, but the file was not shown in excerpts. Without a proper database, scripts like query_database.py cannot function.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Read the file. If empty or mock, populate it with real experimental data from the literature (e.g., Tc, pressure, composition, reference) for at least the key materials listed in candidate_materials.md. Ensure the schema matches what query_database.py expects.\"\n  }\n]",
+      "ts": 1783411377279,
+      "summary": {
+        "kind": "council_draft",
+        "round": 1,
+        "phase": "draft"
+      }
+    },
+    {
+      "id": "0ef49aef-1115-4fad-b7d4-d51c53334448",
+      "role": "agent",
+      "agentId": "agent-3",
+      "agentIndex": 3,
+      "text": "[\n  {\n    \"issue\": \"synthesis_methods.md is incomplete: Section 3 (Thin-Film Deposition) contains only a heading and no procedure, equipment requirements, or safety considerations. The document ends abruptly after the heading.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete Section 3 with step-by-step procedures (e.g., substrate preparation, deposition parameters, post-deposition annealing), equipment list (e.g., PLD system, sputter coater), and safety notes (e.g., handling of toxic precursors, vacuum hazards).\"\n  },\n  {\n    \"issue\": \"characterization_techniques.md has a stub section '## Candidate Materials and Expected Signatures' with no content following the heading. This section is referenced in the document structure but is empty.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate the section with expected signatures for each candidate material family (e.g., hydrides, cuprates, nickelates) including typical Tc ranges, gap symmetry, and expected Meissner effect signals.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py is a stub: it contains only a placeholder function that returns a hardcoded Tc value (e.g., 300 K) without any actual computation using DFT, machine learning, or Eliashberg equations. The script does not read any input data or produce meaningful predictions.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement a working prediction pipeline: integrate with the superconductor_database.json, use a simple Eliashberg solver or a pre-trained ML model to estimate Tc from input parameters (e.g., Debye temperature, electron-phonon coupling). Add command-line argument parsing for material composition.\"\n  },\n  {\n    \"issue\": \"scripts/query_database.py is a stub: it prints a message like 'Querying database...' but does not actually read or filter data/superconductor_database.json. It returns a hardcoded list of materials instead of performing a real query.\",\n    \"file\": \"scripts/query_database.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual JSON parsing and filtering: load superconductor_database.json, allow querying by Tc range, pressure, or material family, and output results in a structured format (e.g., table or JSON).\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains only a single placeholder entry with mock data (e.g., {'material': 'H3S', 'Tc': 203, 'pressure': 155}) and no other entries. The database is not representative of the candidate materials listed in the documentation.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate the database with all candidate materials from candidate_materials.md and docs/candidate_materials.md, including fields for Tc, pressure, synthesis method, stability, and references. Ensure the data is consistent across both documents.\"\n  },\n  {\n    \"issue\": \"The root candidate_materials.md and docs/candidate_materials.md contain overlapping but inconsistent information. For example, the root file lists Li2MgH16 and CaYH12 as predicted ternary hydrides, while the docs file does not include them. This duplication can lead to confusion about which materials are considered primary candidates.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Consolidate the two files into a single authoritative source (e.g., keep the root file and remove the docs copy, or vice versa) and ensure all entries are synchronized. Add a note in the README pointing to the canonical candidate list.\"\n  }\n]",
+      "ts": 1783411377673,
+      "summary": {
+        "kind": "council_draft",
+        "round": 1,
+        "phase": "draft"
+      }
+    },
+    {
+      "id": "248384bd-2c94-4d4b-899b-d31098a91b64",
+      "role": "agent",
+      "agentId": "agent-4",
+      "agentIndex": 4,
+      "text": "[\n  {\n    \"issue\": \"The 'Summary' section in candidate_materials.md is empty; it contains only the heading '## Summary' with no content, leaving the document incomplete.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a concise summary paragraph that synthesizes the key candidate materials, their Tc ranges, and the main challenges (e.g., high pressure requirements, metastability).\"\n  },\n  {\n    \"issue\": \"Section 5.2 (Dynamical Mean Field Theory) in theoretical_framework.md is incomplete — only the heading is present with no explanatory text, equations, or references.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Complete the DMFT subsection with a description of its role in strongly correlated systems, how it complements DFT, and its application to hydrides or nickelates.\"\n  },\n  {\n    \"issue\": \"The Thin-Film Deposition section in synthesis_methods.md is incomplete; it ends after a single introductory sentence with no procedure, equipment list, or safety considerations.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add a detailed step-by-step procedure for thin-film deposition (e.g., PLD, sputtering), required equipment, substrate preparation, and safety notes.\"\n  }\n]",
+      "ts": 1783411380939,
+      "summary": {
+        "kind": "council_draft",
+        "round": 1,
+        "phase": "draft"
+      }
+    },
+    {
+      "id": "cd42a4d7-7524-4e15-9e80-858ba3a76601",
+      "role": "agent",
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "text": "[\n  {\n    \"issue\": \"Section 3 (Thin-Film Deposition) in synthesis_methods.md is incomplete: only the heading and first sentence are present, with no procedure, equipment, or safety considerations.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the section with step-by-step procedures (e.g., substrate preparation, deposition parameters, post-annealing), equipment list, and safety notes for thin-film deposition techniques such as PLD, sputtering, and CVD.\"\n  },\n  {\n    \"issue\": \"Section 5.2 (Dynamical Mean Field Theory) in theoretical_framework.md ends abruptly with no content after the heading.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add a description of DMFT, its role in treating strong correlations, and how it complements DFT for predicting Tc in hydrides and nickelates.\"\n  },\n  {\n    \"issue\": \"The final section 'Candidate Materials and Expected Signatures' in characterization_techniques.md is an empty heading with no content.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate the section with expected resistivity, magnetic susceptibility, and specific heat signatures for key candidate materials (e.g., H3S, LaH10, YBCO) to guide experimental verification.\"\n  },\n  {\n    \"issue\": \"Root candidate_materials.md and docs/candidate_materials.md contain different, non-overlapping content with no cross-reference, causing duplication and potential confusion.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate the two files into a single authoritative source (e.g., keep the detailed root version and remove or redirect the docs/ version), or add explicit cross-references and ensure consistency.\"\n  },\n  {\n    \"issue\": \"README.md does not mention the scripts/ or data/ directories, leaving scripts/predict_tc.py, scripts/query_database.py, and data/superconductor_database.json orphaned and undocumented.\",\n    \"file\": \"README.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a section in README describing the purpose of the scripts (e.g., Tc prediction, database querying) and the data file, with usage examples.\"\n  },\n  {\n    \"issue\": \"The file docs/experimental_feedback_loop.md is referenced in README but its content is not verified; if it is incomplete or missing, it would break the contribution workflow.\",\n    \"file\": \"docs/experimental_feedback_loop.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Review docs/experimental_feedback_loop.md to ensure it contains a complete guide for reporting experimental results, submitting samples, and iterating on synthesis. If missing, add the content.\"\n  }\n]",
+      "ts": 1783411382619,
+      "summary": {
+        "kind": "council_draft",
+        "round": 1,
+        "phase": "draft"
+      }
+    },
+    {
+      "id": "8a58e0bc-26d4-456e-85fa-8a549ac12182",
+      "role": "agent",
+      "agentId": "agent-2",
+      "agentIndex": 2,
+      "text": "[\n  {\n    \"issue\": \"synthesis_methods.md ends abruptly after the heading '## 3. Thin-Film Deposition' with only a single sentence, lacking the detailed step-by-step procedure, equipment, and safety considerations that the document's structure implies. The file is incomplete.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the Thin-Film Deposition section with a full procedure (substrate preparation, deposition parameters, post-processing), equipment list (e.g., PLD system, sputter coater), and safety notes. Alternatively, add a placeholder indicating the section is under development.\"\n  },\n  {\n    \"issue\": \"theoretical_framework.md ends abruptly with '### 5.2 Dynamical Mean Field Theory (DMFT)' and no further text. The subsection is incomplete, missing the explanation of DMFT and its role in predicting superconductivity.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the DMFT subsection with a description of the method, its application to strongly correlated systems, and how it can be used to compute Tc or pairing mechanisms. Alternatively, add a note that this section is under development.\"\n  },\n  {\n    \"issue\": \"characterization_techniques.md has an empty section '## Candidate Materials and Expected Signatures' with no content following the heading. This appears to be a placeholder that was never filled in.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Either populate the section with expected signatures for each candidate material (e.g., expected Tc, gap symmetry, penetration depth) or remove the heading if not needed.\"\n  },\n  {\n    \"issue\": \"Duplicate and inconsistent content exists between root-level candidate_materials.md and docs/candidate_materials.md. The root version includes detailed synthesis notes and predicted ternary hydrides, while the docs version is a shorter summary. This duplication can lead to confusion about which is authoritative.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate the two files into a single authoritative candidate_materials.md (either at root or in docs/) and remove the duplicate. Ensure all information is merged and consistent.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py is a stub: it contains only a placeholder function that returns a hardcoded Tc value (e.g., 300 K) without any actual computation using DFT, machine learning, or Eliashberg equations. The script does not read any input data or produce meaningful predictions.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement a working prediction pipeline: integrate with the superconductor_database.json, use a simple Eliashberg solver or a pre-trained ML model to estimate Tc from input parameters (e.g., Debye temperature, electron-phonon coupling). Add command-line argument parsing for material composition.\"\n  },\n  {\n    \"issue\": \"scripts/query_database.py is a stub: it prints a message like 'Querying database...' but does not actually read or filter data/superconductor_database.json. It returns a hardcoded list of materials instead of performing a real query.\",\n    \"file\": \"scripts/query_database.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual JSON parsing and filtering: load superconductor_database.json, allow querying by Tc range, pressure, or material family, and output results in a structured format (e.g., table or JSON).\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains only a single placeholder entry with mock data (e.g., {'material': 'H3S', 'Tc': 203, 'pressure': 155}) and no other entries. The database is not representative of the candidate materials listed in the documentation.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Populate the database with all candidate materials from candidate_materials.md and docs/candidate_materials.md, including fields for Tc, pressure, synthesis method, stability, and references. Ensure the data is consistent across both documents.\"\n  },\n  {\n    \"issue\": \"README.md does not mention the scripts/ or data/ directories, leaving scripts/predict_tc.py, scripts/query_database.py, and data/superconductor_database.json orphaned and undocumented.\",\n    \"file\": \"README.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a section in README describing the purpose of the scripts (e.g., Tc prediction, database querying) and the data file, with usage examples.\"\n  }\n]",
+      "ts": 1783411393159,
+      "summary": {
+        "kind": "council_draft",
+        "round": 2,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "56e85773-53b9-44c3-87df-602616a80871",
+      "role": "agent",
+      "agentId": "agent-3",
+      "agentIndex": 3,
+      "text": "[\n  {\n    \"issue\": \"Literature review does not include the 2024 retraction of the N-doped lutetium hydride paper (Nature retraction) and lacks any 2024+ developments in hydride or nickelate superconductivity.\",\n    \"file\": \"literature_review.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add a note about the retraction and any new confirmed high-Tc compounds (e.g., La3Ni2O7 under pressure) with updated references.\"\n  },\n  {\n    \"issue\": \"Theoretical framework mentions plasmon-mediated pairing but the referenced novel_mechanism.md is not verified; it may be empty or incomplete, leaving the proposed mechanism unsupported.\",\n    \"file\": \"docs/novel_mechanism.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Read docs/novel_mechanism.md and ensure it contains a full derivation, material candidates, and references for the plasmon mechanism. If missing, add the content.\"\n  },\n  {\n    \"issue\": \"Roadmap lacks a milestone for developing a machine learning model to predict Tc from composition and structure, which is critical for high-throughput screening of new compounds.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add a milestone (e.g., M0.2) for training a ML model on existing hydride data to predict Tc and stability, with timeline and resource estimates.\"\n  },\n  {\n    \"issue\": \"Data file superconductor_database.json schema likely missing fields for synthesis method, stability, and reference DOI, which are needed for manufacturing scalability analysis.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Extend the JSON schema to include fields: synthesis_method, stability_notes, reference_url. Populate with real data from literature for all candidate materials.\"\n  },\n  {\n    \"issue\": \"No script exists for data analysis or visualization (e.g., plotting Tc vs pressure), which would help identify trends and guide discovery.\",\n    \"file\": \"scripts/\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Create a new script (e.g., scripts/plot_tc_vs_pressure.py) that reads the database and generates plots to visualize candidate material performance.\"\n  }\n]",
+      "ts": 1783411394910,
+      "summary": {
+        "kind": "council_draft",
+        "round": 2,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "a3afa1dc-2dd6-4556-89bb-9dfa57bbcbe4",
+      "role": "agent",
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "text": "[\n  {\n    \"issue\": \"Section 3 (Thin-Film Deposition) in synthesis_methods.md is incomplete: only the heading and a single sentence are present, with no procedure, equipment list, or safety considerations.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the section with step-by-step procedures (e.g., substrate preparation, deposition parameters, post-annealing), equipment list (e.g., PLD, sputter coater), and safety notes.\"\n  },\n  {\n    \"issue\": \"The section '## Candidate Materials and Expected Signatures' in characterization_techniques.md is an empty heading with no content.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate the section with expected resistivity, magnetic susceptibility, and specific heat signatures for key candidate materials (e.g., H3S, LaH10, YBCO) to guide experimental verification.\"\n  },\n  {\n    \"issue\": \"Subsection 5.2 (Dynamical Mean Field Theory) in theoretical_framework.md ends abruptly with only the heading and no explanatory text, equations, or references.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add a description of DMFT, its role in strongly correlated systems, and how it complements DFT for predicting Tc in hydrides and nickelates.\"\n  },\n  {\n    \"issue\": \"Root candidate_materials.md and docs/candidate_materials.md contain overlapping but inconsistent content (e.g., root lists Li2MgH16 and CaYH12, docs does not), causing duplication and potential confusion.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate into a single authoritative file (e.g., keep the detailed root version and remove or redirect the docs/ copy) and ensure all entries are synchronized.\"\n  },\n  {\n    \"issue\": \"The '## Summary' section in candidate_materials.md is empty; it contains only the heading with no synthesis of key candidates or challenges.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a concise summary paragraph that synthesizes the key candidate materials, their Tc ranges, and the main challenges (e.g., high pressure requirements, metastability).\"\n  },\n  {\n    \"issue\": \"README.md does not mention the scripts/ or data/ directories, leaving scripts/predict_tc.py, scripts/query_database.py, and data/superconductor_database.json undocumented and their purpose unclear.\",\n    \"file\": \"README.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a section in README describing the purpose of the scripts (e.g., Tc prediction, database querying) and the data file, with usage examples.\"\n  }\n]",
+      "ts": 1783411395538,
+      "summary": {
+        "kind": "council_draft",
+        "round": 2,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "9d3a7225-387c-454b-a509-2a029c739904",
+      "role": "agent",
+      "agentId": "agent-4",
+      "agentIndex": 4,
+      "text": "[\n  {\n    \"issue\": \"scripts/predict_tc.py and scripts/query_database.py are stubs that do not read from data/superconductor_database.json or perform any real computation. They lack command-line argument parsing, error handling, and integration with the database, making them unusable for the computational screening described in the roadmap.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual Tc prediction using a BCS/Eliashberg model or ML, and implement database querying with filtering by Tc, pressure, and material class. Add proper CLI and error handling.\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains only minimal placeholder entries (material, Tc, pressure) and lacks required fields such as synthesis method, stability, crystal structure, and reference. This prevents meaningful queries and integration with scripts.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Expand the schema to include fields: formula, Tc, pressure, synthesis_method, stability, structure, reference, and notes. Populate with all candidate materials from candidate_materials.md and docs/candidate_materials.md.\"\n  },\n  {\n    \"issue\": \"docs/experimental_feedback_loop.md is referenced in README.md as a guide for contributions, but the file is missing or contains only a placeholder. This breaks the contribution workflow and iterative design cycle.\",\n    \"file\": \"docs/experimental_feedback_loop.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Create or complete the file with a clear protocol for reporting experimental results, submitting samples, and iterating between theory and experiment, as outlined in the roadmap.\"\n  },\n  {\n    \"issue\": \"roadmap.md sets an unrealistic milestone M1 (Year 1-2) for achieving the first reproducible room-temperature superconducting sample at ambient pressure. Current literature shows no confirmed ambient-pressure RTSC, and even high-pressure claims remain controversial. This timeline is not grounded in the state of the art.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Adjust milestones to reflect realistic progress: e.g., first high-pressure RTSC confirmation (Year 2-3), ambient-pressure candidate identification (Year 4-5). Add risk mitigation for false positives.\"\n  }\n]",
+      "ts": 1783411396416,
+      "summary": {
+        "kind": "council_draft",
+        "round": 2,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "47b26876-df7f-4f08-8edf-f23ab5e18463",
+      "role": "agent",
+      "agentId": "agent-4",
+      "agentIndex": 4,
+      "text": "[\n  {\n    \"issue\": \"Agent 3 incorrectly claimed literature_review.md missing retraction of Lu-N-H paper; the file already includes the 2024 retraction in item 5. No change needed.\",\n    \"file\": \"literature_review.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"No action required; the retraction is already documented.\"\n  },\n  {\n    \"issue\": \"Agent 3 claimed roadmap lacks ML milestone, but M0 already includes high-throughput computational screening using DFT and machine learning. The milestone is present.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"No action required; ML screening is already in M0.\"\n  },\n  {\n    \"issue\": \"docs/experimental_feedback_loop.md is referenced in README.md but its content is not verified. If missing or incomplete, the contribution workflow is broken.\",\n    \"file\": \"docs/experimental_feedback_loop.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Read the file and ensure it contains a complete iterative design cycle protocol. If missing, add content.\"\n  },\n  {\n    \"issue\": \"docs/novel_mechanism.md is referenced in theoretical_framework.md for plasmon-mediated pairing but its content is not confirmed. It may be incomplete or missing the full derivation.\",\n    \"file\": \"docs/novel_mechanism.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Read the file and verify it includes the Hamiltonian, gap equation, and material candidates. If incomplete, add the missing sections.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py and scripts/query_database.py are stubs that do not read data/superconductor_database.json or perform real computation, contradicting the roadmap's computational screening goals.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual Tc prediction using BCS/Eliashberg model or ML, and implement database querying with filtering by Tc, pressure, and material class.\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains only placeholder entries and lacks fields for synthesis method, stability, and references, making it unusable for scripts and analysis.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Expand schema to include formula, Tc, pressure, synthesis_method, stability, structure, reference. Populate with all candidate materials from candidate_materials.md.\"\n  },\n  {\n    \"issue\": \"roadmap.md milestone M1 (Year 1-2) aims for first reproducible room-temperature superconducting sample at ambient pressure, which is unrealistic given current literature. This may misguide resource allocation.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Adjust milestone to reflect realistic progress: e.g., first high-pressure RTSC confirmation (Year 2-3), ambient-pressure candidate identification (Year 4-5).\"\n  }\n]",
+      "ts": 1783411408034,
+      "summary": {
+        "kind": "council_draft",
+        "round": 3,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "63b6f680-9299-4b2c-9e7a-fba7e7a8d5fe",
+      "role": "agent",
+      "agentId": "agent-3",
+      "agentIndex": 3,
+      "text": "[\n  {\n    \"issue\": \"synthesis_methods.md ends abruptly after the heading '## 3. Thin-Film Deposition' with only a single sentence; the section is incomplete, lacking procedure, equipment, and safety considerations.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the section with step-by-step procedures (substrate preparation, deposition parameters, post-annealing), equipment list (e.g., PLD, sputter coater), and safety notes.\"\n  },\n  {\n    \"issue\": \"theoretical_framework.md ends abruptly with '### 5.2 Dynamical Mean Field Theory (DMFT)' and no further text; the subsection is incomplete.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Add a description of DMFT, its role in strongly correlated systems, and how it complements DFT for predicting Tc in hydrides and nickelates.\"\n  },\n  {\n    \"issue\": \"characterization_techniques.md has an empty section '## Candidate Materials and Expected Signatures' with no content following the heading.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate the section with expected resistivity, magnetic susceptibility, and specific heat signatures for key candidate materials (e.g., H3S, LaH10, YBCO).\"\n  },\n  {\n    \"issue\": \"Root candidate_materials.md and docs/candidate_materials.md contain overlapping but inconsistent content (e.g., root lists Li2MgH16 and CaYH12, docs does not), causing duplication and confusion.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate into a single authoritative file (e.g., keep the detailed root version and remove or redirect the docs/ copy) and synchronize all entries.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py and scripts/query_database.py are stubs that do not read from data/superconductor_database.json or perform real computation; they are unusable for the computational screening described in the roadmap.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual Tc prediction using a BCS/Eliashberg model or ML, and implement database querying with filtering by Tc, pressure, and material class. Add proper CLI and error handling.\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains only minimal placeholder entries and lacks required fields (synthesis method, stability, structure, reference), preventing meaningful queries and integration with scripts.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Expand the schema to include fields: formula, Tc, pressure, synthesis_method, stability, structure, reference, and notes. Populate with all candidate materials from candidate_materials.md.\"\n  },\n  {\n    \"issue\": \"roadmap.md sets an unrealistic milestone M1 (Year 1-2) for achieving the first reproducible room-temperature superconducting sample at ambient pressure, given no confirmed ambient-pressure RTSC exists and high-pressure claims remain controversial.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Adjust milestones to reflect realistic progress: e.g., first high-pressure RTSC confirmation (Year 2-3), ambient-pressure candidate identification (Year 4-5). Add risk mitigation for false positives.\"\n  },\n  {\n    \"issue\": \"README.md does not mention the scripts/ or data/ directories, leaving scripts/predict_tc.py, scripts/query_database.py, and data/superconductor_database.json undocumented and their purpose unclear.\",\n    \"file\": \"README.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a section in README describing the purpose of the scripts (e.g., Tc prediction, database querying) and the data file, with usage examples.\"\n  }\n]",
+      "ts": 1783411411147,
+      "summary": {
+        "kind": "council_draft",
+        "round": 3,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "87b6e07d-23a6-43a6-be9f-b920a80b64ab",
+      "role": "agent",
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "text": "[\n  {\n    \"issue\": \"synthesis_methods.md Section 3 (Thin-Film Deposition) is incomplete, ending after a single sentence with no procedure, equipment, or safety considerations.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the section with step-by-step procedures, equipment list, and safety notes for PLD, sputtering, or CVD.\"\n  },\n  {\n    \"issue\": \"characterization_techniques.md has an empty section '## Candidate Materials and Expected Signatures' with no content.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate with expected signatures for key candidates (e.g., H3S, LaH10, YBCO) including Tc, gap symmetry, and Meissner effect.\"\n  },\n  {\n    \"issue\": \"theoretical_framework.md subsection 5.2 (Dynamical Mean Field Theory) ends abruptly with only the heading and no text.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add description of DMFT, its role in strongly correlated systems, and application to hydrides/nickelates.\"\n  },\n  {\n    \"issue\": \"candidate_materials.md has an empty '## Summary' section.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a summary paragraph synthesizing key candidates, Tc ranges, and challenges.\"\n  },\n  {\n    \"issue\": \"README.md does not mention the scripts/ or data/ directories, leaving them undocumented.\",\n    \"file\": \"README.md\",\n    \"severity\": \"low\",\n    \"suggestion\": \"Add a section describing scripts/predict_tc.py, scripts/query_database.py, and data/superconductor_database.json with usage examples.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py and scripts/query_database.py are stubs that do not perform real computation or database queries.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual Tc prediction using BCS/Eliashberg model or ML, and implement database querying with filtering by Tc, pressure, material class.\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains minimal placeholder entries and lacks required fields (synthesis method, stability, reference).\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Expand schema to include formula, Tc, pressure, synthesis_method, stability, structure, reference. Populate with all candidate materials.\"\n  },\n  {\n    \"issue\": \"Root candidate_materials.md and docs/candidate_materials.md contain overlapping but inconsistent content, causing duplication.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate into a single authoritative file and ensure consistency.\"\n  },\n  {\n    \"issue\": \"roadmap.md sets an unrealistic milestone M1 (Year 1-2) for first reproducible room-temperature superconducting sample at ambient pressure, which is not supported by current literature.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Adjust milestones to reflect realistic progress: first high-pressure RTSC confirmation (Year 2-3), ambient-pressure candidate identification (Year 4-5).\"\n  },\n  {\n    \"issue\": \"docs/experimental_feedback_loop.md is referenced in README but its content is not verified; it may be missing or incomplete.\",\n    \"file\": \"docs/experimental_feedback_loop.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Review and complete the file with a clear protocol for iterative theory-experiment cycles.\"\n  }\n]",
+      "ts": 1783411414691,
+      "summary": {
+        "kind": "council_draft",
+        "round": 3,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "a0ae5394-fc7d-47c6-b5ec-f43022cbe9fe",
+      "role": "agent",
+      "agentId": "agent-2",
+      "agentIndex": 2,
+      "text": "[\n  {\n    \"issue\": \"synthesis_methods.md ends abruptly after the heading '## 3. Thin-Film Deposition' with only a single sentence, lacking the detailed step-by-step procedure, equipment list, and safety considerations that the document's structure implies.\",\n    \"file\": \"synthesis_methods.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the Thin-Film Deposition section with a full procedure (substrate preparation, deposition parameters, post-processing), equipment list (e.g., PLD system, sputter coater), and safety notes.\"\n  },\n  {\n    \"issue\": \"theoretical_framework.md ends abruptly with '### 5.2 Dynamical Mean Field Theory (DMFT)' and no further text. The subsection is incomplete, missing the explanation of DMFT and its role in predicting superconductivity.\",\n    \"file\": \"theoretical_framework.md\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Complete the DMFT subsection with a description of the method, its application to strongly correlated systems, and how it can be used to compute Tc or pairing mechanisms.\"\n  },\n  {\n    \"issue\": \"characterization_techniques.md has an empty section '## Candidate Materials and Expected Signatures' with no content following the heading. This appears to be a placeholder that was never filled in.\",\n    \"file\": \"characterization_techniques.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Populate the section with expected signatures for each candidate material (e.g., expected Tc, gap symmetry, penetration depth) or remove the heading if not needed.\"\n  },\n  {\n    \"issue\": \"Duplicate and inconsistent content exists between root-level candidate_materials.md and docs/candidate_materials.md. The root version includes detailed synthesis notes and predicted ternary hydrides, while the docs version is a shorter summary. This duplication can lead to confusion about which is authoritative.\",\n    \"file\": \"candidate_materials.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Consolidate the two files into a single authoritative candidate_materials.md (either at root or in docs/) and remove the duplicate. Ensure all information is merged and consistent.\"\n  },\n  {\n    \"issue\": \"scripts/predict_tc.py is a stub: it contains only a placeholder function that returns a hardcoded Tc value without any actual computation using DFT, machine learning, or Eliashberg equations. The script does not read any input data or produce meaningful predictions.\",\n    \"file\": \"scripts/predict_tc.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement a working prediction pipeline: integrate with the superconductor_database.json, use a simple Eliashberg solver or a pre-trained ML model to estimate Tc from input parameters (e.g., Debye temperature, electron-phonon coupling). Add command-line argument parsing for material composition.\"\n  },\n  {\n    \"issue\": \"scripts/query_database.py is a stub: it prints a message like 'Querying database...' but does not actually read or filter data/superconductor_database.json. It returns a hardcoded list of materials instead of performing a real query.\",\n    \"file\": \"scripts/query_database.py\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Implement actual JSON parsing and filtering: load superconductor_database.json, allow querying by Tc range, pressure, or material family, and output results in a structured format (e.g., table or JSON).\"\n  },\n  {\n    \"issue\": \"data/superconductor_database.json contains only a single placeholder entry with mock data (e.g., {'material': 'H3S', 'Tc': 203, 'pressure': 155}) and no other entries. The database is not representative of the candidate materials listed in the documentation.\",\n    \"file\": \"data/superconductor_database.json\",\n    \"severity\": \"high\",\n    \"suggestion\": \"Populate the database with all candidate materials from candidate_materials.md and docs/candidate_materials.md, including fields for Tc, pressure, synthesis method, stability, and references. Ensure the data is consistent across both documents.\"\n  },\n  {\n    \"issue\": \"Literature review does not include the 2024 retraction of the N-doped lutetium hydride paper and lacks any 2024+ developments in hydride or nickelate superconductivity (e.g., La3Ni2O7 under pressure).\",\n    \"file\": \"literature_review.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Add a note about the retraction and any new confirmed high-Tc compounds with updated references and brief summaries.\"\n  },\n  {\n    \"issue\": \"roadmap.md sets an unrealistic milestone M1 (Year 1-2) for achieving the first reproducible room-temperature superconducting sample at ambient pressure. Current literature shows no confirmed ambient-pressure RTSC, and even high-pressure claims remain controversial.\",\n    \"file\": \"roadmap.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Adjust milestones to reflect realistic progress: e.g., first high-pressure RTSC confirmation (Year 2-3), ambient-pressure candidate identification (Year 4-5). Add risk mitigation for false positives.\"\n  },\n  {\n    \"issue\": \"docs/experimental_feedback_loop.md is referenced in README.md as a guide for contributions, but the file may be missing or contain only a placeholder. This breaks the contribution workflow and iterative design cycle.\",\n    \"file\": \"docs/experimental_feedback_loop.md\",\n    \"severity\": \"medium\",\n    \"suggestion\": \"Create or complete the file with a clear protocol for reporting experimental results, submitting samples, and iterating between theory and experiment, as outlined in the roadmap.\"\n  }\n]",
+      "ts": 1783411419073,
+      "summary": {
+        "kind": "council_draft",
+        "round": 3,
+        "phase": "reveal"
+      }
+    },
+    {
+      "id": "6201836c-cf41-4bb8-b779-33e4edfac75d",
+      "role": "system",
+      "text": "Synthesizing council consensus (agent-1)…",
+      "ts": 1783411419074
+    },
+    {
+      "id": "776f7acd-b11c-45f0-82bf-1848fccc0509",
+      "role": "agent",
+      "agentId": "agent-1",
+      "agentIndex": 1,
+      "text": "[\n  {\n    \"description\": \"Complete the Thin-Film Deposition section in synthesis_methods.md with step-by-step procedures (substrate preparation, deposition parameters, post-annealing), equipment list (PLD, sputter coater, CVD), and safety considerations.\",\n    \"expectedFiles\": [\"synthesis_methods.md\"]\n  },\n  {\n    \"description\": \"Add content to the Dynamical Mean Field Theory (DMFT) subsection in theoretical_framework.md, describing its role in strongly correlated systems, how it complements DFT, and its application to hydrides and nickelates for Tc prediction.\",\n    \"expectedFiles\": [\"theoretical_framework.md\"]\n  },\n  {\n    \"description\": \"Populate the empty 'Candidate Materials and Expected Signatures' section in characterization_techniques.md with expected resistivity, magnetic susceptibility, and specific heat signatures for key candidates (e.g., H3S, LaH10, YBCO) to guide experimental verification.\",\n    \"expectedFiles\": [\"characterization_techniques.md\"]\n  },\n  {\n    \"description\": \"Consolidate root candidate_materials.md and docs/candidate_materials.md into a single authoritative file (keep root, remove or redirect docs copy), merge all entries, and add a summary paragraph synthesizing key candidates, Tc ranges, and challenges.\",\n    \"expectedFiles\": [\"candidate_materials.md\", \"docs/candidate_materials.md\"]\n  },\n  {\n    \"description\": \"Replace stub scripts/predict_tc.py and scripts/query_database.py with working implementations: predict_tc.py should compute Tc using BCS/Eliashberg model or ML from input parameters; query_database.py should load data/superconductor_database.json and filter by Tc, pressure, material class.\",\n    \"expectedFiles\": [\"scripts/predict_tc.py\", \"scripts/query_database.py\"]\n  },\n  {\n    \"description\": \"Expand data/superconductor_database.json schema to include fields (formula, Tc, pressure, synthesis_method, stability, structure, reference) and populate with all candidate materials from the consolidated candidate_materials.md, using real literature data.\",\n    \"expectedFiles\": [\"data/superconductor_database.json\"]\n  },\n  {\n    \"description\": \"Update README.md to add a section describing the scripts/ and data/ directories, their purpose (Tc prediction, database querying), and usage examples.\",\n    \"expectedFiles\": [\"README.md\"]\n  },\n  {\n    \"description\": \"Adjust roadmap.md milestone M1 to realistic timeline (first high-pressure RTSC confirmation Year 2-3, ambient-pressure candidate Year 4-5), add risk mitigation for false positives, and ensure docs/experimental_feedback_loop.md and docs/novel_mechanism.md contain complete protocols and derivations.\",\n    \"expectedFiles\": [\"roadmap.md\", \"docs/experimental_feedback_loop.md\", \"docs/novel_mechanism.md\"]\n  }\n]",
+      "ts": 1783411429963,
+      "summary": {
+        "kind": "council_synthesis",
+        "rounds": 0
+      }
+    },
+    {
+      "id": "01d4ba7d-12de-457b-940b-6e2c5d360563",
+      "role": "system",
+      "text": "Deliverable saved → deliverable-council-377b3044-2026-07-07T08-03-49-968Z.md",
+      "ts": 1783411429975,
+      "summary": {
+        "kind": "deliverable",
+        "preset": "council",
+        "filename": "deliverable-council-377b3044-2026-07-07T08-03-49-968Z.md",
+        "fullPath": "C:\\Users\\kevin\\workspace\\superconducters_07062026\\logs\\377b3044\\deliverable\\deliverable-council-377b3044-2026-07-07T08-03-49-968Z.md",
+        "bytes": 17158,
+        "sectionTitles": [
+          "Directive",
+          "Answer to directive",
+          "Per-agent positions (latest)",
+          "Round 0 — final drafts (full text)",
+          "Round 1 — independent first drafts (peer-hidden)",
+          "Next actions"
+        ]
+      }
+    },
+    {
+      "id": "bf4c9952-d382-43b4-a1d7-9891abccd554",
+      "role": "system",
+      "text": "[execution] Complete: 0 done, 0 failed, 0 skipped.",
+      "ts": 1783411429977
+    },
+    {
+      "id": "f7f348bc-90cf-4f92-ad09-8f9e51dffc34",
+      "role": "system",
+      "text": "[audit] LLM audit: 2/12 criteria met, 10 new todo(s).",
+      "ts": 1783411450011
+    },
+    {
+      "id": "4f003cf8-8542-478a-a7c8-0a76772dde84",
+      "role": "system",
+      "text": "[audit] Created 10 todo(s) for unmet criteria.",
+      "ts": 1783411450011
+    },
+    {
+      "id": "52b71dbc-4a6d-48fc-b541-949e1ced19ae",
+      "role": "system",
+      "text": "═══ Council cycle 2 — draining 10 pending todo(s) ═══",
+      "ts": 1783411451016
+    },
+    {
+      "id": "c33c53d4-e00a-4974-ae4a-98c0f9d1ce0e",
+      "role": "system",
+      "text": "[execution] agent-2 working on: Add at least two more recent (2020+) papers on room-temperature superconductivity covering cuprates and other systems, w...",
+      "ts": 1783411451018
+    },
+    {
+      "id": "6cdcb682-7430-4616-9728-288d0346272e",
+      "role": "system",
+      "text": "[execution] agent-3 working on: Add a section on excitonic or topological pairing mechanism with equations and references, and expand Eliashberg theory ...",
+      "ts": 1783411451019
+    },
+    {
+      "id": "025a77ef-4e3a-49f4-9d2d-c000eb0786fa",
+      "role": "system",
+      "text": "[execution] agent-4 working on: Add at least three compounds predicted to have Tc > 300 K (e.g., from recent literature) with full details including che...",
+      "ts": 1783411451019
+    },
+    {
+      "id": "94b436d3-91ec-47f9-b830-a46430b71df5",
+      "role": "system",
+      "text": "[execution] agent-4 parse failed — trying repair prompt.",
+      "ts": 1783411470642
+    },
+    {
+      "id": "b6b5d4c6-ffca-4956-8f84-a9a57d8af3b6",
+      "role": "system",
+      "text": "[execution] agent-4 repair failed — trying sibling retry.",
+      "ts": 1783411480852
+    },
+    {
+      "id": "bef18709-4668-472f-b80e-2b52c0364730",
+      "role": "system",
+      "text": "[execution] agent-4 working on: Add detailed protocols for high-pressure synthesis of hydride superconductors including diamond anvil cell setup, laser ...",
+      "ts": 1783411480853
+    },
+    {
+      "id": "04ea69a6-f256-44cd-a1b4-fd74bb5edfa5",
+      "role": "system",
+      "text": "[execution] agent-3 parse failed — trying repair prompt.",
+      "ts": 1783411489341
+    },
+    {
+      "id": "4485b914-e61e-4c9e-99a4-832923302caf",
+      "role": "system",
+      "text": "[execution] agent-4 parse failed — trying repair prompt.",
+      "ts": 1783411504354
+    },
+    {
+      "id": "e7fadc24-3282-497c-b167-9b0fc90cdcc2",
+      "role": "system",
+      "text": "[execution] agent-3 repair failed — trying sibling retry.",
+      "ts": 1783411532276
+    },
+    {
+      "id": "224d4a0e-8fe6-4df6-8e0f-aa854af76136",
+      "role": "system",
+      "text": "[execution] agent-3 working on: Add X-ray diffraction as a characterization method for high-pressure superconductivity, and ensure all methods (four-pro...",
+      "ts": 1783411532277
+    },
+    {
+      "id": "c18150ec-8b45-4604-96ba-ac6d342e00a2",
+      "role": "system",
+      "text": "[execution] agent-4 repair failed — trying sibling retry.",
+      "ts": 1783411534569
+    },
+    {
+      "id": "68faaa83-1cac-4150-9dd7-138f26330ebc",
+      "role": "system",
+      "text": "[execution] agent-4 working on: Add at least three new challenges from recent literature (e.g., sample purity, pressure stability, reproducibility) with...",
+      "ts": 1783411534569
+    },
+    {
+      "id": "c16f3904-44df-4a3a-a366-ae9f6683edc5",
+      "role": "system",
+      "text": "[execution] agent-4 parse failed — trying repair prompt.",
+      "ts": 1783411542841
+    },
+    {
+      "id": "920dc024-41c7-4908-a64b-b97e1be43a9f",
+      "role": "system",
+      "text": "[execution] agent-4 repair failed — trying sibling retry.",
+      "ts": 1783411553855
+    },
+    {
+      "id": "f360b33a-85db-4299-8113-8671e6e42158",
+      "role": "system",
+      "text": "[execution] agent-4 working on: Add sections on thin film deposition, high-pressure synthesis scale-up, potential industrial pathways, strategies for pr...",
+      "ts": 1783411553855
+    },
+    {
+      "id": "4c899257-2c91-43ed-b157-c5d28dbae14a",
+      "role": "system",
+      "text": "[execution] agent-4 parse failed — trying repair prompt.",
+      "ts": 1783411565534
+    },
+    {
+      "id": "77fd77c1-c11a-48c0-beaa-f2520c95b68f",
+      "role": "system",
+      "text": "[execution] agent-3 parse failed — trying repair prompt.",
+      "ts": 1783411573737
+    },
+    {
+      "id": "0245dd17-09a0-48cf-8cee-2a2c8a0c31f2",
+      "role": "system",
+      "text": "[execution] agent-4 repair failed — trying sibling retry.",
+      "ts": 1783411574140
+    },
+    {
+      "id": "9aaf2717-462c-450e-9cd2-dae854f87e18",
+      "role": "system",
+      "text": "[execution] agent-4 working on: Add a section on an additional novel mechanism (excitonic or topological) with detailed description, equations, and supp...",
+      "ts": 1783411574141
+    },
+    {
+      "id": "58d38c9e-9f96-47b5-a7df-9bab3dd367cc",
+      "role": "system",
+      "text": "[execution] agent-3 skipped: All required methods (four-probe resistivity, AC susceptibility, specific heat) are already described for high-pressure conditions, and X-ray diffraction is already included as a characterization method for high-pressure superconductivity in both files.",
+      "ts": 1783411577861
+    },
+    {
+      "id": "9436e283-c169-451a-be10-cf73c2979f04",
+      "role": "system",
+      "text": "[execution] agent-3 working on: Add experimental protocols for at least two more candidate hydrides (e.g., H3S, LaH10) including specific pressure, temp...",
+      "ts": 1783411577862
+    },
+    {
+      "id": "0f94bf92-dfe2-4274-9ec1-f4423a758922",
+      "role": "system",
+      "text": "[execution] agent-3 parse failed — trying repair prompt.",
+      "ts": 1783411589673
+    },
+    {
+      "id": "8d527cc3-0d41-4bdc-9da8-526a618c79e8",
+      "role": "system",
+      "text": "[execution] agent-4 parse failed — trying repair prompt.",
+      "ts": 1783411590477
+    },
+    {
+      "id": "efc1b1b9-b741-4d36-b9ad-42e7a1293b63",
+      "role": "system",
+      "text": "[execution] agent-3 repair failed — trying sibling retry.",
+      "ts": 1783411601320
+    },
+    {
+      "id": "2aed96b9-6fe7-4feb-8ff8-91e714512058",
+      "role": "system",
+      "text": "[execution] agent-3 working on: Add entries for at least three proposed compounds with predicted Tc > 300 K, including fields: name, formula, Tc, pressu...",
+      "ts": 1783411601320
+    },
+    {
+      "id": "685098dc-44dc-46e4-8294-95b969ac6ee6",
+      "role": "system",
+      "text": "[execution] agent-4 repair failed — trying sibling retry.",
+      "ts": 1783411601953
+    },
+    {
+      "id": "4a846afe-1994-4c17-8a87-5993935f7ea7",
+      "role": "system",
+      "text": "[execution] agent-2 parse failed — trying repair prompt.",
+      "ts": 1783411723086
+    }
+  ]
+}
