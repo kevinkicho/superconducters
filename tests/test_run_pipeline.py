@@ -227,3 +227,29 @@ class TestRunPipeline:
         assert result["yield_bounds"] == [150.0, 250.0]
         # Verify the result status
         assert result["status"] == "success"
+
+
+def test_full_pipeline_with_real_data():
+    """Integration test: load real database, run pipeline, verify output files."""
+    import os
+    # Check if real database exists
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'supercon_db.json')
+    if not os.path.exists(db_path):
+        pytest.skip("Real database not found at " + db_path)
+    # Run the pipeline
+    result = rp.run_pipeline()
+    # Check candidate_materials.md exists and has content
+    candidate_path = os.path.join(os.path.dirname(__file__), '..', 'candidate_materials.md')
+    assert os.path.exists(candidate_path), "candidate_materials.md should exist after pipeline run"
+    with open(candidate_path, 'r') as f:
+        candidate_content = f.read()
+    assert len(candidate_content) > 0, "candidate_materials.md should not be empty"
+    # Check roadmap.md exists and has final report
+    roadmap_path = os.path.join(os.path.dirname(__file__), '..', 'roadmap.md')
+    assert os.path.exists(roadmap_path), "roadmap.md should exist after pipeline run"
+    with open(roadmap_path, 'r') as f:
+        roadmap_content = f.read()
+    assert len(roadmap_content) > 0, "roadmap.md should not be empty"
+    # Verify roadmap contains a final report section (e.g., 'Final Summary' or 'Deployment')
+    assert "Final Summary" in roadmap_content or "Deployment" in roadmap_content, \
+        "roadmap.md should contain a final report section"
