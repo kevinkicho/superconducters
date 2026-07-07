@@ -46,3 +46,40 @@ These compounds are predicted based on first-principles calculations and are yet
 
 - **Rb2CaH20 (rubidium-calcium hydride)** – Chemical formula: Rb2CaH20. Predicted Tc: ~355 K. Synthesis pressure: 290 GPa. Crystal structure: Cubic clathrate (space group Im-3m). Doping: None required; doping with Na or Li may enhance stability. Synthesis feasibility: Requires high-pressure laser heating of Rb and Ca with excess H2 in diamond anvil cell. Predicted to be stable at 290 GPa. References: Zhang et al., Phys. Rev. B 111, 2025; Liu et al., J. Phys. Chem. Lett. 16, 2025.
 - **Cs2MgH18 (cesium-magnesium hydride)** – Chemical formula: Cs2MgH18. Predicted Tc: ~360 K. Synthesis pressure: 310 GPa. Crystal structure: Cubic clathrate (space group Fm-3m). Doping: None required; doping with Li or Na may lower required pressure. Synthesis feasibility: Requires high-pressure laser heating of Cs and Mg with excess H2 in diamond anvil cell. Predicted to be stable at 310 GPa. References: Wang et al., Phys. Rev. B 112, 2025; Chen et al., J. Phys. Chem. C 129, 2025.
+
+## Multi-Criteria Decision Matrix
+
+This section defines a weighted multi-criteria decision matrix to rank the predicted room temperature superconductors (Tc > 300 K) based on six criteria: Tc, synthesis pressure, cost, environmental impact, risk, and technology readiness level (TRL). Weights are assigned according to their importance for practical deployment.
+
+### Criteria and Weights
+
+| Criterion | Weight | Rationale |
+|-----------|--------|-----------|
+| Tc (K) | 0.30 | Higher Tc is the primary goal; room temperature (≥300 K) is the target. |
+| Synthesis Pressure (GPa) | 0.20 | Lower pressure reduces cost and equipment complexity. |
+| Cost (1–5) | 0.15 | Estimated from pressure and precursor availability (1 = low, 5 = high). |
+| Environmental Impact (1–5) | 0.10 | Based on material toxicity and byproducts (1 = low, 5 = high). |
+| Risk (1–5) | 0.15 | Synthesis difficulty and metastability (1 = low, 5 = high). |
+| TRL (1–5) | 0.10 | Technology readiness level (1 = predicted, 5 = commercial). |
+
+### Scoring Methodology
+
+Each criterion is normalized to a 0–1 scale using min–max normalization. For benefit criteria (Tc, TRL), higher raw values yield higher normalized scores. For cost criteria (pressure, cost, environmental impact, risk), lower raw values yield higher normalized scores. The composite score is the weighted sum of normalized scores.
+
+### Candidate Scores
+
+| Candidate | Tc (K) | Pressure (GPa) | Cost (1–5) | Env. Impact (1–5) | Risk (1–5) | TRL (1–5) | Composite Score |
+|-----------|--------|----------------|------------|-------------------|------------|-----------|-----------------|
+| SrH10 | 330 | 220 | 2 | 1 | 2 | 1 | 0.700 |
+| Li2CaH18 | 345 | 250 | 3 | 1 | 3 | 1 | 0.627 |
+| CaH12 | 305 | 200 | 2 | 1 | 2 | 1 | 0.600 |
+| K2CaH20 | 350 | 280 | 3 | 1 | 3 | 1 | 0.600 |
+| YH10 | 326 | 250 | 3 | 1 | 3 | 1 | 0.524 |
+| Rb2CaH20 | 355 | 290 | 4 | 1 | 4 | 1 | 0.509 |
+| MgH16 | 350 | 300 | 4 | 1 | 4 | 1 | 0.464 |
+| Cs2MgH18 | 360 | 310 | 5 | 1 | 5 | 1 | 0.400 |
+| Na2MgH16 | 335 | 300 | 4 | 1 | 4 | 1 | 0.382 |
+
+### Recommendation
+
+**Top candidate: SrH10 (strontium decahydride)** with a composite score of 0.700. SrH10 offers a high predicted Tc of 330 K at a relatively low synthesis pressure of 220 GPa, resulting in lower estimated cost and risk compared to other candidates. Its cubic clathrate structure (Fm-3m) is similar to other high-Tc hydrides, and doping with Mg or Ca may further lower the required pressure. While Cs2MgH18 has the highest Tc (360 K), its extreme pressure requirement (310 GPa) and associated cost/risk penalties reduce its overall score. The ranking is consistent with the TRL assessment (all candidates at TRL 1) and manufacturing analysis (lower pressure compounds are more feasible for scale-up). Further experimental validation and pipeline data (e.g., DFT formation energies, synthesizability scores) should be incorporated to refine the weights and scores.
