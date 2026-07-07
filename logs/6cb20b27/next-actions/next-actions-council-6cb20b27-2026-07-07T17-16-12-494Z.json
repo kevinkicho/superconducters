@@ -1,0 +1,18 @@
+{
+  "preset": "council",
+  "runId": "6cb20b27-9db7-4ef9-80e7-3a7934029f48",
+  "generatedAt": "2026-07-07T17:16:12.498Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Write unit tests that import predict_tc, mock the database, and verify expected Tc values for known materials (e.g., LaH10 at 170 GPa should give ~250 K). Use pytest fixtures.\"",
+      "source": "Agent 1"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Write unit tests that import predict_tc, mock the database, and verify expected Tc values for known materials (e.g., LaH10 at 170 GPa should give ~250 K). Use pytest fixtures.\" _(from: Agent 1)_",
+      "source": "Next actions"
+    }
+  ]
+}
