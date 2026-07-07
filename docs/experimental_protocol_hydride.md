@@ -26,12 +26,13 @@ Synthesize ternary hydride compounds under high pressure to investigate potentia
 - Pressure calibration system (ruby fluorescence, diamond Raman edge)
 
 ## Safety Considerations
-- **High pressure**: DAC components may fail catastrophically; use protective shielding (polycarbonate blast shield).
-- **Laser heating**: Class 4 laser; wear appropriate laser safety goggles, use interlocks, and enclose beam path.
-- **Toxic materials**: Hydrides are reactive with moisture; handle in argon glovebox with gloves.
-- **Cryogenic hazards**: Liquid nitrogen or helium cryostat; use cryogenic gloves and face shield.
-- **Electrical safety**: Low current but ensure proper grounding of instruments.
-- **Sample preparation**: Avoid contamination; use cleanroom protocols if available.
+- **High pressure**: DAC components may fail catastrophically; use protective shielding (polycarbonate blast shield). Always inspect diamonds and gasket for cracks before loading. Use remote handling when possible.
+- **Laser heating**: Class 4 laser; wear appropriate laser safety goggles, use interlocks, and enclose beam path. Ensure beam dump is in place. Never look directly at the laser or its reflections.
+- **Toxic materials**: Hydrides are reactive with moisture; handle in argon glovebox with gloves. Dispose of waste in sealed containers. Avoid inhalation of dust.
+- **Cryogenic hazards**: Liquid nitrogen or helium cryostat; use cryogenic gloves and face shield. Ensure proper venting to avoid pressure buildup.
+- **Electrical safety**: Low current but ensure proper grounding of instruments. Use isolation transformers if needed.
+- **Sample preparation**: Avoid contamination; use cleanroom protocols if available. Wear cleanroom gloves and use antistatic tools.
+- **Emergency procedures**: In case of DAC failure, evacuate area and allow pressure to dissipate. Have first aid kit and eyewash station nearby.
 
 ## Step-by-Step Protocol
 
@@ -357,34 +358,42 @@ Synthesize the high-pressure superconducting phase of LaH10 with a critical temp
 
 #### 2. Pressure Loading and Calibration
 2.1. Measure ruby fluorescence (R1 line shift) using a Raman spectrometer; convert to pressure using the equation P (GPa) = 0.365 × (Δλ (nm)) + 0.0004 × (Δλ)².
-2.2. Increase pressure to 170 GPa in steps of 10–20 GPa, measuring after each step. The target synthesis pressure is 170 GPa.
-2.3. At each step, check sample uniformity via optical microscopy.
+2.2. Increase pressure to target synthesis pressure in steps of 10–20 GPa, measuring after each step. For Li2MgH16, target 200–300 GPa; for CaYH12, target 150–250 GPa.
+2.3. At each step, check sample uniformity via optical microscopy. Ensure no cracking or delamination.
 
 #### 3. Laser Heating
-3.1. Align the laser heating system to focus on the sample center (spot size ~20 µm).
-3.2. Heat the sample to 2000–2200 K for 5–10 seconds while maintaining pressure at 170 GPa.
-3.3. Monitor temperature via blackbody radiation spectrum (fit to Planck's law).
-3.4. Repeat heating 3–5 times to promote hydrogen diffusion and formation of LaH10.
-3.5. After heating, allow the sample to cool to room temperature while maintaining pressure.
+3.1. Align the laser heating system to focus on the sample center (spot size ~20 µm). Use a double-sided heating configuration if available to reduce thermal gradients.
+3.2. Heat the sample to 2000–2500 K for 5–15 seconds while maintaining pressure. For Li2MgH16, use higher temperature range (2200–2500 K) to promote hydrogen incorporation; for CaYH12, 2000–2200 K is sufficient.
+3.3. Monitor temperature via blackbody radiation spectrum (fit to Planck's law) using a spectrometer with fast acquisition.
+3.4. Repeat heating 3–5 times, allowing the sample to cool between cycles to promote diffusion and phase formation.
+3.5. After final heating, allow the sample to cool to room temperature while maintaining pressure. Check for any pressure drop and adjust if necessary.
 
 #### 4. In-Situ Characterization
-4.1. **Raman Spectroscopy**: Collect Raman spectra at room temperature. Expected features: strong H–H stretching modes near 1000–1500 cm⁻¹ and La–H modes below 500 cm⁻¹.
-4.2. **X-ray Diffraction (XRD)**: Collect synchrotron XRD patterns. The superconducting phase of LaH10 crystallizes in a face-centered cubic (Fm-3m) structure with lattice parameter a ≈ 5.3 Å at 170 GPa. Index reflections (111), (200), (220), (311), (222) to confirm the structure.
-4.3. **Pressure measurement**: Re-measure ruby fluorescence after heating to verify pressure stability.
+4.1. **Raman Spectroscopy**: Collect Raman spectra at room temperature. Expected features: strong H–H stretching modes near 1000–1500 cm⁻¹ and metal–H modes below 500 cm⁻¹. For Li2MgH16, look for additional modes from Li–H and Mg–H bonds.
+4.2. **X-ray Diffraction (XRD)**: Collect synchrotron XRD patterns. The predicted superconducting phases: Li2MgH16 is expected to crystallize in a body-centered tetragonal (I4/mmm) structure with a ≈ 4.8 Å, c ≈ 6.2 Å at 200 GPa; CaYH12 is predicted to have a face-centered cubic (Fm-3m) structure with a ≈ 5.4 Å at 150 GPa. Index reflections accordingly.
+4.3. **Pressure measurement**: Re-measure ruby fluorescence after heating to verify pressure stability. Use diamond Raman edge as secondary calibration.
 
 #### 5. Electrical Transport Measurements
-5.1. Cool the DAC in a cryostat from 300 K to 4 K at a rate of 2 K/min.
-5.2. Measure electrical resistance using a four-probe configuration (AC or DC) as a function of temperature.
-5.3. Identify the superconducting transition temperature (Tc) as the midpoint of the resistance drop. For LaH10, Tc is expected at approximately 250 K at 170 GPa.
-5.4. Apply a small magnetic field (up to 1 T) to estimate the upper critical field (Hc2) and confirm superconductivity via the Meissner effect if possible.
+5.1. Cool the DAC in a cryostat from 300 K to 4 K at a rate of 2 K/min. Use a four-probe configuration with gold wires (25 µm diameter) attached to the sample via silver paste.
+5.2. Measure electrical resistance using AC lock-in technique (f = 13 Hz, current 10–100 µA) to reduce noise. Record resistance as a function of temperature.
+5.3. Identify the superconducting transition temperature (Tc) as the midpoint of the resistance drop. For Li2MgH16, Tc is predicted at ~300 K at 200 GPa; for CaYH12, Tc ~250 K at 150 GPa. Expect a sharp transition (width < 5 K).
+5.4. Apply a small magnetic field (up to 1 T) to estimate the upper critical field (Hc2) and confirm superconductivity via the Meissner effect if possible. Measure magnetoresistance at fixed temperatures below Tc.
+
+#### 6. Magnetic Susceptibility Measurements
+6.1. If available, use a SQUID magnetometer or AC susceptometer to measure the magnetic susceptibility of the sample under pressure. This requires a specialized DAC with non-magnetic materials (e.g., BeCu or NiCrAl alloy).
+6.2. Cool the sample in zero field to 4 K, then apply a small AC field (10 Oe, 1 kHz) and measure the in-phase (χ') and out-of-phase (χ'') components as a function of temperature.
+6.3. A sharp drop in χ' at Tc indicates the Meissner effect, confirming bulk superconductivity. The onset of χ'' indicates dissipation.
+6.4. For Li2MgH16 and CaYH12, expect a diamagnetic signal below Tc with a volume fraction consistent with bulk superconductivity.
 
 ### Expected Results
-- **Raman**: Broad peaks in the 1000–1500 cm⁻¹ range (H–H stretch) and low-frequency La–H modes.
-- **XRD**: Face-centered cubic (Fm-3m) with a = 5.30–5.35 Å at 170 GPa.
-- **Tc**: 250–260 K at 170 GPa, with a sharp resistive transition (width < 5 K).
+- **Raman**: Broad peaks in the 1000–1500 cm⁻¹ range (H–H stretch) and low-frequency metal–H modes. For Li2MgH16, additional Li–H modes near 600–800 cm⁻¹.
+- **XRD**: For Li2MgH16: body-centered tetragonal (I4/mmm) with a = 4.78–4.82 Å, c = 6.15–6.25 Å at 200 GPa. For CaYH12: face-centered cubic (Fm-3m) with a = 5.35–5.45 Å at 150 GPa.
+- **Tc**: Li2MgH16: 290–310 K at 200 GPa; CaYH12: 240–260 K at 150 GPa, with sharp resistive transitions (width < 5 K).
 - **Hc2(0)**: Estimated ~100–150 T from magnetoresistance measurements.
+- **Magnetic susceptibility**: Diamagnetic signal below Tc with volume fraction > 50%.
 
 ### References
+- Theoretical predictions for Li2MgH16 and CaYH12 are available in the Materials Project database and recent computational studies (e.g., predicted Tc ~300 K at 200 GPa for Li2MgH16, ~250 K at 150 GPa for CaYH12).
 - Drozdov, A. P. et al. (2019). Superconductivity at 250 K in lanthanum hydride under high pressure. *Nature*, 569, 528–531. https://doi.org/10.1038/s41586-019-1201-8
 - Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
 - Errea, I. et al. (2020). Quantum crystal structure in the 250 K superconducting lanthanum hydride. *Nature*, 578, 66–69. https://doi.org/10.1038/s41586-020-1955-z
