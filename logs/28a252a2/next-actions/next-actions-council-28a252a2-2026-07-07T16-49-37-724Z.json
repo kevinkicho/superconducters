@@ -1,0 +1,28 @@
+{
+  "preset": "council",
+  "runId": "28a252a2-bc2f-485d-849c-ab495521ca78",
+  "generatedAt": "2026-07-07T16:49:37.727Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Implement unit tests that import `predict_tc.py`, mock the database, and verify that `predict_tc` returns expected Tc values for known materials (e.g., LaH10 at 170 GPa should give ~250 K). Use pytest fixtures and cover edge cases.\"",
+      "source": "Agent 3"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Decide on a single location for each document (root or docs/) and remove the duplicate. Update all cross-references accordingly. The README should link to the canonical version.\"",
+      "source": "Agent 2"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Implement unit tests that import `predict_tc.py`, mock the database, and verify that `predict_tc` returns expected Tc values for known materials (e.g., LaH10 at 170 GPa should give ~250 K). Use pytest fixtures and cover edge cases.\" _(from: Agent 3)_",
+      "source": "Next actions"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Decide on a single location for each document (root or docs/) and remove the duplicate. Update all cross-references accordingly. The README should link to the canonical version.\" _(from: Agent 2)_",
+      "source": "Next actions"
+    }
+  ]
+}

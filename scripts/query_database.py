@@ -259,3 +259,21 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+def get_material_properties(name: str) -> dict:
+    """Retrieve material properties from the database by name.
+
+    Args:
+        name: Material name (e.g., 'MgB2').
+
+    Returns:
+        Dictionary of material properties, or None if not found.
+    """
+    try:
+        entries = load_database(DATABASE_PATH)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None
+    for entry in entries:
+        if entry.get("name") == name:
+            return entry
+    return None

@@ -940,3 +940,26 @@ def structure_to_graph(structure: Structure) -> Data:
         edge_index = [[0], [0]]
     edge_index = torch.tensor(edge_index, dtype=torch.long)
     return Data(x=x, edge_index=edge_index)
+
+def predict_tc_mcmillan_allen_dynes(theta_D: float, lambda_: float, mu_star: float = 0.13, omega_log: float = None) -> float:
+    """
+    Predict Tc using the McMillan-Allen-Dynes equation.
+
+    Args:
+        theta_D: Debye temperature (K)
+        lambda_: electron-phonon coupling constant
+        mu_star: Coulomb pseudopotential (default 0.13)
+        omega_log: logarithmic average phonon frequency (K). If None, uses theta_D/1.45.
+
+    Returns:
+        Tc in Kelvin.
+    """
+    if omega_log is None:
+        omega_log = theta_D / 1.45
+    numerator = 1.04 * (1 + lambda_)
+    denominator = lambda_ - mu_star * (1 + 0.62 * lambda_)
+    if denominator <= 0:
+        return 0.0
+    exponent = - numerator / denominator
+    Tc = (omega_log / 1.2) * math.exp(exponent)
+    return Tc
