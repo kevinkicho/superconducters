@@ -369,3 +369,34 @@ The computational discovery pipeline is tightly coupled with an experimental syn
 - A monthly review meeting evaluates the top 10 candidates from the queue, the retrained model performance, and any emerging literature. Decisions to adjust synthesis parameters, explore new chemical families, or halt unpromising lines are made collaboratively.
 
 This integrated pipeline ensures that computational predictions are continuously validated and refined by experimental reality, accelerating the discovery of room-temperature superconductors.
+
+
+## 15. Prioritized Screening Pipeline
+
+The discovery process is organized as a prioritized screening pipeline that combines computational prediction (via `scripts/predict_tc.py`) with experimental synthesis, guided by the decision gates defined in Section 13. The pipeline operates as follows:
+
+### 15.1 Candidate Generation and Scoring
+- The generative CVAE (Section 12) produces candidate compositions and structures.
+- Each candidate is scored by the GNN surrogate for predicted Tc at multiple pressures (0, 10, 50, 100 GPa).
+- A composite priority score is computed: `P = w1 * (Tc_pred / 300) + w2 * (1 / P_req) + w3 * (1 / synthesis_difficulty)`, where `w1=0.5, w2=0.3, w3=0.2` (weights adjustable).
+- Candidates are ranked by priority score and placed in a queue.
+
+### 15.2 Computational Screening (Gate 1–3)
+- **Gate 1 (Thermodynamic Stability):** DFT relaxation (Section 13.1) – candidates that fail are deprioritized.
+- **Gate 2 (Dynamic Stability):** Phonon stability check (Section 13.2) – only dynamically stable structures proceed.
+- **Gate 3 (Tc Threshold):** Predicted Tc from `scripts/predict_tc.py` (McMillan-Allen-Dynes equation) must exceed 250 K at ≤50 GPa (Section 13.3). Candidates with Tc > 300 K at any pressure are automatically promoted.
+
+### 15.3 Experimental Synthesis Queue
+- Candidates passing Gate 3 are added to a priority queue sorted by composite score.
+- The queue is processed by the robotic high-pressure synthesis system (Section 14.1).
+- Synthesis difficulty is estimated from required pressure, temperature, and precursor availability.
+
+### 15.4 Experimental Validation (Gate 4)
+- Synthesized samples undergo characterization (Section 14.2).
+- If confirmed (Meissner effect, zero resistivity, reproducibility), the candidate becomes a lead compound.
+- Failure modes are analyzed and fed back to the ML models (Section 14.3).
+
+### 15.5 Iterative Refinement
+- Every 50 experiments, the GNN surrogate and CVAE are retrained on the combined dataset.
+- The priority weights (w1, w2, w3) are adjusted based on historical success rates.
+- The pipeline ensures that the most promising candidates are synthesized first, accelerating the discovery of room-temperature superconductors.

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "fa48609b-3119-459f-9fc2-ce2576109531",
+  "writtenAt": 1783450391224,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Consolidate duplicate documents: move canonical versions of candidate_materials.md, characterization_techniques.md, literature_review.md, roadmap.md, synthesis_methods.md, theoretical_framework.md into docs/, remove root duplicates, and update README.md links to point to docs/ versions.\n\nAlso (council-synthesis): Reconcile inconsistent Tc and pressure values for predicted room-temperature superconductors (YH10, CaH12, MgH16) between proposed_chemistry_physics.md and docs/candidate_materials.md, using a single authoritative source.\n\nAlso (council-synthesis): Add detailed synthesis protocols for YH10, CaH12, MgH16 in proposed_chemistry_physics.md, or cross-reference docs/experimental_protocol_hydride.md with specific parameters.\n\nAlso (council-synthesis): Update theoretical_framework.md to include sections on electron-phonon coupling (McMillan-Allen-Dynes), strong correlations (DMFT), and unconventional pairing (spin fluctuations), referencing proposed_chemistry_physics.md.\n\nAlso (council-synthesis): Fix broken link in README.md (discovery_strategy.md) by moving root discovery_strategy.md into docs/ and updating the link, or updating the link to point to root.",
+      "expectedFiles": [
+        "README.md",
+        "candidate_materials.md",
+        "characterization_techniques.md",
+        "literature_review.md",
+        "roadmap.md",
+        "synthesis_methods.md",
+        "theoretical_framework.md",
+        "docs/candidate_materials.md",
+        "docs/characterization_techniques.md",
+        "docs/literature_review.md",
+        "docs/roadmap.md",
+        "docs/synthesis_methods.md",
+        "docs/theoretical_framework.md",
+        "proposed_chemistry_physics.md",
+        "docs/experimental_protocol_hydride.md",
+        "discovery_strategy.md",
+        "docs/discovery_strategy.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement predict_tc function in scripts/predict_tc.py using McMillan-Allen-Dynes equation, loading from data/superconductor_database.json.",
+      "expectedFiles": [
+        "scripts/predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Populate data/superconductor_database.json with real entries for known and predicted superconductors (LaH10, H3S, YH9, YH10, CaH12, MgH16, etc.) including composition, pressure, Tc, electron-phonon coupling λ, Debye temperature.",
+      "expectedFiles": [
+        "data/superconductor_database.json"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Write unit tests in tests/test_predict_tc.py that mock the database and verify expected Tc values for known materials (e.g., LaH10 at 170 GPa → ~250 K). Remove duplicate tests/tests_predict_tc.py.",
+      "expectedFiles": [
+        "tests/test_predict_tc.py",
+        "tests/tests_predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}
