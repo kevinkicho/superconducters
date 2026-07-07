@@ -3,7 +3,7 @@
 ## 1. Chemical Systems
 
 ### Ternary Hydrides
-- **Carbonaceous sulfur hydride (C-S-H)**: Achieved Tc ~267 K at 155 GPa (Nature, 2020). Photochemical synthesis under high pressure. [Source](https://www.nature.com/articles/s41586-020-2801-z)
+- **Carbonaceous sulfur hydride (C-S-H)**: Claimed Tc ~287 K at 267 GPa (Nature, 2020), but retracted in 2023 due to data inconsistencies. No independent replication exists. The highest confirmed hydride Tc is 250 K in LaH₁₀ (Drozdov et al., 2019). [Source](https://www.nature.com/articles/s41586-020-2801-z) [Retraction](https://www.nature.com/articles/s41586-023-06616-5)
 - **Nitrogen-doped lutetium hydride (Lu-N-H)**: Claimed Tc ~294 K at 1 GPa, but retracted due to data integrity concerns (Nature, 2023). Highlights need for rigorous verification. [Source](https://www.nature.com/articles/s41586-023-05742-0)
 - **Ternary hydride predictions**: Computational searches identify Li2MgH4 (predicted Tc ~200 K at 200 GPa) and other systems. Doping with light elements (C, N, O) enhances Tc by modifying electronic structure. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134512)
 
@@ -46,7 +46,7 @@
 
 ## 4. Open Questions and Limitations
 
-- **Reproducibility**: Retraction of Lu-N-H claim underscores need for independent verification and transparent data sharing.
+- **Reproducibility**: Retractions of the C-S-H (2023) and Lu-N-H (2023) claims underscore the need for independent verification and transparent data sharing. The C-S-H retraction followed concerns about background subtraction and magnetic susceptibility data.
 - **Mechanism**: No consensus on pairing mechanism in cuprates; hydride mechanism better understood but pressure requirement is a barrier.
 - **Materials Discovery**: Computational screening (e.g., ternary hydrides) needs experimental validation. High-throughput methods could accelerate.
 - **Room-Temperature Ambient Pressure**: No material yet achieves Tc >300 K at 1 atm. Focus on metastable hydrides or novel cuprate/nickelate phases under strain.
