@@ -345,8 +345,21 @@ The optimizer outputs a ranked list of the next experiments to perform, includin
 
 This automated planning reduces human bias and accelerates the discovery of optimal synthesis conditions for room-temperature superconductors.
 
+### Multi-Fidelity Bayesian Optimization
+
+The multi-fidelity Bayesian optimization (MFBO) module in `scripts/run_pipeline.py` treats ML predictions as low-fidelity and DFT calculations as high-fidelity. It uses a weighted acquisition function to select candidates for experimental synthesis, balancing exploitation of high-confidence predictions with exploration of uncertain regions. The MFBO module is called after the initial ML prediction and DFT validation steps, and its output feeds into the prioritized candidate list in `docs/candidate_materials.md`.
+
+#### Workflow
+
+1. **Low-fidelity data**: ML-predicted Tc and uncertainty from `predict_tc` and `compute_uncertainty`.
+2. **High-fidelity data**: DFT-calculated Tc and uncertainty from `dft_calculator.run_full_dft_calculation`.
+3. **Acquisition function**: Combines low and high fidelity with weights (e.g., 0.3 low, 0.7 high) plus an exploration bonus proportional to uncertainty.
+4. **Selection**: Top-N candidates with highest acquisition score are recommended for experimental synthesis.
+5. **Feedback loop**: Experimental results update the database, retrain ML models, and refine DFT calculations, improving future MFBO rounds.
+
 ### Cross-References
 
-- `scripts/bayesian_optimizer.py` implements the BO loop.
-- `scripts/run_pipeline.py` orchestrates the integration of BO with the existing feedback loop.
-- `docs/candidate_materials.md` receives the BO-ranked candidates.
+- `scripts/run_pipeline.py` implements the MFBO module as `multi_fidelity_bayesian_optimization`.
+- `scripts/dft_calculator.py` provides high-fidelity DFT data.
+- `docs/candidate_materials.md` receives the MFBO-ranked candidates.
+- `scripts/bayesian_optimizer.py` implements the single-fidelity BO loop (legacy).

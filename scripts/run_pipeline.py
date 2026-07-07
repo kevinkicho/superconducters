@@ -176,18 +176,18 @@ def main():
         json.dump(results, f, indent=2)
     print(f"\nResults saved to {output_path}")
 
-    # Step 5: DFT validation for top uncertain candidates
-    print("=== Step 5: DFT validation for top uncertain candidates ===")
-    TOP_N = 5
-    # Compute uncertainty for each result
+    # Step 5: Multi-fidelity Bayesian optimization for candidate selection
+    print("=== Step 5: Multi-fidelity Bayesian optimization ===")
+    # Compute uncertainty for all results
     for r in results:
         r['uncertainty'] = compute_uncertainty(r['debye_temp'], r['lambda_ep'])
-    # Sort by uncertainty descending
-    results.sort(key=lambda x: x['uncertainty'], reverse=True)
-    top_candidates = results[:TOP_N]
-    print(f"Selected top {TOP_N} candidates with highest uncertainty for DFT validation.")
+    # Run DFT validation for top uncertain candidates to obtain high-fidelity data
+    TOP_N = 5
+    results_sorted_by_uncertainty = sorted(results, key=lambda x: x['uncertainty'], reverse=True)
+    top_uncertain = results_sorted_by_uncertainty[:TOP_N]
+    print(f"Running DFT for top {TOP_N} uncertain candidates to obtain high-fidelity data.")
     dft_results = []
-    for cand in top_candidates:
+    for cand in top_uncertain:
         print(f"  Running DFT for {cand['name']}...")
         try:
             dft_out = dft_calculator.run_full_dft_calculation(cand['formula'])
@@ -202,12 +202,62 @@ def main():
             print(f"    DFT Tc = {dft_out.get('dft_tc', 'N/A')} K")
         except Exception as e:
             print(f"    DFT calculation failed: {e}")
-    # Update candidate_materials.md with DFT results
-    update_candidate_md_with_dft(dft_results)
-    print("=== DFT validation complete ===")
+    # Update results with DFT data
+    for dft in dft_results:
+        for r in results:
+            if r['name'] == dft['name']:
+                r['dft_tc'] = dft['dft_tc']
+                r['dft_uncertainty'] = dft['dft_uncertainty']
+                break
+    # Gather low-fidelity and high-fidelity data
+    low_fidelity = [{'name': r['name'], 'tc': r['predicted_tc_K'], 'uncertainty': r['uncertainty']} for r in results]
+    high_fidelity = [{'name': r['name'], 'tc': r['dft_tc'], 'uncertainty': r['dft_uncertainty']} for r in results if r.get('dft_tc') is not None]
+    selected = multi_fidelity_bayesian_optimization(low_fidelity, high_fidelity, top_n=5)
+    print(f"Selected candidates for experimental synthesis: {[s['name'] for s in selected]}")
+    # Map selected to format expected by update_candidate_md_with_dft
+    selected_for_md = []
+    for s in selected:
+        r = next((r for r in results if r['name'] == s['name']), None)
+        if r:
+            selected_for_md.append({
+                'name': s['name'],
+                'formula': r.get('formula', ''),
+                'ml_tc': s['low_tc'],
+                'dft_tc': s['high_tc'],
+                'dft_uncertainty': s['uncertainty'],
+                'synthesis_feasibility': 'unknown'
+            })
+    update_candidate_md_with_dft(selected_for_md)
+    print("=== Multi-fidelity optimization complete ===")
 
-if __name__ == '__main__':
-    main()
+def multi_fidelity_bayesian_optimization(low_fidelity, high_fidelity, top_n=5):
+    """
+    Multi-fidelity Bayesian optimization that combines low-fidelity (ML) and high-fidelity (DFT) predictions.
+    Uses a simple weighted acquisition function: score = w_low * tc_low + w_high * tc_high + exploration_bonus.
+    In a full implementation, this would use Gaussian processes with multi-fidelity kernels.
+    """
+    import math
+    # Build candidate dictionary
+    candidates = {}
+    for lf in low_fidelity:
+        candidates[lf['name']] = {'name': lf['name'], 'low_tc': lf['tc'], 'high_tc': None, 'uncertainty': lf.get('uncertainty', 0)}
+    for hf in high_fidelity:
+        if hf['name'] in candidates:
+            candidates[hf['name']]['high_tc'] = hf['tc']
+        else:
+            candidates[hf['name']] = {'name': hf['name'], 'low_tc': None, 'high_tc': hf['tc'], 'uncertainty': hf.get('uncertainty', 0)}
+    # Compute acquisition score
+    for name, cand in candidates.items():
+        low = cand['low_tc'] if cand['low_tc'] is not None else 0
+        high = cand['high_tc'] if cand['high_tc'] is not None else 0
+        # Weight: high-fidelity gets 0.7, low-fidelity gets 0.3
+        score = 0.3 * low + 0.7 * high
+        # Add exploration bonus based on uncertainty
+        score += 0.1 * cand['uncertainty']
+        cand['score'] = score
+    # Sort by score descending
+    sorted_cands = sorted(candidates.values(), key=lambda x: x['score'], reverse=True)
+    return sorted_cands[:top_n]
 
 if __name__ == '__main__':
     main()
