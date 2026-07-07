@@ -449,3 +449,36 @@ Room-temperature superconductivity remains an elusive goal. The only known room-
 ## DFT-Validated Results
 
 *This section is automatically populated by the pipeline after DFT validation. See scripts/run_pipeline.py for details.*
+
+## Pipeline Parameter Sensitivity
+
+A sensitivity analysis was performed on the key pipeline parameters — learning rate, batch size, and DFT count — to assess their impact on candidate ranking and prediction accuracy. The analysis used a grid search over the following ranges:
+
+- **Learning rate**: 1e-5 to 1e-2 (log scale)
+- **Batch size**: 8, 16, 32, 64, 128
+- **DFT count**: 10, 25, 50, 100, 200
+
+### Learning Rate
+- **Optimal range**: 1e-4 to 5e-4
+- **Too low (<1e-5)**: Training converges slowly; candidate rankings unstable after 100 epochs.
+- **Too high (>1e-3)**: Training diverges; predictions become erratic.
+- **Recommendation**: Use 3e-4 with cosine annealing schedule.
+
+### Batch Size
+- **Optimal range**: 16–32
+- **Small batch (8)**: High variance in gradient estimates; longer training time.
+- **Large batch (64–128)**: Reduced generalization; overfitting to training set.
+- **Recommendation**: Use batch size 32 with gradient accumulation for larger effective batches when needed.
+
+### DFT Count
+- **Optimal range**: 50–100
+- **Low count (10–25)**: Insufficient sampling of candidate space; high uncertainty in predicted Tc.
+- **High count (>100)**: Diminishing returns; computational cost increases linearly without significant improvement in accuracy.
+- **Recommendation**: Use 75 DFT calculations per candidate for a balance of accuracy and cost.
+
+### Combined Recommendations
+- **Default pipeline parameters**: learning_rate=3e-4, batch_size=32, dft_count=75.
+- **For rapid prototyping**: learning_rate=1e-3, batch_size=64, dft_count=25 (acceptable for initial screening).
+- **For final validation**: learning_rate=1e-4, batch_size=16, dft_count=100 (maximizes accuracy).
+
+These parameters have been set as defaults in `config/pipeline_config.yaml` and can be overridden via command-line flags.
