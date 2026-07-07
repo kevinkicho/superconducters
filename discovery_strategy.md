@@ -205,3 +205,45 @@ The script accepts a CSV of candidate formulas or a list of prototype structures
 
 ---
 *This document was generated based on online research conducted in 2025. All sources are cited with URLs. The strategy is intended to be a living document, updated as new results emerge.*
+
+
+## 8. Active Learning Pipeline
+
+### 8.1 Overview
+The active learning pipeline iteratively selects the most informative candidates for experimental synthesis, reducing the number of experiments needed to discover high-Tc compounds. It is implemented in `scripts/active_learn.py` and integrates with the computational screening pipeline (Section 7).
+
+### 8.2 Uncertainty-Based Selection
+- **Acquisition function:** The pipeline uses an ensemble of surrogate models (e.g., random forest, neural network, Gaussian process) to predict Tc and estimate prediction uncertainty. Candidates with the highest uncertainty (e.g., highest variance across ensemble members) are prioritized for experimental testing.
+- **Exploration vs. exploitation:** A tunable parameter (e.g., β in upper confidence bound) balances exploring uncertain regions and exploiting known high-Tc candidates. The default setting favors exploration in early cycles.
+- **Diversity constraint:** To avoid selecting chemically similar candidates, the pipeline applies a Tanimoto similarity filter on composition fingerprints, ensuring a diverse set of candidates is chosen each cycle.
+
+### 8.3 Retraining Cycle
+- **Data collection:** Experimental results (synthesis success, measured Tc, pressure conditions) are recorded in a database (`data/experiments.db`).
+- **Model update:** After each batch of experiments (typically 10–20 candidates), the surrogate models are retrained on the augmented dataset. The retraining uses the same featurization as the initial screening (Section 7.3).
+- **Convergence:** The cycle repeats until the acquisition function plateaus (no new high-uncertainty regions) or a target Tc is achieved. The pipeline logs all decisions and outcomes for reproducibility.
+
+## 9. Model Evaluation
+
+### 9.1 Overview
+To ensure the reliability of Tc predictions, the surrogate models used in the screening and active learning pipelines are rigorously evaluated. The evaluation module is in `scripts/evaluate_model.py`.
+
+### 9.2 Cross-Validation
+- **k-fold cross-validation:** The training set (known Tc values from literature and prior experiments) is split into k=5 folds. The model is trained on k-1 folds and evaluated on the held-out fold. Metrics are averaged across folds.
+- **Stratified splitting:** Folds are stratified by pressure regime (ambient, <50 GPa, 50–100 GPa, >100 GPa) to ensure representative coverage.
+- **Leave-one-family-out:** To test generalization to new chemical families, the pipeline supports leave-one-family-out cross-validation, where all compounds from a given prototype structure (e.g., all LaH10 variants) are held out.
+
+### 9.3 Feature Importance
+- **Permutation importance:** For each feature (e.g., electron density at Fermi level, Debye temperature, average electronegativity), the model’s performance drop is measured when the feature values are randomly shuffled. Features with large drops are deemed important.
+- **SHAP values:** SHAP (SHapley Additive exPlanations) values are computed for individual predictions, providing interpretable contributions of each feature to the predicted Tc. The pipeline outputs a summary plot (`figures/shap_summary.png`).
+
+### 9.4 Regression Metrics
+- **R² (coefficient of determination):** Measures the proportion of variance in Tc explained by the model. A value >0.8 is considered good for this domain.
+- **MAE (mean absolute error):** Average absolute deviation between predicted and experimental Tc. Target MAE < 30 K for hydride systems.
+- **RMSE (root mean square error):** Also reported for comparison. The pipeline logs all metrics to a JSON file (`results/evaluation_metrics.json`).
+
+### 9.5 Usage
+To run model evaluation:
+```bash
+python scripts/evaluate_model.py --data data/training_set.csv --model models/surrogate.pkl --output results/evaluation.json
+```
+The script outputs cross-validation scores, feature importance rankings, and a calibration plot.
