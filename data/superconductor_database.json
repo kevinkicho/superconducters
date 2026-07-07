@@ -947,6 +947,61 @@
         "doi": "10.1038/s41586-020-2801-z"
       }
     ]
+  },
+  {
+    "name": "FeSe",
+    "composition": "FeSe",
+    "Tc": 8,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Hsu et al., PNAS 105, 14262 (2008)",
+    "doi": "10.1073/pnas.0807325105",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 700 °C"
+  },
+  {
+    "name": "Bi2Sr2CaCu2O8",
+    "composition": "Bi2Sr2CaCu2O8",
+    "Tc": 85,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Maeda et al., Jpn. J. Appl. Phys. 27, L209 (1988)",
+    "doi": "10.1143/JJAP.27.L209",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 850 °C"
+  },
+  {
+    "name": "Bi2Sr2Ca2Cu3O10",
+    "composition": "Bi2Sr2Ca2Cu3O10",
+    "Tc": 110,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Maeda et al., Jpn. J. Appl. Phys. 27, L209 (1988)",
+    "doi": "10.1143/JJAP.27.L209",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 850 °C"
+  },
+  {
+    "name": "Tl2Ba2Ca2Cu3O10",
+    "composition": "Tl2Ba2Ca2Cu3O10",
+    "Tc": 125,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Sheng & Hermann, Nature 332, 55 (1988)",
+    "doi": "10.1038/332055a0",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C"
+  },
+  {
+    "name": "(La,Ba)2CuO4",
+    "composition": "La1.85Ba0.15CuO4",
+    "Tc": 30,
+    "pressure": 0,
+    "structure": "tetragonal, I4/mmm",
+    "reference": "Bednorz & Müller, Z. Phys. B 64, 189 (1986)",
+    "doi": "10.1007/BF01303701",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
   }
 ]
 
