@@ -2758,6 +2758,26 @@
     "synthesis_parameters": "ambient pressure, temperature 900 °C",
     "lambda": 1.0,
     "omega_log": 400
+  },
+  {
+    "name": "FeSe",
+    "Tc": 8,
+    "pressure": 0,
+    "structure": "tetragonal, P4/nmm",
+    "reference": "Hsu et al., Proc. Natl. Acad. Sci. USA 105, 14262 (2008)",
+    "doi": "10.1073/pnas.0807325105",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 700 °C"
+  },
+  {
+    "name": "NbTi",
+    "Tc": 9.5,
+    "pressure": 0,
+    "structure": "cubic, Im-3m (bcc)",
+    "reference": "Berlincourt & Hake, Phys. Rev. 131, 140 (1963)",
+    "doi": "10.1103/PhysRev.131.140",
+    "synthesis_method": "arc melting",
+    "synthesis_parameters": "ambient pressure, temperature 2000 °C"
   }
 ]
 
