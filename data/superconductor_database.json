@@ -815,6 +815,24 @@
     "doi": "10.1021/acs.jpclett.0c03610",
     "synthesis_method": "high-pressure synthesis",
     "synthesis_parameters": "pressure 250 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Cs3C60",
+    "composition": "Cs3C60",
+    "Tc": 38,
+    "pressure": 0,
+    "structure": "fcc, Fm-3m",
+    "reference": "Ganin et al., Nature 408, 154 (2000) doi:10.1038/35012038",
+    "doi": "10.1038/35012038"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2",
+    "composition": "Nd0.8Sr0.2NiO2",
+    "Tc": 15,
+    "pressure": 0,
+    "structure": "infinite-layer, tetragonal, P4/mmm",
+    "reference": "Li et al., Nature 572, 624 (2019) doi:10.1038/s41586-019-1496-5",
+    "doi": "10.1038/s41586-019-1496-5"
   }
 ]
 
