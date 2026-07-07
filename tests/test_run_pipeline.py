@@ -424,3 +424,23 @@ def test_pipeline_validated_against_2025_paper():
         # After loop, verify retraining happened
         # train_model should have been called at least 7 times (initial + 6 retraining)
         assert mock_train.call_count >= 7, f"Expected at least 7 train_model calls, got {mock_train.call_count}"
+
+    @patch('scripts.run_pipeline.notify')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_council_briefing(self, mock_open, mock_notify):
+        """Test that council briefing writes correct section to roadmap.md and calls notifier."""
+        candidates = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"},
+        ]
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        rp.council_briefing(candidates)
+        mock_open.assert_called_with('roadmap.md', 'w')
+        written_content = ''.join(c[0][0] for c in mock_file.write.call_args_list)
+        assert 'Council Briefing' in written_content
+        assert 'H3S' in written_content
+        assert 'LaH10' in written_content
+        assert '203' in written_content
+        assert '250' in written_content
+        mock_notify.assert_called_once()
