@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "runId": "fa48609b-3119-459f-9fc2-ce2576109531",
-  "updatedAt": 1783450538696,
-  "lastCycle": 1,
+  "updatedAt": 1783450568036,
+  "lastCycle": 2,
   "observations": [
     {
       "kind": "fail",
@@ -56,6 +56,15 @@
         "docs/discovery_strategy.md"
       ],
       "at": 1783450501848
+    },
+    {
+      "kind": "commit",
+      "text": "discovery_strategy.md is updated with a prioritized screening pipeline that combines computational prediction (e.g., from scripts/predict_tc.py) and experimental synthesis, including decision gates for down-selection.",
+      "cycle": 2,
+      "files": [
+        "discovery_strategy.md"
+      ],
+      "at": 1783450548037
     }
   ]
 }

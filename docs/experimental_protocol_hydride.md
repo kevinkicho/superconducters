@@ -398,3 +398,87 @@ Synthesize the high-pressure superconducting phase of LaH10 with a critical temp
 - Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
 - Errea, I. et al. (2020). Quantum crystal structure in the 250 K superconducting lanthanum hydride. *Nature*, 578, 66–69. https://doi.org/10.1038/s41586-020-1955-z
 - Geballe, Z. M. et al. (2018). Synthesis and stability of lanthanum superhydrides. *Angewandte Chemie International Edition*, 57, 688–692. https://doi.org/10.1002/anie.201709970
+
+
+## LaH10 Synthesis Protocol
+
+### Objective
+Synthesize lanthanum superhydride (LaH10) under high pressure to achieve near-room-temperature superconductivity, following the landmark experiments of Drozdov et al. (2019) and Somayazulu et al. (2019).
+
+### Materials
+- Lanthanum foil (La, 99.9% purity, 25–50 µm thick)
+- Ammonia borane (NH3BH3, 97%) as hydrogen source
+- Diamond anvil cell (DAC) with 50–100 µm culet diamonds
+- Rhenium gasket (pre-indented to 15–25 µm thickness)
+- Ruby spheres (5–10 µm) for pressure calibration
+- Epoxy glue (Stycast 2850FT)
+- Methanol-ethanol mixture (4:1) for loading
+- Gold wires (25 µm diameter) for electrical contacts
+- Silver paste for contact attachment
+
+### Equipment
+- Diamond anvil cell (DAC) with symmetric or panoramic design
+- Laser heating system (Nd:YAG, 1064 nm, 100 W) with beam shaping optics
+- Raman spectrometer (532 nm excitation, 1800 lines/mm grating)
+- Synchrotron X-ray diffraction (XRD) beamline (λ ≈ 0.4 Å)
+- Cryostat (4–300 K) for electrical transport measurements
+- Four-probe electrical setup (Keithley 2400 sourcemeter, nanovoltmeter)
+- Optical microscope with long-working-distance objectives
+- Pressure calibration system (ruby fluorescence, diamond Raman edge)
+
+### Safety Considerations
+Refer to the general safety precautions listed in the main protocol above. Additional considerations for LaH10 synthesis:
+- **High pressure (170 GPa)**: DAC failure risk is elevated; use reinforced blast shield and remote handling. Inspect diamonds and gasket meticulously.
+- **Laser heating (2000 K)**: Class 4 laser; use interlocks, beam enclosure, and appropriate goggles. Monitor sample temperature via pyrometry.
+- **Hydrogen gas release**: Ammonia borane decomposes to release hydrogen; ensure adequate ventilation and avoid ignition sources.
+- **Sample handling**: Lanthanum is pyrophoric in fine powder form; handle foil in argon glovebox. Dispose of waste in sealed containers.
+
+### Step-by-Step Protocol
+
+#### 1. Precursor Preparation
+1.1. In an argon-filled glovebox (O2, H2O < 0.1 ppm), cut a small piece of lanthanum foil (~30 µm × 30 µm, ~15 µm thick).
+1.2. Place the La foil in the gasket hole of a pre-indented rhenium gasket (hole diameter ~100 µm).
+1.3. Add a small amount of ammonia borane (NH3BH3) as a hydrogen source. The NH3BH3 should be in excess (approximately 2:1 molar ratio relative to La) to ensure sufficient hydrogen supply.
+1.4. Place a ruby sphere (5–10 µm) near the sample for pressure calibration.
+1.5. Close the DAC and apply initial pressure (~5 GPa) to seal the gasket.
+
+#### 2. High-Pressure Loading and Compression
+2.1. Gradually increase pressure to ~170 GPa over several hours. Monitor pressure using ruby fluorescence (R1 line shift) or diamond Raman edge.
+2.2. At each pressure step (e.g., every 10 GPa), collect Raman spectra to monitor the formation of hydrogen-rich phases. The appearance of a broad H–H stretching mode near 1000–1500 cm⁻¹ indicates hydrogen incorporation.
+2.3. At the target pressure (170 GPa), allow the sample to equilibrate for 30 minutes.
+
+#### 3. Laser Heating
+3.1. Focus the Nd:YAG laser (1064 nm) onto the sample through the diamond anvils. Use a flat-top beam profile to ensure uniform heating.
+3.2. Heat the sample to ~2000 K (measured by pyrometry) for 10–30 seconds. Repeat heating cycles (3–5 times) to promote reaction between La and hydrogen.
+3.3. After each heating cycle, cool the sample rapidly (quench) by turning off the laser. Monitor the pressure; it may increase slightly due to thermal expansion.
+3.4. Collect Raman and XRD data after each heating cycle to confirm the formation of LaH10 (cubic Fm-3m structure, a ≈ 5.0–5.1 Å at 170 GPa).
+
+#### 4. In-Situ Characterization
+4.1. **X-ray Diffraction**: Perform synchrotron XRD (λ ≈ 0.4 Å) at the target pressure. Index the diffraction pattern to the cubic Fm-3m structure. Expected lattice parameter: a = 5.05(5) Å at 170 GPa. The pattern should show reflections from (111), (200), (220), (311), etc.
+4.2. **Raman Spectroscopy**: Acquire Raman spectra with 532 nm excitation. Look for a strong H–H stretching mode near 1100–1300 cm⁻¹ and low-frequency La–H modes below 500 cm⁻¹. The absence of NH3BH3 peaks indicates complete decomposition.
+4.3. **Pressure Calibration**: Re-measure pressure after each characterization step using ruby fluorescence or diamond Raman edge.
+
+#### 5. Electrical Transport Measurements
+5.1. After confirming the LaH10 phase, prepare electrical contacts: attach four gold wires (25 µm diameter) to the sample surface using silver paste in a four-probe configuration. Ensure good electrical contact.
+5.2. Measure electrical resistance using AC lock-in technique (f = 13 Hz, current 10–100 µA) as a function of temperature from 300 K down to 4 K.
+5.3. Identify the superconducting transition temperature (Tc) as the midpoint of the resistance drop. For LaH10 at 170 GPa, Tc is expected at ~250–260 K (Drozdov et al., 2019; Somayazulu et al., 2019). The transition width should be < 5 K.
+5.4. Apply a small magnetic field (up to 1 T) to estimate the upper critical field (Hc2) and confirm superconductivity via the Meissner effect if possible. Measure magnetoresistance at fixed temperatures below Tc.
+
+#### 6. Magnetic Susceptibility Measurements (Optional)
+6.1. If available, use a SQUID magnetometer or AC susceptometer to measure the magnetic susceptibility of the sample under pressure. This requires a specialized DAC with non-magnetic materials (e.g., BeCu or NiCrAl alloy).
+6.2. Cool the sample in zero field to 4 K, then apply a small AC field (10 Oe, 1 kHz) and measure the in-phase (χ') and out-of-phase (χ'') components as a function of temperature.
+6.3. A sharp drop in χ' at Tc indicates the Meissner effect, confirming bulk superconductivity. The onset of χ'' indicates dissipation.
+6.4. For LaH10, expect a diamagnetic signal below Tc with a volume fraction > 50%.
+
+### Expected Results
+- **Raman**: Broad H–H stretch peak at 1100–1300 cm⁻¹; La–H modes at 200–400 cm⁻¹.
+- **XRD**: Cubic Fm-3m structure with a = 5.05(5) Å at 170 GPa. Reflections: (111), (200), (220), (311), (222), (400).
+- **Tc**: 250–260 K at 170 GPa, with sharp resistive transition (width < 5 K).
+- **Hc2(0)**: Estimated ~100–150 T from magnetoresistance measurements.
+- **Magnetic susceptibility**: Diamagnetic signal below Tc with volume fraction > 50%.
+
+### References
+- Drozdov, A. P. et al. (2019). Superconductivity at 250 K in lanthanum hydride under high pressure. *Nature*, 569, 528–531. https://doi.org/10.1038/s41586-019-1201-8
+- Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
+- Errea, I. et al. (2020). Quantum crystal structure in the 250 K superconducting lanthanum hydride. *Nature*, 578, 66–69. https://doi.org/10.1038/s41586-020-1955-z
+- Geballe, Z. M. et al. (2018). Synthesis and stability of lanthanum superhydrides. *Angewandte Chemie International Edition*, 57, 688–692. https://doi.org/10.1002/anie.201709970
