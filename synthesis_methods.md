@@ -28,6 +28,41 @@ High-pressure synthesis involves applying elevated pressure (typically >1 GPa) t
 - Ensure proper ventilation when handling volatile precursors.
 - Inspect capsules for leaks before pressurization.
 
+### Hydride-Specific Protocols (LaH₁₀, YH₉)
+
+High-pressure synthesis of superhydrides (e.g., LaH₁₀, YH₉) requires extreme conditions (≥150 GPa) and laser heating. The following procedure is adapted from recent diamond anvil cell (DAC) experiments.
+
+#### Procedure for LaH₁₀
+1. **Precursor preparation**: Cut a thin foil (≈5 µm) of lanthanum (99.9% purity). Clean surface with dilute HCl and rinse with acetone.
+2. **DAC loading**: Place the La foil in the sample chamber of a diamond anvil cell (culet size 30–50 µm). Add a ruby chip for pressure calibration.
+3. **Gas loading**: Load hydrogen gas (99.9999% purity) into the DAC using a gas-loading system at ≈0.2 GPa. Seal the cell.
+4. **Pressurization**: Increase pressure to 150–170 GPa at room temperature. Monitor pressure via ruby fluorescence.
+5. **Laser heating**: Use a continuous-wave or pulsed laser (e.g., Nd:YAG, 1064 nm) to heat the sample to 1500–2000 K for 1–5 seconds. The laser spot size should cover the entire sample.
+6. **Quenching**: Turn off laser; sample cools rapidly (≈10⁶ K/s) while maintaining pressure.
+7. **Characterization**: Perform synchrotron X‑ray diffraction (XRD) to identify the LaH₁₀ phase (fcc structure). Measure superconducting transition temperature (Tc) via electrical transport or magnetic susceptibility (SQUID).
+
+#### Procedure for YH₉
+- Similar to LaH₁₀, but use yttrium foil (99.9% purity) and target pressure 160–200 GPa. Laser heating at 1500–2000 K. YH₉ forms in a hexagonal structure (P6₃/mmc). Tc reported up to 243 K at 201 GPa.
+
+#### Equipment Requirements
+- Diamond anvil cell (Boehler‑Almax type or symmetric DAC)
+- Laser heating system (Nd:YAG or CO₂ laser with beam shaping optics)
+- Gas loading apparatus (e.g., COMPRES gas loader)
+- Ruby fluorescence system for pressure measurement
+- Synchrotron X‑ray source for in‑situ XRD
+- Cryostat and electrical transport measurement setup
+
+#### Safety Considerations
+- High‑pressure gas loading: hydrogen is flammable and explosive. Use gas‑loading systems with proper ventilation and leak detection.
+- Laser safety: Class 4 laser requires interlocks, beam enclosures, and laser‑safety goggles.
+- Diamond anvils are brittle; handle with care to avoid shattering.
+- High‑pressure experiments require extensive training and institutional approval.
+
+#### References
+- LaH₁₀: Nature 569, 528–531 (2019). DOI: 10.1038/s41586-019-1201-8
+- YH₉: Phys. Rev. Lett. 122, 027001 (2019). DOI: 10.1103/PhysRevLett.122.027001
+- Review: Rev. Mod. Phys. 94, 035002 (2022).
+
 ## 2. Chemical Doping
 
 Chemical doping introduces foreign atoms into a host lattice to modify electronic, magnetic, or optical properties.
@@ -367,3 +402,35 @@ Chemical vapor deposition (CVD) is a versatile technique for growing thin films 
 - For YBCO CVD: J. Phys. D: Appl. Phys. 45, 095301 (2012).
 - For FeSe CVD: Supercond. Sci. Technol. 30, 035001 (2017).
 - For hydride thin films: Nature 586, 373 (2020).
+
+
+## 4. Scalable Manufacturing of Ternary Hydrides
+
+Ternary hydrides (e.g., La–Y–H, C–S–H) are promising for room‑temperature superconductivity but require extreme pressures. Scalable manufacturing focuses on large‑volume presses and alternative synthesis routes.
+
+### Reactor Design
+- **Large‑volume multi‑anvil press**: Capable of 10–30 GPa with sample volumes up to 1 cm³. Use tungsten carbide anvils and pyrophyllite gaskets. Suitable for producing gram‑scale samples of ternary hydrides.
+- **Belt‑type press**: For pressures up to 10 GPa and volumes >10 cm³. Used in industrial diamond synthesis; adaptable for hydride synthesis with hydrogen gas loading.
+- **Gas‑loaded autoclave**: For moderate pressures (1–5 GPa) with hydrogen gas. Requires thick‑walled vessels (e.g., Inconel 718) and internal heaters. Suitable for pre‑synthesis of precursor alloys.
+
+### Process Considerations
+1. **Precursor alloying**: Melt La and Y in stoichiometric ratios (e.g., La₀.₅Y₀.₅) under argon atmosphere. Quench to form homogeneous alloy.
+2. **Hydrogenation**: Place alloy in a high‑pressure cell with hydrogen source (e.g., LiBH₄ or NH₃BH₃ as internal hydrogen donor) or direct H₂ gas loading. Pressurize to 10–30 GPa and heat to 800–1200 K for 1–2 hours.
+3. **Recovery**: Decompress slowly (0.1 GPa/min) to avoid phase decomposition. Recover sample under inert atmosphere.
+4. **Scale‑up challenges**: Maintaining uniform temperature and pressure across large volumes; avoiding hydrogen embrittlement of reactor materials; managing thermal gradients.
+
+### Reactor Materials
+- **Anvils**: Tungsten carbide (WC) or sintered diamond for high‑pressure durability.
+- **Gaskets**: Pyrophyllite or boron‑epoxy composites.
+- **Heaters**: Graphite or rhenium foil heaters embedded in the cell.
+- **Thermocouples**: Type C (W‑Re) for high‑temperature measurement.
+
+### Safety Considerations
+- Hydrogen embrittlement: Use hydrogen‑resistant alloys (e.g., Inconel, Hastelloy) for pressure vessels.
+- High‑pressure gas: Install burst discs, pressure relief valves, and remote operation.
+- Thermal runaway: Monitor temperature with multiple thermocouples; implement automatic shutoff.
+
+### References
+- Large‑volume press synthesis: High Press. Res. 40, 1–20 (2020).
+- Ternary hydride design: Nature 600, 73–78 (2021).
+- Industrial scale‑up: Supercond. Sci. Technol. 35, 053001 (2022).
