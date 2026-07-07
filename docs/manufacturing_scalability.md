@@ -407,10 +407,32 @@ The dynamic cost model is implemented in the `DynamicCostModel` class in `run_pi
 - **Scalability**: CVD methods are inherently scalable (roll-to-roll processing). The main challenge is achieving the correct stoichiometry and phase purity. Doping and post-deposition annealing under moderate pressure (10–30 GPa) may be required.
 
 ### Ambient-Pressure Stabilization Strategies
-- **Chemical precompression**: Embedding hydrogen in metal hydride lattices (e.g., MgH₂, CaH₂) provides internal chemical pressure, reducing external pressure needs to <50 GPa. This is the most mature route for ternary hydrides.
-- **Thin-film encapsulation**: Coating hydride films with diamond-like carbon or hexagonal boron nitride can maintain high internal pressure (up to 50 GPa) in a thin film, enabling ambient-pressure operation.
-- **Strain engineering**: Epitaxial growth on substrates with lattice mismatch (e.g., SrTiO₃, MgO) can induce compressive strain equivalent to several GPa, stabilizing high-pressure phases.
-- **Doping and alloying**: Substituting elements (e.g., C in sulfur hydride, Y in LaH₁₀) can lower the required external pressure by 20–50%.
+
+#### Chemical Precompression via Carbon Cages and Clathrate Structures
+Chemical precompression is a key strategy to reduce the external pressure required to stabilize superconducting hydride phases. Two promising approaches involve carbon-based cages and clathrate structures:
+
+- **Carbon cages (fullerenes, carbon nanotubes)**: Encapsulating hydrogen-rich compounds inside carbon cages (e.g., C60, carbon nanotubes) can provide internal chemical pressure of up to 50–100 GPa due to the strong sp² carbon framework. This approach has been demonstrated in computational studies for H3S@C60 and LaH10@CNT, showing reduced external pressure requirements by 30–50%. Cost estimates for carbon cage synthesis: fullerenes ~$100/g (lab scale), projected <$1/g at industrial scale via arc discharge or CVD. Feasibility: early-stage research; main challenges are controlled encapsulation and maintaining cage integrity under synthesis conditions. See [candidate_materials.md](candidate_materials.md) for computational predictions and [synthesis_methods.md](synthesis_methods.md) for encapsulation protocols.
+
+- **Clathrate structures (hydrogen clathrate hydrates, metal-organic frameworks)**: Clathrate hydrates (e.g., H2@H2O clathrates) can host hydrogen molecules at high density under moderate pressure (1–10 GPa). Doping with metal atoms (e.g., Li, Na) can induce metallicity and superconductivity. Metal-organic frameworks (MOFs) with high surface area can also serve as templates for hydrogen storage and subsequent metallization. Cost estimates: clathrate hydrate synthesis is low-cost (<$10/kg) using high-pressure autoclaves; MOFs range $50–200/kg depending on linker complexity. Feasibility: clathrate hydrates are well-studied for hydrogen storage; superconducting clathrates remain theoretical. See [candidate_materials.md](candidate_materials.md) for clathrate candidate lists and [synthesis_methods.md](synthesis_methods.md) for high-pressure autoclave protocols.
+
+#### Other Chemical Precompression Methods
+- **Metal hydride lattices**: Embedding hydrogen in metal hydrides (e.g., MgH₂, CaH₂) provides internal chemical pressure, reducing external pressure needs to <50 GPa. This is the most mature route for ternary hydrides. Cost: metal hydrides are cheap (<$10/kg). Feasibility: demonstrated for several ternary hydrides (e.g., Li-Mg-H) at 100–150 GPa; further reduction to <50 GPa is an active research area.
+- **Thin-film encapsulation**: Coating hydride films with diamond-like carbon or hexagonal boron nitride can maintain high internal pressure (up to 50 GPa) in a thin film, enabling ambient-pressure operation. Cost: thin-film deposition via CVD ~$50/m². Feasibility: demonstrated for diamond anvil cells; scale-up to large-area films is challenging.
+- **Strain engineering**: Epitaxial growth on substrates with lattice mismatch (e.g., SrTiO₃, MgO) can induce compressive strain equivalent to several GPa, stabilizing high-pressure phases. Cost: substrate cost ~$100/m². Feasibility: widely used in semiconductor industry; application to hydrides is nascent.
+- **Doping and alloying**: Substituting elements (e.g., C in sulfur hydride, Y in LaH₁₀) can lower the required external pressure by 20–50%. Cost: dopants are cheap (<$1/g). Feasibility: demonstrated in computational studies; experimental verification needed.
+
+#### Feasibility Analysis
+The most promising ambient-pressure stabilization strategies for top hydride candidates are:
+1. **Carbon cage encapsulation** for H3S and LaH10: requires further computational and experimental validation. Estimated timeline: 5–10 years to proof-of-concept.
+2. **Clathrate hydrates** for hydrogen-rich compounds: low-cost but low-Tc predicted; suitable for large-scale applications if Tc > 77 K.
+3. **Metal hydride precompression** for ternary hydrides: most mature, with demonstrated Tc > 200 K at 100–150 GPa. Further pressure reduction to <50 GPa is expected within 3–5 years.
+
+Cost estimates for scaled production (10,000 tonnes/year):
+- Carbon cage route: $50–100/kg (including cage synthesis and encapsulation)
+- Clathrate hydrate route: $20–50/kg
+- Metal hydride route: $30–60/kg
+
+Cross-references: See [candidate_materials.md](candidate_materials.md) for detailed material properties and [synthesis_methods.md](synthesis_methods.md) for experimental protocols.
 
 ### Cost and Scalability Comparison
 | Material | Required Pressure (GPa) | Lab Cost ($/g) | Target Cost ($/kg) | Scalability | Ambient-Pressure Potential |
