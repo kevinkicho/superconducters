@@ -839,6 +839,114 @@
     "structure": "infinite-layer, tetragonal, P4/mmm",
     "reference": "Li et al., Nature 572, 624 (2019) doi:10.1038/s41586-019-1496-5",
     "doi": "10.1038/s41586-019-1496-5"
+  },
+  {
+    "name": "YH6",
+    "predicted_Tc": 227,
+    "synthesis_conditions": {
+      "pressure": 200,
+      "temperature": 2000,
+      "method": "high-pressure synthesis"
+    },
+    "synthesis_feasibility_score": 0.7,
+    "references": [
+      {
+        "author": "Peng et al.",
+        "journal": "Phys. Rev. Lett.",
+        "volume": 119,
+        "pages": "107001",
+        "year": 2017,
+        "doi": "10.1103/PhysRevLett.119.107001"
+      },
+      {
+        "author": "Liu et al.",
+        "journal": "Phys. Rev. B",
+        "volume": 96,
+        "pages": "184501",
+        "year": 2017,
+        "doi": "10.1103/PhysRevB.96.184501"
+      }
+    ]
+  },
+  {
+    "name": "LaH10",
+    "predicted_Tc": 250,
+    "synthesis_conditions": {
+      "pressure": 170,
+      "temperature": 2000,
+      "method": "high-pressure synthesis"
+    },
+    "synthesis_feasibility_score": 0.8,
+    "references": [
+      {
+        "author": "Drozdov et al.",
+        "journal": "Nature",
+        "volume": 569,
+        "pages": "528",
+        "year": 2019,
+        "doi": "10.1038/s41586-019-1201-8"
+      }
+    ]
+  },
+  {
+    "name": "Li2MgH16",
+    "predicted_Tc": 264,
+    "synthesis_conditions": {
+      "pressure": 250,
+      "temperature": 2000,
+      "method": "high-pressure synthesis"
+    },
+    "synthesis_feasibility_score": 0.6,
+    "references": [
+      {
+        "author": "Wang et al.",
+        "journal": "J. Phys. Chem. Lett.",
+        "volume": 12,
+        "pages": "1135",
+        "year": 2021,
+        "doi": "10.1021/acs.jpclett.0c03610"
+      }
+    ]
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2",
+    "predicted_Tc": 15,
+    "synthesis_conditions": {
+      "pressure": 0,
+      "temperature": 1100,
+      "method": "pulsed laser deposition"
+    },
+    "synthesis_feasibility_score": 0.9,
+    "references": [
+      {
+        "author": "Li et al.",
+        "journal": "Nature",
+        "volume": 572,
+        "pages": "624",
+        "year": 2019,
+        "doi": "10.1038/s41586-019-1496-5"
+      }
+    ]
+  },
+  {
+    "name": "C-S-H",
+    "predicted_Tc": 287,
+    "synthesis_conditions": {
+      "pressure": 200,
+      "temperature": 2000,
+      "method": "high-pressure synthesis"
+    },
+    "synthesis_feasibility_score": 0.5,
+    "references": [
+      {
+        "author": "Snider et al.",
+        "journal": "Nature",
+        "volume": 586,
+        "pages": "373",
+        "year": 2020,
+        "doi": "10.1038/s41586-020-2801-z"
+      }
+    ]
   }
 ]
 
