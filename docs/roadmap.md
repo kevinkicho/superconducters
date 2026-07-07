@@ -31,3 +31,9 @@ This roadmap outlines the phased approach to discovering and manufacturing room-
 - Feed characterization data back into the theoretical models (`theoretical_framework.md`) to refine predictions.
 - Update `candidate_materials.md` with new candidates and experimental results.
 - Adapt manufacturing processes based on performance metrics and cost analysis.
+
+## Patent Filing Milestone
+- File provisional patent applications for novel room-temperature superconductor compositions and synthesis methods after successful characterization (Phase 3) and optimization (Phase 4).
+- Engage patent counsel to draft and file utility patents covering the core technology.
+- Ensure all experimental data and theoretical predictions are documented for patent disclosure.
+- Timeline: Within 6 months of confirming Tc > 300 K at ambient pressure.
