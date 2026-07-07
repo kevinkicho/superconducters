@@ -1126,5 +1126,70 @@ def get_report(candidate_id):
     return jsonify(report)
 
 
+def trl_assessment(candidate):
+    """Compute Technology Readiness Level (1-9) for a candidate material.
+
+    Evaluates based on:
+    - Experimental validation status (has the material been synthesized and tested?)
+    - Manufacturing scalability (can it be produced at scale?)
+    - Risk factors (stability, reproducibility, safety)
+
+    Returns a dict with TRL score, justification, and recommended next steps.
+    """
+    # Default TRL 1 (basic principles observed)
+    trl = 1
+    justification_parts = []
+    next_steps = []
+
+    # Check experimental validation
+    if candidate.get('experimental_tc'):
+        trl = max(trl, 3)  # Experimental proof of concept
+        justification_parts.append("Experimental Tc reported (TRL 3)")
+        if candidate.get('replication_count', 0) >= 2:
+            trl = max(trl, 4)  # Validated in lab
+            justification_parts.append("Replicated by multiple groups (TRL 4)")
+        if candidate.get('ambient_pressure', False):
+            trl = max(trl, 5)  # Validated in relevant environment
+            justification_parts.append("Operates at ambient pressure (TRL 5)")
+    else:
+        justification_parts.append("No experimental Tc reported (TRL 1-2)")
+        next_steps.append("Synthesize candidate and measure Tc")
+
+    # Check manufacturing scalability
+    if candidate.get('synthesis_method'):
+        trl = max(trl, 3)
+        if candidate.get('scalable_synthesis', False):
+            trl = max(trl, 5)
+            justification_parts.append("Scalable synthesis method identified (TRL 5)")
+        else:
+            next_steps.append("Develop scalable synthesis route")
+    else:
+        next_steps.append("Identify synthesis method")
+
+    # Check risk factors
+    risks = []
+    if candidate.get('air_sensitive', True):
+        risks.append("Air-sensitive material requires handling in inert atmosphere")
+    if candidate.get('high_pressure_required', True):
+        risks.append("High-pressure synthesis or operation required")
+    if candidate.get('decomposition_temp', 0) < 300:
+        risks.append("Low thermal stability")
+
+    if risks:
+        trl = min(trl, 6)  # Cap at TRL 6 if significant risks
+        justification_parts.append(f"Risks identified: {'; '.join(risks)}")
+        next_steps.extend([f"Mitigate: {risk}" for risk in risks])
+
+    # Cap at 9
+    trl = min(trl, 9)
+
+    return {
+        'trl': trl,
+        'justification': '; '.join(justification_parts),
+        'next_steps': next_steps,
+        'risk_factors': risks
+    }
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
