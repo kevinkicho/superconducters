@@ -342,3 +342,93 @@ def high_throughput_screening(entries, min_tc=100, max_tc=500, max_pressure=300,
             candidates.append(entry)
     candidates.sort(key=lambda x: x.get('Tc', 0), reverse=True)
     return candidates[:max_results]
+
+
+def fetch_materials_project_data(compositions, api_key, db_path="data/superconductor_database.json"):
+    """Fetch formation energies and band structures from Materials Project API for given compositions.
+    
+    Args:
+        compositions: List of composition strings (e.g., ["YH3", "LaH10"]).
+        api_key: Materials Project API key.
+        db_path: Path to the superconductor database JSON file.
+    
+    Returns:
+        List of new entries added/updated.
+    """
+    import time
+    import json
+    import urllib.request
+    import urllib.parse
+    import os
+
+    base_url = "https://api.materialsproject.org/rest/v2/materials/"
+    headers = {"X-API-KEY": api_key, "Accept": "application/json"}
+    new_entries = []
+
+    # Load existing database
+    if os.path.exists(db_path):
+        with open(db_path, "r") as f:
+            db = json.load(f)
+    else:
+        db = []
+
+    # Rate limiting: 1 request per second (adjust as needed)
+    rate_limit = 1.0  # seconds between requests
+
+    for comp in compositions:
+        # Encode composition for URL
+        encoded_comp = urllib.parse.quote(comp)
+        url = f"{base_url}{encoded_comp}/"
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req) as response:
+                data = json.loads(response.read().decode())
+                # Extract formation energy and band structure
+                # The API returns a list of materials; take the first
+                if data and len(data) > 0:
+                    material = data[0]
+                    formation_energy = material.get("formation_energy_per_atom", None)
+                    band_gap = material.get("band_gap", None)
+                    # Create entry
+                    entry = {
+                        "name": comp,
+                        "composition": comp,
+                        "formation_energy_per_atom": formation_energy,
+                        "band_gap": band_gap,
+                        "source": "Materials Project",
+                        "Tc": None,  # placeholder
+                        "pressure": 0,
+                        "structure": material.get("structure", {}).get("lattice", {}).get("type", ""),
+                        "synthesis_method": "",
+                        "mechanism": "",
+                        "reference": f"Materials Project API: {url}",
+                        "feasibility_score": None
+                    }
+                    # Check if entry already exists, update or append
+                    found = False
+                    for i, existing in enumerate(db):
+                        if existing.get("name") == comp:
+                            db[i] = entry
+                            found = True
+                            break
+                    if not found:
+                        db.append(entry)
+                    new_entries.append(entry)
+        except urllib.error.HTTPError as e:
+            print(f"HTTP error for {comp}: {e.code} - {e.reason}")
+            if e.code == 429:
+                # Rate limit exceeded, wait longer
+                print("Rate limit hit, sleeping 60 seconds...")
+                time.sleep(60)
+                continue
+        except urllib.error.URLError as e:
+            print(f"URL error for {comp}: {e.reason}")
+        except Exception as e:
+            print(f"Unexpected error for {comp}: {e}")
+        # Rate limit sleep
+        time.sleep(rate_limit)
+
+    # Write updated database
+    with open(db_path, "w") as f:
+        json.dump(db, f, indent=2)
+    return new_entries
