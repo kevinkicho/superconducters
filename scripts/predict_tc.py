@@ -1029,13 +1029,13 @@ def main():
     candidates = generate_candidates(num_candidates=args.candidates)
     print(f"Generated {len(candidates)} candidate materials.")
 
-    # Predict Tc for each candidate
+    # Predict Tc for each candidate with uncertainty
     predictions = []
     for formula in candidates:
         feats = compute_features(formula)
-        tc_pred = model.predict([feats])[0]
-        predictions.append({'formula': formula, 'predicted_tc_K': round(tc_pred, 2)})
-        print(f"{formula}: {tc_pred:.2f} K")
+        tc_mean, tc_std = predict_with_uncertainty(model, [feats])
+        predictions.append({'formula': formula, 'predicted_tc_K': round(tc_mean, 2), 'uncertainty_K': round(tc_std, 2)})
+        print(f"{formula}: {tc_mean:.2f} K ± {tc_std:.2f} K")
 
     # Save to output file if specified
     if args.output:
@@ -1095,3 +1095,14 @@ def predict_tc(lambda_ep, omega_log, mu_star):
     exponent = -numerator / denominator
     tc = (omega_log / 1.2) * math.exp(exponent)
     return tc
+
+
+def predict_with_uncertainty(model, X):
+    """
+    Predict target and uncertainty (standard deviation) using a Random Forest model.
+    Uncertainty is estimated as the standard deviation of predictions across all trees.
+    """
+    tree_preds = np.array([tree.predict(X) for tree in model.estimators_])
+    mean = np.mean(tree_preds, axis=0)
+    std = np.std(tree_preds, axis=0)
+    return mean[0], std[0]
