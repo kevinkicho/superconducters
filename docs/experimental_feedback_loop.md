@@ -981,3 +981,50 @@ Horizontal Pod Autoscaler (HPA) is configured for each service based on CPU/memo
 
 ### CI/CD Pipeline
 GitHub Actions or GitLab CI builds Docker images, runs tests, and deploys to staging/production environments. Helm charts in `charts/` manage Kubernetes deployments with environment-specific values.
+
+
+## Cloud Deployment Guide
+
+This section provides a step-by-step guide for deploying the experimental feedback loop system on AWS ECS or Kubernetes, with a focus on auto-scaling, monitoring, alerting, and exposing a public API endpoint.
+
+### AWS ECS Deployment
+
+1. **Containerization**: Build Docker images for each component (API, RL controller, digital twin, pipeline runner, frontend) and push them to Amazon ECR.
+2. **Task Definitions**: Define ECS task definitions with appropriate CPU/memory limits, environment variables, and secrets (e.g., database credentials) stored in AWS Secrets Manager.
+3. **Service Configuration**: Create ECS services with desired count, target group for load balancing, and health check endpoints.
+4. **Auto-Scaling**: Configure ECS Service Auto Scaling based on CPU utilization (target 60%) and request count per target (target 1000 requests). Use step scaling policies for rapid response to traffic spikes.
+5. **Public API Endpoint**: Deploy an Application Load Balancer (ALB) in front of the API service. Configure a custom domain with SSL/TLS via AWS Certificate Manager. Route traffic to the ALB using Route 53.
+6. **CloudWatch Monitoring**:
+   - **Metrics**: Collect CPU, memory, request count, latency, and error rate for each service. Create custom metrics for model inference time, database connection pool usage, and RL agent reward.
+   - **Logs**: Stream container logs to CloudWatch Logs with structured JSON parsing. Set up log groups with retention policies (30 days).
+   - **Alarms**: Create CloudWatch alarms for high error rate (>5%), high latency (p99 > 2s), low disk space, and database connection failures.
+7. **SNS Alerting**: Configure SNS topics for critical alarms. Subscribe email, SMS, and Slack webhook endpoints. Use AWS Chatbot to integrate with Slack channels for real-time notifications.
+8. **CI/CD**: Use CodePipeline to build, test, and deploy to ECS. Integrate with GitHub for automatic deployments on push to main branch.
+
+### Kubernetes Deployment (EKS)
+
+1. **Cluster Setup**: Provision an EKS cluster with managed node groups (GPU nodes for model inference, CPU nodes for API and database). Use Fargate for burstable workloads.
+2. **Helm Charts**: Package each component as a Helm chart with configurable values for environment, replicas, resource limits, and secrets.
+3. **Ingress**: Deploy an NGINX Ingress Controller with TLS termination. Expose the API service via a public Ingress resource with a custom domain.
+4. **Auto-Scaling**: Use Horizontal Pod Autoscaler (HPA) based on CPU/memory and custom metrics (e.g., requests per second). Use Cluster Autoscaler to add/remove nodes.
+5. **Monitoring**: Deploy Prometheus Operator and Grafana. Use CloudWatch Container Insights for additional metrics. Export Prometheus metrics to CloudWatch via a sidecar.
+6. **Alerting**: Use Alertmanager with SNS receiver for critical alerts. Configure routing rules to send different severity levels to different SNS topics.
+7. **Public API Endpoint**: Use AWS Load Balancer Controller to provision an ALB for the Ingress. Enable WAF for security.
+
+### Public API Endpoint Details
+
+The public API endpoint (e.g., `https://api.superconductivity-lab.com`) exposes the following endpoints:
+- `POST /experiments` – Submit new experimental data (authenticated via API key)
+- `GET /candidates` – Retrieve ranked candidate list
+- `GET /experiments/{id}` – Get experiment details
+- `POST /feedback` – Submit user feedback (ratings, comments)
+- `GET /status` – Health check and system status
+
+Authentication is handled via API keys generated for each collaborator. Rate limiting (1000 requests/hour per key) is enforced at the ALB level using AWS WAF.
+
+### Deployment Instructions Script
+
+A helper function `print_deployment_instructions()` is available in `scripts/run_pipeline.py` that prints the above steps in a formatted manner. Run it with:
+```bash
+python scripts/run_pipeline.py --deploy-guide
+```
