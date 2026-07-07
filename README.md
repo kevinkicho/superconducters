@@ -118,3 +118,37 @@ CONFIG_PATH=my_config.yaml python scripts/run_pipeline.py
 - **Unexpected results**: Verify that the configuration parameters are reasonable. For Tc predictions, ensure the candidate material is in the supported list.
 
 For further assistance, open an issue on the repository.
+
+
+## Reproducibility
+
+[![Reproducibility](https://img.shields.io/badge/Reproducibility-Yes-brightgreen)](https://github.com/yourusername/yourrepo)
+
+To reproduce the results in this repository, you can use the provided Dockerfile or conda environment.
+
+### Using Docker
+
+1. Ensure Docker is installed on your system.
+2. Build the Docker image:
+   ```
+   docker build -t superconductivity-research .
+   ```
+3. Run the container:
+   ```
+   docker run --rm -v $(pwd):/workspace superconductivity-research
+   ```
+
+### Using Conda
+
+1. Install Miniconda or Anaconda.
+2. Create the environment from the provided `environment.yml`:
+   ```
+   conda env create -f environment.yml
+   ```
+3. Activate the environment:
+   ```
+   conda activate superconductivity
+   ```
+4. Run the pipeline as described in the User Manual.
+
+For more details, see the [Dockerfile](Dockerfile) and [environment.yml](environment.yml) in the repository root.
