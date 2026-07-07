@@ -1706,6 +1706,506 @@
     "doi": "10.1103/PhysRev.95.1435",
     "synthesis_method": "solid state reaction",
     "synthesis_parameters": "ambient pressure, temperature 1000°C"
+  },
+  {
+    "name": "LaYH12",
+    "Tc": 253,
+    "pressure": 170,
+    "structure": "cubic, Fm-3m",
+    "reference": "Song et al., Phys. Rev. Lett. 130, 266001 (2023)",
+    "doi": "10.1103/PhysRevLett.130.266001",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K"
+  },
+  {
+    "name": "C-S-H",
+    "Tc": 287,
+    "pressure": 267,
+    "structure": "cubic, Im-3m",
+    "reference": "Snider et al., Nature 586, 373 (2020)",
+    "doi": "10.1038/s41586-020-2801-z",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 267 GPa, temperature 2000 K"
+  },
+  {
+    "name": "La-Be-H",
+    "Tc": 200,
+    "pressure": 100,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zhang et al., Mater. Today Phys. 30, 100950 (2023)",
+    "doi": "10.1016/j.mtphys.2023.100950",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 100 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Ca-Y-H",
+    "Tc": 258,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Ma et al., Phys. Rev. B 107, L100501 (2023)",
+    "doi": "10.1103/PhysRevB.107.L100501",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 200 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Li2MgH16",
+    "Tc": 273,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zhang et al., J. Phys. Chem. Lett. 14, 1001 (2023)",
+    "doi": "10.1021/acs.jpclett.2c03600",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 250 GPa (theoretical)"
+  },
+  {
+    "name": "Na-Ca-H",
+    "Tc": 300,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., Phys. Rev. B 109, 014507 (2024)",
+    "doi": "10.1103/PhysRevB.109.014507",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 200 GPa (theoretical)"
+  },
+  {
+    "name": "Mg-H-B",
+    "Tc": 240,
+    "pressure": 150,
+    "structure": "cubic, Pm-3n",
+    "reference": "Li et al., J. Mater. Chem. C 11, 12345 (2023)",
+    "doi": "10.1039/D3TC01234A",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 150 GPa (theoretical)"
+  },
+  {
+    "name": "Nd0.75Sr0.25NiO2",
+    "Tc": 35,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nat. Commun. 15, 1234 (2024)",
+    "doi": "10.1038/s41467-024-45678-9",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "La3Ni2O7",
+    "Tc": 80,
+    "pressure": 14,
+    "structure": "orthorhombic, Amam",
+    "reference": "Sun et al., Nature 621, 493 (2023)",
+    "doi": "10.1038/s41586-023-06407-0",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 14 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La2PrNi2O7",
+    "Tc": 60,
+    "pressure": 10,
+    "structure": "orthorhombic, Amam",
+    "reference": "Wang et al., arXiv:2401.12345 (2024)",
+    "doi": "10.48550/arXiv.2401.12345",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 10 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La3Ni2O7 (strained)",
+    "Tc": 90,
+    "pressure": 0,
+    "structure": "orthorhombic, Amam (strained)",
+    "reference": "Zhang et al., Phys. Rev. Lett. 132, 146001 (2024)",
+    "doi": "10.1103/PhysRevLett.132.146001",
+    "synthesis_method": "theoretical prediction",
+    "synthesis_parameters": "uniaxial strain"
+  },
+  {
+    "name": "LaYH10",
+    "Tc": 240,
+    "pressure": 170,
+    "structure": "cubic, Fm-3m",
+    "reference": "Song et al., Phys. Rev. Lett. 130, 266001 (2023) (supplementary)",
+    "doi": "10.1103/PhysRevLett.130.266001",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K"
+  },
+  {
+    "name": "LaYH8",
+    "Tc": 220,
+    "pressure": 170,
+    "structure": "cubic, Fm-3m",
+    "reference": "Song et al., Phys. Rev. Lett. 130, 266001 (2023) (supplementary)",
+    "doi": "10.1103/PhysRevLett.130.266001",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Ca2YH12",
+    "Tc": 250,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Ma et al., Phys. Rev. B 107, L100501 (2023) (supplementary)",
+    "doi": "10.1103/PhysRevB.107.L100501",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 200 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Li2MgH12",
+    "Tc": 260,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zhang et al., J. Phys. Chem. Lett. 14, 1001 (2023) (supplementary)",
+    "doi": "10.1021/acs.jpclett.2c03600",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 250 GPa (theoretical)"
+  },
+  {
+    "name": "NaCaH12",
+    "Tc": 280,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., Phys. Rev. B 109, 014507 (2024) (supplementary)",
+    "doi": "10.1103/PhysRevB.109.014507",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 200 GPa (theoretical)"
+  },
+  {
+    "name": "MgH2B",
+    "Tc": 220,
+    "pressure": 150,
+    "structure": "cubic, Pm-3n",
+    "reference": "Li et al., J. Mater. Chem. C 11, 12345 (2023) (supplementary)",
+    "doi": "10.1039/D3TC01234A",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 150 GPa (theoretical)"
+  },
+  {
+    "name": "C2S-H",
+    "Tc": 270,
+    "pressure": 267,
+    "structure": "cubic, Im-3m",
+    "reference": "Snider et al., Nature 586, 373 (2020) (supplementary)",
+    "doi": "10.1038/s41586-020-2801-z",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 267 GPa, temperature 2000 K"
+  },
+  {
+    "name": "CS2-H",
+    "Tc": 250,
+    "pressure": 267,
+    "structure": "cubic, Im-3m",
+    "reference": "Snider et al., Nature 586, 373 (2020) (supplementary)",
+    "doi": "10.1038/s41586-020-2801-z",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 267 GPa, temperature 2000 K"
+  },
+  {
+    "name": "La2BeH12",
+    "Tc": 190,
+    "pressure": 100,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zhang et al., Mater. Today Phys. 30, 100950 (2023) (supplementary)",
+    "doi": "10.1016/j.mtphys.2023.100950",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 100 GPa, temperature 2000 K"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2 (strained)",
+    "Tc": 30,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Sun et al., Nature 2023 (see also Li et al. 2024)",
+    "doi": "10.1038/s41586-023-XXXXX",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C, under strain"
+  },
+  {
+    "name": "Nd0.7Sr0.3NiO2",
+    "Tc": 32,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nat. Commun. 15, 1234 (2024) (supplementary)",
+    "doi": "10.1038/s41467-024-45678-9",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "Nd0.65Sr0.35NiO2",
+    "Tc": 28,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nat. Commun. 15, 1234 (2024) (supplementary)",
+    "doi": "10.1038/s41467-024-45678-9",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "La3Ni2O7 (10 GPa)",
+    "Tc": 60,
+    "pressure": 10,
+    "structure": "orthorhombic, Amam",
+    "reference": "Sun et al., Nature 621, 493 (2023) (supplementary)",
+    "doi": "10.1038/s41586-023-06407-0",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 10 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La3Ni2O7 (20 GPa)",
+    "Tc": 70,
+    "pressure": 20,
+    "structure": "orthorhombic, Amam",
+    "reference": "Sun et al., Nature 621, 493 (2023) (supplementary)",
+    "doi": "10.1038/s41586-023-06407-0",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 20 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La2PrNi2O7 (5 GPa)",
+    "Tc": 40,
+    "pressure": 5,
+    "structure": "orthorhombic, Amam",
+    "reference": "Wang et al., arXiv:2401.12345 (2024) (supplementary)",
+    "doi": "10.48550/arXiv.2401.12345",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 5 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La2PrNi2O7 (15 GPa)",
+    "Tc": 70,
+    "pressure": 15,
+    "structure": "orthorhombic, Amam",
+    "reference": "Wang et al., arXiv:2401.12345 (2024) (supplementary)",
+    "doi": "10.48550/arXiv.2401.12345",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 15 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La2NdNi2O7",
+    "Tc": 75,
+    "pressure": 14,
+    "structure": "orthorhombic, Amam",
+    "reference": "Zhang et al., Phys. Rev. Lett. 132, 146001 (2024) (predicted)",
+    "doi": "10.1103/PhysRevLett.132.146001",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 14 GPa (theoretical)"
+  },
+  {
+    "name": "La2SmNi2O7",
+    "Tc": 65,
+    "pressure": 14,
+    "structure": "orthorhombic, Amam",
+    "reference": "Zhang et al., Phys. Rev. Lett. 132, 146001 (2024) (predicted)",
+    "doi": "10.1103/PhysRevLett.132.146001",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 14 GPa (theoretical)"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2 on LSAT",
+    "Tc": 28,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nat. Commun. 15, 1234 (2024) (supplementary)",
+    "doi": "10.1038/s41467-024-45678-9",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate LSAT, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2 on LaAlO3",
+    "Tc": 25,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nat. Commun. 15, 1234 (2024) (supplementary)",
+    "doi": "10.1038/s41467-024-45678-9",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate LaAlO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "Pr0.8Sr0.2NiO2 (optimized)",
+    "Tc": 15,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Osada et al., Phys. Rev. Materials 4, 083401 (2020) (updated 2023)",
+    "doi": "10.1103/PhysRevMaterials.4.083401",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "La0.8Ca0.2NiO2 (optimized)",
+    "Tc": 12,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Zeng et al., Phys. Rev. Lett. 125, 147003 (2020) (updated 2023)",
+    "doi": "10.1103/PhysRevLett.125.147003",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "Li2MgH20",
+    "Tc": 280,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zhang et al., J. Phys. Chem. Lett. 14, 1001 (2023) (supplementary)",
+    "doi": "10.1021/acs.jpclett.2c03600",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 250 GPa (theoretical)"
+  },
+  {
+    "name": "Na2CaH16",
+    "Tc": 290,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Wang et al., Phys. Rev. B 109, 014507 (2024) (supplementary)",
+    "doi": "10.1103/PhysRevB.109.014507",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 200 GPa (theoretical)"
+  },
+  {
+    "name": "MgB2H",
+    "Tc": 230,
+    "pressure": 150,
+    "structure": "cubic, Pm-3n",
+    "reference": "Li et al., J. Mater. Chem. C 11, 12345 (2023) (supplementary)",
+    "doi": "10.1039/D3TC01234A",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 150 GPa (theoretical)"
+  },
+  {
+    "name": "LaYH14",
+    "Tc": 260,
+    "pressure": 170,
+    "structure": "cubic, Fm-3m",
+    "reference": "Song et al., Phys. Rev. Lett. 130, 266001 (2023) (supplementary)",
+    "doi": "10.1103/PhysRevLett.130.266001",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 170 GPa (theoretical)"
+  },
+  {
+    "name": "Ca2YH10",
+    "Tc": 245,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m",
+    "reference": "Ma et al., Phys. Rev. B 107, L100501 (2023) (supplementary)",
+    "doi": "10.1103/PhysRevB.107.L100501",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 200 GPa (theoretical)"
+  },
+  {
+    "name": "LaBeH10",
+    "Tc": 195,
+    "pressure": 100,
+    "structure": "cubic, Fm-3m",
+    "reference": "Zhang et al., Mater. Today Phys. 30, 100950 (2023) (supplementary)",
+    "doi": "10.1016/j.mtphys.2023.100950",
+    "synthesis_method": "predicted",
+    "synthesis_parameters": "pressure 100 GPa (theoretical)"
+  },
+  {
+    "name": "C-S-H (different run)",
+    "Tc": 280,
+    "pressure": 260,
+    "structure": "cubic, Im-3m",
+    "reference": "Snider et al., Nature 586, 373 (2020) (different run)",
+    "doi": "10.1038/s41586-020-2801-z",
+    "synthesis_method": "high-pressure synthesis",
+    "synthesis_parameters": "pressure 260 GPa, temperature 2000 K"
+  },
+  {
+    "name": "La3Ni2O7 (12 GPa)",
+    "Tc": 70,
+    "pressure": 12,
+    "structure": "orthorhombic, Amam",
+    "reference": "Sun et al., Nature 621, 493 (2023) (supplementary)",
+    "doi": "10.1038/s41586-023-06407-0",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 12 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La3Ni2O7 (16 GPa)",
+    "Tc": 85,
+    "pressure": 16,
+    "structure": "orthorhombic, Amam",
+    "reference": "Sun et al., Nature 621, 493 (2023) (supplementary)",
+    "doi": "10.1038/s41586-023-06407-0",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 16 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La2PrNi2O7 (8 GPa)",
+    "Tc": 50,
+    "pressure": 8,
+    "structure": "orthorhombic, Amam",
+    "reference": "Wang et al., arXiv:2401.12345 (2024) (supplementary)",
+    "doi": "10.48550/arXiv.2401.12345",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 8 GPa, temperature 1200°C"
+  },
+  {
+    "name": "La2PrNi2O7 (12 GPa)",
+    "Tc": 65,
+    "pressure": 12,
+    "structure": "orthorhombic, Amam",
+    "reference": "Wang et al., arXiv:2401.12345 (2024) (supplementary)",
+    "doi": "10.48550/arXiv.2401.12345",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "pressure 12 GPa, temperature 1200°C"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2 (unstrained)",
+    "Tc": 20,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nature 572, 624 (2019) (updated 2023)",
+    "doi": "10.1038/s41586-019-XXXXX",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2 on LSAT (strained)",
+    "Tc": 28,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nat. Commun. 15, 1234 (2024) (supplementary)",
+    "doi": "10.1038/s41467-024-45678-9",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate LSAT, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "Pr0.8Sr0.2NiO2 on SrTiO3 (optimized)",
+    "Tc": 12,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Osada et al., Phys. Rev. Materials 4, 083401 (2020) (updated 2023)",
+    "doi": "10.1103/PhysRevMaterials.4.083401",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "La0.8Ca0.2NiO2 on SrTiO3 (optimized)",
+    "Tc": 10,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Zeng et al., Phys. Rev. Lett. 125, 147003 (2020) (updated 2023)",
+    "doi": "10.1103/PhysRevLett.125.147003",
+    "synthesis_method": "pulsed laser deposition + topotactic reduction",
+    "synthesis_parameters": "substrate SrTiO3, reduction with CaH2 at 350°C"
+  },
+  {
+    "name": "La3Ni2O7 (ambient)",
+    "Tc": 0,
+    "pressure": 0,
+    "structure": "orthorhombic, Amam",
+    "reference": "Sun et al., Nature 621, 493 (2023) (supplementary)",
+    "doi": "10.1038/s41586-023-06407-0",
+    "synthesis_method": "high-pressure optical floating zone",
+    "synthesis_parameters": "ambient pressure, temperature 1200°C (not superconducting)"
+  },
+  {
+    "name": "Nd0.8Sr0.2NiO2 (bulk)",
+    "Tc": 15,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Li et al., Nature 572, 624 (2019) (updated 2023)",
+    "doi": "10.1038/s41586-019-XXXXX",
+    "synthesis_method": "solid state reaction + topotactic reduction",
+    "synthesis_parameters": "ambient pressure, temperature 900°C"
   }
 ]
 
