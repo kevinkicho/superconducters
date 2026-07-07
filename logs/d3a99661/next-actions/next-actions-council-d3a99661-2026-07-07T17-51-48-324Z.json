@@ -1,0 +1,58 @@
+{
+  "preset": "council",
+  "runId": "d3a99661-22d0-4be7-af06-00e753da8574",
+  "generatedAt": "2026-07-07T17:51:48.330Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "Consolidate duplicate documents: move canonical versions to docs/ and remove root duplicates, update README links.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Implement predict_tc function in scripts/predict_tc.py using McMillan-Allen-Dynes equation, load from database.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Add detailed synthesis protocols for predicted room-temperature superconductors (YH10, CaH12, MgH16) in proposed_chemistry_physics.md or cross-reference experimental_protocol_hydride.md.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Update theoretical_framework.md to include mechanisms from proposed_chemistry_physics.md (electron-phonon coupling, spin fluctuations, etc.).",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Update roadmap.md with specific milestones for synthesis and characterization of predicted compounds.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "Fix broken link in README.md (discovery_strategy.md) and remove duplicate test file tests/tests_predict_tc.py.",
+      "source": "Answer to directive"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Implement the 'predict_tc' function using the McMillan-Allen-Dynes equation or a trained ML model, and ensure it returns expected Tc values for known materials (e.g., LaH10 at 170 GPa should give ~250 K).\"",
+      "source": "Agent 4"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Implement the predict_tc function using the McMillan-Allen-Dynes equation or a machine learning model, load data from data/superconductor_database.json, and ensure it returns realistic Tc values for known materials (e.g., LaH10 at 170 GPa should give ~250 K).\"",
+      "source": "Agent 3"
+    },
+    {
+      "priority": "medium",
+      "text": "Consolidate duplicate documents: move canonical versions to docs/ and remove root duplicates, update README links. _(from: Answer to directive)_",
+      "source": "Next actions"
+    },
+    {
+      "priority": "medium",
+      "text": "Implement predict_tc function in scripts/predict_tc.py using McMillan-Allen-Dynes equation, load from database. _(from: Answer to directive)_",
+      "source": "Next actions"
+    }
+  ]
+}

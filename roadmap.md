@@ -93,3 +93,9 @@
 - **High-pressure synthesis of top candidate (e.g., Li2MgH16)**: Synthesize the most promising candidate using diamond anvil cell (DAC) techniques. Target: successful synthesis within 6 months.
 - **Four-probe resistivity and AC susceptibility measurements**: Characterize the synthesized sample for superconductivity. Measure Tc onset, zero-resistance, and Meissner effect. Target: confirm or refute superconductivity within 9 months.
 - **Iteration**: Feed experimental results back into computational models to refine predictions and select next candidate. Target: complete at least 2 full iteration cycles within 12 months.
+
+
+## Online Research Integration and Experimental Feedback Loop Milestones
+- **M21 (Month 1-3)**: Establish continuous online research monitoring system to automatically scrape and summarize new publications on room-temperature superconductivity. Integrate with literature review database.
+- **M22 (Month 3-6)**: Implement experimental feedback loop: after each synthesis and characterization cycle, automatically update computational models with new data. Use Bayesian optimization to suggest next candidate.
+- **M23 (Month 6-12)**: Achieve at least 3 full iteration cycles of online research -> computational prediction -> synthesis -> characterization -> model update. Target: identify at least one new promising compound not previously in literature.
