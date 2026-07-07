@@ -73,3 +73,34 @@ def test_edge_cases():
         ptc.predict_tc(None, pressure=0)
     result = ptc.predict_tc('H3S', pressure=-10)
     assert isinstance(result, float)
+
+def test_prediction_accuracy():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        model = ptc.train_model()
+        pred_h3s = model.predict([[ptc.average_valence("H3S"), ptc.average_debye("H3S")]])[0]
+        pred_lah10 = model.predict([[ptc.average_valence("LaH10"), ptc.average_debye("LaH10")]])[0]
+        assert abs(pred_h3s - 203) < 20, f"H3S prediction {pred_h3s} too far from 203"
+        assert abs(pred_lah10 - 250) < 20, f"LaH10 prediction {pred_lah10} too far from 250"
+
+def test_screening_output_format():
+    mock_data = [
+        {"name": "H3S", "Tc": 203, "composition": "H3S", "pressure": 155},
+        {"name": "LaH10", "Tc": 250, "composition": "LaH10", "pressure": 170},
+        {"name": "YBa2Cu3O7", "Tc": 93, "composition": "YBa2Cu3O7", "pressure": 0},
+    ]
+    with patch.object(ptc, 'load_data', return_value=mock_data):
+        results = ptc.screen_materials()
+        assert isinstance(results, list)
+        assert len(results) == 3
+        for item in results:
+            assert isinstance(item, dict)
+            assert "name" in item
+            assert "Tc" in item
+            assert "pressure" in item
+            assert "composition" in item
+        tcs = [r["Tc"] for r in results]
+        assert tcs == sorted(tcs, reverse=True)
