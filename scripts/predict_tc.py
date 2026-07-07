@@ -699,12 +699,18 @@ def active_learning_loop(candidates: list, alpha: float = 1.0, top_n: int = 5, r
     results.sort(key=lambda x: x['score'], reverse=True)
     return results[:top_n]
 
+def cross_validate_model(model, X, y, cv=5):
+    from sklearn.model_selection import cross_val_score, cross_val_predict, KFold
+    from sklearn.metrics import mean_absolute_error
+    kf = KFold(n_splits=cv, shuffle=True, random_state=42)
+    r2_scores = cross_val_score(model, X, y, cv=kf, scoring='r2')
+    y_pred_all = cross_val_predict(model, X, y, cv=kf)
+    mae = mean_absolute_error(y, y_pred_all)
+    print(f"Cross-validation (k={cv}): R² = {r2_scores.mean():.4f} ± {r2_scores.std():.4f}, MAE = {mae:.4f} K")
+    return r2_scores.mean(), mae
+
+
 def retrain_from_new_data(data_path=None):
-    """
-    Retrain the RandomForest model using new data from the specified JSON file.
-    If data_path is None, defaults to 'data/superconductor_database.json' relative to the project root.
-    Updates the saved model file and prints performance.
-    """
     import numpy as np
     if data_path is None:
         data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
@@ -732,13 +738,10 @@ def retrain_from_new_data(data_path=None):
         raise ValueError("Not enough data to train model")
     X = np.array(X)
     y = np.array(y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     rf = RandomForestRegressor(n_estimators=100, random_state=42)
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
-    r2 = r2_score(y_test, y_pred)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
-    print(f"Model retrained from new data. Test R² = {r2:.4f}, RMSE = {rmse:.4f} K")
+    rf.fit(X, y)
+    r2, mae = cross_validate_model(rf, X, y, cv=5)
+    print(f"Model retrained from new data. Cross-validation R² = {r2:.4f}, MAE = {mae:.4f} K")
     model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     joblib.dump(rf, model_path)
