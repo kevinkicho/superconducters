@@ -231,3 +231,80 @@ Synthesize the high-pressure superconducting phase of CaH6 with a predicted crit
 - Wang, H. et al. (2012). Superconductive sodalite-like clathrate calcium hydride at high pressures. *Proceedings of the National Academy of Sciences*, 109, 6463–6466.
 - Ma, L. et al. (2022). Experimental observation of superconductivity at 215 K in calcium superhydride under high pressure. *Nature Communications*, 13, 6703.
 - Drozdov, A. P. et al. (2019). Superconductivity at 250 K in lanthanum hydride under high pressure. *Nature*, 569, 528–531.
+
+
+## Experimental Protocol: LaH10 (Lanthanum Decahydride)
+
+### Objective
+Synthesize the high-pressure superconducting phase of LaH10 with a critical temperature near 250 K, following the experimental breakthrough by Drozdov et al. (2019) and subsequent confirmations. This protocol details the synthesis of lanthanum decahydride under extreme pressure, including step-by-step pressure/temperature conditions, synthesis steps, and characterization outcomes.
+
+### Materials
+- Lanthanum metal (99.9% purity, foil or granules)
+- Ammonia borane (NH3BH3, 97%) as hydrogen source
+- Diamond anvil cell (DAC) with 300 µm culet diamonds
+- Rhenium gasket (pre-indented to 40 µm thickness)
+- Ruby spheres (10–20 µm) for pressure calibration
+- Epoxy glue (Stycast 2850FT)
+- Methanol-ethanol mixture (4:1) for loading
+
+### Equipment
+- Diamond anvil cell (DAC) assembly (symmetric or panoramic design)
+- Laser heating system (Nd:YAG, 1064 nm, 100 W) with beam shaping optics
+- Raman spectrometer (532 nm excitation, 1800 lines/mm grating)
+- Synchrotron X-ray diffraction (XRD) beamline (λ ≈ 0.4 Å)
+- Cryostat (4–300 K) for electrical transport measurements
+- Four-probe electrical setup (Keithley 2400 sourcemeter, nanovoltmeter)
+- Optical microscope with long-working-distance objectives
+- Pressure calibration system (ruby fluorescence, diamond Raman edge)
+
+### Safety Considerations
+- **High pressure**: DAC components may fail catastrophically; use protective shielding (polycarbonate blast shield).
+- **Laser heating**: Class 4 laser; wear appropriate laser safety goggles, use interlocks, and enclose beam path.
+- **Toxic materials**: Lanthanum and ammonia borane are irritants; handle in fume hood with gloves.
+- **Cryogenic hazards**: Liquid nitrogen or helium cryostat; use cryogenic gloves and face shield.
+- **Electrical safety**: Low current but ensure proper grounding of instruments.
+- **Sample preparation**: Avoid contamination; use cleanroom protocols if possible.
+
+### Step-by-Step Protocol
+
+#### 1. Sample Preparation
+1.1. Cut lanthanum metal into a small piece (~20 µm thick, 50 µm diameter) inside an argon-filled glovebox (O2, H2O < 0.1 ppm).
+1.2. Place the lanthanum piece in the gasket hole of the pre-indented rhenium gasket.
+1.3. Add ammonia borane as hydrogen source in a La:NH3BH3 molar ratio of approximately 1:10 (excess hydrogen ensures full hydride formation).
+1.4. Place a ruby sphere on top of the sample for pressure calibration.
+1.5. Close the DAC and apply initial pressure of ~5 GPa by tightening the screws.
+
+#### 2. Pressure Loading and Calibration
+2.1. Measure ruby fluorescence (R1 line shift) using a Raman spectrometer; convert to pressure using the equation P (GPa) = 0.365 × (Δλ (nm)) + 0.0004 × (Δλ)².
+2.2. Increase pressure to 170 GPa in steps of 10–20 GPa, measuring after each step. The target synthesis pressure is 170 GPa.
+2.3. At each step, check sample uniformity via optical microscopy.
+
+#### 3. Laser Heating
+3.1. Align the laser heating system to focus on the sample center (spot size ~20 µm).
+3.2. Heat the sample to 2000–2200 K for 5–10 seconds while maintaining pressure at 170 GPa.
+3.3. Monitor temperature via blackbody radiation spectrum (fit to Planck's law).
+3.4. Repeat heating 3–5 times to promote hydrogen diffusion and formation of LaH10.
+3.5. After heating, allow the sample to cool to room temperature while maintaining pressure.
+
+#### 4. In-Situ Characterization
+4.1. **Raman Spectroscopy**: Collect Raman spectra at room temperature. Expected features: strong H–H stretching modes near 1000–1500 cm⁻¹ and La–H modes below 500 cm⁻¹.
+4.2. **X-ray Diffraction (XRD)**: Collect synchrotron XRD patterns. The superconducting phase of LaH10 crystallizes in a face-centered cubic (Fm-3m) structure with lattice parameter a ≈ 5.3 Å at 170 GPa. Index reflections (111), (200), (220), (311), (222) to confirm the structure.
+4.3. **Pressure measurement**: Re-measure ruby fluorescence after heating to verify pressure stability.
+
+#### 5. Electrical Transport Measurements
+5.1. Cool the DAC in a cryostat from 300 K to 4 K at a rate of 2 K/min.
+5.2. Measure electrical resistance using a four-probe configuration (AC or DC) as a function of temperature.
+5.3. Identify the superconducting transition temperature (Tc) as the midpoint of the resistance drop. For LaH10, Tc is expected at approximately 250 K at 170 GPa.
+5.4. Apply a small magnetic field (up to 1 T) to estimate the upper critical field (Hc2) and confirm superconductivity via the Meissner effect if possible.
+
+### Expected Results
+- **Raman**: Broad peaks in the 1000–1500 cm⁻¹ range (H–H stretch) and low-frequency La–H modes.
+- **XRD**: Face-centered cubic (Fm-3m) with a = 5.30–5.35 Å at 170 GPa.
+- **Tc**: 250–260 K at 170 GPa, with a sharp resistive transition (width < 5 K).
+- **Hc2(0)**: Estimated ~100–150 T from magnetoresistance measurements.
+
+### References
+- Drozdov, A. P. et al. (2019). Superconductivity at 250 K in lanthanum hydride under high pressure. *Nature*, 569, 528–531. https://doi.org/10.1038/s41586-019-1201-8
+- Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
+- Errea, I. et al. (2020). Quantum crystal structure in the 250 K superconducting lanthanum hydride. *Nature*, 578, 66–69. https://doi.org/10.1038/s41586-020-1955-z
+- Geballe, Z. M. et al. (2018). Synthesis and stability of lanthanum superhydrides. *Angewandte Chemie International Edition*, 57, 688–692. https://doi.org/10.1002/anie.201709970

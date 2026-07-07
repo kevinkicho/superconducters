@@ -121,3 +121,63 @@ def test_query_combined_filters():
         assert r['feasibility_score'] >= 0.5
         assert r['material_class'] == "cuprate"
 
+
+
+def test_load_database_json_decode_error():
+    with patch('builtins.open', MagicMock(side_effect=json.JSONDecodeError("", "", 0))):
+        with pytest.raises(json.JSONDecodeError):
+            qdb.load_database("dummy.json")
+
+def test_query_empty_database():
+    results = qdb.query([], argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=None, feasibility_score_max=None,
+        material_class=None
+    ))
+    assert results == []
+
+def test_query_pressure_min_max():
+    mock_db = [
+        {"name": "A", "Tc": 50, "pressure": 10},
+        {"name": "B", "Tc": 150, "pressure": 100},
+        {"name": "C", "Tc": 200, "pressure": 200},
+    ]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=50, pressure_max=150, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=None, feasibility_score_max=None,
+        material_class=None
+    ))
+    assert len(results) == 1
+    assert results[0]["name"] == "B"
+
+def test_query_type_mismatch_tc_min():
+    mock_db = [{"name": "A", "Tc": 50}]
+    with pytest.raises(TypeError):
+        qdb.query(mock_db, argparse.Namespace(
+            name=None, tc_min="low", tc_max=None, pressure=None,
+            pressure_min=None, pressure_max=None, composition=None,
+            synthesis=None, synthesis_method=None, mechanism=None,
+            feasibility_score_min=None, feasibility_score_max=None,
+            material_class=None
+        ))
+
+def test_query_synthesis_method_filter():
+    mock_db = [
+        {"name": "A", "Tc": 50, "synthesis_method": "CVD"},
+        {"name": "B", "Tc": 150, "synthesis_method": "HPHT"},
+        {"name": "C", "Tc": 200, "synthesis_method": "CVD"},
+    ]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method="CVD", mechanism=None,
+        feasibility_score_min=None, feasibility_score_max=None,
+        material_class=None
+    ))
+    assert len(results) == 2
+    for r in results:
+        assert r["synthesis_method"] == "CVD"

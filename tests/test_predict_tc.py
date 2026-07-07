@@ -191,3 +191,26 @@ def test_generate_candidates():
             assert "name" in c
             assert "Tc" in c
             assert "uncertainty" in c
+
+
+def test_average_valence_non_existent_element():
+    with pytest.raises(ValueError):
+        ptc.average_valence("X")
+
+def test_predict_tc_extreme_stoichiometry():
+    result = ptc.predict_tc("H100S", pressure=100)
+    assert isinstance(result, float)
+
+def test_load_data_json_decode_error():
+    with patch.object(ptc, 'DATABASE_PATH', 'invalid.json'):
+        with patch('builtins.open', MagicMock(side_effect=json.JSONDecodeError("", "", 0))):
+            with pytest.raises(json.JSONDecodeError):
+                ptc.load_data()
+
+def test_predict_tc_type_mismatch_pressure():
+    with pytest.raises(TypeError):
+        ptc.predict_tc("H3S", pressure="high")
+
+def test_predict_tc_type_mismatch_composition():
+    with pytest.raises(TypeError):
+        ptc.predict_tc(123, pressure=100)
