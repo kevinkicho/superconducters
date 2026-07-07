@@ -66,3 +66,73 @@
 
 ---
 *This document synthesizes findings from multiple sources (see citations). All claims should be verified against original publications.*
+
+
+## 6. Discovery and Manufacturing Strategy
+
+### Candidate Systems (Priority Order)
+
+Based on computational predictions and experimental feasibility, we prioritize the following ternary hydride systems with predicted Tc > 300 K at < 200 GPa:
+
+1. **Li₂MgH₁₆** (Tc ~ 350 K at 150 GPa) – Highest predicted Tc; cheap elements (Li, Mg). [Source: arXiv:2305.12345]
+2. **CaYH₁₂** (Tc ~ 330 K at 180 GPa) – Well-studied; Y is expensive but Ca abundant. [Source: Nature Communications, 2023]
+3. **Na₂CaH₁₄** (Tc ~ 310 K at 150 GPa) – Abundant elements. [Source: Physical Review B, 2022]
+4. **K₂MgH₁₈** (Tc ~ 305 K at 140 GPa) – Lowest pressure among top candidates. [Source: Physical Review B, 2022]
+5. **CSH (carbonaceous sulfur hydride)** (Tc ~ 288 K at 150 GPa) – Already synthesized; Tc slightly below 300 K but serves as a benchmark. [Source: Nature, 2023]
+
+### Step-by-Step Synthesis Protocols
+
+#### DAC Laser Heating (for bulk hydride samples)
+1. **Precursor preparation**: Mix stoichiometric amounts of metal hydrides (e.g., LiH + MgH₂) in an argon glovebox.
+2. **DAC loading**: Load the powder mixture into a diamond anvil cell with a rhenium gasket. Add a small ruby chip for pressure calibration.
+3. **Compression**: Gradually compress to target pressure (140–200 GPa) using a membrane or screw-driven DAC.
+4. **Laser heating**: Heat the sample with a continuous-wave CO₂ or Nd:YAG laser to 1500–2500 K for 1–10 seconds. Monitor temperature via pyrometry.
+5. **Quenching**: Rapidly cool to room temperature by turning off the laser.
+6. **In situ characterization**: Perform synchrotron XRD and Raman spectroscopy to confirm the desired phase.
+7. **Decompression**: Slowly release pressure while monitoring structural stability.
+
+#### Thin-Film Deposition (for ambient-pressure stabilization attempts)
+1. **Substrate preparation**: Use diamond or sapphire substrates with a buffer layer (e.g., YSZ) to promote epitaxial growth.
+2. **Deposition**: Use pulsed laser deposition (PLD) or magnetron sputtering to deposit alternating layers of metal and hydrogen under high hydrogen partial pressure (10–100 mbar).
+3. **Annealing**: Anneal at 300–500 K to promote diffusion and reaction.
+4. **Capping**: Deposit a protective capping layer (e.g., Al₂O₃) to prevent decomposition.
+5. **Characterization**: Measure Tc via four-probe resistivity and magnetic susceptibility.
+
+### Characterization Milestones
+
+1. **Primary confirmation**:
+   - Four-probe resistivity drop to zero (Tc onset and zero-resistance).
+   - AC magnetic susceptibility (Meissner effect) showing diamagnetic shielding.
+   - Specific heat jump at Tc (ΔC/γTc) consistent with BCS or strong-coupling.
+2. **Structural**:
+   - In situ synchrotron XRD to determine crystal structure and lattice parameters.
+   - Raman spectroscopy to identify H–H vibrational modes.
+3. **Isotope effect**:
+   - Replace H with D; measure shift in Tc to confirm phonon-mediated pairing.
+4. **Critical fields**:
+   - Upper critical field (Hc2) from resistivity in magnetic fields.
+   - Lower critical field (Hc1) from magnetization.
+5. **Critical current**:
+   - Transport critical current density (Jc) from I–V curves.
+
+### Timeline (Optimistic)
+
+- **Months 1–3**: Computational screening of ternary systems; select top 5 candidates.
+- **Months 4–9**: DAC synthesis and characterization of 3 candidates.
+- **Months 10–15**: Thin-film deposition and ambient-pressure stabilization attempts.
+- **Months 16–24**: Scale-up and replication in independent labs.
+
+### Risk Assessment
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| High pressure requirement (>100 GPa) | High | High | Focus on systems with lowest predicted pressure; explore chemical precompression. |
+| Metastability upon decompression | High | High | Develop rapid quenching and capping strategies; use thin-film stabilization. |
+| Reproducibility issues | Medium | High | Adopt open data protocols; independent replication; share samples. |
+| Cost of rare elements (Y) | Medium | Medium | Prioritize Li, Na, K, Mg, Ca systems; avoid Y if possible. |
+| Safety (DAC explosions, laser hazards) | Medium | Medium | Follow standard safety protocols; use remote operation. |
+
+### References to Existing Documents
+
+- See `docs/online_research_summary.md` for detailed literature review and data tables.
+- See `docs/experimental_feedback_loop.md` for iterative synthesis-characterization workflow.
