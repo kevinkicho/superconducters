@@ -5,6 +5,9 @@
 ### Ternary Hydrides
 - **Carbonaceous sulfur hydride (C-S-H)**: Claimed Tc ~287 K at 267 GPa (Nature, 2020), but retracted in 2023 due to data inconsistencies. No independent replication exists. The highest confirmed hydride Tc is 250 K in LaH₁₀ (Drozdov et al., 2019). [Source](https://www.nature.com/articles/s41586-020-2801-z) [Retraction](https://www.nature.com/articles/s41586-023-06616-5)
 - **Nitrogen-doped lutetium hydride (Lu-N-H)**: Claimed Tc ~294 K at 1 GPa, but retracted due to data integrity concerns (Nature, 2023). Highlights need for rigorous verification. [Source](https://www.nature.com/articles/s41586-023-05742-0)
+- **YH10 (yttrium decahydride)**: Predicted room-temperature superconductor with Tc ~300 K at ~200 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
+- **CaH12 (calcium dodecahydride)**: Predicted Tc ~250–300 K at ~150 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
+- **MgH16 (magnesium hexadecahydride)**: Predicted Tc ~200–250 K at ~250 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
 - **Ternary hydride predictions**: Computational searches identify Li2MgH4 (predicted Tc ~200 K at 200 GPa) and other systems. Doping with light elements (C, N, O) enhances Tc by modifying electronic structure. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134512)
 
 ### Doped Cuprates
@@ -136,3 +139,11 @@ Based on computational predictions and experimental feasibility, we prioritize t
 
 - See `docs/online_research_summary.md` for detailed literature review and data tables.
 - See `docs/experimental_feedback_loop.md` for iterative synthesis-characterization workflow.
+
+
+## Manufacturing Pathways
+
+### High-Pressure Synthesis of Hydrides
+- See `docs/experimental_protocol_hydride.md` for detailed experimental protocols for DAC synthesis, thin-film deposition, and characterization of hydride superconductors.
+- The predicted room-temperature hydrides (YH10, CaH12, MgH16) are primary targets for synthesis and verification.
+- Iterative feedback loop: computational screening → high-pressure synthesis → four-probe resistivity and AC susceptibility measurements → refinement of predictions.

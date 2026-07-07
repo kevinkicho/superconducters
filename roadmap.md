@@ -86,3 +86,10 @@
 - **M18 (Year 2-3)**: Integrate GNN with active learning loop to prioritize synthesis of top candidates. Use uncertainty quantification to guide experimental testing. Target 3x improvement in candidate hit rate over random screening.
 - **M19 (Year 3-5)**: Experimental testing of top 100 GNN-predicted candidates using high-throughput synthesis (e.g., combinatorial thin-film deposition) and characterization (resistivity, magnetic susceptibility). Validate predictions and feed results back to retrain GNN.
 - **M20 (Year 5-10)**: Deploy GNN-based screening in manufacturing QC to predict material performance from process parameters. Reduce time-to-market for new wire batches by 50%.
+
+
+## Near-Term Milestones (6–12 months)
+- **Computational screening of ternary hydrides**: Use DFT and machine learning to screen ternary hydride systems (e.g., Li-Mg-H, Y-H, Ca-H) for high Tc under moderate pressure. Target: identify top 5 candidates within 3 months.
+- **High-pressure synthesis of top candidate (e.g., Li2MgH16)**: Synthesize the most promising candidate using diamond anvil cell (DAC) techniques. Target: successful synthesis within 6 months.
+- **Four-probe resistivity and AC susceptibility measurements**: Characterize the synthesized sample for superconductivity. Measure Tc onset, zero-resistance, and Meissner effect. Target: confirm or refute superconductivity within 9 months.
+- **Iteration**: Feed experimental results back into computational models to refine predictions and select next candidate. Target: complete at least 2 full iteration cycles within 12 months.
