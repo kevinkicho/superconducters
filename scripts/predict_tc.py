@@ -14,6 +14,9 @@ import math
 import os
 from typing import Dict, List, Tuple
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
+import numpy as np
 import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -605,3 +608,93 @@ def screen_candidates(candidates: List[str], model_path: str = None) -> List[Dic
             results.append({'formula': formula, 'error': str(e)})
     results.sort(key=lambda x: x.get('predicted_tc', -1), reverse=True)
     return results
+
+
+def train_gp_model():
+    """
+    Train a Gaussian Process regressor on the embedded database.
+    Returns the trained GP model and the feature scaler (if any).
+    """
+    from sklearn.preprocessing import StandardScaler
+    data = load_data()
+    X = []
+    y = []
+    for entry in data:
+        formula = entry.get('composition', entry.get('name', ''))
+        if not formula:
+            continue
+        try:
+            avg_val = average_valence(formula)
+            avg_deb = average_debye(formula)
+            avg_mass = average_atomic_mass(formula)
+            num_elements = len(set(re.findall(r'[A-Z][a-z]*', formula)))
+            tc = entry.get('Tc', None)
+            if tc is None:
+                continue
+            X.append([avg_val, avg_deb, avg_mass, num_elements])
+            y.append(tc)
+        except:
+            continue
+    if len(X) < 5:
+        raise ValueError("Not enough data to train GP model")
+    X = np.array(X)
+    y = np.array(y)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-2, 1e2))
+    gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10, alpha=1e-6, normalize_y=True)
+    gp.fit(X_scaled, y)
+    print(f"GP model trained. Kernel: {gp.kernel_}")
+    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'gp_model.pkl')
+    os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    joblib.dump({'gp': gp, 'scaler': scaler}, model_path)
+    print(f"GP model saved to {model_path}")
+    return gp, scaler
+
+
+def predict_with_uncertainty(formula: str, gp_model_path: str = None) -> dict:
+    """
+    Predict Tc and uncertainty (standard deviation) for a given formula using a trained GP.
+    Returns dict with 'formula', 'predicted_tc', 'uncertainty'.
+    """
+    import numpy as np
+    if gp_model_path is None:
+        gp_model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'gp_model.pkl')
+    if not os.path.exists(gp_model_path):
+        gp, scaler = train_gp_model()
+    else:
+        saved = joblib.load(gp_model_path)
+        gp = saved['gp']
+        scaler = saved['scaler']
+    try:
+        avg_val = average_valence(formula)
+        avg_deb = average_debye(formula)
+        avg_mass = average_atomic_mass(formula)
+        num_elements = len(set(re.findall(r'[A-Z][a-z]*', formula)))
+        features = np.array([[avg_val, avg_deb, avg_mass, num_elements]])
+        features_scaled = scaler.transform(features)
+        tc_pred, tc_std = gp.predict(features_scaled, return_std=True)
+        return {'formula': formula, 'predicted_tc': round(tc_pred[0], 2), 'uncertainty': round(tc_std[0], 2)}
+    except Exception as e:
+        return {'formula': formula, 'error': str(e)}
+
+
+def active_learning_loop(candidates: list, alpha: float = 1.0, top_n: int = 5, retrain: bool = False) -> list:
+    """
+    Active learning loop that selects high-uncertainty, high-Tc candidates.
+    Uses the GP model to predict Tc and uncertainty. Scores candidates as
+    predicted_tc + alpha * uncertainty, then returns the top_n candidates.
+    If retrain is True, the model is retrained on the full database before prediction.
+    """
+    if retrain:
+        train_gp_model()
+    results = []
+    for formula in candidates:
+        res = predict_with_uncertainty(formula)
+        if 'error' in res:
+            continue
+        score = res['predicted_tc'] + alpha * res['uncertainty']
+        res['score'] = round(score, 2)
+        results.append(res)
+    results.sort(key=lambda x: x['score'], reverse=True)
+    return results[:top_n]
