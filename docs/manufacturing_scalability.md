@@ -846,3 +846,74 @@ To qualify materials for commercial deployment, accelerated aging tests under co
 - Develop in-operando characterization techniques (e.g., synchrotron X-ray diffraction under current load) to observe degradation in real time.
 - Explore self-healing materials that can repair microcracks or replenish hydrogen via reversible chemical reactions.
 - Investigate the role of grain boundaries and defects in accelerating degradation; grain boundary engineering may improve long-term stability.
+
+
+## Detailed Engineering Design for Pilot Plant
+
+### Process Flow Diagram (Text-Based)
+
+```
+[Feedstock: H2 gas, La metal, S powder]
+         |
+         v
+[Precursor Mixing & Ball Milling]
+         |
+         v
+[High-Pressure Autoclave (2 GPa, 800°C)]
+         |
+         v
+[Quench & Pressure Release]
+         |
+         v
+[Crushing & Sieving (100-500 µm)]
+         |
+         v
+[Encapsulation (DLC coating)]
+         |
+         v
+[Quality Control: XRD, Tc measurement]
+         |
+         v
+[Product: 1 kg/day LaH10 or H3S pellets]
+```
+
+### Equipment List
+
+| Equipment | Specification | Quantity | Estimated Cost (USD) |
+|-----------|---------------|----------|----------------------|
+| High-pressure autoclave | 2 GPa, 800°C, 5 L volume, Inconel 718 | 2 | $4,000,000 |
+| Ball mill | Planetary, 500 mL jars, zirconia balls | 1 | $50,000 |
+| Gas handling system | H2 compressor, purifier, mass flow controllers | 1 | $500,000 |
+| Quench tank | Stainless steel, 100 L, with recirculation | 1 | $30,000 |
+| Crusher & sieve shaker | Jaw crusher + vibratory sieve | 1 | $80,000 |
+| Encapsulation system | PECVD for diamond-like carbon coating | 1 | $600,000 |
+| XRD diffractometer | Lab-scale, Cu Kα, 2θ range 10-90° | 1 | $200,000 |
+| Cryostat & Tc measurement | Closed-cycle cryostat, 4-probe resistivity | 1 | $150,000 |
+| Safety infrastructure | Blast walls, gas detection, ventilation | 1 | $1,000,000 |
+| **Total Equipment** | | | **$6,610,000** |
+
+### Cost Estimate for 1 kg/day Production
+
+- **Capital Investment**: $8.5M (equipment $6.6M + installation $1.0M + contingency $0.9M)
+- **Operating Cost per kg**:
+  - Raw materials (H2, La, S): $150
+  - Energy (heating, compression, coating): $400
+  - Labor (3 operators per shift, 3 shifts): $200
+  - Maintenance & consumables: $100
+  - Depreciation (10-year straight line): $23
+  - **Total operating cost per kg**: ~$873
+- **Annual Production**: 365 kg/year
+- **Annual Operating Cost**: ~$318,000
+- **Revenue at $1,000/kg**: $365,000/year → Payback period ~23 years (subsidized R&D phase)
+
+### Timeline (Months 1–18)
+
+| Phase | Duration | Activities |
+|-------|----------|------------|
+| Detailed design & procurement | Months 1–4 | Finalize P&ID, order long-lead items (autoclave, coating system) |
+| Site preparation & utilities | Months 3–6 | Install gas lines, electrical, safety systems |
+| Equipment installation & commissioning | Months 5–10 | Install autoclave, ball mill, encapsulation; pressure test |
+| Shake-down runs | Months 9–12 | Produce first 10 g batches; optimize temperature/pressure profile |
+| Scale-up to 1 kg/day | Months 11–14 | Increase batch size; validate Tc and yield |
+| Quality certification | Months 13–16 | Obtain XRD, Tc, and stability data; document SOPs |
+| Pilot plant operational | Month 18 | Full 1 kg/day production ready for external evaluation |
