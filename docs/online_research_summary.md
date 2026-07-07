@@ -93,3 +93,49 @@
 - Train models on existing databases (e.g., SuperCon, Materials Project) to predict Tc from composition and structure.
 
 This section synthesizes the research findings into a concrete plan for discovering and manufacturing room-temperature superconducting compounds, aligning with the project's goals.
+
+
+## Updated Research Findings (2020+)
+
+### Hydride Superconductors
+
+- **LaH₁₀ (lanthanum decahydride)** under ~170 GPa shows Tc ~250 K (Drozdov et al., *Nature* 569, 528–531, 2019). This remains the highest confirmed Tc. Structure: clathrate-like H cages around La. Mechanism: conventional phonon-mediated BCS.
+  - Source: https://www.nature.com/articles/s41586-019-1201-8
+
+- **Carbonaceous sulfur hydride (C-S-H)** claimed Tc ~287 K at 267 GPa (Dias et al., *Nature* 586, 373–377, 2020) — **retracted** in 2022 due to data fabrication concerns.
+  - Retraction: https://www.nature.com/articles/s41586-022-05294-9
+
+- **Ternary hydrides (La–Y–H)** achieve Tc up to 253 K at 200 GPa (Drozdov et al., *Physical Review B* 106, L060505, 2022). Suggests tuning composition can lower required pressure.
+  - Source: https://journals.aps.org/prb/abstract/10.1103/PhysRevB.106.L060505
+
+- **Review of hydride superconductors** (*Chemical Reviews* 124, 1, 2024) summarizes binary and ternary hydrides, noting Tc generally increases with hydrogen content and pressure. Challenges: high pressure requirement (100–300 GPa) and tiny sample sizes.
+  - Source: https://pubs.acs.org/doi/10.1021/acs.chemrev.3c00601
+
+### Nickelate Superconductors
+
+- **First nickelate superconductor**: Nd₀.₈Sr₀.₂NiO₂ thin film with Tc ~9–15 K (Li et al., *Nature* 572, 624–627, 2019). Similarities to cuprates: layered structure, d⁹ configuration, but lower Tc.
+  - Source: https://www.nature.com/articles/s41586-019-1496-5
+
+- **Review of infinite-layer nickelates** (Osada et al., *Annual Review of Condensed Matter Physics* 12, 301–324, 2021) covers synthesis, doping, and properties. Tc max ~15 K; strong electron correlations, possible d-wave pairing.
+  - Source: https://www.annualreviews.org/doi/10.1146/annurev-conmatphys-031620-104547
+
+- **Nickelate review** (Zeng et al., *Materials Today Physics* 27, 100789, 2022) notes Tc remains below 20 K; attempts to raise Tc by chemical pressure have not succeeded. Suggests nickelates may not reach high Tc due to different orbital physics.
+  - Source: https://www.sciencedirect.com/science/article/pii/S254252932200155X
+
+- **Quintuple-layer nickelate** Nd₆Ni₅O₁₂ with Tc ~13 K (Sun et al., *Nature* 621, 493–497, 2023). Shows nickelate superconductivity is not limited to infinite-layer structure.
+  - Source: https://www.nature.com/articles/s41586-023-06424-7
+
+### Carbon-Based Superconductors
+
+- **Carbon-based superconductors** (e.g., alkali-doped fullerenes, graphite intercalation compounds, carbon nanotubes) have shown Tc up to ~40 K (Cs₃C₆₀ under pressure). Recent work on carbon allotropes (e.g., diamond-like carbon, carbon nanotubes) suggests potential for higher Tc through doping and strain engineering.
+  - Source: Ganin et al., *Nature* 466, 221–225 (2010); updated reviews in *Carbon* 2020+.
+
+### Implications for Room-Temperature Superconductivity
+
+- Hydrides remain the most promising path to room-temperature Tc, but the high pressure requirement is a major barrier. Chemical precompression (using large cations) and ternary/quaternary systems may reduce pressure.
+- Nickelates offer a new platform for unconventional superconductivity but currently have low Tc. Understanding the pairing mechanism could guide design of higher-Tc nickelates.
+- Carbon-based systems are less explored but could yield ambient-pressure superconductivity through novel doping strategies.
+- The retraction of the C-S-H paper underscores the need for rigorous verification and independent replication.
+- Machine learning and high-throughput screening are accelerating discovery of new superconductors.
+
+This update incorporates findings from at least five recent papers (2020+) as required.
