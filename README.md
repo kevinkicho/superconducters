@@ -318,3 +318,10 @@ export RBAC_ADMIN_API_KEY=your_admin_key_here
 ```
 
 If no role is set, the system defaults to `viewer` with no API key required. The pipeline scripts check these variables before executing privileged operations and will exit with an error if the role is insufficient.
+
+
+## Additional Documentation
+
+- [User Manual](docs/user_manual.md): Comprehensive guide for using the project.
+- [Deployment Guide](docs/deployment_guide.md): Instructions for deploying the system.
+- [Model Versioning and Experiment Tracking](docs/model_versioning_and_experiment_tracking.md): Guide for managing model versions and tracking experiments.
