@@ -202,3 +202,15 @@ A room-temperature superconducting compound having the formula A_xB_yH_z, where 
 [11] AIAG & VDA. (2019). Failure Mode and Effects Analysis (FMEA) Handbook. Automotive Industry Action Group.
 [12] Drozdov, A. P., et al. (2015). Conventional superconductivity at 203 K at high pressures. Nature, 525, 73–76. https://doi.org/10.1038/nature14964
 [13] Pickard, C. J., & Needs, R. J. (2011). Ab initio random structure searching. Journal of Physics: Condensed Matter, 23(5), 053201. https://doi.org/10.1088/0953-8984/23/5/053201
+
+## Regulatory Submission
+
+The top candidate (a ternary hydride superconductor, e.g., LiYH₄) requires a comprehensive regulatory submission to address safety, environmental, and manufacturing compliance. Key considerations include:
+
+- **Chemical Safety**: Hydride precursors (e.g., LiH, YH₃) are pyrophoric and toxic. The submission must include Material Safety Data Sheets (MSDS), exposure limits, and handling protocols per OSHA 29 CFR 1910.1200 (Hazard Communication) and EPA Toxic Substances Control Act (TSCA) premanufacture notification (PMN) for new chemical substances.
+- **High-Pressure Equipment**: Synthesis at 50–150 GPa and 1000–3000 K involves multi-anvil presses. Compliance with ASME Boiler and Pressure Vessel Code (BPVC) Section VIII and OSHA 29 CFR 1910.217 (mechanical power presses) is required. A Process Hazard Analysis (PHA) per OSHA 29 CFR 1910.119 (Process Safety Management) must be submitted.
+- **Environmental Impact**: The manufacturing process may generate hydrogen gas and metal dust. The submission must include an Environmental Impact Assessment (EIA) under NEPA, air emission permits under Clean Air Act, and waste disposal plans under RCRA.
+- **Product Certification**: For applications in power transmission or MRI, the material must meet ASTM B714 (superconducting wire) and IEC 61788 (superconductivity) standards. A Declaration of Conformity (DoC) and CE marking for EU markets are needed.
+- **International Regulations**: REACH (EU) registration for substances >1 ton/year, and China REACH (MEE Order No. 12) for CN market. Export controls under Wassenaar Arrangement may apply if the material is dual-use.
+
+A regulatory submission package should include: (1) chemical identity and composition, (2) manufacturing process description, (3) toxicological and ecotoxicological data, (4) exposure scenarios, (5) risk management measures, and (6) compliance declarations. The submission timeline is estimated at 12–18 months for US EPA PMN and EU REACH registration, with parallel filings in JP, CN, and KR.
