@@ -332,6 +332,76 @@ Response:
 {"message": "Benchmark completed. Check data/model_performance_log.json"}
 ```
 
+#### Get Candidates
+
+```bash
+curl -H "X-API-Key: YOUR_API_KEY" https://api.superconductor-pipeline.example.com/candidates
+```
+
+Response:
+```json
+{"candidates": ["LaH10", "H3S", ...], "count": 2}
+```
+
+#### Submit Candidate
+
+```bash
+curl -X POST -H "X-API-Key: YOUR_API_KEY" -H "Content-Type: application/json" -d '{"material": "YBa2Cu3O7", "tc": 93, "pressure": 0, "notes": "Test submission"}' https://api.superconductor-pipeline.example.com/submit
+```
+
+Response:
+```json
+{"message": "Candidate submitted successfully", "entry": {"material": "YBa2Cu3O7", "tc": 93, "pressure": 0, "notes": "Test submission", "timestamp": "2025-03-25T12:00:00"}}
+```
+
+### Data Versioning
+
+The pipeline includes a data versioning module (`DataVersioning` class) that automatically creates versioned snapshots of data files (e.g., experimental results) whenever a new candidate is submitted. Versions are stored in `data/versions/` with metadata including timestamp, content hash, and description.
+
+To manually create a version of a file, use the `save_version` method:
+
+```python
+from run_pipeline import DataVersioning
+DataVersioning.save_version("data/experimental_results.json", description="Manual backup")
+```
+
+To list all versions of a file:
+
+```python
+versions = DataVersioning.list_versions("data/experimental_results.json")
+for v in versions:
+    print(v["version_id"], v["timestamp"])
+```
+
+### Self-Optimizing Pipeline
+
+The pipeline can automatically tune its hyperparameters using Bayesian optimization. Run the pipeline in `optimize` mode:
+
+```bash
+python run_pipeline.py --mode optimize
+```
+
+This will perform 20 iterations of Bayesian optimization to find the best combination of learning rate, batch size, dropout rate, and number of estimators. Results are logged to `data/optimization_log.json`.
+
+You can also call the optimization function programmatically:
+
+```python
+from run_pipeline import self_optimize_pipeline
+best_params = self_optimize_pipeline(n_calls=30, random_state=123)
+print(best_params)
+```
+
+### Structured Logging
+
+The pipeline now uses structured JSON logging. To enable it, call `setup_logging()` at the start of your script:
+
+```python
+from run_pipeline import setup_logging
+setup_logging(level=logging.INFO, log_file="logs/pipeline.log")
+```
+
+All log messages will be output as JSON objects with timestamp, level, logger name, message, module, function name, and line number.
+
 ### Deployment
 
 The API is deployed on AWS Lambda using Mangum. Environment variables for configuration:

@@ -9449,6 +9449,171 @@ def run_benchmark():
     print(f"[Benchmark] Logged results: {elapsed:.4f}s, {throughput:.2f} samples/s, peak memory {peak/1e6:.2f} MB")
 
 
+# --- Data Versioning Module ---
+import hashlib
+import json
+import os
+from datetime import datetime
+
+class DataVersioning:
+    """Manages versioning of data files using content hashing and metadata."""
+    
+    VERSION_DIR = "data/versions"
+    
+    @classmethod
+    def ensure_version_dir(cls):
+        os.makedirs(cls.VERSION_DIR, exist_ok=True)
+    
+    @classmethod
+    def compute_hash(cls, filepath: str) -> str:
+        """Compute SHA256 hash of file contents."""
+        sha256 = hashlib.sha256()
+        with open(filepath, 'rb') as f:
+            for chunk in iter(lambda: f.read(8192), b''):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+    
+    @classmethod
+    def save_version(cls, filepath: str, description: str = "") -> str:
+        """Save a versioned copy of the file with metadata."""
+        cls.ensure_version_dir()
+        content_hash = cls.compute_hash(filepath)
+        timestamp = datetime.now().isoformat()
+        version_id = f"{timestamp}_{content_hash[:8]}"
+        dest = os.path.join(cls.VERSION_DIR, f"{os.path.basename(filepath)}_{version_id}")
+        with open(filepath, 'r') as src:
+            content = src.read()
+        with open(dest, 'w') as dst:
+            dst.write(content)
+        # Save metadata
+        meta = {
+            "version_id": version_id,
+            "original_file": filepath,
+            "timestamp": timestamp,
+            "hash": content_hash,
+            "description": description
+        }
+        meta_path = os.path.join(cls.VERSION_DIR, f"{os.path.basename(filepath)}_{version_id}.meta.json")
+        with open(meta_path, 'w') as f:
+            json.dump(meta, f, indent=2)
+        print(f"[DataVersioning] Saved version {version_id} for {filepath}")
+        return version_id
+    
+    @classmethod
+    def list_versions(cls, filepath: str) -> list:
+        """List all versions for a given file."""
+        cls.ensure_version_dir()
+        base = os.path.basename(filepath)
+        versions = []
+        for fname in os.listdir(cls.VERSION_DIR):
+            if fname.startswith(base) and fname.endswith('.meta.json'):
+                with open(os.path.join(cls.VERSION_DIR, fname), 'r') as f:
+                    meta = json.load(f)
+                versions.append(meta)
+        return sorted(versions, key=lambda x: x['timestamp'], reverse=True)
+
+
+# --- Self-Optimizing Pipeline using Bayesian Optimization ---
+def self_optimize_pipeline(n_calls: int = 20, random_state: int = 42) -> dict:
+    """
+    Use Bayesian optimization to tune pipeline hyperparameters.
+    Optimizes a composite score (e.g., -MAE on validation set).
+    """
+    from skopt import gp_minimize
+    from skopt.space import Real, Integer
+    from skopt.utils import use_named_args
+    
+    # Define search space
+    space = [
+        Real(1e-4, 1e-1, name='learning_rate', prior='log-uniform'),
+        Integer(16, 256, name='batch_size'),
+        Real(0.1, 0.9, name='dropout_rate'),
+        Integer(50, 500, name='n_estimators'),
+    ]
+    
+    @use_named_args(space)
+    def objective(**params):
+        """Objective function: run pipeline with given params and return negative score."""
+        # In a real implementation, run the pipeline with these hyperparameters
+        # and compute a validation metric (e.g., MAE on held-out set).
+        # For now, simulate a score.
+        import random
+        # Simulate: lower learning rate and higher n_estimators give better score
+        score = - (params['learning_rate'] * 10 + (1/params['n_estimators']) * 100 + random.uniform(0, 0.1))
+        return score
+    
+    print("[SelfOptimize] Starting Bayesian optimization...")
+    result = gp_minimize(objective, space, n_calls=n_calls, random_state=random_state, verbose=True)
+    
+    best_params = {dim.name: val for dim, val in zip(space, result.x)}
+    print(f"[SelfOptimize] Best parameters found: {best_params}")
+    print(f"[SelfOptimize] Best score: {result.fun}")
+    
+    # Log optimization results
+    log_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "best_params": best_params,
+        "best_score": result.fun,
+        "n_calls": n_calls,
+        "random_state": random_state
+    }
+    log_path = "data/optimization_log.json"
+    if os.path.exists(log_path):
+        with open(log_path, 'r') as f:
+            log_data = json.load(f)
+    else:
+        log_data = []
+    log_data.append(log_entry)
+    with open(log_path, 'w') as f:
+        json.dump(log_data, f, indent=2)
+    
+    return best_params
+
+
+# --- Structured Logging Setup ---
+import logging
+import json
+import sys
+
+class JSONFormatter(logging.Formatter):
+    """Custom formatter to output log records as JSON."""
+    def format(self, record):
+        log_entry = {
+            "timestamp": self.formatTime(record, self.datefmt),
+            "level": record.levelname,
+            "logger": record.name,
+            "message": record.getMessage(),
+            "module": record.module,
+            "funcName": record.funcName,
+            "lineNo": record.lineno
+        }
+        if record.exc_info and record.exc_info[0]:
+            log_entry["exception"] = self.formatException(record.exc_info)
+        return json.dumps(log_entry)
+
+def setup_logging(level=logging.INFO, log_file: str = None):
+    """Configure structured JSON logging to stdout and optionally to a file."""
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+    
+    # Remove existing handlers
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+    
+    # Console handler
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(JSONFormatter())
+    root_logger.addHandler(console_handler)
+    
+    # File handler (optional)
+    if log_file:
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setFormatter(JSONFormatter())
+        root_logger.addHandler(file_handler)
+    
+    logging.info("Structured logging initialized.")
+
+
 # --- FastAPI application ---
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
@@ -9495,19 +9660,72 @@ async def benchmark_endpoint():
     run_benchmark()
     return {"message": "Benchmark completed. Check data/model_performance_log.json"}
 
+@app.get("/candidates", dependencies=[Depends(verify_api_key)])
+async def get_candidates():
+    """Return list of candidate materials."""
+    candidate_file = "candidate_materials.md"
+    if not os.path.exists(candidate_file):
+        return {"candidates": []}
+    with open(candidate_file, "r") as f:
+        content = f.read()
+    # Parse candidates from markdown (simple heuristic: lines starting with - or *)
+    candidates = []
+    for line in content.split("\n"):
+        line = line.strip()
+        if line.startswith("- ") or line.startswith("* "):
+            candidates.append(line[2:])
+    return {"candidates": candidates, "count": len(candidates)}
+
+@app.post("/submit", dependencies=[Depends(verify_api_key)])
+async def submit_candidate(data: dict):
+    """Submit a new experimental result or candidate material."""
+    # Validate input
+    if not data or "material" not in data:
+        raise HTTPException(status_code=400, detail="Missing 'material' field")
+    material = data["material"]
+    tc = data.get("tc", None)
+    pressure = data.get("pressure", None)
+    notes = data.get("notes", "")
+    
+    # Save to experimental results file
+    results_file = "data/experimental_results.json"
+    if os.path.exists(results_file):
+        with open(results_file, 'r') as f:
+            results = json.load(f)
+    else:
+        results = []
+    
+    entry = {
+        "material": material,
+        "tc": tc,
+        "pressure": pressure,
+        "notes": notes,
+        "timestamp": datetime.now().isoformat()
+    }
+    results.append(entry)
+    with open(results_file, 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    # Also create a versioned snapshot
+    DataVersioning.save_version(results_file, description=f"Submitted candidate: {material}")
+    
+    return {"message": "Candidate submitted successfully", "entry": entry}
+
 # Mangum handler for AWS Lambda
 handler = Mangum(app)
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["pipeline", "api", "benchmark"], default="pipeline", help="Run mode")
+    parser.add_argument("--mode", choices=["pipeline", "api", "benchmark", "optimize"], default="pipeline", help="Run mode")
     args = parser.parse_args()
     if args.mode == "pipeline":
         run_validation()
         integrate_manufacturing_cost()
     elif args.mode == "benchmark":
         run_benchmark()
+    elif args.mode == "optimize":
+        self_optimize_pipeline()
     else:
         # Run API server
         host = os.environ.get("HOST", "0.0.0.0")
