@@ -56,14 +56,40 @@ Edit `.env` with your settings:
 | `VIEWER_USER` | Username for viewer role | No |
 | `VIEWER_PASS` | Password for viewer role | No |
 
-### Role-Based Access Control (RBAC)
+### Role-Based Access Control (RBAC) with OAuth2
 
-The Streamlit dashboard supports three roles:
-- **Admin**: Full access to all features, including pipeline execution and configuration.
-- **Researcher**: Can view results, run experiments, and provide feedback.
-- **Viewer**: Read-only access to dashboards and reports.
+The Streamlit dashboard supports OAuth2 authentication via providers such as Google, GitHub, and Microsoft Azure AD. This provides secure, token-based access without managing passwords.
 
-Set the corresponding environment variables to enable authentication. If not set, the dashboard runs in open mode.
+#### Configuration
+
+1. Register an OAuth2 application with your provider (e.g., Google Cloud Console, GitHub OAuth Apps).
+2. Set the following environment variables in your `.env` file:
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `OAUTH2_CLIENT_ID` | Client ID from the OAuth2 provider | Yes |
+| `OAUTH2_CLIENT_SECRET` | Client secret from the OAuth2 provider | Yes |
+| `OAUTH2_AUTHORIZE_URL` | Authorization endpoint (e.g., `https://accounts.google.com/o/oauth2/auth`) | Yes |
+| `OAUTH2_TOKEN_URL` | Token endpoint (e.g., `https://oauth2.googleapis.com/token`) | Yes |
+| `OAUTH2_USERINFO_URL` | User info endpoint (e.g., `https://www.googleapis.com/oauth2/v2/userinfo`) | Yes |
+| `OAUTH2_SCOPE` | Space-separated list of scopes (e.g., `openid email profile`) | Yes |
+| `OAUTH2_REDIRECT_URI` | Callback URL (e.g., `https://your-app.com/oauth2/callback`) | Yes |
+
+3. The dashboard will automatically redirect unauthenticated users to the OAuth2 provider's login page.
+4. After successful authentication, the user's email and roles are extracted from the user info response.
+
+#### Role Mapping
+
+Roles are assigned based on the user's email domain or a predefined mapping file. By default:
+- Users with email ending in `@admin.org` are assigned the **Admin** role.
+- Users with email ending in `@researcher.org` are assigned the **Researcher** role.
+- All other authenticated users are assigned the **Viewer** role.
+
+You can customize role mapping by setting the `OAUTH2_ROLE_MAPPING` environment variable to a JSON file path containing a dictionary of email patterns to roles.
+
+#### Fallback to Environment Variable Authentication
+
+If OAuth2 is not configured (i.e., `OAUTH2_CLIENT_ID` is not set), the dashboard falls back to the legacy environment variable authentication using `ADMIN_USER`, `ADMIN_PASS`, etc. as described in the Configuration section above.
 
 ## Running the Pipeline
 
@@ -411,3 +437,90 @@ The API is deployed on AWS Lambda using Mangum. Environment variables for config
 | `HOST` | Host to bind (for local uvicorn) | `0.0.0.0` |
 | `PORT` | Port to bind (for local uvicorn) | `8000` |
 | `PIPELINE_API_KEYS` | Comma-separated list of valid API keys | `dev-key-123` |
+
+
+### Batch Predict API
+
+The `/batch_predict` endpoint allows you to submit multiple materials for Tc prediction in a single request. This is useful for high-throughput screening.
+
+#### Endpoint
+
+`POST /batch_predict`
+
+#### Authentication
+
+Requires a valid API key (see API Key Authentication above) or OAuth2 bearer token.
+
+#### Request Body
+
+The request body must be a JSON object with a `materials` array. Each material is an object with the following fields:
+
+| Field | Type | Description | Required |
+|-------|------|-------------|----------|
+| `formula` | string | Chemical formula (e.g., `LaH10`) | Yes |
+| `pressure` | number | Pressure in GPa | Yes |
+| `temperature` | number | Temperature in K (optional, default 0) | No |
+| `structure` | string | Crystal structure type (e.g., `fcc`, `bcc`, `hcp`) | No |
+
+#### Example Request
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer YOUR_OAUTH2_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "materials": [
+      {"formula": "LaH10", "pressure": 150, "temperature": 0, "structure": "fcc"},
+      {"formula": "H3S", "pressure": 200, "temperature": 0, "structure": "bcc"},
+      {"formula": "YBa2Cu3O7", "pressure": 0, "temperature": 93, "structure": "orthorhombic"}
+    ]
+  }' \
+  https://api.superconductor-pipeline.example.com/batch_predict
+```
+
+#### Example Response
+
+```json
+{
+  "predictions": [
+    {
+      "formula": "LaH10",
+      "pressure": 150,
+      "predicted_tc": 250.3,
+      "confidence": 0.92,
+      "model_version": "v2.1.0"
+    },
+    {
+      "formula": "H3S",
+      "pressure": 200,
+      "predicted_tc": 203.5,
+      "confidence": 0.88,
+      "model_version": "v2.1.0"
+    },
+    {
+      "formula": "YBa2Cu3O7",
+      "pressure": 0,
+      "predicted_tc": 92.0,
+      "confidence": 0.95,
+      "model_version": "v2.1.0"
+    }
+  ],
+  "request_id": "batch-20250325-abc123",
+  "timestamp": "2025-03-25T12:00:00Z"
+}
+```
+
+#### Error Handling
+
+If any material in the batch fails validation (e.g., invalid formula), the entire batch is rejected with a 400 status code and an error message indicating which material failed.
+
+```json
+{
+  "error": "Invalid material at index 1: formula 'H3S' is not recognized",
+  "request_id": "batch-20250325-def456"
+}
+```
+
+#### Rate Limiting
+
+The batch predict endpoint is rate-limited to 10 requests per minute per API key. Exceeding this limit returns a 429 status code.
