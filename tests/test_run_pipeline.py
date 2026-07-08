@@ -2154,3 +2154,103 @@ def test_run_pipeline_prediction_failure():
         mock_open.return_value.__enter__.return_value = mock_file
         with pytest.raises(Exception):
             rp.run_pipeline()
+
+
+# --- Tests for new modules (Sobol analysis, decision support, newsletter) ---
+
+def test_generate_press_release():
+    """Test generate_press_release function."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \\
+         patch('scripts.run_pipeline.train_model') as mock_train, \\
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \\
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \\
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.generate_press_release()
+        assert isinstance(result, str)
+        assert len(result) > 0
+        assert True
+
+def test_generate_monthly_report():
+    """Test generate_monthly_report function."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \\
+         patch('scripts.run_pipeline.train_model') as mock_train, \\
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \\
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \\
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.generate_monthly_report()
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+def test_generate_funding_proposal():
+    """Test generate_funding_proposal function."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \\
+         patch('scripts.run_pipeline.train_model') as mock_train, \\
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \\
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \\
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.generate_funding_proposal()
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+def test_decision_support():
+    """Test decision_support function."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \\
+         patch('scripts.run_pipeline.train_model') as mock_train, \\
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \\
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \\
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.decision_support()
+        assert result is not None
+
+def test_generate_stakeholder_newsletter():
+    """Test generate_stakeholder_newsletter function."""
+    with patch('scripts.run_pipeline.generate_press_release', return_value="Press release content"), \\
+         patch('scripts.run_pipeline.generate_monthly_report', return_value="Monthly report content"), \\
+         patch('scripts.run_pipeline.generate_funding_proposal', return_value="Funding proposal content"), \\
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.generate_stakeholder_newsletter()
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+def test_sobol_sensitivity_analysis():
+    """Test sobol_sensitivity_analysis function."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \\
+         patch('scripts.run_pipeline.train_model') as mock_train, \\
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \\
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \\
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.sobol_sensitivity_analysis()
+        assert isinstance(result, dict)
+        assert 'S1' in result or 'ST' in result or 'total' in result
