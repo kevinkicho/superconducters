@@ -72,61 +72,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 arxiv
 
-      - name: Run superconductor research script
+      - name: Run superconductor research pipeline
         run: |
-          python -c "
-import requests
-from bs4 import BeautifulSoup
-import arxiv
-import json
-
-# Search arXiv for recent papers on room temperature superconductors
-search = arxiv.Search(
-    query='room temperature superconductor',
-    max_results=10,
-    sort_by=arxiv.SortCriterion.SubmittedDate
-)
-
-papers = []
-for result in search.results():
-    papers.append({
-        'title': result.title,
-        'authors': [a.name for a in result.authors],
-        'summary': result.summary[:500],
-        'url': result.entry_id,
-        'published': str(result.published)
-    })
-
-# Save to a JSON file for later use
-with open('superconductor_research.json', 'w') as f:
-    json.dump(papers, f, indent=2)
-
-print(f'Found {len(papers)} recent papers.')
-"
-
-      - name: Generate research report
-        run: |
-          python -c "
-import json
-
-with open('superconductor_research.json') as f:
-    papers = json.load(f)
-
-report = '# Daily Superconductor Research Report\n\n'
-report += f'Generated on: $(date)\n\n'
-report += '## Recent arXiv Papers\n\n'
-for p in papers:
-    report += f'### {p[\"title\"]}\n'
-    report += f'**Authors:** {\", \".join(p[\"authors\"])}\n'
-    report += f'**Published:** {p[\"published\"]}\n'
-    report += f'**Summary:** {p[\"summary\"]}\n'
-    report += f'**URL:** {p[\"url\"]}\n\n'
-
-with open('docs/daily_superconductor_report.md', 'w') as f:
-    f.write(report)
-
-print('Report written to docs/daily_superconductor_report.md')
-"
+          python run_pipeline.py
 
       - name: Commit and push report
         run: |
