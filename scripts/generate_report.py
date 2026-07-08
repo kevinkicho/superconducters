@@ -3,7 +3,10 @@
 
 import json
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 # Try to import weasyprint; if not available, fallback to reportlab
@@ -219,7 +222,7 @@ def generate_pdf_latex(md_files: dict, pipeline_results: dict, output_path: str)
         tex_parts.append("No pipeline results available.")
 
     tex_parts.append(r"\\end{document}")
-    tex_content = '\\n'.join(tex_parts)
+    tex_content = '\n'.join(tex_parts)
 
     # Write to temporary directory and compile
     with tempfile.TemporaryDirectory() as tmpdir:
