@@ -1322,3 +1322,68 @@ Error metrics (RMSE, R²) and comparison plots for all ML models are tracked her
 *Placeholder for comparison plots (e.g., predicted vs. actual Tc scatter plots, residual distributions).*
 
 These metrics are updated after each retraining cycle (see [Retraining Workflow](#retraining-workflow)).
+
+
+## Production Monitoring
+
+This section describes the real-time monitoring infrastructure for the prediction API and experimental feedback loop. The monitoring system ensures that the deployed models remain reliable, performant, and aligned with experimental outcomes.
+
+### Prediction Error Monitoring
+
+Every API prediction request is logged with the following fields:
+- Timestamp (ISO 8601)
+- Input compound composition and synthesis parameters
+- Predicted Tc (K)
+- Model version ID
+- Request latency (ms)
+- Response status (success/error)
+
+When experimental results are later ingested for the same compound, the prediction error is computed as:
+- Absolute error = |predicted Tc - measured Tc|
+- Signed error = predicted Tc - measured Tc
+- Relative error = |predicted Tc - measured Tc| / measured Tc (if measured Tc > 0)
+
+These errors are aggregated into rolling windows (last 50, 100, 500 predictions) and exposed via a Prometheus metric `prediction_error_mae`. A dashboard (Grafana) displays the MAE trend, error distribution, and per-model-version breakdown.
+
+### API Latency Logging
+
+Each API request is instrumented with OpenTelemetry to capture:
+- Total request duration (p50, p95, p99)
+- Model inference time
+- Database query time (if applicable)
+- Serialization/deserialization overhead
+
+Latency metrics are exported to Prometheus as histograms (`api_request_duration_seconds`). Alerts fire when p95 latency exceeds 500 ms for more than 5 consecutive minutes.
+
+### Drift Detection Mechanism
+
+Drift detection runs as a scheduled job every 6 hours. It compares the distribution of recent predictions (last 200) against the training data distribution using:
+- **Population Stability Index (PSI)**: Measures shift in predicted Tc distribution. PSI > 0.2 triggers a warning.
+- **Kolmogorov–Smirnov test**: Compares the cumulative distribution of prediction errors against the baseline error distribution from the held-out test set. A p-value < 0.05 indicates significant drift.
+- **Rolling MAE**: As described in the [Retraining Triggers](#retraining-triggers) section, the rolling MAE over the last 50 experiments is tracked. If it exceeds 2× baseline MAE for three consecutive windows, a drift alert is raised.
+
+Drift metrics are stored in a `drift_metrics` table (timestamp, PSI, KS-statistic, p-value, rolling MAE, model version ID) for historical analysis.
+
+### Alerting (Console/Email)
+
+Alerts are routed through a central alert manager (e.g., Alertmanager) with the following notification channels:
+
+1. **Console alerts**: Displayed in the monitoring dashboard (Grafana) as annotated events. Critical alerts also appear in the system log (`/var/log/superconductor/monitoring.log`).
+2. **Email alerts**: Sent to the on-call ML engineer and experimental team lead via SMTP. The email includes:
+   - Alert severity (info, warning, critical)
+   - Alert name and description
+   - Current metric value and threshold
+   - Link to the relevant Grafana dashboard
+   - Suggested remediation steps
+
+Alert rules (defined in `prometheus/alerts.yml`):
+
+| Rule Name | Condition | Severity |
+|-----------|-----------|----------|
+| HighPredictionError | prediction_error_mae > 10 K for 5m | critical |
+| DriftDetected | drift_psi > 0.2 or drift_ks_pvalue < 0.05 | warning |
+| HighLatency | api_request_duration_seconds p95 > 0.5 for 5m | warning |
+| ModelVersionStale | model_version_age_days > 30 | info |
+| IngestionFailure | ingestion_error_rate > 0.05 for 10m | critical |
+
+All alerts are logged to a dedicated `alert_history` table for post-mortem analysis and compliance auditing.
