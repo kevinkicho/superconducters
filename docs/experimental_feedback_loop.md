@@ -1209,3 +1209,68 @@ The retraining process proceeds as follows:
 5. **Candidate re-ranking**: After successful retraining, the active learning loop re-ranks candidates using the updated model (see Closed-Loop Workflow Protocol).
 
 All retraining events are logged in `logs/retraining.log` with timestamps, model version, and performance metrics.
+
+
+## Campaign Planning
+
+This section outlines the timeline, resource allocation, and contingency plans for the top three candidate families identified by the active learning loop. The campaign is structured in three overlapping phases over a 12-month period, with clear milestones and decision gates.
+
+### Top Candidates (Ranked by Predicted Tc × Feasibility Score)
+
+1. **Hydride superconductors (LaH₁₀, H₃S, Y–C–H clathrates)** – Predicted Tc > 200 K at 150–200 GPa. High risk due to extreme pressure requirements, but highest potential payoff.
+2. **Cuprate high-Tc compounds (HgBa₂Ca₂Cu₃O₈₊δ, YBa₂Cu₃O₇₋δ)** – Tc up to 133 K at ambient pressure. Mature synthesis methods, but limited by brittle ceramics and oxygen doping control.
+3. **Nickelate superconductors (Nd₀.₈Sr₀.₂NiO₂, infinite-layer films)** – Tc up to 15 K at ambient pressure, but recent pressure studies suggest possible enhancement. Low risk, moderate payoff; serves as a fallback for demonstrating unconventional pairing mechanisms.
+
+### Timeline (12-Month Campaign)
+
+| Phase | Months | Activities | Deliverables | Decision Gate |
+|-------|--------|------------|--------------|---------------|
+| **Phase 1: Hydride Exploration** | 1–6 | High-pressure DAC synthesis of LaH₁₀, H₃S, and ternary clathrates (Li₂MgH₁₆, Y–C–H). DFT screening of 50+ candidate compositions. | 10 synthesized samples; Tc measurements; crystal structure refinement. | Month 6: If no sample shows Tc > 200 K at < 200 GPa, shift 50% of hydride resources to cuprate phase. |
+| **Phase 2: Cuprate Optimization** | 3–9 | Epitaxial thin-film growth of HgBa₂Ca₂Cu₃O₈₊δ and YBa₂Cu₃O₇₋δ on lattice-matched substrates (SrTiO₃, LaAlO₃). Oxygen doping optimization via post-annealing. | 20 thin-film samples; Tc > 130 K confirmed; critical current density > 10⁶ A/cm². | Month 9: If Tc < 120 K or Jc < 10⁵ A/cm², initiate nickelate fallback. |
+| **Phase 3: Nickelate Fallback** | 6–12 | MBE growth of Nd₀.₈Sr₀.₂NiO₂ films on SrTiO₃; high-pressure (10–30 GPa) transport measurements; alkali-metal intercalation. | 15 samples; Tc > 30 K under pressure; demonstration of unconventional pairing. | Month 12: Final report on all candidates; recommend next campaign. |
+
+### Resource Allocation
+
+| Resource | Phase 1 (Hydride) | Phase 2 (Cuprate) | Phase 3 (Nickelate) | Shared |
+|----------|-------------------|--------------------|----------------------|--------|
+| **Personnel (FTE)** | 3 (1 senior, 2 postdocs) | 2 (1 senior, 1 PhD student) | 1 (postdoc) | 1 data scientist, 1 lab manager |
+| **Equipment** | Diamond anvil cells (2 sets), laser heating system, synchrotron beamtime (20 days) | PLD/MBE system, tube furnaces, oxygen annealing station | MBE system (shared with Phase 2), high-pressure cell (10 GPa) | SQUID magnetometer, PPMS, XRD, Raman spectrometer |
+| **Consumables budget** | $150,000 (precursors: La, Y, Li, Mg, H₂ gas; gaskets, diamonds) | $80,000 (substrates, targets, oxygen gas) | $50,000 (substrates, Nd, Sr, Ni targets) | $30,000 (cryogens, wires, sensors) |
+| **Computational resources** | 50,000 CPU-hours (DFT + phonon calculations) | 10,000 CPU-hours (doping optimization) | 5,000 CPU-hours (band structure) | 20,000 CPU-hours (ML retraining) |
+| **Total cost** | $350,000 | $200,000 | $120,000 | $100,000 |
+
+### Contingency Plans
+
+**Contingency A: Hydride Tc below 200 K or pressure > 200 GPa required**
+- Action: Reallocate 50% of hydride personnel to cuprate optimization (Phase 2). Remaining hydride effort focuses on ternary clathrates (Y–C–H, Li–Mg–H) which may stabilize at lower pressures (50–100 GPa).
+- Trigger: Month 6 decision gate.
+
+**Contingency B: Cuprate Tc fails to exceed 120 K or Jc < 10⁵ A/cm²**
+- Action: Switch to nickelate fallback (Phase 3) with increased personnel (2 FTE). Investigate alkali-metal intercalation in FeSe as an alternative (Tc up to 45 K via ammonia intercalation).
+- Trigger: Month 9 decision gate.
+
+**Contingency C: All three candidates underperform**
+- Action: Initiate a new high-throughput screening campaign using the retrained ML model. Focus on unexplored ternary hydrides (e.g., Ca–Y–H, Sc–C–H) and topological materials (Bi₂Se₃ doped with magnetic impurities). Publish negative results to inform the community.
+- Trigger: Month 12 final report.
+
+**Contingency D: Equipment failure or supply chain disruption**
+- Action: Maintain a 3-month buffer of critical consumables (diamonds, gaskets, substrates). Cross-train personnel on multiple synthesis techniques. Establish agreements with two synchrotron facilities (APS, ESRF) for beamtime redundancy.
+- Trigger: Any single point of failure identified during monthly risk review.
+
+### Risk Assessment
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Hydride requires > 200 GPa for metallization | High | High | Focus on ternary clathrates; explore chemical precompression with heavier elements (Y, La). |
+| Cuprate thin films have low Jc due to grain boundaries | Medium | Medium | Optimize substrate lattice match; use buffer layers (e.g., CeO₂). |
+| Nickelate Tc remains below 30 K even under pressure | Medium | Low | Switch to FeSe intercalation as alternative fallback. |
+| Synchrotron beamtime delays | Medium | Medium | Maintain backup facility agreements; use in-house XRD for preliminary screening. |
+| Budget overrun | Low | Medium | Monthly budget review; reallocate from underperforming phases. |
+
+### Success Criteria
+
+- **Primary**: At least one candidate with confirmed Tc > 200 K at < 200 GPa (hydride) or Tc > 130 K at ambient pressure (cuprate) by Month 12.
+- **Secondary**: Demonstration of unconventional pairing mechanism in nickelates with Tc > 30 K under pressure.
+- **Tertiary**: Publication of negative results and updated ML model with improved predictive accuracy (RMSE < 15 K).
+
+This campaign plan is reviewed monthly at the experimental feedback loop meeting. Adjustments to timeline and resource allocation are documented in the meeting minutes and reflected in the central database.
