@@ -4619,6 +4619,9 @@ This study reviews current literature on room-temperature superconductors, focus
 5. **Doping of cuprates with hydrogen:** Intercalate hydrogen into YBCO to enhance Tc.
 6. **Nickelate superconductors:** Optimize doping and strain to raise Tc above 100 K.
 7. **Topological superconductors:** Search for materials with Majorana edge states for fault-tolerant quantum computing.
+8. **Investigation of LK-99-like copper-substituted apatite:** Re-examine the controversial claim and explore related compounds.
+9. **High-throughput screening of ternary and quaternary hydrides:** Use evolutionary algorithms and DFT to predict new high-Tc phases.
+10. **Machine learning for synthesis route prediction:** Train models to suggest optimal synthesis conditions (pressure, temperature, doping) for candidate materials.
 
 ## 6. References
 - Drozdov et al., Nature 525, 73 (2015) – H3S.
@@ -4631,7 +4634,15 @@ This study reviews current literature on room-temperature superconductors, focus
 - Li et al., Nature 572, 624 (2019) – Nd0.8Sr0.2NiO2.
 - Cao et al., Nature 556, 43 (2018) – twisted bilayer graphene.
 - SuperCon database (NIMS).
+- Lee et al., arXiv:2307.12008 (2023) – LK-99 (controversial).
+- Hirsch et al., Physica C 612, 1354354 (2023) – critique of LK-99.
+- Boeri et al., J. Phys. Condens. Matter 34, 183002 (2022) – review of hydride superconductors.
+- Stanev et al., npj Comput. Mater. 4, 29 (2018) – machine learning for Tc prediction.
 """
     with open("superconductor_study.md", "w") as f:
         f.write(study)
     print("[Study] Written superconductor_study.md")
+
+
+if __name__ == "__main__":
+    write_superconductor_study()
