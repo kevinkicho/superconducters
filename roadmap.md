@@ -199,3 +199,42 @@
 - Critical current density > 10⁵ A/cm² at operating temperature.
 - At least two independent labs confirm superconductivity.
 - All raw data and analysis code deposited in a public repository (e.g., Zenodo, GitHub).
+
+
+## Pilot Plant Construction (12-Month Milestone)
+
+**Objective**: Design, build, and commission a pilot-scale manufacturing line for the top candidate superconductor material, capable of producing 100 m of wire per month.
+
+### Steps
+1. **Site selection and facility design** (Months 1–3): Identify a suitable location (e.g., existing lab or industrial park), design the layout for synthesis, wire drawing, and QC. Lead: Project Manager, Facility Engineer.
+2. **Equipment procurement and installation** (Months 2–6): Order and install key equipment: CVD reactor, tape casting line, wire drawing machine, automated characterization stations. Lead: Lead Engineer, Procurement Officer.
+3. **Process development and optimization** (Months 4–9): Develop standard operating procedures (SOPs) for each step; optimize parameters (temperature, pressure, deposition rate) to achieve target Tc and critical current. Lead: Lead Experimentalist, Process Engineer.
+4. **Quality control system** (Months 5–10): Implement inline QC (XRD, resistivity, critical current mapping) and a data management system for traceability. Lead: QC Engineer, Data Scientist.
+5. **Commissioning and initial production** (Months 10–12): Run pilot batches, validate against lab-scale results, and produce first 100 m of wire. Lead: Lead Engineer, Lead Experimentalist.
+
+### Responsible Parties
+- **Project Manager**: Overall coordination, budget tracking, reporting to steering committee.
+- **Lead Engineer**: Technical oversight of equipment installation and process integration.
+- **Lead Experimentalist**: Ensures material quality matches lab-scale performance.
+- **Process Engineer**: Develops and optimizes manufacturing parameters.
+- **QC Engineer**: Implements inline QC and data collection.
+- **Data Scientist**: Manages QC data analysis and process optimization.
+- **Safety Officer**: Ensures compliance with safety regulations (chemical handling, high-temperature operations).
+
+### Budget Estimates
+| Category | Cost (USD) |
+|----------|------------|
+| Facility lease and renovation | $2,000,000 |
+| Equipment (CVD reactor, tape casting, wire drawing, QC) | $8,000,000 |
+| Installation and commissioning | $1,500,000 |
+| Personnel (12 months, 5 FTE) | $1,500,000 |
+| Raw materials and consumables | $1,000,000 |
+| Contingency (20%) | $2,800,000 |
+| **Total** | **$16,800,000** |
+
+### Success Criteria
+- Pilot plant operational within 12 months.
+- Wire production rate ≥ 100 m/month with Tc > 300 K (or > 250 K at < 10 GPa).
+- Critical current density > 10⁵ A/cm² at operating temperature.
+- Inline QC detects > 95% of defects.
+- Cost per meter < $500 (target for future scale-up).
