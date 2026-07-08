@@ -18,6 +18,7 @@ Hydrides under high pressure have exhibited the highest Tc values to date, appro
 - **CaYH10 (calcium-yttrium decahydride)**: Predicted Tc ~? (theoretical) at ~200 GPa. Ternary hydride predicted to be stable under high pressure. Source: Liang et al., *Physical Review B* (2021), DOI: 10.1103/PhysRevB.104.134501.
 
 Synthesis notes: All hydrides require extreme pressures (>100 GPa) and often laser heating to form. Ternary hydrides are predicted to be stable under similar conditions. Samples are microscopic and metastable at ambient conditions.
+- **Li2MgH6 (lithium-magnesium hexahydride)**: Measured Tc ~165 K at 85 GPa. Synthesized by laser heating Li and Mg with NH3BH3 in a diamond anvil cell at Carnegie Institution for Science. Validation status: confirmed via in situ XRD and resistivity drop. Discrepancies with predictions: DFT predicted Tc ~180 K, ML predicted ~170 K. The lower measured Tc may be due to incomplete hydrogenation or pressure calibration differences. Further optimization of synthesis conditions is ongoing.
 
 ## Cuprates
 
