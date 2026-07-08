@@ -1893,3 +1893,27 @@ User feedback is treated as a first-class data source in the feedback loop. It i
 ---
 
 *All sections above are part of the experimental feedback loop documentation and should be updated as the system evolves.*
+
+## TOPSIS Decision Support System
+
+### Method
+TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution) is a multi-criteria decision analysis method used to rank candidate compounds based on multiple conflicting criteria. The method selects alternatives that are closest to the ideal solution and farthest from the negative-ideal solution.
+
+### Weights
+The weights for each criterion are determined by domain experts and can be adjusted via the configuration file. Typical criteria include:
+- Predicted Tc (K) – weight: 0.3
+- Synthesizability score – weight: 0.25
+- Cost of precursors – weight: 0.15
+- Stability (formation energy) – weight: 0.1
+- Experimental validation confidence – weight: 0.1
+- User feedback rating – weight: 0.1
+
+### Ranking Process
+1. Normalize the decision matrix.
+2. Compute the weighted normalized matrix.
+3. Determine ideal best and ideal worst solutions.
+4. Calculate separation measures (Euclidean distance) from ideal best and worst.
+5. Compute relative closeness to ideal solution.
+6. Rank candidates by descending closeness coefficient.
+
+The TOPSIS ranking is updated after each retraining cycle and is displayed in the candidate dashboard.
