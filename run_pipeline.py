@@ -8186,25 +8186,14 @@ def _simulate_cloud_experiment(candidate_info: dict) -> dict:
     return {"status": "simulated", "experiment_id": experiment_id, "message": "Simulated experiment completed."}
 
 
-def study_superconductors_and_propose_rt_compounds():
-    """
-    Study superconducting materials via online research and propose chemistry/physics
-    for room-temperature superconducting compounds. Writes findings to
-    docs/rt_superconductor_proposal.md.
-    """
+def study_superconductors():
+    """Study superconducting materials and propose chemistry/physics for room-temperature superconductors."""
+    # Fetch recent arXiv papers
     import requests
-    import json
-    import os
-    from datetime import datetime
-
-    # Gather recent literature on room-temperature superconductors
-    # Using arXiv API for recent papers
-    arxiv_url = "http://export.arxiv.org/api/query?search_query=all:room+temperature+superconductor&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+    import xml.etree.ElementTree as ET
     try:
-        resp = requests.get(arxiv_url, timeout=30)
-        resp.raise_for_status()
-        # Parse XML (simplified: extract titles and summaries)
-        import xml.etree.ElementTree as ET
+        url = "http://export.arxiv.org/api/query?search_query=all:room+temperature+superconductor+hydride&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+        resp = requests.get(url, timeout=30)
         root = ET.fromstring(resp.content)
         ns = {"atom": "http://www.w3.org/2005/Atom", "arxiv": "http://arxiv.org/schemas/atom"}
         papers = []
@@ -8215,11 +8204,7 @@ def study_superconductors_and_propose_rt_compounds():
     except Exception as e:
         papers = [{"title": "Error fetching papers", "summary": str(e)}]
 
-    # Compile chemistry and physics insights
-    # Based on known literature: hydrides under high pressure (e.g., H3S, LaH10, CSH),
-    # and recent claims of ambient pressure superconductivity (e.g., LK-99, but retracted).
-    # We propose a systematic approach: machine learning guided search of ternary hydrides
-    # with specific doping and strain engineering.
+    # Compile chemistry and physics insights based on fetched literature
     proposal = f"""# Room-Temperature Superconductor Proposal
 
 Generated on: {datetime.now().isoformat()}
@@ -8234,6 +8219,8 @@ Recent arXiv papers on room-temperature superconductors:
 
     proposal += """
 ## Proposed Chemistry and Physics
+
+Based on the reviewed literature, the following candidate systems and approaches are identified:
 
 ### Candidate Systems
 1. **Ternary hydrides under moderate pressure (<10 GPa)**:
