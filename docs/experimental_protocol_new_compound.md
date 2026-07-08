@@ -68,3 +68,87 @@ This protocol details the synthesis and characterization of LaH10, a near-room-t
 - Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
 - Errea, I. et al. (2020). Quantum crystal structure in the 250 K superconducting lanthanum hydride. *Nature*, 578, 66–69. https://doi.org/10.1038/s41586-020-1955-z
 - Geballe, Z. M. et al. (2018). Synthesis and stability of lanthanum superhydrides. *Angewandte Chemie International Edition*, 57, 688–692. https://doi.org/10.1002/anie.201709970
+
+## 7. Experimental Validation Plan for LaH10 (Top Candidate)
+
+### Required Equipment
+- Diamond anvil cell (DAC) with 200–300 µm culet diamonds (e.g., from Almax easyLab or Diacell)
+- Continuous-wave Nd:YAG laser (1064 nm, 50–100 W) for laser heating
+- Raman spectrometer (e.g., Horiba LabRAM HR Evolution) with 532 nm and 633 nm excitation
+- Synchrotron X-ray source (e.g., APS 13-ID-D, ESRF ID27) for angle-dispersive XRD
+- Four-probe electrical measurement setup: Keithley 2400 sourcemeter, Keithley 2182A nanovoltmeter
+- Closed-cycle cryostat (e.g., Janis CCS-350) or helium-flow cryostat (4–300 K)
+- SQUID magnetometer (e.g., Quantum Design MPMS) with DAC insert
+- Ruby fluorescence pressure calibration system (e.g., Ocean Optics HR4000 spectrometer)
+- Optical microscope with long-working-distance objectives
+- Glovebox (O2 < 0.1 ppm, H2O < 0.1 ppm) for sample handling
+- Fume hood for chemical preparation
+
+### Materials and Purity
+- Lanthanum metal: 99.9% purity (REacton or Alfa Aesar), foil or powder, 10–20 µm thickness
+- Ammonia borane (NH3BH3): 97% purity (Sigma-Aldrich), stored under inert atmosphere
+- Rhenium gasket: 99.97% purity, pre-indented to ~30 µm
+- Insulating powder: cubic boron nitride (cBN) or Al2O3 (99.5% purity)
+- Electrical leads: platinum or gold foil (2–5 µm thick, 99.99% purity)
+- Ruby spheres: ~5 µm diameter, Cr-doped Al2O3
+- Dilute HCl (0.1 M), ethanol (99.9%), argon gas (99.999%)
+- For isotope effect: ND3BD3 (deuterated ammonia borane, 98% D enrichment)
+
+### Safety Protocols
+- **High-pressure safety**: DACs can fail explosively. Use polycarbonate or steel shielding around the DAC. Never exceed rated pressure of diamond anvils. Inspect diamonds for cracks before each run.
+- **Laser safety**: Class 4 laser operation requires dedicated interlocked enclosure, laser safety goggles (OD >5 at 1064 nm), and beam blocks. Only trained personnel operate the laser.
+- **Chemical hazards**: Ammonia borane is toxic and flammable; handle in fume hood or glovebox. Lanthanum powder is pyrophoric; store under inert gas. Dispose of chemical waste according to institutional guidelines.
+- **Cryogen safety**: Liquid helium and nitrogen handling requires cryogenic gloves and face shield. Ensure proper ventilation to avoid asphyxiation.
+- **Electrical safety**: Use grounded equipment and current-limiting resistors. Avoid contact with high-current leads.
+
+### Step-by-Step Synthesis and Characterization Procedure
+1. **Precursor loading** (Day 1): Clean La foil, load into DAC with NH3BH3 and ruby spheres. Apply 5 GPa initial pressure.
+2. **Pressure ramp** (Day 2): Increase pressure to 150 GPa at 0.5 GPa/min. Monitor ruby fluorescence every 10 GPa.
+3. **Laser heating** (Day 3): Heat sample to 1800 K for 20 s, repeat 4 times. Monitor Raman for H–H modes.
+4. **XRD confirmation** (Day 4): Collect diffraction pattern at 150 GPa. Index to Fm-3m, lattice parameter ~5.0 Å.
+5. **Electrical transport** (Days 5–7): Attach Pt leads, measure R(T) from 300 K to 4 K at 1 K/min. Identify Tc (R50).
+6. **Magnetic susceptibility** (Day 8): Measure ZFC/FC magnetization at 10 Oe from 300 K to 4 K. Confirm Meissner effect.
+7. **Pressure dependence** (Days 9–12): Vary pressure 100–200 GPa in 10 GPa steps. Record Tc at each step.
+8. **Isotope effect** (Days 13–15): Repeat with ND3BD3. Measure ΔTc.
+9. **Data analysis** (Days 16–20): Refine lattice parameters, fit Tc(P) curve, compute electron-phonon coupling λ.
+
+### Expected Outcomes
+- Successful synthesis of LaH10 with cubic clathrate structure (Fm-3m) at 150–170 GPa.
+- Tc of 250–260 K confirmed by resistance drop to zero and diamagnetic shielding fraction >50%.
+- Pressure dependence: Tc increases with pressure up to ~170 GPa then decreases, consistent with literature.
+- Isotope shift ΔTc ~10–15 K, confirming phonon-mediated pairing.
+- Raman spectra show characteristic H–H stretching modes (~4000 cm⁻¹) and absence of NH3BH3 peaks.
+
+### Contingency Steps
+- **If LaH10 not formed**: Check pressure calibration; increase laser heating temperature to 2000 K or add more NH3BH3. Try longer heating cycles (30 s).
+- **If Tc lower than expected**: Verify sample purity; check for oxygen contamination. Consider using higher-purity La (99.99%).
+- **If DAC fails**: Replace diamonds and gasket. Use larger culet (300 µm) for lower pressure gradient.
+- **If electrical contacts fail**: Reattach leads with silver epoxy. Use van der Pauw geometry if linear geometry fails.
+- **If XRD pattern ambiguous**: Collect longer exposure (120 s) or use smaller beam size. Compare with simulated pattern from known LaH10 structure.
+- **If no isotope shift observed**: Verify deuteration level of ND3BD3 via mass spectrometry. Increase D enrichment to >99%.
+
+### Estimated Timeline (6 Months)
+| Phase | Duration | Milestones |
+|-------|----------|------------|
+| Equipment setup and calibration | 1 month | DAC assembly, laser alignment, cryostat commissioning |
+| Precursor preparation and initial synthesis | 1 month | First successful LaH10 synthesis confirmed by XRD |
+| Electrical transport and magnetic measurements | 1.5 months | Tc determination, Meissner effect, pressure dependence |
+| Isotope effect and additional characterization | 1 month | ΔTc measurement, Raman mapping |
+| Data analysis and manuscript preparation | 1.5 months | Final Tc(P) curve, electron-phonon coupling, publication draft |
+
+### Budget Estimate
+| Item | Estimated Cost (USD) |
+|------|---------------------|
+| Diamond anvil cells (2 sets) | $20,000 |
+| Laser system (Nd:YAG, 100 W) | $50,000 |
+| Raman spectrometer | $80,000 |
+| Cryostat (closed-cycle) | $40,000 |
+| SQUID magnetometer (shared facility access) | $15,000 (6 months) |
+| Synchrotron beamtime (3 days) | $10,000 |
+| Chemicals and consumables (La, NH3BH3, gaskets, etc.) | $5,000 |
+| Glovebox and fume hood (if not available) | $30,000 |
+| Miscellaneous (tools, software licenses, shipping) | $5,000 |
+| Personnel (1 postdoc, 1 graduate student, 6 months) | $60,000 |
+| **Total** | **$315,000** |
+
+*Note: Costs assume shared facility access for synchrotron and SQUID. If dedicated equipment is purchased, total may exceed $500,000.*
