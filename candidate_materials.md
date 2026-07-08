@@ -912,18 +912,20 @@ This causal graph is used in our digital twin simulations to predict Tc for new 
 
 This section lists candidate materials submitted by the community (external researchers, open-source contributors, and automated screening pipelines) along with their validation status. Submissions are reviewed and tested in our cloud lab (see `experimental_feedback_loop.md` for details).
 
-| Candidate | Submitter | Predicted Tc (K) | Validation Status | Notes |
-|-----------|-----------|------------------|-------------------|-------|
-| Li2MgH6 | Carnegie Institution for Science | 165 (measured) | Confirmed | Synthesized and measured; Tc lower than DFT prediction (180 K) due to incomplete hydrogenation. |
-| C-H-S (CSH) | Dias et al., *Nature* (2020) | 287 (claimed) | Controversial | Not independently confirmed; retracted by *Nature* in 2022. |
-| LaH10 | Drozdov et al., *Nature* (2019) | 250 (measured) | Confirmed | Widely reproduced; Tc ~250 K at 170 GPa. |
-| H3S | Drozdov et al., *Nature* (2015) | 203 (measured) | Confirmed | First hydride above 200 K; cubic Im-3m structure. |
-| YH9 | Kong et al., *Nature Communications* (2021) | 243 (measured) | Confirmed | Synthesized at 201 GPa. |
-| YH6 | Kong et al., *Nature Communications* (2021) | 224 (measured) | Confirmed | Synthesized at 166 GPa. |
-| Li2MgH16 | ML/DFT prediction (this project) | 240 ±20 | Pending | Not yet synthesized in cloud lab; high priority for future cycles. |
-| CaYH12 | ML/DFT prediction (this project) | 280 ±15 | Pending | Not yet synthesized; predicted to be stable at 150 GPa. |
-| LaH6 | ML/DFT prediction (this project) | 220 ±10 | Pending | Part of La-H system; synthesis similar to LaH10. |
-| CaYH10 | ML/DFT prediction (this project) | 250 ±15 | Pending | Ternary hydride; predicted stable at ~200 GPa. |
+**Note:** Confidence intervals for cost and yield are under development and will be added in a future update.
+
+| Rank | Candidate | Submitter | Predicted Tc (K) | Score | Validation Status | Notes |
+|------|-----------|-----------|------------------|-------|-------------------|-------|
+| 1 | C-H-S (CSH) | Dias et al., *Nature* (2020) | 287 (claimed) | 287 | Controversial | Not independently confirmed; retracted by *Nature* in 2022. |
+| 2 | CaYH12 | ML/DFT prediction (this project) | 280 ±15 | 280 | Pending | Not yet synthesized; predicted to be stable at 150 GPa. |
+| 3 | LaH10 | Drozdov et al., *Nature* (2019) | 250 (measured) | 250 | Confirmed | Widely reproduced; Tc ~250 K at 170 GPa. |
+| 4 | CaYH10 | ML/DFT prediction (this project) | 250 ±15 | 250 | Pending | Ternary hydride; predicted stable at ~200 GPa. |
+| 5 | YH9 | Kong et al., *Nature Communications* (2021) | 243 (measured) | 243 | Confirmed | Synthesized at 201 GPa. |
+| 6 | Li2MgH16 | ML/DFT prediction (this project) | 240 ±20 | 240 | Pending | Not yet synthesized in cloud lab; high priority for future cycles. |
+| 7 | YH6 | Kong et al., *Nature Communications* (2021) | 224 (measured) | 224 | Confirmed | Synthesized at 166 GPa. |
+| 8 | LaH6 | ML/DFT prediction (this project) | 220 ±10 | 220 | Pending | Part of La-H system; synthesis similar to LaH10. |
+| 9 | H3S | Drozdov et al., *Nature* (2015) | 203 (measured) | 203 | Confirmed | First hydride above 200 K; cubic Im-3m structure. |
+| 10 | Li2MgH6 | Carnegie Institution for Science | 165 (measured) | 165 | Confirmed | Synthesized and measured; Tc lower than DFT prediction (180 K) due to incomplete hydrogenation. |
 
 **Validation Criteria:**
 - **Confirmed**: Independent experimental reproduction with Tc within ±10% of claimed value.
