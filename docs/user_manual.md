@@ -617,3 +617,61 @@ Based on the UAT feedback, the following enhancements were implemented:
 - **Configuration versioning**: The `.env` and `config.yaml` files are now tracked with Git tags; a changelog is displayed in the Settings page.
 
 For ongoing feedback, users can continue to use the feedback form in the dashboard or contact the development team via the project's GitHub Issues page.
+
+
+## Leaderboard API Endpoint
+
+The pipeline exposes a RESTful API endpoint at `/leaderboard` that returns the top-ranked candidate materials based on the current discovery metrics (e.g., predicted critical temperature, stability score, cost index). This endpoint is useful for programmatic access, integration with external dashboards, and automated reporting.
+
+### Endpoint
+
+`GET /leaderboard`
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | integer | 10 | Number of top candidates to return (max 100) |
+| `sort_by` | string | `tc` | Sort field: `tc` (critical temperature), `stability`, `cost`, or `score` |
+| `order` | string | `desc` | Sort order: `asc` or `desc` |
+| `min_tc` | float | 0 | Minimum predicted critical temperature (K) |
+| `max_pressure` | float | 0 | Maximum required pressure (GPa); 0 means no limit |
+
+### Example Request
+
+```bash
+curl -X GET "https://api.superconductor-pipeline.example.com/leaderboard?limit=5&sort_by=tc&order=desc&min_tc=100" \
+  -H "Authorization: Bearer YOUR_API_TOKEN"
+```
+
+### Example Response
+
+```json
+{
+  "count": 5,
+  "results": [
+    {
+      "formula": "LaH10",
+      "tc": 250.0,
+      "pressure": 150.0,
+      "stability": 0.87,
+      "cost_index": 0.45,
+      "score": 0.92
+    },
+    {
+      "formula": "YH6",
+      "tc": 220.0,
+      "pressure": 120.0,
+      "stability": 0.82,
+      "cost_index": 0.38,
+      "score": 0.88
+    }
+  ]
+}
+```
+
+### Notes
+
+- Authentication is required via Bearer token (see OAuth2 configuration above).
+- The `score` field is a composite metric combining predicted Tc, stability, and cost, normalized to [0,1].
+- For real-time updates, consider polling the endpoint at a reasonable interval (e.g., every 60 seconds).
