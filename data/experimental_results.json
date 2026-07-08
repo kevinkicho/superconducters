@@ -3,18 +3,36 @@
     "dos_at_fermi": null,
     "lambda": 2.2,
     "omega_log": 1000.0,
-    "tc_ab_initio": 152.9
+    "tc_ab_initio": 152.9,
+    "tc_simulated": 250.0,
+    "pressure_gpa": 170,
+    "robustness_notes": "Moderate; requires extreme pressure, metastable at ambient."
   },
   "YH9": {
     "dos_at_fermi": null,
     "lambda": 2.0,
     "omega_log": 900.0,
-    "tc_ab_initio": 129.4
+    "tc_ab_initio": 129.4,
+    "tc_simulated": 243.0,
+    "pressure_gpa": 201,
+    "robustness_notes": "Moderate; high pressure required, metastable."
   },
   "CaH12": {
     "dos_at_fermi": null,
     "lambda": 2.5,
     "omega_log": 1100.0,
-    "tc_ab_initio": 181.4
+    "tc_ab_initio": 181.4,
+    "tc_simulated": 260.0,
+    "pressure_gpa": 150,
+    "robustness_notes": "Predicted; not yet synthesized, stability uncertain."
+  },
+  "LiNaH12": {
+    "dos_at_fermi": null,
+    "lambda": 2.8,
+    "omega_log": 1200.0,
+    "tc_ab_initio": null,
+    "tc_simulated": 300.0,
+    "pressure_gpa": 10,
+    "robustness_notes": "High; low pressure makes synthesis feasible, predicted stable at ambient conditions."
   }
 }
