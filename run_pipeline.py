@@ -18,6 +18,44 @@ that accepts keyword arguments and returns results.
 import argparse
 import sys
 import importlib
+import os
+import re
+
+def active_learning_loop():
+    """Active learning loop: select next candidate, run DFT, update candidate list."""
+    candidate_file = "candidate_materials.md"
+    if not os.path.exists(candidate_file):
+        print("[ActiveLearning] candidate_materials.md not found. Skipping.")
+        return
+    with open(candidate_file, "r") as f:
+        content = f.read()
+    lines = content.split("\n")
+    selected_idx = None
+    for i, line in enumerate(lines):
+        if line.startswith("- [ ]"):
+            selected_idx = i
+            break
+    if selected_idx is None:
+        print("[ActiveLearning] No uncomputed candidates found. Skipping.")
+        return
+    candidate_line = lines[selected_idx]
+    parts = candidate_line.split(" - ")
+    if len(parts) < 2:
+        print("[ActiveLearning] Could not parse candidate line. Skipping.")
+        return
+    compound = parts[0].replace("- [ ] ", "").strip()
+    print(f"[ActiveLearning] Selected candidate: {compound}")
+    try:
+        dft_mod = importlib.import_module("dft_calculator")
+        result = dft_mod.run(compound)
+    except Exception as e:
+        print(f"[ActiveLearning] DFT calculation failed: {e}", file=sys.stderr)
+        return
+    new_line = f"- [x] {compound} - computed Tc: {result.get('Tc', 'N/A')} K"
+    lines[selected_idx] = new_line
+    with open(candidate_file, "w") as f:
+        f.write("\n".join(lines))
+    print(f"[ActiveLearning] Updated {candidate_file} with results for {compound}.")
 
 def main():
     parser = argparse.ArgumentParser(description="Superconductor discovery pipeline")
@@ -29,6 +67,8 @@ def main():
                         help="Arguments passed to predict_tc.run()")
     parser.add_argument("--output-args", nargs="*", default=[],
                         help="Arguments passed to output_ranked.run()")
+    parser.add_argument("--active-learning", action="store_true",
+                        help="Enable active learning loop to select next candidate, run DFT, and update candidate list.")
     args = parser.parse_args()
 
     # Import sub-modules (assumed to be in same package)
@@ -69,6 +109,12 @@ def main():
     print("[Pipeline] Writing ranked output...")
     out_mod.run(predictions, *args.output_args)
     print("[Pipeline] Pipeline completed successfully.")
+
+    # Step 5: Active learning loop (optional)
+    if args.active_learning:
+        print("[Pipeline] Starting active learning loop...")
+        active_learning_loop()
+        print("[Pipeline] Active learning loop completed.")
 
 if __name__ == "__main__":
     main()
