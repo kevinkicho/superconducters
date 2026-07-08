@@ -42,3 +42,28 @@ def test_fetch_icsd_network_error():
     with patch('scripts.api_client.requests.get', side_effect=Exception("Network error")):
         with pytest.raises(Exception):
             fetch_icsd("LaH10")
+
+
+def test_fetch_arxiv_network_error():
+    """Test fetch_arxiv raises exception on network error."""
+    with patch('scripts.api_client.requests.get', side_effect=Exception("Network error")):
+        with pytest.raises(Exception):
+            fetch_arxiv("room temperature superconductor")
+
+
+def test_fetch_materials_project_handles_invalid_formula():
+    """Test fetch_materials_project returns empty data for invalid formula."""
+    result = fetch_materials_project("InvalidFormula")
+    assert result == {"data": []}
+
+
+def test_fetch_arxiv_handles_invalid_query():
+    """Test fetch_arxiv returns empty list for invalid query."""
+    result = fetch_arxiv("!@#$%^&*()")
+    assert result == []
+
+
+def test_fetch_icsd_handles_empty():
+    """Test fetch_icsd returns empty list for empty formula."""
+    result = fetch_icsd("")
+    assert result == []
