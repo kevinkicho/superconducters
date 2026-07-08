@@ -612,3 +612,14 @@ This section synthesizes current knowledge from the literature (see references i
 | CaYH10 | TBD | TBD |
 
 *Note: Values will be populated by running `compute_ab_initio_tc()` in `dft_calculator.py`.*
+
+## Cloud
+
+Cloud-based synthesis and characterization platforms enable high-throughput experimentation (HTE) by automating material synthesis, measurement, and data analysis in a remote, scalable environment. These platforms integrate robotic synthesis, in-situ characterization, and machine learning to accelerate the discovery of novel superconductors.
+
+- **Emerald Cloud Lab (ECL)**: A fully automated, remote-controlled laboratory that supports a wide range of chemical synthesis and characterization workflows. Users can design and execute experiments via a web interface, with real-time monitoring and data collection. ECL is suitable for high-throughput screening of candidate materials, including hydrides and cuprates, under controlled conditions.
+- **Strateos (formerly Transcriptic)**: A cloud-based life sciences lab that offers automated liquid handling, incubation, and assay capabilities. While primarily focused on biology, its modular platform can be adapted for materials synthesis (e.g., sol-gel, precipitation) and characterization (e.g., XRD, UV-Vis) with custom integrations.
+- **Cloud-Based DFT and Materials Databases**: Platforms such as the Materials Project, AFLOW, and OQMD provide cloud-accessible databases of computed material properties (e.g., formation energy, band structure, electron-phonon coupling). These can be used to pre-screen candidate superconductors before experimental synthesis. APIs allow programmatic access for high-throughput virtual screening.
+- **High-Throughput Experimental Platforms**: Custom-built robotic systems (e.g., at NIST, MIT, or Stanford) that combine thin-film deposition (PLD, sputtering), rapid thermal annealing, and automated measurement (resistivity, magnetometry) are increasingly offered as cloud services or shared facilities. These platforms can test hundreds of compositions per day, generating data for machine learning models.
+
+Cloud platforms reduce the barrier to entry for materials discovery, enabling researchers to iterate rapidly on synthesis parameters and characterization protocols. Integration with the generative model and PINN predictions (see above) allows for closed-loop optimization: the model suggests candidates, the cloud platform synthesizes and characterizes them, and the results feed back into the model.
