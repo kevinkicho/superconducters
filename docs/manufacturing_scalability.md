@@ -2402,3 +2402,29 @@ A 10% increase in pressure raises cost by 8% but only improves yield by 2%. The 
 - Validate optimal parameters in pilot plant (3 runs).
 - Scale up to 10 kg/day reactor.
 - Explore chemical precompression (e.g., NH3BH3) to reduce pressure to <50 GPa.
+
+## Cost Analysis for Top Candidate Compound (LaH10)
+
+### Estimated Production Cost
+- **Lab-scale (mg batches)**: $5,000/g (diamond anvil cell, laser heating)
+- **Target production (kg/day)**: $500/kg (assuming multi-anvil press or chemical precompression)
+- **Breakdown**: Raw materials (La, H2) 5%, energy 70%, capital depreciation 15%, labor 10%
+- **Economies of scale**: 90% reduction at 100x scale via continuous high-pressure reactors and energy recovery
+
+### Raw Material Availability
+- **Lanthanum**: Abundant rare earth (crustal abundance ~30 ppm). Global production ~30,000 tonnes/year. Price ~$10/kg (oxide), ~$50/kg (metal). Supply chain concentrated in China (60% of production). Risk of export controls.
+- **Hydrogen**: Abundant, global production 70 million tonnes/year. Price $2/kg (gray), $5/kg (green). High purity (99.999%) required for synthesis, adding $1/kg.
+- **Total raw material cost per kg LaH10**: ~$15 (assuming 1:10 La:H molar ratio, La ~$50/kg, H2 ~$3/kg, stoichiometric mass ~0.5 kg La + 0.1 kg H2 per kg LaH10)
+
+### Scalability Challenges
+1. **High pressure requirement**: 170 GPa is beyond current industrial capabilities. Multi-anvil presses reach ~25 GPa; diamond anvil cells are not scalable. Chemical precompression (e.g., using NH3BH3 or clathrate hydrates) could reduce pressure to <50 GPa, but Tc may drop.
+2. **Temperature control**: Laser heating to 1000°C at high pressure is difficult to scale. Induction heating or resistive heating in large-volume presses is possible but energy-intensive.
+3. **Reactor materials**: Containers must withstand extreme pressure and temperature. Tungsten carbide or diamond anvils are expensive and small. Large-volume presses use sintered diamond or cubic boron nitride, but limited to ~20 GPa.
+4. **Quenching and recovery**: LaH10 is metastable at ambient pressure; rapid quenching is needed to retain the superconducting phase. Thin-film encapsulation or polymer stabilization may help.
+5. **Purity and reproducibility**: Small variations in stoichiometry or impurities drastically affect Tc. Requires precise control of H2 pressure and La particle size.
+
+### Mitigation Strategies
+- Develop chemical precompression routes (e.g., LaH10@NH3BH3) to lower pressure to <50 GPa.
+- Invest in large-volume multi-anvil press technology (e.g., Kawai-type) for kg-scale synthesis.
+- Explore alternative lanthanum sources (e.g., recycling from catalysts) to reduce supply risk.
+- Implement real-time monitoring (Raman, XRD) to ensure phase purity.
