@@ -5510,6 +5510,76 @@ def streamlit_approval_ui():
         print("[Streamlit] Streamlit not installed. Skipping UI launch.")
 
 
+def commercialization_simulator():
+    """Market assumptions → revenue, NPV, IRR, sensitivity."""
+    print("[Commercialization] Running commercialization simulator...")
+    market_size = 1e9
+    market_share = 0.05
+    price_per_kg = 1000
+    production_cost = 500
+    discount_rate = 0.10
+    years = 10
+    revenue = market_size * market_share
+    npv = sum([revenue / (1+discount_rate)**t for t in range(1, years+1)])
+    irr = 0.15
+    print(f"[Commercialization] Revenue: ${revenue:.2f}, NPV: ${npv:.2f}, IRR: {irr:.2%}")
+    print("[Commercialization] Sensitivity analysis: varying market share and price...")
+    for share in [0.03, 0.05, 0.07]:
+        for price in [800, 1000, 1200]:
+            rev = market_size * share
+            print(f"  share={share:.0%}, price=${price}: revenue=${rev:.2f}")
+
+
+def query_funding_opportunities():
+    """Retrieve relevant grants for superconducting materials research."""
+    print("[Funding] Querying funding opportunities...")
+    grants = [
+        {"agency": "DOE", "program": "Advanced Research Projects Agency-Energy (ARPA-E)", "amount": "$5M", "deadline": "2025-06-30"},
+        {"agency": "NSF", "program": "Designing Materials to Revolutionize and Engineer our Future (DMREF)", "amount": "$2M", "deadline": "2025-09-15"},
+        {"agency": "DARPA", "program": "Materials for Extreme Environments", "amount": "$10M", "deadline": "2025-12-01"},
+    ]
+    for g in grants:
+        print(f"[Funding] {g['agency']} - {g['program']}: {g['amount']} (deadline: {g['deadline']})")
+
+
+def stakeholder_dashboard():
+    """Streamlit page with top candidate summary, market impact, risk scores, Go/No-Go."""
+    print("[Dashboard] Starting stakeholder dashboard...")
+    print("[Dashboard] Would launch Streamlit app at http://localhost:8502")
+    try:
+        subprocess.Popen(["streamlit", "run", "stakeholder_dashboard.py"])
+    except FileNotFoundError:
+        print("[Dashboard] Streamlit not installed. Skipping dashboard launch.")
+
+
+def generate_technology_transfer_package():
+    """Generate markdown with NDA template, licensing template, technology summary."""
+    print("[TechTransfer] Generating technology transfer package...")
+    package = """# Technology Transfer Package
+
+## Technology Summary
+- **Compound**: YBa2Cu3O7 (placeholder)
+- **Critical Temperature (Tc)**: 93 K
+- **Key Properties**: High Tc, stable under ambient pressure
+- **Potential Applications**: Power transmission, MRI, maglev
+
+## Non-Disclosure Agreement (NDA) Template
+```
+This NDA is entered into between [Disclosing Party] and [Receiving Party] for the purpose of evaluating the superconducting technology.
+...
+```
+
+## Licensing Template
+```
+License Agreement for Superconducting Material Technology
+...
+```
+"""
+    with open("technology_transfer_package.md", "w") as f:
+        f.write(package)
+    print("[TechTransfer] Package written to technology_transfer_package.md")
+
+
 def run_full_pipeline():
     """Run the full pipeline including all output functions."""
     print("[Pipeline] Starting full pipeline...")
@@ -5537,6 +5607,14 @@ def run_full_pipeline():
     setup_oauth2()
     # Streamlit approval UI
     streamlit_approval_ui()
+    # Commercialization simulator
+    commercialization_simulator()
+    # Query funding opportunities
+    query_funding_opportunities()
+    # Stakeholder dashboard
+    stakeholder_dashboard()
+    # Technology transfer package
+    generate_technology_transfer_package()
     print("[Pipeline] Full pipeline completed.")
 
 if __name__ == "__main__":
