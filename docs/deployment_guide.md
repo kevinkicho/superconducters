@@ -178,3 +178,47 @@ jobs:
 ---
 
 *This guide is part of the superconducting materials discovery project. For questions, refer to the project README.*
+
+## 8. Automated Docker Build
+
+The project includes an automated Docker build function (`scripts/automated_docker_build.py`) that builds and pushes the image to Docker Hub. To use it:
+
+### Configure Docker Hub Credentials
+
+Set the following environment variables or add them to your CI/CD secrets:
+
+- `DOCKER_USERNAME` – your Docker Hub username
+- `DOCKER_PASSWORD` – your Docker Hub password or access token
+
+Alternatively, run `docker login` manually:
+
+```bash
+docker login -u <username> -p <password>
+```
+
+### Run the Automated Build
+
+Execute the build script:
+
+```bash
+python scripts/automated_docker_build.py
+```
+
+The script will:
+- Build the Docker image with the tag `supercon-pipeline:latest`
+- Tag it with the current commit SHA
+- Push both tags to Docker Hub under your username
+
+### CI/CD Integration
+
+In your GitHub Actions workflow, add the following step after checkout:
+
+```yaml
+- name: Build and push to Docker Hub
+  env:
+    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  run: python scripts/automated_docker_build.py
+```
+
+Make sure to add `DOCKER_USERNAME` and `DOCKER_PASSWORD` as secrets in your GitHub repository settings.
