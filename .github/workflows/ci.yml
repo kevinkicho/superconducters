@@ -26,3 +26,7 @@ jobs:
     - name: Run performance benchmarks
       run: |
         pytest tests/test_run_pipeline.py::TestPerformanceAndStress -v
+
+    - name: Run integration tests
+      run: |
+        pytest tests/integration/ -v
