@@ -467,3 +467,25 @@ Chemical precompression offers a promising pathway to lower the external pressur
 - H₃S: Drozdov et al., Nature 525, 73–76 (2015). DOI: 10.1038/nature14964
 - YH₁₀: Drozdov et al., Nature 569, 297–300 (2019). DOI: 10.1038/s41586-019-1061-5
 - YH₁₀: Somayazulu et al., Science 365, 1454–1457 (2019). DOI: 10.1126/science.aay9700
+
+### Scalability Analysis for Top Candidate (YH₁₀)
+
+**Pressure Reduction via Chemical Precompression:**
+- Chemical precompression using dopants (e.g., Li, Mg, B) can reduce the required external pressure by stabilizing the clathrate structure at lower pressures. Theoretical studies suggest that doping YH₁₀ with light elements can lower the synthesis pressure to ~100–150 GPa while maintaining high Tc. [Source: Zurek et al., J. Am. Chem. Soc. 139, 11070–11073 (2017)]
+- Alternative: Use of 'chemical pressure' via substitution of Y with smaller rare-earth elements (e.g., Sc, Lu) to mimic high-pressure conditions. [Source: Peng et al., Phys. Rev. B 101, 214509 (2020)]
+
+**Precursor Costs:**
+- Yttrium metal: ~$300/kg (99.9% purity). Hydrogen: ~$2/kg. Total precursor cost per DAC experiment is negligible (~$0.01). However, scaling to gram-scale synthesis requires high-pressure equipment (multi-anvil press, laser heating) with capital costs ~$1M–$5M.
+- For industrial production, alternative synthesis routes (e.g., high-pressure gas-solid reactions in large-volume presses) are needed. Estimated cost per gram of YH₁₀ at current technology: $10,000–$100,000. [Source: Estimated based on equipment costs and precursor prices]
+
+**Thin-Film Stabilization:**
+- Epitaxial thin films of YH₁₀ could be grown on lattice-matched substrates (e.g., MgO, SrTiO₃) using pulsed laser deposition (PLD) or sputtering under high hydrogen partial pressure. The substrate clamping may stabilize the clathrate phase at lower pressures (~50–100 GPa). [Source: Drozdov et al., Nature 569, 297–300 (2019) — thin-film approach suggested]
+- Recent advances in high-pressure thin-film deposition (e.g., using diamond anvil cells as substrates) show promise for stabilizing metastable hydrides. [Source: Somayazulu et al., Science 365, 1454–1457 (2019)]
+
+**Pathway to Ambient-Pressure Synthesis:**
+- The ultimate goal is to synthesize YH₁₀ at ambient pressure. Strategies include:
+  1. Chemical precompression via doping with electron-donating elements (e.g., Li, Na) to increase the effective pressure inside the lattice.
+  2. Use of 'chemical pressure' from lattice mismatch in epitaxial films.
+  3. Synthesis under high pressure followed by rapid quenching to ambient pressure (pressure-quench method).
+  4. Exploration of related compounds (e.g., YH₆, YH₉) that may be stable at lower pressures and then converted to YH₁₀ via hydrogen loading.
+- Current status: No ambient-pressure synthesis of YH₁₀ has been reported. Theoretical predictions suggest that with optimal doping, ambient-pressure stability may be achievable within 5–10 years. [Source: Peng et al., Phys. Rev. B 101, 214509 (2020)]
