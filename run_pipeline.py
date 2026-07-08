@@ -8775,6 +8775,82 @@ def retrain_active_learning() -> None:
         print("active_learning_loop not defined. Skipping retraining.")
 
 
+class VirtualLabSimulator:
+    """Simulates synthesis and characterization of superconducting materials with realistic noise and failures."""
+    def __init__(self, failure_rate: float = 0.05, noise_std: float = 0.1):
+        self.failure_rate = failure_rate
+        self.noise_std = noise_std
+
+    def simulate_synthesis(self, candidate: Dict[str, Any]) -> Dict[str, Any]:
+        """Simulate synthesis of a candidate material. Returns measured properties or failure."""
+        if random.random() < self.failure_rate:
+            return {"status": "failure", "reason": "Equipment malfunction"}
+        base_tc = candidate.get("predicted_tc", 100.0)
+        measured_tc = base_tc + random.gauss(0, self.noise_std * base_tc)
+        return {
+            "status": "success",
+            "measured_tc": measured_tc,
+            "measurement_uncertainty": self.noise_std * base_tc,
+            "synthesis_conditions": {"pressure": 150, "temperature": 2000}
+        }
+
+
+def assimilate_experimental_data(experimental_results: list) -> None:
+    """Assimilate experimental data into the model, updating predictions and candidate list."""
+    exp_path = os.path.join(os.path.dirname(__file__), "data", "experimental_results.json")
+    try:
+        with open(exp_path, "r") as f:
+            existing = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        existing = []
+    existing.extend(experimental_results)
+    with open(exp_path, "w") as f:
+        json.dump(existing, f, indent=2)
+    retrain_active_learning()
+    print(f"Assimilated {len(experimental_results)} experimental results.")
+
+
+def run_closed_loop_simulation(steps: int = 10) -> None:
+    """Run closed-loop discovery simulation using VirtualLabSimulator and data assimilation."""
+    print("Starting closed-loop simulation...")
+    simulator = VirtualLabSimulator()
+    for step in range(steps):
+        print(f"Simulation step {step+1}/{steps}")
+        # Load current candidate list
+        candidate_file = "candidate_materials.md"
+        if not os.path.exists(candidate_file):
+            print("No candidate list found. Generating initial candidates...")
+            try:
+                import generate_candidates
+                generate_candidates.run()
+            except ImportError:
+                print("Cannot generate candidates. Skipping step.")
+                continue
+        # Read candidates (simplified: assume they are in a list in the file)
+        with open(candidate_file, "r") as f:
+            content = f.read()
+        # Parse candidates (simple heuristic: lines starting with "- [ ]")
+        candidates = []
+        for line in content.split("\n"):
+            if line.startswith("- [ ]"):
+                parts = line.split(" - ")
+                if len(parts) >= 2:
+                    candidates.append({"formula": parts[1].strip(), "predicted_tc": 100.0})  # placeholder
+        if not candidates:
+            print("No candidates to simulate. Skipping step.")
+            continue
+        # Simulate each candidate
+        results = []
+        for cand in candidates:
+            result = simulator.simulate_synthesis(cand)
+            results.append(result)
+        # Assimilate results
+        assimilate_experimental_data(results)
+        # Optionally update candidate list based on new data (e.g., remove simulated ones)
+        # For simplicity, we just continue
+    print("Closed-loop simulation complete.")
+
+
 def watch_and_retrain(watch_file: str) -> None:
     """Watch file for changes and trigger retraining on modification."""
     import time
@@ -8797,6 +8873,8 @@ if __name__ == "__main__":
     parser.add_argument("--watch", action="store_true", help="Enable event-driven mode watching data/experimental_results.json")
     parser.add_argument("--watch-file", type=str, default="data/experimental_results.json", help="File to watch for changes")
     parser.add_argument("--validate", action="store_true", help="Run validation on database and log metrics")
+    parser.add_argument("--simulate", action="store_true", help="Run closed-loop simulation with VirtualLabSimulator")
+    parser.add_argument("--simulation-steps", type=int, default=10, help="Number of simulation steps")
     args, _ = parser.parse_known_args()
     if args.validate:
         validate_model()
@@ -8805,9 +8883,11 @@ if __name__ == "__main__":
         validate_model()
         retrain_active_learning()
         watch_and_retrain(args.watch_file)
+    elif args.simulate:
+        run_closed_loop_simulation(steps=args.simulation_steps)
     else:
         # Fallback to original main logic if any
         if 'run' in globals():
             run()
         else:
-            print("No run() function defined. Use --watch or --validate.")
+            print("No run() function defined. Use --watch, --validate, or --simulate.")
