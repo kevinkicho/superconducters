@@ -19,6 +19,15 @@ import shap
 import numpy as np
 from scipy.integrate import quad
 
+# Configuration flag to force CPU usage (overrides CUDA detection)
+FORCE_CPU = False
+
+def get_device():
+    """Return torch device based on CUDA availability and FORCE_CPU flag."""
+    if FORCE_CPU:
+        return torch.device('cpu')
+    return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 # Default pseudopotential directory (adjust as needed)
 PSEUDO_DIR = os.environ.get("QE_PSEUDO_DIR", "./pseudo")
@@ -641,8 +650,12 @@ def compute_ab_initio_tc(structure, pinn_model=None):
     consistency_flag = None
     pinn_tc = None
     if pinn_model is not None:
+        # Move model to device
+        device = get_device()
+        pinn_model = pinn_model.to(device)
         # Assume pinn_model has a predict method
         graph = structure_to_graph(structure)  # need to implement or use existing
+        graph = graph.to(device)
         with torch.no_grad():
             pinn_tc = pinn_model(graph).item()
         if pinn_tc > 0:
