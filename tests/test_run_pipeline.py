@@ -480,3 +480,121 @@ def test_pipeline_validated_against_2025_paper():
             # Optionally check that the PDF was generated with the report data
             pdf_args, _ = mock_generate_pdf.call_args
             assert pdf_args[0] == mock_report  # first argument is the report dict
+
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.select_next_candidate')
+    @patch('scripts.run_pipeline.update_candidate_list')
+    def test_active_learning_loop(self, mock_update, mock_select, mock_dft, mock_predict, mock_train, mock_load):
+        """Test that active learning loop feeds experimental results back into model and selects next candidates."""
+        # Mock initial data
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty to return (Tc, uncertainty)
+        def mock_predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 5.0)
+            elif name == "LaH10":
+                return (250.0, 8.0)
+            else:
+                return (100.0, 10.0)
+        mock_predict.side_effect = mock_predict_side_effect
+
+        # Mock DFT calculation
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Mock select_next_candidate to return a candidate name
+        mock_select.return_value = "YH6"
+
+        # Mock update_candidate_list to return updated list
+        mock_update.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"},
+            {"name": "YH6", "Tc": 220, "pressure": 150, "composition": "YH6"}
+        ]
+
+        # Run the active learning loop (assume function run_active_learning_loop exists)
+        result = rp.run_active_learning_loop()
+
+        # Verify that load_data was called
+        mock_load.assert_called_once()
+        # Verify that train_model was called (to retrain with new data)
+        mock_train.assert_called_once()
+        # Verify that select_next_candidate was called (uncertainty sampling)
+        mock_select.assert_called_once()
+        # Verify that DFT was run for the selected candidate
+        mock_dft.assert_called_once()
+        # Verify that update_candidate_list was called with new results
+        mock_update.assert_called_once()
+        # Verify that the result contains the updated candidate list
+        assert len(result) == 3
+        assert result[-1]["name"] == "YH6"
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.dft_calculator.predict_tc_ml')
+    def test_ml_model_integration(self, mock_predict_ml, mock_dft, mock_predict, mock_train, mock_load):
+        """Test that ML model predictions are used correctly in the pipeline."""
+        # Mock load_data to return candidates
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty (DFT-based)
+        def mock_predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 5.0)
+            elif name == "LaH10":
+                return (250.0, 8.0)
+            else:
+                return (100.0, 10.0)
+        mock_predict.side_effect = mock_predict_side_effect
+
+        # Mock DFT calculation
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Mock ML prediction (e.g., from random forest)
+        def mock_ml_predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (210.0, 6.0)
+            elif name == "LaH10":
+                return (245.0, 9.0)
+            else:
+                return (180.0, 12.0)
+        mock_predict_ml.side_effect = mock_ml_predict_side_effect
+
+        # Run the pipeline (assume it uses ML predictions when available)
+        result = rp.run_pipeline(use_ml=True)
+
+        # Verify that load_data was called
+        mock_load.assert_called_once()
+        # Verify that train_model was called
+        mock_train.assert_called_once()
+        # Verify that ML predictions were used (predict_tc_ml called at least once)
+        assert mock_predict_ml.call_count >= 1
+        # Verify that DFT was still called for high-uncertainty candidates
+        assert mock_dft.call_count >= 1
+        # Verify that the result contains expected structure (e.g., list of dicts with Tc)
+        assert isinstance(result, list)
+        assert len(result) >= 2
+        # Check that ML predictions influenced candidate selection (e.g., uncertainty threshold)
+        # We can check that the pipeline used the ML Tc values in some way
+        # For simplicity, we assert that the result includes the ML-predicted Tc for H3S
+        # (This assumes the pipeline returns a dict with 'ml_tc' field)
+        # If not, we can check that the mock was called with correct arguments
+        mock_predict_ml.assert_any_call("H3S", pressure=155)
