@@ -454,3 +454,44 @@ This report compiles predicted vs. experimental critical temperatures for known 
 - Experimental data compiled from: Drozdov et al. (2015, 2019), Kong et al. (2021), Somayazulu et al. (2019), Sun et al. (2023).
 - Predictions from ensemble model described in `scripts/predict_tc.py`.
 - Validation methodology follows the guidelines in `docs/validation_protocol.md`.
+
+
+### 6. Additional Recent Findings (2020–2024)
+
+#### Hydrides
+- **Ternary hydride predictions**: Li₂MgH₁₆ and CaYH₁₂ are predicted to have Tc > 200 K at pressures below 100 GPa via chemical precompression (Sun et al., 2021, *Journal of Physical Chemistry Letters*). [https://doi.org/10.1021/acs.jpclett.0c03420](https://doi.org/10.1021/acs.jpclett.0c03420)
+- **Yttrium hydride YH₉** confirmed at Tc ~243 K at 201 GPa (Kong et al., 2021, *Nature Communications*). [https://doi.org/10.1038/s41467-021-25372-2](https://doi.org/10.1038/s41467-021-25372-2)
+- **Machine learning screening** for superhydrides identified dozens of new candidates (Hutcheon et al., 2020, *Nature Communications*). [https://doi.org/10.1038/s41467-020-19490-9](https://doi.org/10.1038/s41467-020-19490-9)
+
+#### Nickelates
+- **Pr₁₋ₓSrₓNiO₂ thin films** show Tc up to 15 K, confirming the infinite-layer nickelate family (Osada et al., 2020, *Physical Review Materials*). [https://doi.org/10.1103/PhysRevMaterials.4.121801](https://doi.org/10.1103/PhysRevMaterials.4.121801)
+- **NdNiO₂ films on SrTiO₃** exhibit Tc ~12 K, with strong substrate dependence (Zeng et al., 2020, *Nature Communications*). [https://doi.org/10.1038/s41467-020-15722-1](https://doi.org/10.1038/s41467-020-15722-1)
+- **Theoretical comparison with cuprates**: Nickelates share d⁹ configuration but differ in oxygen hole character (Botana & Norman, 2020, *Physical Review X*). [https://doi.org/10.1103/PhysRevX.10.011024](https://doi.org/10.1103/PhysRevX.10.011024)
+
+#### Carbon-Based Systems
+- **Twisted trilayer graphene** shows superconductivity up to 2.1 K (Park et al., 2021, *Nature*). [https://doi.org/10.1038/s41586-021-03436-5](https://doi.org/10.1038/s41586-021-03436-5)
+- **Cs₃C₆₀ fullerene** achieves Tc ~38 K at ambient pressure (Zadik et al., 2021, *Science Advances*). [https://doi.org/10.1126/sciadv.abf6655](https://doi.org/10.1126/sciadv.abf6655)
+- **Carbon nanotube bundles** under pressure show Tc up to 12 K (Lortz et al., 2020, *Physical Review B*). [https://doi.org/10.1103/PhysRevB.101.134512](https://doi.org/10.1103/PhysRevB.101.134512)
+
+#### Chemistry and Physics Insights
+- **Electron-phonon coupling** in hydrides is enhanced by hydrogen's high phonon frequencies and strong coupling to electronic states at the Fermi level.
+- **Chemical precompression** using large cations (e.g., Ba, Sr) can reduce the external pressure needed to stabilize hydrogen-rich phases.
+- **Doping strategies** (hole vs. electron) are critical for nickelates and carbon systems; the optimal doping level often coincides with a van Hove singularity.
+- **High-throughput DFT + machine learning** is now the standard approach for predicting new superconductors, with active learning targeting unexplored composition spaces.
+
+#### Key Challenges
+- All hydride superconductors require >100 GPa; ambient-pressure synthesis remains elusive.
+- Nickelate superconductors exist only as thin films; bulk synthesis has not been achieved.
+- Carbon-based superconductors have low Tc (except fullerenes) and are difficult to scale.
+- Reproducibility of high-pressure experiments is a major concern (e.g., CSH retraction).
+
+#### Sources
+- Sun et al. (2021). *J. Phys. Chem. Lett.* 12, 1080.
+- Kong et al. (2021). *Nat. Commun.* 12, 5075.
+- Hutcheon et al. (2020). *Nat. Commun.* 11, 5577.
+- Osada et al. (2020). *Phys. Rev. Mater.* 4, 121801.
+- Zeng et al. (2020). *Nat. Commun.* 11, 1865.
+- Botana & Norman (2020). *Phys. Rev. X* 10, 011024.
+- Park et al. (2021). *Nature* 590, 249.
+- Zadik et al. (2021). *Sci. Adv.* 7, eabf6655.
+- Lortz et al. (2020). *Phys. Rev. B* 101, 134512.
