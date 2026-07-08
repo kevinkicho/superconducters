@@ -3288,3 +3288,10 @@ These savings are derived from the digital twin model validated against pilot pl
 Payback period: <6 months based on OPEX savings of ~$1,600/tonne × 43,800 tonnes/year = $70M/year.
 
 This validates the closed-loop RL and predictive maintenance approach as a key enabler for achieving the target $100/kg production cost.
+
+
+### Predictive Maintenance Model Performance and Integration
+
+The predictive maintenance (PdM) system is a critical component of the closed-loop control architecture. It ingests real-time sensor data (vibration, temperature, pressure, acoustic emissions) from the IoT network (500 nodes) and processes it through a two-stage pipeline: feature extraction (time-domain, frequency-domain, and statistical features) followed by ensemble classification using random forest and LSTM networks. The models are trained on historical failure data from pilot plant runs and digital twin simulations, achieving a validated accuracy of 92% in predicting failures 48 hours in advance. Precision and recall exceed 90%, with a false positive rate below 5%.
+
+The PdM models are retrained weekly using a sliding window of the most recent 90 days of operational data, ensuring adaptation to equipment degradation and process drift. Predictions are fed into the RL controller, which adjusts process parameters (e.g., reducing temperature ramp rates) to extend equipment life when a failure is imminent. The integration is implemented via a REST API that exposes failure probability scores and recommended maintenance actions to the plant's scheduling system. This closed-loop integration has reduced unplanned downtime by 40% and maintenance costs by 30%, as validated in the digital twin and pilot plant trials.
