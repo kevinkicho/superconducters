@@ -1058,3 +1058,55 @@ class TestPerformanceAndStress:
         for _ in range(10):
             result = rp.run_pipeline()
             assert result is not None
+
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_output_consistency(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test that output files are consistent across multiple runs with same input."""
+        import time
+        candidates = [{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]
+        mock_load.return_value = candidates
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (203.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run pipeline twice and compare outputs
+        result1 = rp.run_pipeline()
+        result2 = rp.run_pipeline()
+        assert result1 == result2, "Pipeline outputs differ between runs"
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_pipeline_performance(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test that the pipeline completes within a reasonable time limit."""
+        import time
+        candidates = [{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]
+        mock_load.return_value = candidates
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (203.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        start = time.perf_counter()
+        result = rp.run_pipeline()
+        elapsed = time.perf_counter() - start
+        assert elapsed < 5.0, f"Pipeline took {elapsed:.2f}s, expected <5s"
+        assert result is not None
