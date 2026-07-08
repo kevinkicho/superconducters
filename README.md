@@ -249,3 +249,8 @@ Sample log output:
 - **CloudLabStatus**: Whether the candidate has been submitted for automated synthesis and testing in the cloud lab.
 
 For a detailed discovery report, see [final_report.md](final_report.md).
+
+
+## Market Analysis
+
+For an analysis of the market size, growth projections, key players, and competitive landscape, see the [Market Analysis Report](docs/market_analysis.md). For details on funding requirements and strategy, see the [Funding Proposal](docs/funding_proposal.md).
