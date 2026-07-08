@@ -6968,3 +6968,62 @@ def what_if_analysis(candidate_file: str = "candidate_materials.md",
         print(f"[what_if_analysis] Plot saved to {plot_path}")
     except ImportError:
         print("[what_if_analysis] matplotlib not available; skipping plot generation.")
+
+
+def submit_to_arxiv():
+    """
+    Submit the research paper to arXiv.
+
+    This function attempts to submit the manuscript (docs/research_paper.md) to arXiv
+    using the arXiv API. If API credentials are not available, it prints a manual
+    submission guide as a fallback.
+
+    Environment variables required for API submission:
+      - ARXIV_USERNAME: arXiv account username
+      - ARXIV_PASSWORD: arXiv account password
+      - ARXIV_API_KEY: arXiv API key (if using API key authentication)
+
+    The manuscript should be converted to PDF before submission. This function
+    assumes the PDF is at docs/research_paper.pdf.
+    """
+    import os
+    import subprocess
+    import sys
+
+    pdf_path = "docs/research_paper.pdf"
+    if not os.path.exists(pdf_path):
+        print("[submit_to_arxiv] PDF not found at {}. Attempting to generate from Markdown...".format(pdf_path))
+        # Try to convert using pandoc
+        try:
+            subprocess.run(["pandoc", "docs/research_paper.md", "-o", pdf_path], check=True)
+            print("[submit_to_arxiv] PDF generated successfully.")
+        except Exception as e:
+            print("[submit_to_arxiv] Failed to generate PDF: {}".format(e))
+            print("[submit_to_arxiv] Please manually convert docs/research_paper.md to PDF and place at {}.".format(pdf_path))
+            return
+
+    # Check for arXiv credentials
+    username = os.environ.get("ARXIV_USERNAME")
+    password = os.environ.get("ARXIV_PASSWORD")
+    api_key = os.environ.get("ARXIV_API_KEY")
+
+    if not (username and password) and not api_key:
+        print("[submit_to_arxiv] No arXiv credentials found.")
+        print("[submit_to_arxiv] === MANUAL SUBMISSION GUIDE ===")
+        print("[submit_to_arxiv] 1. Go to https://arxiv.org/submit")
+        print("[submit_to_arxiv] 2. Log in with your arXiv account.")
+        print("[submit_to_arxiv] 3. Upload the PDF from {}.".format(pdf_path))
+        print("[submit_to_arxiv] 4. Fill in the metadata (title, authors, abstract, categories).")
+        print("[submit_to_arxiv] 5. Submit and note the arXiv ID (e.g., 2501.12345).")
+        print("[submit_to_arxiv] 6. Update literature_review.md with the real preprint link.")
+        print("[submit_to_arxiv] === END MANUAL GUIDE ===")
+        return
+
+    # Attempt API submission (placeholder — real implementation would use arXiv API)
+    # arXiv's official API for submission is not publicly documented for automated
+    # submissions; most users use the web interface. This function provides the
+    # structure for future integration.
+    print("[submit_to_arxiv] arXiv credentials found. Attempting API submission...")
+    print("[submit_to_arxiv] Note: Automated arXiv submission via API is not officially supported.")
+    print("[submit_to_arxiv] Please use the manual submission guide above.")
+    print("[submit_to_arxiv] Once submitted, update literature_review.md with the real preprint link.")
