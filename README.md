@@ -13,14 +13,14 @@ This repository documents a research project on room-temperature superconductivi
 - [characterization_techniques.md](characterization_techniques.md): Techniques used to characterize superconducting properties.
 - [roadmap.md](roadmap.md): Project roadmap and future milestones.
 - [proposed_chemistry_physics.md](proposed_chemistry_physics.md): Proposed chemistry and physics for discovering and manufacturing room-temperature superconducting compounds.
-- [presentation.md](presentation.md): Generated slide deck summarizing the research.
+- [slide_deck.md](docs/slide_deck.md): Generated slide deck summarizing the research.
 - [technology_transfer_plan.md](docs/technology_transfer_plan.md): Technology transfer plan for commercializing room-temperature superconductors.
 
 ## Navigation
 
 Start with the literature review to understand the current state of research, then explore the theoretical framework. Next, review candidate materials and synthesis methods. The characterization techniques document explains how we verify superconductivity, and the roadmap outlines next steps.
 
-Additionally, see the following key documents: [discovery_strategy.md](docs/discovery_strategy.md), [online_research_summary.md](docs/online_research_summary.md), [manufacturing_scalability.md](docs/manufacturing_scalability.md), [experimental_protocol_hydride.md](docs/experimental_protocol_hydride.md), [novel_mechanism.md](docs/novel_mechanism.md), [weekly_digest.md](docs/weekly_digest.md), [project_health_report.md](docs/project_health_report.md), [Production Readiness](docs/challenges_and_mitigations.md#production-readiness), and [project_closure_report.md](docs/project_closure_report.md).
+Additionally, see the following key documents: [discovery_strategy.md](discovery_strategy.md), [online_research_summary.md](docs/online_research_summary.md), [manufacturing_scalability.md](docs/manufacturing_scalability.md), [experimental_protocol_hydride.md](docs/experimental_protocol_hydride.md), [novel_mechanism.md](docs/novel_mechanism.md), [weekly_digest.md](docs/weekly_digest.md), [project_health_report.md](docs/project_health_report.md), [Production Readiness](docs/challenges_and_mitigations.md#production-readiness), and [project_closure_report.md](docs/project_closure_report.md).
 
 
 ## Architecture
@@ -188,28 +188,28 @@ To reproduce the results in this repository, you can use the provided Dockerfile
    ```
 4. Run the pipeline as described in the User Manual.
 
-For more details, see the [Dockerfile](Dockerfile) and [environment.yml](environment.yml) in the repository root.
+For more details, see the [Dockerfile](reproducibility/Dockerfile) and [environment.yml](environment.yml) in the repository root.
 
 
 ## Business Plan
 
-A comprehensive business plan for the top candidate material is available in [business_plan.md](business_plan.md).
+A comprehensive business plan for the top candidate material is available in business_plan.md.
 
 ## Press Release
 
-A press release announcing the discovery of the top candidate material is available in [press_release.md](press_release.md).
+A press release announcing the discovery of the top candidate material is available in press_release.md.
 
 ## Public Outreach
 
-A public outreach document is available in [public_outreach.md](public_outreach.md).
+A public outreach summary is available in [public_outreach_summary.md](docs/public_outreach_summary.md).
 
 ## Executive Summary
 
-An executive summary of the project is available in [executive_summary.md](executive_summary.md). See the [slide deck](presentation.md) for a visual summary.
+An executive summary of the project is available in [executive_summary.md](docs/executive_summary.md). See the [slide deck](docs/slide_deck.md) for a visual summary.
 
 ## Final Report
 
-The final report of the project is available in [final_report.md](final_report.md).
+The final report of the project is available in [final_report.md](docs/final_report.md).
 
 
 ## Audit Trail
@@ -283,12 +283,12 @@ Sample log output:
 - **ValidationScore**: A confidence metric (0–1) indicating how reliable the prediction is based on known data.
 - **CloudLabStatus**: Whether the candidate has been submitted for automated synthesis and testing in the cloud lab.
 
-For a detailed discovery report, see [final_report.md](final_report.md).
+For a detailed discovery report, see [final_report.md](docs/final_report.md).
 
 
 ## Market Analysis
 
-For an analysis of the market size, growth projections, key players, and competitive landscape, see the [Market Analysis Report](docs/market_analysis.md). For details on funding requirements and strategy, see the [Funding Proposal](docs/funding_proposal.md).
+For an analysis of the market size, growth projections, key players, and competitive landscape, see the Market Analysis Report. For details on funding requirements and strategy, see the [Funding Proposal](docs/funding_proposal.md).
 
 
 ## User Management and Role-Based Access Control (RBAC)
@@ -324,11 +324,59 @@ export RBAC_ADMIN_API_KEY=your_admin_key_here
 If no role is set, the system defaults to `viewer` with no API key required. The pipeline scripts check these variables before executing privileged operations and will exit with an error if the role is insufficient.
 
 
-## Additional Documentation
+## All Documents
+
+### Research Framework
+
+- [Literature Review](docs/literature_review.md): Extended survey of existing research on room-temperature superconductivity.
+- [Theoretical Framework](docs/theoretical_framework.md): Extended theoretical models and frameworks guiding the research.
+- [Candidate Materials](docs/candidate_materials.md): Extended database of potential superconducting compounds.
+- [Synthesis Methods](docs/synthesis_methods.md): Extended synthesis protocols for candidate materials.
+- [Characterization Techniques](docs/characterization_techniques.md): Extended characterization methods for superconducting properties.
+- [Roadmap](docs/roadmap.md): Extended project roadmap and milestones.
+
+### Experimental Protocols
+
+- [Carbon-based Superconductors](docs/experimental_protocol_carbon.md)
+- [Hydride Superconductors](docs/experimental_protocol_hydride.md)
+- [Nickelate Superconductors](docs/experimental_protocol_nickelate.md)
+
+### Project Management
+
+- [Phase 2 Project Plan](docs/phase2_project_plan.md)
+- [Project Health Report](docs/project_health_report.md)
+- [Project Closure Report](docs/project_closure_report.md)
+- [Weekly Digest](docs/weekly_digest.md)
+
+### Commercialization & IP
+
+- [Patent Draft (Top Candidate)](docs/patent_draft_top_candidate.md)
+- [Process Design (Top Candidate)](docs/process_design_top_candidate.md)
+- [Technology Transfer Plan](docs/technology_transfer_plan.md)
+- [Manufacturing Scalability](docs/manufacturing_scalability.md)
+- [Grant Proposal](docs/grant_proposal.md)
+- [Funding Proposal](docs/funding_proposal.md)
+
+### Operations & Guides
 
 - [User Manual](docs/user_manual.md): Comprehensive guide for using the project.
 - [Deployment Guide](docs/deployment_guide.md): Instructions for deploying the system.
-- [Model Versioning and Experiment Tracking](docs/model_versioning_and_experiment_tracking.md): Guide for managing model versions and tracking experiments.
+- [Online Research Summary](docs/online_research_summary.md)
+- [Novel Mechanism](docs/novel_mechanism.md)
+- [Challenges and Mitigations](docs/challenges_and_mitigations.md)
+- [Experimental Feedback Loop](docs/experimental_feedback_loop.md)
+
+### Presentations & Reports
+
+- [Slide Deck](docs/slide_deck.md)
+- [Executive Summary](docs/executive_summary.md)
+- [Final Report](docs/final_report.md)
+- [Research Paper](docs/research_paper.md)
+- [Public Outreach Summary](docs/public_outreach_summary.md)
+
+### Tutorials
+
+- [Interactive Tutorial Notebook](docs/tutorial.ipynb)
 
 ## OAuth2 Provider Configuration
 
@@ -469,11 +517,6 @@ This section is dynamically updated by the `update_readme_statistics()` function
 - **Top Candidates**: Highest predicted Tc values and their materials.
 - **Synthesis Success Rate**: Percentage of successful synthesis attempts.
 - **Characterization Results**: Summary of characterization outcomes.
-
-### Deployed URLs
-
-- **Streamlit Dashboard**: [Deploy to Heroku and update this URL](https://your-app.herokuapp.com)
-- **REST API**: [Deploy to Heroku and update this URL](https://your-api.herokuapp.com)
 
 
 ## Usage
