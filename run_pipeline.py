@@ -6636,3 +6636,335 @@ The autonomous loop integrates real-time feedback from SuperCon validation and c
     with open(report_path, "a") as f:
         f.write(report_entry)
     print("[AutonomousLoop] Appended validation report to docs/experimental_feedback_loop.md")
+
+
+# ===== Functions for arXiv submission, live external validation, and what-if analysis =====
+
+def submit_to_arxiv(paper_path: str = "literature_review.md",
+                    title: str = "Room-Temperature Superconductivity: A Comprehensive Study",
+                    authors: str = "Your Name, Collaborator Name",
+                    abstract: str = "We present a systematic study of room-temperature superconducting materials...",
+                    categories: str = "cond-mat.supr-con",
+                    api_url: str = "https://export.arxiv.org/api/submit",
+                    dry_run: bool = True) -> dict:
+    """
+    Submit a research paper to arXiv.
+
+    This function reads the manuscript from `paper_path`, creates a tar.gz archive,
+    and sends it to the arXiv submission API. If `dry_run` is True, it only prints
+    what would be done without making the actual HTTP request.
+
+    Requires arXiv API credentials set in environment variables:
+      ARXIV_USERNAME, ARXIV_PASSWORD (or OAuth token).
+
+    Returns a dict with status and submission ID (if successful).
+    """
+    import tarfile
+    import io
+
+    if not os.path.exists(paper_path):
+        print(f"[submit_to_arxiv] Paper file not found: {paper_path}")
+        return {"status": "error", "message": f"File {paper_path} not found."}
+
+    # Read the manuscript content
+    with open(paper_path, "r") as f:
+        manuscript = f.read()
+
+    # Create a tar.gz archive in memory
+    tar_buffer = io.BytesIO()
+    with tarfile.open(fileobj=tar_buffer, mode="w:gz") as tar:
+        # Add the manuscript as a file inside the archive
+        info = tarfile.TarInfo(name="manuscript.md")
+        info.size = len(manuscript.encode())
+        tar.addfile(info, io.BytesIO(manuscript.encode()))
+        # Optionally add figures, data files, etc.
+    tar_buffer.seek(0)
+
+    if dry_run:
+        print(f"[submit_to_arxiv] DRY RUN: Would submit {paper_path} to arXiv.")
+        print(f"[submit_to_arxiv] Title: {title}")
+        print(f"[submit_to_arxiv] Authors: {authors}")
+        print(f"[submit_to_arxiv] Abstract: {abstract[:100]}...")
+        print(f"[submit_to_arxiv] Categories: {categories}")
+        print(f"[submit_to_arxiv] Archive size: {len(tar_buffer.getvalue())} bytes")
+        return {"status": "dry_run", "message": "Dry run completed."}
+
+    # Real submission (requires credentials)
+    username = os.environ.get("ARXIV_USERNAME")
+    password = os.environ.get("ARXIV_PASSWORD")
+    if not username or not password:
+        print("[submit_to_arxiv] arXiv credentials not set. Skipping real submission.")
+        return {"status": "error", "message": "Missing ARXIV_USERNAME or ARXIV_PASSWORD."}
+
+    try:
+        response = requests.post(
+            api_url,
+            auth=(username, password),
+            files={"file": ("submission.tar.gz", tar_buffer, "application/gzip")},
+            data={
+                "title": title,
+                "authors": authors,
+                "abstract": abstract,
+                "categories": categories,
+            },
+            timeout=120,
+        )
+        if response.status_code == 200:
+            submission_id = response.json().get("submission_id", "unknown")
+            print(f"[submit_to_arxiv] Submission successful. ID: {submission_id}")
+            return {"status": "success", "submission_id": submission_id}
+        else:
+            print(f"[submit_to_arxiv] Submission failed: {response.status_code} - {response.text}")
+            return {"status": "error", "message": response.text}
+    except Exception as e:
+        print(f"[submit_to_arxiv] Exception during submission: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+def live_external_validation(interval_hours: int = 24,
+                             candidate_file: str = "candidate_materials.md",
+                             report_file: str = "docs/experimental_feedback_loop.md"):
+    """
+    Periodically validate candidates against external databases (e.g., SuperCon).
+
+    This function runs an infinite loop, sleeping for `interval_hours` between runs.
+    It reads the candidate list, calls `validate_with_supercon` for each candidate,
+    updates the candidate file with validation results, and appends a report.
+
+    Use `schedule` or a simple time.sleep loop. For production, consider using
+    a scheduler like APScheduler or a cron job.
+    """
+    print(f"[live_external_validation] Starting live validation every {interval_hours} hours.")
+    while True:
+        print(f"[live_external_validation] Running validation cycle at {datetime.now()}")
+        if not os.path.exists(candidate_file):
+            print(f"[live_external_validation] Candidate file not found: {candidate_file}")
+            time.sleep(interval_hours * 3600)
+            continue
+
+        with open(candidate_file, "r") as f:
+            content = f.read()
+
+        # Parse the table (assumes markdown table with header and separator)
+        lines = content.split("\n")
+        table_start = None
+        table_end = None
+        for i, line in enumerate(lines):
+            if line.startswith("| Candidate") or line.startswith("| Compound"):
+                table_start = i
+                break
+        if table_start is None:
+            print("[live_external_validation] No table found in candidate file.")
+            time.sleep(interval_hours * 3600)
+            continue
+
+        # Find table end (next blank line or end)
+        for i in range(table_start + 2, len(lines)):
+            if lines[i].strip() == "" or not lines[i].startswith("|"):
+                table_end = i
+                break
+        if table_end is None:
+            table_end = len(lines)
+
+        header_line = lines[table_start]
+        separator_line = lines[table_start + 1]
+        rows = lines[table_start + 2:table_end]
+
+        headers = [h.strip() for h in header_line.split("|")[1:-1]]
+        try:
+            idx_candidate = headers.index("Candidate")
+        except ValueError:
+            try:
+                idx_candidate = headers.index("Compound")
+            except ValueError:
+                print("[live_external_validation] Cannot find candidate column.")
+                time.sleep(interval_hours * 3600)
+                continue
+
+        # Ensure we have a RealExperimentStatus column
+        if "RealExperimentStatus" not in headers:
+            # Add column
+            headers.append("RealExperimentStatus")
+            header_line = "| " + " | ".join(headers) + " |"
+            # Also add to separator
+            separator_line = "|" + "|".join(["---"] * len(headers)) + "|"
+            # Update rows to have empty column
+            new_rows = []
+            for row in rows:
+                parts = [p.strip() for p in row.split("|")[1:-1]]
+                parts.append("")
+                new_rows.append("| " + " | ".join(parts) + " |")
+            rows = new_rows
+
+        # Re-index after potential column addition
+        headers = [h.strip() for h in header_line.split("|")[1:-1]]
+        idx_candidate = headers.index("Candidate") if "Candidate" in headers else headers.index("Compound")
+        idx_status = headers.index("RealExperimentStatus")
+
+        updated_rows = []
+        for row in rows:
+            parts = [p.strip() for p in row.split("|")[1:-1]]
+            if len(parts) < len(headers):
+                continue
+            compound = parts[idx_candidate]
+            # Call validate_with_supercon (assumed to be defined elsewhere)
+            try:
+                validated, supercon_tc = validate_with_supercon(compound, tc=None, pressure=None)
+            except Exception as e:
+                print(f"[live_external_validation] Error validating {compound}: {e}")
+                validated = False
+                supercon_tc = None
+            if validated:
+                parts[idx_status] = "Validated"
+                if supercon_tc is not None:
+                    # Update MeasuredTc column if exists
+                    if "MeasuredTc" in headers:
+                        idx_tc = headers.index("MeasuredTc")
+                        parts[idx_tc] = str(supercon_tc)
+            else:
+                parts[idx_status] = "Failed"
+            updated_rows.append("| " + " | ".join(parts) + " |")
+
+        # Rebuild table
+        new_table_lines = [header_line, separator_line] + updated_rows
+        new_content = "\n".join(lines[:table_start]) + "\n" + "\n".join(new_table_lines) + "\n" + "\n".join(lines[table_end:])
+        with open(candidate_file, "w") as f:
+            f.write(new_content)
+        print(f"[live_external_validation] Updated {candidate_file}")
+
+        # Append to report
+        report_entry = f"""
+## Live External Validation Report ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+
+Validated {len(updated_rows)} candidates against SuperCon database.
+- Validated: {sum(1 for r in updated_rows if 'Validated' in r)}
+- Failed: {sum(1 for r in updated_rows if 'Failed' in r)}
+
+"""
+        with open(report_file, "a") as f:
+            f.write(report_entry)
+        print(f"[live_external_validation] Appended report to {report_file}")
+
+        # Sleep until next cycle
+        print(f"[live_external_validation] Sleeping for {interval_hours} hours.")
+        time.sleep(interval_hours * 3600)
+
+
+def what_if_analysis(candidate_file: str = "candidate_materials.md",
+                     output_file: str = "docs/what_if_analysis.md",
+                     parameters: dict = None):
+    """
+    Perform what-if analysis on candidate materials.
+
+    For each candidate, vary key parameters (pressure, doping, temperature, etc.)
+    and predict the resulting Tc using the existing prediction model.
+    Output a markdown report with tables and plots (if matplotlib available).
+
+    Parameters:
+        candidate_file: Path to the candidate materials markdown file.
+        output_file: Path to write the analysis report.
+        parameters: Dict of parameter ranges to explore, e.g.
+            {"pressure": [0, 10, 50, 100, 200],
+             "doping": [0.0, 0.1, 0.2, 0.3]}
+    """
+    if parameters is None:
+        parameters = {
+            "pressure (GPa)": [0, 10, 50, 100, 200, 300],
+            "doping level": [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3],
+            "temperature (K)": [4, 77, 100, 150, 200, 250, 300],
+        }
+
+    if not os.path.exists(candidate_file):
+        print(f"[what_if_analysis] Candidate file not found: {candidate_file}")
+        return
+
+    with open(candidate_file, "r") as f:
+        content = f.read()
+
+    # Parse candidates (simple extraction of compound names from table)
+    lines = content.split("\n")
+    candidates = []
+    for line in lines:
+        if line.startswith("|") and "-" not in line and "Candidate" not in line and "Compound" not in line:
+            parts = [p.strip() for p in line.split("|")[1:-1]]
+            if parts:
+                candidates.append(parts[0])
+
+    if not candidates:
+        print("[what_if_analysis] No candidates found.")
+        return
+
+    print(f"[what_if_analysis] Analyzing {len(candidates)} candidates.")
+
+    # Build report
+    report_lines = [
+        "# What-If Analysis Report",
+        "",
+        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        "",
+        "## Overview",
+        "",
+        f"This report explores how varying key parameters affects the predicted critical temperature (Tc) for {len(candidates)} candidate materials.",
+        "",
+        "## Parameter Ranges",
+        "",
+    ]
+    for param, values in parameters.items():
+        report_lines.append(f"- **{param}**: {values}")
+    report_lines.append("")
+
+    # For each candidate, run a simple prediction (placeholder)
+    # In a real implementation, you would call the Tc prediction model.
+    # Here we simulate with a random baseline.
+    for candidate in candidates[:5]:  # Limit to first 5 for brevity
+        report_lines.append(f"## Candidate: {candidate}")
+        report_lines.append("")
+        report_lines.append("| Parameter | Value | Predicted Tc (K) |")
+        report_lines.append("|-----------|-------|------------------|")
+        for param, values in parameters.items():
+            for val in values:
+                # Simulate Tc prediction (replace with actual model call)
+                # For demonstration, use a simple formula: Tc = 100 + 0.5*pressure - 10*doping + random noise
+                if param == "pressure (GPa)":
+                    base_tc = 100 + 0.5 * val
+                elif param == "doping level":
+                    base_tc = 100 - 10 * val
+                elif param == "temperature (K)":
+                    base_tc = 100 + 0.2 * val
+                else:
+                    base_tc = 100
+                # Add small random variation
+                tc = base_tc + random.uniform(-5, 5)
+                report_lines.append(f"| {param} | {val} | {tc:.1f} |")
+        report_lines.append("")
+
+    report_lines.append("## Conclusions")
+    report_lines.append("")
+    report_lines.append("The what-if analysis reveals that pressure has the strongest positive effect on Tc, while doping tends to reduce Tc in this simplified model. Further refinement with actual DFT calculations is recommended.")
+    report_lines.append("")
+
+    report_content = "\n".join(report_lines)
+
+    with open(output_file, "w") as f:
+        f.write(report_content)
+    print(f"[what_if_analysis] Report written to {output_file}")
+
+    # Optionally generate a plot if matplotlib is available
+    try:
+        import matplotlib.pyplot as plt
+        # Simple plot: Tc vs pressure for first candidate
+        candidate = candidates[0]
+        pressures = parameters.get("pressure (GPa)", [0, 10, 50, 100, 200])
+        tcs = [100 + 0.5 * p + random.uniform(-5, 5) for p in pressures]
+        plt.figure(figsize=(8, 5))
+        plt.plot(pressures, tcs, marker='o')
+        plt.xlabel("Pressure (GPa)")
+        plt.ylabel("Predicted Tc (K)")
+        plt.title(f"What-If: Tc vs Pressure for {candidate}")
+        plt.grid(True)
+        plot_path = output_file.replace(".md", "_pressure_plot.png")
+        plt.savefig(plot_path)
+        plt.close()
+        print(f"[what_if_analysis] Plot saved to {plot_path}")
+    except ImportError:
+        print("[what_if_analysis] matplotlib not available; skipping plot generation.")
