@@ -726,3 +726,36 @@ Deployment of the FastAPI application is not yet available. To run the API local
    ```
 
 For more details, refer to the source code in `run_pipeline.py`.
+
+
+## Virtual Lab
+
+The Virtual Lab provides cloud-based access to run experiments on candidate materials. It uses the same API key authentication as the local API.
+
+### Authentication
+
+Set the `API_KEY` environment variable and include it in requests via the `X-API-Key` header, as described in the API Documentation above.
+
+### Submission Process
+
+1. **Prepare a submission payload** with the material composition, pressure, and temperature parameters.
+2. **POST** to the Virtual Lab endpoint:
+   ```bash
+   curl -X POST "https://virtual-lab.example.com/submit" \
+        -H "X-API-Key: your-secret-key" \
+        -H "Content-Type: application/json" \
+        -d '{"composition": "LaH10", "pressure": 150, "temperature": 250}'
+   ```
+3. The response includes a `submission_id` (UUID) that you can use to track progress.
+
+### Queue and Email Notification
+
+- Submissions are placed in a FIFO queue. Estimated wait time is shown in the submission response.
+- When the experiment completes, an email notification is sent to the address associated with your API key.
+- You can also poll the status endpoint:
+   ```bash
+   curl -H "X-API-Key: your-secret-key" "https://virtual-lab.example.com/status/{submission_id}"
+   ```
+- The status response includes `state` (queued, running, completed, failed), `result` (if completed), and `estimated_completion_time`.
+
+For more details, see the Virtual Lab documentation in `docs/virtual_lab.md`.

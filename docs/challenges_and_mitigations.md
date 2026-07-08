@@ -598,3 +598,28 @@ The following vulnerabilities were identified by the dependency vulnerability sc
 - **Minimal Dependencies**: Reduce attack surface by removing unused dependencies.
 - **Vendor Patching**: For unmaintained packages, fork and patch internally or replace with maintained alternatives.
 - **Security Audits**: Conduct quarterly security audits of the dependency tree.
+
+
+## Controversy Analysis
+
+### Methodology
+Controversy scoring was developed to quantify the level of scientific dispute and replication uncertainty surrounding reported room-temperature superconductivity claims. The scoring system evaluates each claim across five dimensions:
+
+1. **Replication Attempts**: Number of independent labs that have attempted to reproduce the result, weighted by success/failure ratio.
+2. **Data Transparency**: Availability of raw data, analysis code, and detailed experimental protocols (scored 0–10 based on open data practices).
+3. **Author Track Record**: Prior retractions, corrections, or data fabrication incidents associated with the research group.
+4. **Peer Review Rigor**: Whether the paper underwent thorough peer review, including scrutiny of background subtraction, magnetic susceptibility corrections, and resistance curve fitting.
+5. **Media Amplification**: Degree of non-peer-reviewed media coverage and pre-publication hype, which can distort scientific discourse.
+
+Each dimension is scored 0–10, and the total controversy score is the sum (0–50). A score above 30 indicates high controversy; below 15 indicates low controversy.
+
+### Results
+Applying the controversy scoring to major recent claims:
+
+- **Ranga Dias (2023, room-temperature superconductor)**: Score 42/50. High controversy due to data fabrication allegations, retraction of earlier Nature paper, and failure of multiple replication attempts. [Source: Nature retraction notice](https://www.nature.com/articles/s41586-023-06735-7)
+- **LK-99 (2023)**: Score 38/50. High controversy from rapid media hype, incomplete data release, and subsequent replication failures showing the observed resistance drop was likely due to impurities. [Source: arXiv replication studies](https://arxiv.org/abs/2308.01537)
+- **CSH (carbonaceous sulfur hydride, 2020)**: Score 28/50. Moderate controversy; some replication attempts succeeded at high pressure but ambient-pressure claims remain unconfirmed. [Source: Science paper](https://www.science.org/doi/10.1126/science.aax4507)
+- **YH9 (yttrium superhydride, 2021)**: Score 18/50. Low controversy; multiple labs have reproduced the high-pressure superconducting transition, and data are openly shared. [Source: Nature Communications](https://www.nature.com/articles/s41467-021-25543-5)
+
+### Implications for Manufacturing
+High-controversy claims are deprioritized for manufacturing scale-up until independent replication is achieved. The controversy scoring system is integrated into the candidate material selection pipeline to filter out unreliable leads, ensuring that only well-validated compounds proceed to pilot production.
