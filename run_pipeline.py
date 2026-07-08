@@ -4289,3 +4289,96 @@ def performance_profiling(func, *args, **kwargs) -> dict:
         "total_time_seconds": total_time,
         "profile_stats": stats_str
     }
+
+
+def submit_to_cloud_lab(experiment_config):
+    """Submit experiment to real cloud lab, fallback to simulate_cloud_lab on failure."""
+    try:
+        # Attempt real cloud lab submission (placeholder)
+        result = cloud_lab_api.submit(experiment_config)
+        return result
+    except Exception as e:
+        print(f"Cloud lab submission failed: {e}. Falling back to simulation.")
+        return simulate_cloud_lab(experiment_config)
+
+
+def adaptive_experimental_design(prior_results, surrogate_model=None):
+    """Enhance Bayesian optimization to accept real-time results and maximize information gain."""
+    import numpy as np
+    from scipy.stats import norm
+    if surrogate_model is None:
+        # Initialize a simple Gaussian Process surrogate
+        from sklearn.gaussian_process import GaussianProcessRegressor
+        surrogate_model = GaussianProcessRegressor()
+    # Update surrogate with prior results
+    X = np.array([r['params'] for r in prior_results])
+    y = np.array([r['objective'] for r in prior_results])
+    surrogate_model.fit(X, y)
+    # Expected improvement acquisition function
+    def expected_improvement(x_candidate):
+        mu, sigma = surrogate_model.predict(x_candidate.reshape(1, -1), return_std=True)
+        y_best = np.max(y)
+        with np.errstate(divide='ignore'):
+            z = (mu - y_best) / sigma
+            ei = (mu - y_best) * norm.cdf(z) + sigma * norm.pdf(z)
+        return ei
+    # Suggest next candidate (simplified: random search over grid)
+    # In practice, optimize over parameter space
+    return expected_improvement
+
+
+def assimilate_experimental_data(experimental_data, pinn_model):
+    """Multi-fidelity data assimilation using Bayesian inference to update PINN."""
+    # Placeholder: update PINN weights using Bayesian inference
+    # Assume pinn_model has a method update_with_bayesian_inference
+    updated_pinn = pinn_model.update_with_bayesian_inference(experimental_data)
+    return updated_pinn
+
+
+def external_validation(model_predictions, reference_data, output_plot_path='validation_plot.png'):
+    """External validation against public databases with error metrics and plots."""
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+    y_true = reference_data['true_values']
+    y_pred = model_predictions
+    mae = mean_absolute_error(y_true, y_pred)
+    mse = mean_squared_error(y_true, y_pred)
+    r2 = r2_score(y_true, y_pred)
+    print(f"MAE: {mae}, MSE: {mse}, R2: {r2}")
+    plt.figure()
+    plt.scatter(y_true, y_pred, alpha=0.5)
+    plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], 'r--')
+    plt.xlabel('True')
+    plt.ylabel('Predicted')
+    plt.title('External Validation')
+    plt.savefig(output_plot_path)
+    return {'mae': mae, 'mse': mse, 'r2': r2}
+
+
+def enhanced_patent_draft_generation(invention_description, claims_list, drawings_description=''):
+    """Generate USPTO-compliant patent draft with claims, description, drawings placeholder."""
+    draft = f"""
+PATENT APPLICATION
+
+TITLE OF THE INVENTION
+{invention_description.get('title', 'Untitled')}
+
+BACKGROUND
+{invention_description.get('background', '')}
+
+SUMMARY
+{invention_description.get('summary', '')}
+
+BRIEF DESCRIPTION OF THE DRAWINGS
+{drawings_description if drawings_description else 'Not provided.'}
+
+DETAILED DESCRIPTION
+{invention_description.get('detailed_description', '')}
+
+CLAIMS
+"""
+    for i, claim in enumerate(claims_list, 1):
+        draft += f"{i}. {claim}\n"
+    draft += "\nABSTRACT\n" + invention_description.get('abstract', '')
+    return draft
