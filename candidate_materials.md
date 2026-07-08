@@ -653,21 +653,21 @@ Manufacturing room-temperature superconductors at scale remains a challenge. Cur
 
 ## Cloud Lab Validation Results
 
-> **Note:** The CloudLabValidated column currently reflects literature-reported experimental validation, not results from a cloud lab. This column is a placeholder until real cloud lab experiments are run.
+> **Note:** The CloudLabValidated column currently reflects literature-reported experimental validation, not results from a cloud lab. This column is a placeholder until real cloud lab experiments are run. The RealExperimentStatus, MeasuredTc, and DiscoveryConfidenceScore columns are updated by the autonomous daily loop.
 
 
-| Candidate | CloudLabValidated | RealCloudLabStatus | ValidationMethod |
-|-----------|-------------------|--------------------|-----------------|
-| H3S | Yes | N/A | High-pressure DAC + laser heating |
-| LaH10 | Yes | N/A | High-pressure DAC |
-| YH9 | Yes | N/A | High-pressure DAC + laser heating |
-| C-H-S | Controversial | N/A | High-pressure DAC (unconfirmed) |
-| Li2MgH16 | No | N/A | Theoretical prediction |
-| CaH6 | No | N/A | Theoretical prediction |
-| CaYH12 | No | N/A | Theoretical prediction |
-| YH6 | Yes | N/A | High-pressure DAC + laser heating |
-| LaH6 | Yes | N/A | High-pressure DAC |
-| CaYH10 | No | N/A | Theoretical prediction |
-| YBa2Cu3O7-δ | Yes | N/A | Solid-state reaction + oxygen annealing |
-| Bi2Sr2CaCu2O8+δ | Yes | N/A | Floating zone / thin film deposition |
-| HgBa2Ca2Cu3O8+δ | Yes | N/A | High-pressure synthesis (ambient pressure stable) |
+| Candidate | CloudLabValidated | RealCloudLabStatus | RealExperimentStatus | MeasuredTc | DiscoveryConfidenceScore | ValidationMethod |
+|-----------|-------------------|--------------------|----------------------|------------|--------------------------|-----------------|
+| H3S | Yes | N/A | Pending | N/A | N/A | High-pressure DAC + laser heating |
+| LaH10 | Yes | N/A | Pending | N/A | N/A | High-pressure DAC |
+| YH9 | Yes | N/A | Pending | N/A | N/A | High-pressure DAC + laser heating |
+| C-H-S | Controversial | N/A | Pending | N/A | N/A | High-pressure DAC (unconfirmed) |
+| Li2MgH16 | No | N/A | Pending | N/A | N/A | Theoretical prediction |
+| CaH6 | No | N/A | Pending | N/A | N/A | Theoretical prediction |
+| CaYH12 | No | N/A | Pending | N/A | N/A | Theoretical prediction |
+| YH6 | Yes | N/A | Pending | N/A | N/A | High-pressure DAC + laser heating |
+| LaH6 | Yes | N/A | Pending | N/A | N/A | High-pressure DAC |
+| CaYH10 | No | N/A | Pending | N/A | N/A | Theoretical prediction |
+| YBa2Cu3O7-δ | Yes | N/A | Pending | N/A | N/A | Solid-state reaction + oxygen annealing |
+| Bi2Sr2CaCu2O8+δ | Yes | N/A | Pending | N/A | N/A | Floating zone / thin film deposition |
+| HgBa2Ca2Cu3O8+δ | Yes | N/A | Pending | N/A | N/A | High-pressure synthesis (ambient pressure stable) |

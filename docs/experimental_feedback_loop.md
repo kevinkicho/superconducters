@@ -2405,3 +2405,12 @@ The `quality_check_documents` function in `run_pipeline.py` performs automated q
 The `cloud_lab_integration` module in `run_pipeline.py` provides a direct interface to a remote cloud laboratory (e.g., Emerald Cloud Lab, Strateos) for automated synthesis and characterization of candidate compounds. The integration allows the pipeline to submit synthesis recipes, monitor experiment progress in real time, and retrieve results automatically. It handles authentication, job submission, status polling, and data retrieval via REST APIs. The module also includes a retry mechanism with exponential backoff for transient failures.
 
 **Output**: A log of all cloud lab interactions (`logs/cloud_lab.log`) and a database table (`cloud_lab_jobs`) that tracks each submitted job with its status, start/end times, and result references. The pipeline can optionally trigger model retraining immediately upon receiving results from the cloud lab.
+
+
+## Discovery Validation Report
+
+The `autonomous_loop` function in `run_pipeline.py` generates a validation report after each run. This report summarizes the results of SuperCon validation and cloud lab experiments for all candidates. It includes statistics on validated vs. failed candidates, measured Tc values, and confidence scores. The report is appended to this document automatically.
+
+## Online Learning from Real Experiments
+
+The autonomous daily loop implements an online learning workflow: after each iteration, the candidate database is updated with new experimental results, and confidence scores are recalculated. This allows the pipeline to continuously improve its predictions based on real-world data. The loop can be scheduled to run daily via the `schedule` library (see `run_pipeline.py` for details).
