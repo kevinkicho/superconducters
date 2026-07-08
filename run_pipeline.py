@@ -3852,3 +3852,190 @@ def auto_git_commit(message=None):
         print(f"[AutoGit] Git command failed: {e.stderr.decode()}")
     except FileNotFoundError:
         print("[AutoGit] Git not found. Skipping commit.")
+
+
+# === New functions for end-to-end pipeline with target Tc > 300 K ===
+
+def run_full_pipeline_with_target(target_tc=300, query_args=None, candidates_args=None, predict_args=None, output_args=None):
+    """
+    Run the full pipeline with a target critical temperature.
+    Filters candidates that meet or exceed the target Tc.
+    Returns a dictionary with pipeline results.
+    """
+    print(f"[Pipeline] Running full pipeline with target Tc >= {target_tc} K")
+    # Import sub-modules
+    query_mod = importlib.import_module("query_database")
+    candidates_mod = importlib.import_module("generate_candidates")
+    predict_mod = importlib.import_module("predict_tc")
+    output_mod = importlib.import_module("output_ranked")
+    
+    # Step 1: Query database
+    query_args = query_args or {}
+    db_results = query_mod.run(**query_args)
+    print(f"[Pipeline] Database query returned {len(db_results)} entries")
+    
+    # Step 2: Generate candidates
+    candidates_args = candidates_args or {}
+    candidates = candidates_mod.run(db_results=db_results, **candidates_args)
+    print(f"[Pipeline] Generated {len(candidates)} candidates")
+    
+    # Step 3: Predict Tc
+    predict_args = predict_args or {}
+    predictions = predict_mod.run(candidates=candidates, **predict_args)
+    print(f"[Pipeline] Predicted Tc for {len(predictions)} candidates")
+    
+    # Filter by target Tc
+    filtered = [p for p in predictions if p.get("Tc", 0) >= target_tc]
+    print(f"[Pipeline] {len(filtered)} candidates meet target Tc >= {target_tc} K")
+    
+    # Step 4: Output ranked
+    output_args = output_args or {}
+    output_mod.run(predictions=filtered, **output_args)
+    
+    return {
+        "target_tc": target_tc,
+        "total_candidates": len(candidates),
+        "predicted_count": len(predictions),
+        "filtered_count": len(filtered),
+        "top_candidates": filtered[:10] if filtered else []
+    }
+
+
+def generate_discovery_report(output_dir="docs"):
+    """
+    Consolidate pipeline results into a discovery report markdown file.
+    Reads candidate_materials.md, prediction results, and other outputs.
+    Writes to docs/discovery_report.md.
+    """
+    import os
+    from datetime import datetime
+    
+    report_path = os.path.join(output_dir, "discovery_report.md")
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Gather data
+    candidate_file = "candidate_materials.md"
+    candidates = []
+    if os.path.exists(candidate_file):
+        with open(candidate_file, "r") as f:
+            for line in f:
+                if line.startswith("- [x]") or line.startswith("- [ ]"):
+                    candidates.append(line.strip())
+    
+    # Read prediction results if available
+    prediction_file = "predictions.json"
+    predictions = []
+    if os.path.exists(prediction_file):
+        with open(prediction_file, "r") as f:
+            predictions = json.load(f)
+    
+    # Build report
+    report_lines = [
+        "# Discovery Report",
+        "",
+        f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        "",
+        "## Summary",
+        "",
+        f"Total candidates evaluated: {len(candidates)}",
+        f"Candidates with predicted Tc > 300 K: {sum(1 for p in predictions if p.get('Tc', 0) > 300)}",
+        "",
+        "## Top Candidates",
+        "",
+    ]
+    for i, p in enumerate(predictions[:10]):
+        report_lines.append(f"{i+1}. {p.get('compound', 'Unknown')} - Tc: {p.get('Tc', 'N/A')} K")
+    
+    report_lines.append("")
+    report_lines.append("## Methodology")
+    report_lines.append("")
+    report_lines.append("The pipeline uses a combination of database mining, heuristic candidate generation, and machine learning prediction to identify potential room-temperature superconductors.")
+    report_lines.append("")
+    report_lines.append("## References")
+    report_lines.append("")
+    report_lines.append("- [Superconductor Database](data/superconductor_database.json)")
+    report_lines.append("- [Candidate Materials](candidate_materials.md)")
+    report_lines.append("- [Prediction Model](predict_tc.py)")
+    
+    with open(report_path, "w") as f:
+        f.write("\n".join(report_lines))
+    print(f"[Report] Discovery report written to {report_path}")
+    return report_path
+
+
+def generate_scientific_explanation(output_dir="docs"):
+    """
+    Write a scientific explanation of the proposed chemistry and physics
+    for room-temperature superconductivity to proposed_chemistry_physics.md.
+    Uses the top candidate from the pipeline to provide a detailed analysis.
+    """
+    import os
+    from datetime import datetime
+    
+    explanation_path = os.path.join(output_dir, "proposed_chemistry_physics.md")
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Load top candidate from predictions if available
+    prediction_file = "predictions.json"
+    top_candidate = None
+    if os.path.exists(prediction_file):
+        with open(prediction_file, "r") as f:
+            predictions = json.load(f)
+        if predictions:
+            top_candidate = max(predictions, key=lambda x: x.get("Tc", 0))
+    
+    # Build explanation
+    lines = [
+        "# Proposed Chemistry and Physics for Room-Temperature Superconductivity",
+        "",
+        f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        "",
+        "## Overview",
+        "",
+        "This document provides a scientific explanation of the chemical and physical principles",
+        "underlying the discovery and manufacturing of room-temperature superconducting compounds.",
+        "The analysis is based on the current top candidate from the pipeline.",
+        "",
+    ]
+    
+    if top_candidate:
+        compound = top_candidate.get("compound", "Unknown")
+        tc = top_candidate.get("Tc", "N/A")
+        lines.append(f"## Top Candidate: {compound}")
+        lines.append("")
+        lines.append(f"Predicted critical temperature: {tc} K")
+        lines.append("")
+        lines.append("### Chemistry")
+        lines.append("")
+        lines.append("The compound is likely a hydride or a doped oxide with high hydrogen content.")
+        lines.append("Hydrogen-rich materials under high pressure exhibit high Tc due to strong electron-phonon coupling (BCS theory).")
+        lines.append("The presence of light elements (H, B, C, N) enhances the Debye temperature and thus Tc.")
+        lines.append("Doping with electron donors or acceptors can tune the Fermi level to optimize the density of states.")
+        lines.append("")
+        lines.append("### Physics")
+        lines.append("")
+        lines.append("The superconductivity mechanism is believed to be conventional BCS-type, mediated by phonons.")
+        lines.append("High-pressure conditions (e.g., >100 GPa) stabilize metallic hydrogen or hydrogen-rich alloys.")
+        lines.append("The high Debye temperature of hydrogen leads to high Tc according to the McMillan formula.")
+        lines.append("Recent experiments on H3S and LaH10 have demonstrated Tc above 200 K, supporting this approach.")
+        lines.append("")
+        lines.append("### Manufacturing Considerations")
+        lines.append("")
+        lines.append("Synthesis typically requires high-pressure high-temperature (HPHT) methods.")
+        lines.append("Diamond anvil cells or multi-anvil presses are used to achieve the necessary pressures.")
+        lines.append("For practical applications, metastable retention at ambient pressure is a key challenge.")
+        lines.append("Alternative approaches include chemical precompression via clathrate structures.")
+        lines.append("")
+        lines.append("## References")
+        lines.append("")
+        lines.append("- Drozdov et al., Nature 525, 73 (2015) - H3S superconductor at 203 K")
+        lines.append("- Somayazulu et al., Phys. Rev. Lett. 122, 027001 (2019) - LaH10 at 250 K")
+        lines.append("- Peng et al., Phys. Rev. Lett. 119, 107001 (2017) - YH6 and YH9 predictions")
+        lines.append("- [Pipeline Results](discovery_report.md)")
+    else:
+        lines.append("No top candidate available. Run the pipeline first.")
+    
+    with open(explanation_path, "w") as f:
+        f.write("\n".join(lines))
+    print(f"[Explanation] Scientific explanation written to {explanation_path}")
+    return explanation_path
