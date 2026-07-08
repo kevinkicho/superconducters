@@ -240,6 +240,25 @@ The trained PINN serves as the high-fidelity predictor in the multi-fidelity opt
 
 This approach bridges the gap between low-fidelity machine learning models (e.g., GNNs) and expensive DFT+Eliashberg calculations, enabling rapid screening of thousands of candidate compounds for room-temperature superconductivity.
 
+## 10.5 Bayesian Calibration
+
+### 10.5.1 Overview
+Bayesian calibration provides a rigorous framework for quantifying uncertainty in the theoretical models used for superconductivity prediction. By treating model parameters as random variables and updating their distributions based on experimental data, we obtain posterior distributions that reflect both prior knowledge and empirical evidence.
+
+### 10.5.2 MCMC Calibration Method
+Markov Chain Monte Carlo (MCMC) methods are employed to sample from the posterior distribution of model parameters. For the Eliashberg theory parameters (e.g., \(\lambda\), \(\mu^*\), \(\omega_{\log}\)), we define a likelihood function based on the discrepancy between predicted and observed Tc values. The Metropolis-Hastings algorithm is used to generate a chain of parameter samples. The acceptance probability is given by:
+\[ \alpha = \min\left(1, \frac{p(\theta' | y) q(\theta | \theta')}{p(\theta | y) q(\theta' | \theta)}\right) \]
+where \(p(\theta | y)\) is the posterior, and \(q\) is the proposal distribution. Adaptive MCMC schemes (e.g., Haario et al.) are used to improve mixing.
+
+### 10.5.3 Posterior Distributions
+The posterior distributions provide a full probabilistic description of the parameters. For example, the posterior of \(\mu^*\) may be centered around 0.13 with a 95% credible interval of [0.10, 0.16], reflecting the uncertainty in the Coulomb pseudopotential. The posterior of \(\lambda\) may show correlations with \(\omega_{\log}\). These distributions are used to propagate uncertainty into Tc predictions.
+
+### 10.5.4 Uncertainty Quantification
+Uncertainty quantification (UQ) is performed by sampling from the posterior predictive distribution. For a new candidate material with given \(\alpha^2 F(\Omega)\) and \(\mu^*\) prior, we compute the predictive distribution of Tc by running the Eliashberg solver (or PINN surrogate) for each posterior sample. The resulting distribution yields a mean Tc and credible intervals. This UQ is integrated into the multi-fidelity optimization pipeline to guide experimental prioritization.
+
+### 10.5.5 Implementation
+The Bayesian calibration is implemented in the `run_bayesian_meta_analysis()` function in `run_pipeline.py`. It uses the PyMC library for MCMC sampling, with 4 chains of 5000 samples each (burn-in 1000). Convergence is assessed via the Gelman-Rubin statistic (\(\hat{R} < 1.1\)). The calibrated posteriors are stored in `data/calibration_results.json` for downstream use.
+
 ### References
 - M. Raissi, P. Perdikaris, and G. E. Karniadakis, *Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations*, J. Comput. Phys. 378, 686 (2019).
 - L. Lu, X. Meng, Z. Mao, and G. E. Karniadakis, *DeepXDE: A deep learning library for solving differential equations*, SIAM Rev. 63, 208 (2021).
