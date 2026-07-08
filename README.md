@@ -290,7 +290,7 @@ For a detailed discovery report, see [final_report.md](docs/final_report.md).
 
 ## Market Analysis
 
-For an analysis of the market size, growth projections, key players, and competitive landscape, see the Market Analysis Report. For details on funding requirements and strategy, see the [Funding Proposal](docs/funding_proposal.md).
+For an analysis of the market size, growth projections, key players, and competitive landscape, see the Market Analysis Report. For details on funding requirements and strategy, see the Funding Proposal.
 
 
 ## User Management and Role-Based Access Control (RBAC)
@@ -342,6 +342,7 @@ If no role is set, the system defaults to `viewer` with no API key required. The
 - [Carbon-based Superconductors](docs/experimental_protocol_carbon.md)
 - [Hydride Superconductors](docs/experimental_protocol_hydride.md)
 - [Nickelate Superconductors](docs/experimental_protocol_nickelate.md)
+- [LaH10 Detailed Synthesis Protocol](docs/experimental_protocol_new_compound.md)
 
 ### Project Management
 
@@ -357,7 +358,7 @@ If no role is set, the system defaults to `viewer` with no API key required. The
 - [Technology Transfer Plan](docs/technology_transfer_plan.md)
 - [Manufacturing Scalability](docs/manufacturing_scalability.md)
 - [Grant Proposal](docs/grant_proposal.md)
-- [Funding Proposal](docs/funding_proposal.md)
+- Funding Proposal
 
 ### Operations & Guides
 
@@ -451,20 +452,16 @@ Below are relevant funding sources for room-temperature superconductivity resear
 - **Focus:** Transformational energy technologies, including novel superconductors for power transmission and storage.
 
 ### Stakeholder Dashboard
-For a consolidated view of funding opportunities, deadlines, and project milestones, see the [Stakeholder Dashboard](docs/stakeholder_dashboard.md).
+For a consolidated view of funding opportunities, deadlines, and project milestones, see the Stakeholder Dashboard.
 
 
 ## Grant Proposal
 
 For the full grant proposal, see [Grant Proposal](docs/grant_proposal.md).
 
-## Real-Time Monitoring Dashboard
 
-Access the real-time monitoring dashboard at [Monitoring Dashboard](docs/monitoring_dashboard.md).
 
-## New Features
 
-For instructions on new features, refer to the [New Features Guide](docs/new_features_guide.md).
 
 
 ## Cloud Lab Integration
@@ -473,7 +470,7 @@ The project supports integration with cloud lab platforms for automated synthesi
 
 1. **Configure API Credentials**: Set the environment variables `CLOUD_LAB_API_KEY` and `CLOUD_LAB_ENDPOINT` with your cloud lab provider's credentials.
 2. **Run the Pipeline**: Execute `python run_pipeline.py --cloud-lab` to trigger automated synthesis and characterization workflows.
-3. **Monitor Results**: Results are logged to the database and can be viewed in the [Real-Time Monitoring Dashboard](docs/monitoring_dashboard.md).
+3. **Monitor Results**: Results are logged to the database and can be viewed in the Real-Time Monitoring Dashboard.
 4. **Validation**: Cloud lab validated results are automatically added to the [Candidate Materials](candidate_materials.md) table with a `CloudLabValidated` flag.
 
 For detailed setup instructions, see the [Cloud Lab Integration Guide](docs/experimental_feedback_loop.md#real-cloud-lab-integration).
@@ -497,17 +494,17 @@ Alerts can be configured to notify the team of critical events such as synthesis
 2. **Enable Alert Service**: Run `python run_pipeline.py --alert-service` to start the alert monitoring daemon.
 3. **Test Alerts**: Use `python run_pipeline.py --test-alert` to send a test notification.
 
-For more details, refer to the [Alert Configuration Guide](docs/alert_configuration.md).
+For more details, refer to the Alert Configuration Guide.
 
 ## Publication Figures
 
 Publication-ready figures are generated automatically by the pipeline. To access the latest figures:
 
-- **View Figures**: Open the [Research Paper](docs/research_paper.md#publication-ready-figures) document to see embedded figures.
+- **View Figures**: Open the [Research Paper](docs/research_paper.md) document to see embedded figures.
 - **Regenerate Figures**: Run `python run_pipeline.py --generate-figures` to regenerate all figures from the latest data.
 - **Export**: Figures are saved in the `figures/` directory in PNG and PDF formats.
 
-For a complete list of available figures and customization options, see the [Figures Guide](docs/figures_guide.md).
+For a complete list of available figures and customization options, see the Figures Guide.
 
 
 ## Latest Pipeline Statistics
