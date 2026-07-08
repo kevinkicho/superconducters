@@ -524,3 +524,59 @@ If any material in the batch fails validation (e.g., invalid formula), the entir
 #### Rate Limiting
 
 The batch predict endpoint is rate-limited to 10 requests per minute per API key. Exceeding this limit returns a 429 status code.
+
+## Programmatic Access
+
+This section provides a quick-start guide for programmatic access to the superconductor pipeline API.
+
+### Installation
+
+Install the Python client library (if available) or use the HTTP API directly:
+
+```bash
+pip install superconductor-pipeline-client
+```
+
+Alternatively, you can use any HTTP client (e.g., `curl`, `requests`).
+
+### Authentication
+
+All API endpoints require authentication. You can authenticate using either an API key or an OAuth2 bearer token.
+
+**API Key:** Pass your API key in the `X-API-Key` header:
+
+```bash
+curl -H "X-API-Key: your-api-key" https://api.superconductor-pipeline.example.com/...
+```
+
+**OAuth2 Bearer Token:** Pass your OAuth2 token in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer your-oauth2-token" https://api.superconductor-pipeline.example.com/...
+```
+
+### Example Usage (Python)
+
+```python
+import requests
+
+API_BASE = "https://api.superconductor-pipeline.example.com"
+API_KEY = "your-api-key"
+
+# Predict Tc for a single material
+response = requests.post(
+    f"{API_BASE}/predict",
+    headers={"X-API-Key": API_KEY},
+    json={
+        "formula": "LaH10",
+        "pressure": 150,
+        "temperature": 0,
+        "structure": "fcc"
+    }
+)
+print(response.json())
+```
+
+### Mobile Accessibility
+
+The Streamlit dashboard is fully responsive and can be accessed from mobile devices. For the best experience, use a modern browser (Chrome, Safari, Firefox) on iOS or Android. The dashboard supports touch gestures for navigation and zoom. OAuth2 login works seamlessly on mobile browsers. For programmatic access, the API endpoints described above are also accessible from mobile applications via standard HTTP requests.
