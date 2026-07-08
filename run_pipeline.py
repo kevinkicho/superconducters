@@ -60,6 +60,8 @@ import schedule
 import random
 import math
 from datetime import timedelta
+from skopt import gp_minimize
+from skopt.space import Real
 
 def active_learning_loop() -> None:
     """Active learning loop: select next candidate, run DFT, update candidate list."""
@@ -8626,6 +8628,79 @@ def high_throughput_screening() -> None:
         f.write("\n".join(lines))
     print(f"[HighThroughput] Updated {candidate_file} with computed properties.")
 
+# --- Cloud Lab API Client ---
+class CloudLabAPIClient:
+    def __init__(self, base_url: str, api_key: str, max_retries: int = 3, backoff_factor: float = 2.0):
+        self.base_url = base_url.rstrip('/')
+        self.api_key = api_key
+        self.max_retries = max_retries
+        self.backoff_factor = backoff_factor
+        self.session = requests.Session()
+        self.session.headers.update({"Authorization": f"Bearer {self.api_key}"})
+
+    def _request(self, method: str, endpoint: str, **kwargs) -> requests.Response:
+        url = f"{self.base_url}/{endpoint.lstrip('/')}"
+        for attempt in range(self.max_retries + 1):
+            try:
+                response = self.session.request(method, url, **kwargs)
+                response.raise_for_status()
+                return response
+            except requests.exceptions.RequestException as e:
+                if attempt < self.max_retries:
+                    sleep_time = self.backoff_factor ** attempt
+                    time.sleep(sleep_time)
+                else:
+                    raise RuntimeError(f"Request failed after {self.max_retries} retries: {e}")
+
+    def get(self, endpoint: str, **kwargs) -> dict:
+        return self._request("GET", endpoint, **kwargs).json()
+
+    def post(self, endpoint: str, data: dict = None, **kwargs) -> dict:
+        return self._request("POST", endpoint, json=data, **kwargs).json()
+
+    def put(self, endpoint: str, data: dict = None, **kwargs) -> dict:
+        return self._request("PUT", endpoint, json=data, **kwargs).json()
+
+    def delete(self, endpoint: str, **kwargs) -> dict:
+        return self._request("DELETE", endpoint, **kwargs).json()
+
+# --- Active Learning with Bayesian Optimization ---
+def active_learning_bayesian_opt(objective_func, space, n_calls=20, random_state=42):
+    """
+    Run Bayesian optimization to find the next candidate to evaluate.
+    objective_func: callable that takes a list of parameters and returns a score.
+    space: list of skopt.space.Dimension objects.
+    Returns the best parameters found.
+    """
+    result = gp_minimize(objective_func, space, n_calls=n_calls, random_state=random_state)
+    return result.x, result.fun
+
+# --- Multi-Objective Optimization (Weighted Sum) ---
+def multi_objective_weighted_sum(objectives, weights):
+    """
+    Combine multiple objective values into a single scalar using weighted sum.
+    objectives: list of floats (objective values).
+    weights: list of floats (weights, should sum to 1).
+    Returns weighted sum.
+    """
+    return sum(w * o for w, o in zip(weights, objectives))
+
+# --- Multi-Objective Optimization (NSGA-II placeholder) ---
+def multi_objective_nsga2(objective_func, n_var, bounds, pop_size=50, n_gen=100):
+    """
+    Placeholder for NSGA-II. Requires pymoo or deap. For now, returns a simple weighted sum.
+    """
+    # In a real implementation, use pymoo.algorithms.moo.nsga2.NSGA2
+    # For now, fallback to random search with weighted sum
+    best = None
+    best_score = float('inf')
+    for _ in range(pop_size * n_gen):
+        x = [random.uniform(b[0], b[1]) for b in bounds]
+        score = multi_objective_weighted_sum(objective_func(x), [0.5, 0.5])
+        if score < best_score:
+            best_score = score
+            best = x
+    return best, best_score
 
 if __name__ == "__main__":
     import argparse
