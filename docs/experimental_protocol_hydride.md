@@ -573,3 +573,105 @@ Based on reinforcement learning optimization (run_rl_optimization()), the follow
 - Errea, I. et al. (2020). *Nature*, 578, 66–69.
 - Geballe, Z. M. et al. (2018). *Angewandte Chemie International Edition*, 57, 688–692.
 - RL optimization module: see `run_rl_optimization()` in `run_pipeline.py`.
+
+
+## Safety Data Sheets (SDS)
+
+### Lithium Hydride (LiH)
+- **CAS**: 7580-67-8
+- **Hazards**: Reacts violently with water, releasing flammable hydrogen gas. Causes severe skin burns and eye damage. May cause respiratory irritation.
+- **Handling**: Use in inert atmosphere (argon glovebox). Avoid contact with moisture. Wear chemical-resistant gloves (e.g., nitrile), safety goggles, and lab coat.
+- **Storage**: Store in airtight containers under inert gas, away from water, acids, and oxidizers.
+- **First Aid**: Eyes: Rinse with water for 15 min. Skin: Remove contaminated clothing, rinse with water. Inhalation: Move to fresh air. Seek medical attention.
+- **Disposal**: React with ethanol or isopropanol in a fume hood, then neutralize. Dispose as hazardous waste.
+- **Source**: Sigma-Aldrich SDS (https://www.sigmaaldrich.com/US/en/sds/aldrich/199877)
+
+### Magnesium Hydride (MgH2)
+- **CAS**: 7693-27-8
+- **Hazards**: Flammable solid. Reacts with water to produce hydrogen gas. May cause skin and eye irritation.
+- **Handling**: Handle in glovebox under argon. Avoid dust formation. Use grounded equipment to prevent static discharge.
+- **Storage**: Keep in sealed containers under inert gas, away from moisture and heat.
+- **First Aid**: Skin: Wash with soap and water. Eyes: Flush with water. Inhalation: Remove to fresh air. If ingested, do not induce vomiting.
+- **Disposal**: Slowly react with water in a fume hood, then treat as non-hazardous after complete reaction.
+- **Source**: PubChem (https://pubchem.ncbi.nlm.nih.gov/compound/Magnesium-hydride)
+
+### Calcium Hydride (CaH2)
+- **CAS**: 7789-78-8
+- **Hazards**: Reacts violently with water, releasing hydrogen. Causes severe skin burns and eye damage. May ignite spontaneously in air if finely divided.
+- **Handling**: Use in glovebox. Keep away from water, acids, and oxidizers. Use non-sparking tools.
+- **Storage**: Store in airtight containers under inert gas, in a cool, dry place.
+- **First Aid**: Eyes: Rinse with water for 15 min. Skin: Remove contaminated clothing, rinse with water. Inhalation: Move to fresh air. Seek medical attention.
+- **Disposal**: React with ethanol or isopropanol in a fume hood, then neutralize. Dispose as hazardous waste.
+- **Source**: Sigma-Aldrich SDS (https://www.sigmaaldrich.com/US/en/sds/aldrich/213317)
+
+### Yttrium Hydride (YH3)
+- **CAS**: 13598-57-7
+- **Hazards**: Flammable solid. Reacts with water to produce hydrogen. May cause skin and eye irritation. Yttrium compounds are toxic if ingested.
+- **Handling**: Handle in glovebox. Avoid dust inhalation. Use local exhaust ventilation.
+- **Storage**: Store in sealed containers under inert gas, away from moisture.
+- **First Aid**: Skin: Wash with soap and water. Eyes: Flush with water. Inhalation: Remove to fresh air. If ingested, rinse mouth and seek medical attention.
+- **Disposal**: React with water in a fume hood, then treat as hazardous waste containing yttrium.
+- **Source**: PubChem (https://pubchem.ncbi.nlm.nih.gov/compound/Yttrium-hydride)
+
+### Ammonia Borane (NH3BH3)
+- **CAS**: 13774-81-7
+- **Hazards**: Flammable solid. Decomposes at elevated temperatures, releasing hydrogen and ammonia. May cause skin and eye irritation. Toxic if ingested.
+- **Handling**: Handle in glovebox. Avoid heat, sparks, and open flames. Use antistatic materials.
+- **Storage**: Store in sealed containers under inert gas, in a cool, dry place. Keep away from oxidizers.
+- **First Aid**: Skin: Wash with soap and water. Eyes: Flush with water. Inhalation: Move to fresh air. If ingested, do not induce vomiting; seek medical attention.
+- **Disposal**: Decompose by heating in a fume hood under inert atmosphere, then dispose as hazardous waste.
+- **Source**: Sigma-Aldrich SDS (https://www.sigmaaldrich.com/US/en/sds/aldrich/682098)
+
+### Epoxy Glue (Stycast 2850FT)
+- **CAS**: Mixture (epoxy resin + hardener)
+- **Hazards**: Skin and eye irritant. May cause allergic skin reaction. Harmful if swallowed. Contains bisphenol A epoxy resin.
+- **Handling**: Use in well-ventilated area. Wear nitrile gloves, safety goggles. Avoid skin contact. Use disposable mixing tools.
+- **Storage**: Store in original containers at room temperature, away from heat and ignition sources.
+- **First Aid**: Skin: Wash with soap and water. Eyes: Flush with water for 15 min. Inhalation: Move to fresh air. If ingested, do not induce vomiting; seek medical attention.
+- **Disposal**: Cure completely before disposal as solid hazardous waste.
+- **Source**: Henkel SDS (https://tds.henkel.com/tds5/Studio/ShowPDF/pid%3DSTYCAST%202850FT%20KIT%20-%20RESIN%20ONLY?format=SDS&language=EN&subformat=REACH)
+
+### Methanol-Ethanol Mixture (4:1)
+- **Components**: Methanol (CAS 67-56-1) and Ethanol (CAS 64-17-5)
+- **Hazards**: Flammable liquid (Category 2). Methanol is toxic by ingestion, inhalation, and skin absorption; may cause blindness or death. Ethanol is flammable and irritant.
+- **Handling**: Use in fume hood. Avoid sparks and open flames. Wear chemical-resistant gloves (e.g., nitrile), safety goggles, and lab coat. Use grounded containers.
+- **Storage**: Store in flammable liquids cabinet, away from heat and oxidizers. Keep containers tightly closed.
+- **First Aid**: Eyes: Rinse with water for 15 min. Skin: Remove contaminated clothing, wash with soap and water. Inhalation: Move to fresh air; if breathing difficulty, give oxygen. Ingestion: Do not induce vomiting; seek immediate medical attention (methanol poisoning requires antidote).
+- **Disposal**: Collect as flammable waste; dispose via licensed waste contractor.
+- **Source**: Sigma-Aldrich SDS for Methanol (https://www.sigmaaldrich.com/US/en/sds/aldrich/179337) and Ethanol (https://www.sigmaaldrich.com/US/en/sds/aldrich/459844)
+
+### Rhenium Gasket Material
+- **CAS**: 7440-15-5 (Rhenium metal)
+- **Hazards**: Rhenium metal is relatively inert but may cause mechanical irritation. Dust may be flammable. Avoid inhalation of dust.
+- **Handling**: Use in well-ventilated area. Wear gloves and safety glasses. Avoid generating dust.
+- **Storage**: Store in dry area.
+- **First Aid**: Skin: Wash with soap and water. Eyes: Flush with water. Inhalation: Move to fresh air.
+- **Disposal**: Recycle as scrap metal or dispose as non-hazardous waste.
+- **Source**: PubChem (https://pubchem.ncbi.nlm.nih.gov/compound/Rhenium)
+
+### Ruby Spheres (Al2O3:Cr)
+- **CAS**: 1302-74-5 (Aluminum oxide), 7440-47-3 (Chromium)
+- **Hazards**: Non-hazardous under normal use. May cause mechanical irritation. Avoid inhalation of dust.
+- **Handling**: Use tweezers; avoid crushing. Wear gloves.
+- **Storage**: Store in clean container.
+- **First Aid**: Not required under normal use.
+- **Disposal**: Dispose as non-hazardous waste.
+- **Source**: Not required (common material).
+
+### Silver Paste (for electrical contacts)
+- **CAS**: Mixture (silver flakes, organic binder)
+- **Hazards**: Flammable (organic solvent). May cause skin and eye irritation. Silver compounds may be toxic if ingested.
+- **Handling**: Use in fume hood. Wear nitrile gloves, safety goggles. Avoid skin contact. Keep away from heat and ignition sources.
+- **Storage**: Store in flammable liquids cabinet, tightly sealed.
+- **First Aid**: Skin: Wash with soap and water. Eyes: Flush with water. Inhalation: Move to fresh air. If ingested, do not induce vomiting; seek medical attention.
+- **Disposal**: Cure before disposal as solid hazardous waste.
+- **Source**: Ted Pella SDS (https://www.tedpella.com/msds_html/16040.htm)
+
+### Gold Wires (25 µm diameter)
+- **CAS**: 7440-57-5 (Gold)
+- **Hazards**: Non-hazardous. May cause mechanical injury if sharp.
+- **Handling**: Use tweezers; avoid cuts.
+- **Storage**: Store in clean container.
+- **First Aid**: Not required.
+- **Disposal**: Recycle as precious metal.
+- **Source**: Not required.
