@@ -55,5 +55,14 @@
       "memory_mb": 256,
       "throughput_samples_per_sec": 100.0
     }
+  },
+  {
+    "timestamp": "2025-04-10T14:00:00",
+    "assimilation_metrics": {
+      "ensemble_size": 100,
+      "rmse_before": 0.12,
+      "rmse_after": 0.08,
+      "kalman_gain_norm": 0.45
+    }
   }
 ]

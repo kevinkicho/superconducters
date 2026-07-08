@@ -296,3 +296,52 @@ cloud_lab:
 ### Safety and Error Handling
 
 If an experiment submission fails, the pipeline retries up to 3 times with exponential backoff. After 3 consecutive failures, the autonomous loop pauses and logs an alert. Manual intervention is required to resume.
+
+## Synchrotron Beamline Integration
+
+The pipeline now includes a module to connect to a synchrotron beamline API (e.g., Advanced Photon Source at Argonne National Laboratory) using OAuth2 authentication. This enables real-time fetching of X-ray diffraction and resistance data, which is then assimilated into the digital twin and ML models via an ensemble Kalman filter.
+
+### Authentication
+
+The synchrotron client uses OAuth2 client credentials flow. Set the following environment variables:
+
+- `SYNCHROTRON_CLIENT_ID`: Your client ID.
+- `SYNCHROTRON_CLIENT_SECRET`: Your client secret.
+- `SYNCHROTRON_TOKEN_URL`: Token endpoint (default: `https://api.aps.anl.gov/oauth/token`).
+- `SYNCHROTRON_BASE_URL`: API base URL (default: `https://api.aps.anl.gov/v1`).
+
+The client automatically obtains and refreshes tokens.
+
+### Data Fetching
+
+- `fetch_xrd_data(experiment_id)`: Returns XRD peak positions and intensities.
+- `fetch_resistance_data(experiment_id)`: Returns resistance vs. temperature measurements.
+
+### Data Assimilation
+
+The `ensemble_kalman_filter` function fuses synchrotron observations with DFT/ML predictions using an ensemble Kalman filter. It logs assimilation metrics (RMSE before/after, Kalman gain norm) to `data/model_performance_log.json`.
+
+### Health API
+
+A separate FastAPI app (`health_app`) exposes a `/health` endpoint that returns system and pipeline health metrics. Run it with:
+
+```bash
+uvicorn run_pipeline:health_app --host 0.0.0.0 --port 8001
+```
+
+### Usage Example
+
+```python
+from run_pipeline import SynchrotronClient, ensemble_kalman_filter
+
+client = SynchrotronClient()
+client.authenticate()
+xrd = client.fetch_xrd_data("exp123")
+resistance = client.fetch_resistance_data("exp123")
+client.update_digital_twin(xrd, resistance)
+
+# Assimilate with predictions
+predictions = [300, 0.5]  # example Tc and pressure
+observations = [295, 0.45]  # from synchrotron
+updated = ensemble_kalman_filter(observations, predictions)
+```
