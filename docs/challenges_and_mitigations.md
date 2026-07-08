@@ -902,3 +902,42 @@ Success probabilities are based on historical funding rates for similar programs
 | Q1 2026 | Prepare for next round of submissions (ARPA-E SCALEUP if OPEN awarded, NSF PFI, DOE EFRC). Update proposals with new experimental data. |
 
 This funding strategy provides a diversified portfolio of grant and venture capital sources, with clear deadlines and realistic success probabilities, ensuring continuous financial support for the room-temperature superconductor development program.
+
+
+## Global Sensitivity Analysis
+
+### Objective
+Identify the most influential parameters affecting the predicted superconducting transition temperature (Tc) and manufacturing cost using global sensitivity analysis methods (Sobol and Morris).
+
+### Parameters Analyzed
+- Pressure (GPa)
+- Temperature (K) — synthesis temperature
+- Doping concentration (atomic %)
+- DFT functional (e.g., PBE, PBEsol, SCAN, HSE06)
+- ML hyperparameters (e.g., learning rate, number of layers, regularization)
+- Synthesis temperature (K) — note: this may overlap with temperature, but we treat as separate if needed.
+
+### Methodology
+We will perform:
+1. **Morris method** (elementary effects) for screening: compute mean (μ) and standard deviation (σ) of elementary effects to identify parameters with high influence and non-linear interactions.
+2. **Sobol sensitivity analysis** (variance-based) for quantitative ranking: compute first-order (S1) and total-order (ST) Sobol indices.
+
+The analysis will be conducted on the surrogate model (Gaussian process with linear coregionalization) trained on DFT, ML, and experimental data. The manufacturing cost model will be a separate function of the same parameters.
+
+### Expected Outcomes
+- Tornado plots showing the range of Tc variation for each parameter (one-at-a-time) and Sobol indices.
+- Ranking of parameters by influence on Tc and cost.
+- Recommendations for parameter prioritization (e.g., focus experimental effort on pressure and doping) and uncertainty reduction (e.g., refine DFT functional choice, calibrate ML hyperparameters).
+
+### Recommendations
+- **Pressure** and **doping concentration** are expected to be the most influential on Tc, based on literature. Experimental resources should prioritize precise control and measurement of these parameters.
+- **DFT functional** choice introduces systematic bias; a multi-functional ensemble should be used to quantify uncertainty.
+- **ML hyperparameters** have moderate influence; automated hyperparameter tuning (e.g., Bayesian optimization) is recommended.
+- **Synthesis temperature** affects phase stability; sensitivity analysis will guide optimal temperature windows.
+
+### Next Steps
+- Run the sensitivity analysis using the existing pipeline (run_pipeline.py) with the trained surrogate model.
+- Generate tornado plots and Sobol indices, and insert them into this section.
+- Update recommendations based on actual computed sensitivity indices.
+
+This section will be updated with actual results once the analysis is complete.
