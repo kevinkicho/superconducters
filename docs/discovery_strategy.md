@@ -28,7 +28,7 @@ Default weights are w1=0.5, w2=0.3, w3=0.2, but these can be adjusted by the use
 | Material B | 0.78 | 0.85 | 0.60 | 0.77 |
 | Material C | 0.88 | 0.50 | 0.45 | 0.68 |
 
-The algorithm outputs a ranked list with composite scores, enabling researchers to focus on the most promising candidates. Detailed breakdowns for each axis are stored in `data/candidate_scores.json`.
+The algorithm outputs a ranked list with composite scores, enabling researchers to focus on the most promising candidates. 
 
 ### Integration with Physics and Chemistry
 

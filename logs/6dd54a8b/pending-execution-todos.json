@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "6dd54a8b-5c24-44b8-99a0-c9bf093a4a3a",
+  "writtenAt": 1783550742896,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Implement missing functions fetch_materials_project, fetch_icsd, fetch_arxiv in scripts/api_client.py, ensuring they return appropriate data or call the PipelineClient.",
+      "expectedFiles": [
+        "scripts/api_client.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement run_pipeline.py with actual pipeline logic: integrate arxiv_scraper, call DFT calculator, and update candidate materials based on experimental feedback.",
+      "expectedFiles": [
+        "run_pipeline.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement dft_calculator.py with actual DFT calculation logic (e.g., using a simple approximation or calling an external tool like VASP/Quantum Espresso via subprocess, or at least a placeholder that returns meaningful results for Tc).",
+      "expectedFiles": [
+        "dft_calculator.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Create data/candidate_scores.json with sample candidate scores for materials like YH10, or update docs/discovery_strategy.md to remove the reference to the missing file.",
+      "expectedFiles": [
+        "data/candidate_scores.json",
+        "docs/discovery_strategy.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Unify YH10 Tc values across all files (candidate_materials.md, proposed_chemistry_physics.md, etc.) to a single consistent value (e.g., 250 K or 258 K as per literature).\n\nAlso (council-synthesis): Consolidate duplicate candidate_materials.md files (root and any in docs/) into a single authoritative version, resolving inconsistencies in material properties.",
+      "expectedFiles": [
+        "candidate_materials.md",
+        "proposed_chemistry_physics.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update README.md to replace the coverage badge with a correct one or remove it, and ensure the project description aligns with the directive.",
+      "expectedFiles": [
+        "README.md"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}
