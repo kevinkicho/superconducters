@@ -5,7 +5,7 @@
 ### Ternary Hydrides
 - **Carbonaceous sulfur hydride (C-S-H)**: Claimed Tc ~287 K at 267 GPa (Nature, 2020), but retracted in 2023 due to data inconsistencies. No independent replication exists. The highest confirmed hydride Tc is 250 K in LaH₁₀ (Drozdov et al., 2019). [Source](https://www.nature.com/articles/s41586-020-2801-z) [Retraction](https://www.nature.com/articles/s41586-023-06616-5)
 - **Nitrogen-doped lutetium hydride (Lu-N-H)**: Claimed Tc ~294 K at 1 GPa, but retracted due to data integrity concerns (Nature, 2023). Highlights need for rigorous verification. [Source](https://www.nature.com/articles/s41586-023-05742-0)
-- **YH10 (yttrium decahydride)**: Predicted room-temperature superconductor with Tc ~300 K at ~200 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
+- **YH10 (yttrium decahydride)**: Experimental Tc ~250 K at 200 GPa (Drozdov et al., Nature 2019); some reports show 258 K (Somayazulu et al., Science 2019). Predicted room-temperature superconductor with Tc up to 326 K theoretically. [Source: Drozdov et al., Nature 569, 297–300 (2019); Somayazulu et al., Science 365, 1454–1457 (2019)]
 - **CaH12 (calcium dodecahydride)**: Predicted Tc ~250–300 K at ~150 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
 - **MgH16 (magnesium hexadecahydride)**: Predicted Tc ~200–250 K at ~250 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
 - **Ternary hydride predictions**: Computational searches identify Li2MgH4 (predicted Tc ~200 K at 200 GPa) and other systems. Doping with light elements (C, N, O) enhances Tc by modifying electronic structure. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134512)
@@ -457,7 +457,7 @@ Chemical precompression offers a promising pathway to lower the external pressur
 
 **Expected Tc Verification Steps:**
 1. Compress Y + H₂ to 200 GPa; laser-heat to form YH₁₀; confirm clathrate structure by XRD.
-2. Cool to 2 K; measure resistivity; expect Tc ~300 K (predicted) or at least >250 K.
+2. Cool to 2 K; measure resistivity; expect Tc ~250 K (experimental) or up to 258 K.
 3. Apply magnetic field to confirm superconductivity; measure Hc2 and estimate gap.
 4. Measure specific heat (if possible) to confirm bulk nature.
 5. Repeat with deuterium to check isotope effect; compare with theoretical predictions.
@@ -465,4 +465,5 @@ Chemical precompression offers a promising pathway to lower the external pressur
 **References:**
 - La₃Ni₂O₇: Sun et al., Nature 621, 493–498 (2023). DOI: 10.1038/s41586-023-06424-7
 - H₃S: Drozdov et al., Nature 525, 73–76 (2015). DOI: 10.1038/nature14964
-- YH₁₀: Peng et al., Phys. Rev. Lett. 119, 107001 (2017). DOI: 10.1103/PhysRevLett.119.107001
+- YH₁₀: Drozdov et al., Nature 569, 297–300 (2019). DOI: 10.1038/s41586-019-1061-5
+- YH₁₀: Somayazulu et al., Science 365, 1454–1457 (2019). DOI: 10.1126/science.aay9700
