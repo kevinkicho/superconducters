@@ -1841,3 +1841,41 @@ class TestStressSelfHealing:
         assert "LaH10" in write_content, "Expected LaH10 in output"
         assert "203.0" in write_content, "Expected Tc for H3S in output"
         assert "250.0" in write_content, "Expected Tc for LaH10 in output"
+
+    def test_performance_benchmark_100k_candidates(self):
+        """Performance benchmark: run pipeline with 100,000 synthetic candidates, must complete within 600s."""
+        import time
+        candidates = [{"name": f"candidate_{i}", "Tc": 100 + i % 200, "pressure": 150, "composition": f"H{i%10+1}S"} for i in range(100000)]
+        with patch('scripts.run_pipeline.load_data', return_value=candidates):
+            mock_model = MagicMock()
+            mock_model.predict.return_value = [200.0] * 100000
+            with patch('scripts.run_pipeline.train_model', return_value=mock_model):
+                def mock_predict(name, pressure=None):
+                    return (150.0, 5.0)
+                with patch('scripts.run_pipeline.predict_tc_with_uncertainty', side_effect=mock_predict):
+                    with patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation', return_value={"energy": -1.0, "bandgap": 0.0, "status": "converged"}):
+                        with patch('builtins.open', new_callable=MagicMock):
+                            start = time.time()
+                            result = rp.run_pipeline()
+                            elapsed = time.time() - start
+                            assert elapsed < 600, f"Pipeline took {elapsed:.2f}s, expected < 600s"
+                            assert result is not None
+
+    def test_stress_api_failures_fallback(self):
+        """Stress test: simulate simultaneous API failures and verify fallback to cached data."""
+        candidates = [{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]
+        with patch('scripts.run_pipeline.load_data', return_value=candidates):
+            mock_model = MagicMock()
+            mock_model.predict.return_value = [200.0]
+            with patch('scripts.run_pipeline.train_model', return_value=mock_model):
+                with patch('scripts.run_pipeline.predict_tc_with_uncertainty', return_value=(203.0, 5.0)):
+                    with patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation', return_value={"energy": -1.0, "bandgap": 0.0, "status": "converged"}):
+                        with patch('scripts.run_pipeline.requests.post', side_effect=Exception("API failure")):
+                            with patch('builtins.open', new_callable=MagicMock) as mock_open:
+                                mock_file = MagicMock()
+                                mock_open.return_value.__enter__.return_value = mock_file
+                                result = rp.run_pipeline()
+                                assert result is not None, "Pipeline should complete despite API failures"
+                                write_calls = mock_file.write.call_args_list
+                                write_content = "".join([call[0][0] for call in write_calls])
+                                assert "H3S" in write_content, "Expected candidate data in output"
