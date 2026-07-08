@@ -213,3 +213,43 @@ Optimize synthesis conditions (pressure, temperature, doping) to maximize Tc and
 - Drozdov, A. P. et al. (2019). Superconductivity in LaH₁₀. *Nature*, 569, 528–531. DOI: 10.1038/s41586-019-1201-8
 - Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride. *Phys. Rev. Lett.*, 122, 027001. DOI: 10.1103/PhysRevLett.122.027001
 - APS beamline 16‑ID‑B: https://www.aps.anl.gov/Beamlines/16-ID-B
+
+
+## 6. Quality Assurance and Quality Control (QA/QC) Plan
+
+### 6.1 Statistical Process Control (SPC) Charts
+- **Control charts** for key process parameters: pressure (GPa), laser heating temperature (K), heating duration (s), and sample resistance (Ω) at room temperature.
+- **X̄-R charts**: Subgroup size n=3 (three consecutive runs). Upper and lower control limits set at ±3σ from the mean.
+- **p-chart** for synthesis success rate (binary: Tc > 200 K). Monitor proportion of successful runs per batch of 20.
+- **CUSUM chart** for drift detection in Tc over time (target Tc = 250 K, shift detection δ = 10 K).
+- **Software**: Python `statsmodels` or Minitab for real-time charting; automated alerts when points fall outside control limits or violate Western Electric rules.
+
+### 6.2 Acceptance Criteria for Synthesis and Characterization
+| Parameter | Acceptance Criterion | Method | Frequency |
+|-----------|----------------------|--------|-----------|
+| Pressure (synthesis) | 150–170 GPa ± 2 GPa | Ruby fluorescence (R1 line) | Every run |
+| Laser heating temperature | 1500–2000 K ± 50 K | Optical pyrometer | Every heating cycle |
+| Phase purity (XRD) | I(111)/I(background) ≥ 10 | Rietveld refinement (GSAS-II) | Every sample |
+| Lattice parameter | 5.0 ± 0.05 Å at 150 GPa | XRD peak fitting | Every sample |
+| Critical temperature (Tc) | ≥ 200 K (target 250 K) | Four-probe resistivity (10%–90% drop) | Every sample |
+| Residual resistivity ratio (RRR) | ≥ 2 | ρ(300 K)/ρ(300 K) after correction | Every sample |
+| Hydrogen content (LaHₓ) | x ≥ 9.5 (by mass or NMR) | Mass balance + Raman H–H mode | Every 5th sample |
+
+### 6.3 Calibration Procedures for Equipment
+- **Diamond anvil cell (DAC) pressure calibration**: Ruby fluorescence standard (Mao-Bell scale) before each run; recalibrate after every 10 runs or if cell is disassembled.
+- **Laser power meter**: Calibrated against NIST-traceable standard annually; check with thermopile sensor before each heating session.
+- **Optical pyrometer**: Calibrated using a blackbody furnace (1000–2500 K) every 6 months; daily verification with a tungsten ribbon lamp.
+- **X-ray diffractometer**: Calibrate 2θ zero offset with NIST SRM 640e (Si powder) weekly; detector gain and flat-field correction monthly.
+- **Resistivity measurement system**: Four-probe van der Pauw geometry; calibrate with known resistor (1 mΩ–1 kΩ) before each cooldown; check wiring continuity with multimeter.
+- **Cryostat temperature sensors**: Calibrate against a secondary standard (Pt100 or Cernox) annually; daily check at 77 K (liquid N₂) and 4.2 K (liquid He).
+- **Mass flow controllers (for gas handling)**: Calibrate with bubble flow meter or NIST-traceable standard every 3 months.
+
+### 6.4 Non-Conformance Reporting Procedure
+1. **Identification**: Any deviation from acceptance criteria (Section 6.2) or calibration drift (Section 6.3) triggers a non-conformance (NC) report.
+2. **Documentation**: Fill NC form (electronic or paper) with: date, equipment ID, parameter, observed value, expected value, operator name, and description of deviation.
+3. **Immediate action**: Stop the affected process; isolate non-conforming samples; label and store in a designated area.
+4. **Root cause analysis**: Use 5-Whys or fishbone diagram to identify cause (e.g., pressure leak, laser misalignment, detector saturation).
+5. **Corrective action**: Implement fix (e.g., replace gasket, realign optics, recalibrate detector). Re-run validation test on a control sample.
+6. **Preventive action**: Update SOP, retrain staff, or modify equipment maintenance schedule to prevent recurrence.
+7. **Review**: NC reports reviewed weekly by QA/QC team; trends reported monthly to project lead. Escalate to management if same NC repeats >3 times in a quarter.
+8. **Records**: All NC reports archived in a searchable database (e.g., SQLite) for at least 5 years.
