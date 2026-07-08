@@ -852,6 +852,7 @@ def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float
 def compute_dft_properties_for_top_candidates() -> dict:
     """
     Compute DFT properties (DOS, Tc) for top candidates: LaH10, YH9, CaH12.
+    Uses first-principles electron-phonon coupling calculation via Quantum ESPRESSO.
     Returns a dictionary with results.
     """
     import json
@@ -863,10 +864,17 @@ def compute_dft_properties_for_top_candidates() -> dict:
     candidates = ['LaH10', 'YH9', 'CaH12']
     results = {}
     for idx, name in enumerate(candidates):
+        structure = database[idx]
         dos = compute_dos_at_fermi(structure_index=idx, db_path=db_path)
-        entry = database[idx]
-        lam = entry.get('lambda', 0.5)
-        omega_log = entry.get('omega_log', 500.0)
+        # Compute electron-phonon coupling from first principles
+        eph_result = compute_eph_coupling(structure)
+        if eph_result is not None:
+            lam = eph_result['lambda']
+            omega_log = eph_result['omega_log']
+        else:
+            # Fallback to database values if DFT calculation fails
+            lam = structure.get('lambda', 0.5)
+            omega_log = structure.get('omega_log', 500.0)
         mu_star = 0.1
         numerator = 1.04 * (1 + lam)
         denominator = lam - mu_star * (1 + 0.62 * lam)
@@ -881,3 +889,122 @@ def compute_dft_properties_for_top_candidates() -> dict:
             'tc_ab_initio': tc,
         }
     return results
+
+
+def compute_eph_coupling(structure: dict, prefix: str = "eph", q_grid: list = None) -> Optional[dict]:
+    """
+    Compute electron-phonon coupling (lambda) and logarithmic average frequency (omega_log)
+    for a given structure using Quantum ESPRESSO.
+
+    Args:
+        structure: Dictionary with keys 'cell_parameters', 'atomic_positions', 'atomic_species'.
+        prefix: Calculation prefix.
+        q_grid: List of q-points for phonon calculation (e.g., [2,2,2]).
+
+    Returns:
+        Dictionary with keys 'lambda' and 'omega_log', or None if calculation fails.
+    """
+    if q_grid is None:
+        q_grid = [2, 2, 2]
+    import tempfile
+    import shutil
+    # Create temporary directory for calculation
+    tmpdir = tempfile.mkdtemp()
+    try:
+        # Generate SCF input and run pw.x
+        scf_input = generate_scf_input(structure, prefix=prefix)
+        scf_file = os.path.join(tmpdir, f"{prefix}.scf.in")
+        with open(scf_file, 'w') as f:
+            f.write(scf_input)
+        pw_cmd = [PW_BIN, '-in', scf_file]
+        subprocess.run(pw_cmd, cwd=tmpdir, check=True, capture_output=True, text=True)
+        # Generate PH input
+        ph_input = f"""&inputph
+    prefix = '{prefix}'
+    outdir = '{tmpdir}'
+    fildyn = '{prefix}.dyn'
+    tr2_ph = 1e-12
+    ldisp = .true.
+    nq1 = {q_grid[0]}
+    nq2 = {q_grid[1]}
+    nq3 = {q_grid[2]}
+/
+"""
+        ph_file = os.path.join(tmpdir, f"{prefix}.ph.in")
+        with open(ph_file, 'w') as f:
+            f.write(ph_input)
+        ph_cmd = [PH_BIN, '-in', ph_file]
+        subprocess.run(ph_cmd, cwd=tmpdir, check=True, capture_output=True, text=True)
+        # Run q2r.x
+        q2r_input = f"""&input
+    fildyn = '{prefix}.dyn'
+    flfrc = '{prefix}.fc'
+    zasr = 'crystal'
+/
+"""
+        q2r_file = os.path.join(tmpdir, f"{prefix}.q2r.in")
+        with open(q2r_file, 'w') as f:
+            f.write(q2r_input)
+        q2r_cmd = [Q2R_BIN, '-in', q2r_file]
+        subprocess.run(q2r_cmd, cwd=tmpdir, check=True, capture_output=True, text=True)
+        # Run matdyn.x to get phonon DOS
+        matdyn_input = f"""&input
+    asr = 'crystal'
+    flfrc = '{prefix}.fc'
+    flfrq = '{prefix}.freq'
+    dos = .true.
+    fldos = '{prefix}.phonon_dos'
+    nk1 = 10
+    nk2 = 10
+    nk3 = 10
+/
+"""
+        matdyn_file = os.path.join(tmpdir, f"{prefix}.matdyn.in")
+        with open(matdyn_file, 'w') as f:
+            f.write(matdyn_input)
+        matdyn_cmd = [MATDYN_BIN, '-in', matdyn_file]
+        subprocess.run(matdyn_cmd, cwd=tmpdir, check=True, capture_output=True, text=True)
+        # Run lambda.x to compute electron-phonon coupling
+        lambda_input = f"""&input
+    prefix = '{prefix}'
+    outdir = '{tmpdir}'
+    fildyn = '{prefix}.dyn'
+    flfrc = '{prefix}.fc'
+    flfrq = '{prefix}.freq'
+    fllambda = '{prefix}.lambda'
+    nq1 = {q_grid[0]}
+    nq2 = {q_grid[1]}
+    nq3 = {q_grid[2]}
+    delta = 0.01
+/
+"""
+        lambda_file = os.path.join(tmpdir, f"{prefix}.lambda.in")
+        with open(lambda_file, 'w') as f:
+            f.write(lambda_input)
+        lambda_cmd = [LAMBDA_BIN, '-in', lambda_file]
+        subprocess.run(lambda_cmd, cwd=tmpdir, check=True, capture_output=True, text=True)
+        # Parse lambda output
+        lambda_out = os.path.join(tmpdir, f"{prefix}.lambda")
+        if not os.path.exists(lambda_out):
+            print(f"lambda.x output not found: {lambda_out}")
+            return None
+        with open(lambda_out, 'r') as f:
+            content = f.read()
+        # Extract lambda and omega_log using regex
+        lam_match = re.search(r'lambda\s*=\s*([\d.]+)', content)
+        omega_match = re.search(r'omega_log\s*=\s*([\d.]+)', content)
+        if lam_match and omega_match:
+            lam = float(lam_match.group(1))
+            omega_log = float(omega_match.group(1))
+            return {'lambda': lam, 'omega_log': omega_log}
+        else:
+            print("Could not parse lambda.x output")
+            return None
+    except subprocess.CalledProcessError as e:
+        print(f"DFT calculation failed: {e.stderr}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return None
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
