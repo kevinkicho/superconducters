@@ -328,3 +328,41 @@ See [docs/manufacturing_scalability.md](docs/manufacturing_scalability.md) for d
 
 ### Conclusion
 Li₂MgH₆ offers a viable path to commercial room-temperature superconductivity with manageable supply chain risks and strong financial returns. The technology transfer plan should prioritize securing raw material contracts and scaling production.
+
+
+## 7. Regulatory Strategy
+
+### 7.1 Approval Pathway for Li₂MgH₆
+- **U.S. Department of Energy (DOE)**: For grid-scale superconducting cables and energy storage, the primary regulatory body is the DOE. The pathway involves:
+  - **Technology Readiness Level (TRL) Assessment**: Demonstrate TRL 6+ (system/subsystem model or prototype demonstration in a relevant environment) before field deployment.
+  - **Environmental Impact Statement (EIS)**: Required for large-scale manufacturing facilities under the National Environmental Policy Act (NEPA). Estimated cost: $2–5M; timeline: 12–18 months.
+  - **Grid Interconnection Standards**: Compliance with IEEE 1547 and NERC reliability standards for power grid integration.
+- **U.S. Food and Drug Administration (FDA)**: If used in medical devices (e.g., MRI magnets), the device must undergo 510(k) clearance or Premarket Approval (PMA). The superconductor itself is a component; the device manufacturer bears primary responsibility. Estimated timeline: 6–12 months for 510(k); 12–24 months for PMA. Costs: $50k–$500k depending on device class.
+- **Environmental Protection Agency (EPA)**: For manufacturing emissions and waste, permits under the Clean Air Act and Clean Water Act are required. Estimated cost: $500k–$1M; timeline: 6–12 months.
+- **Occupational Safety and Health Administration (OSHA)**: Compliance with process safety management (PSM) for high-pressure synthesis (up to 10 GPa). Requires hazard analysis, training, and emergency response plans.
+
+### 7.2 International Regulatory Considerations
+- **European Union**: REACH registration for chemical substances (Li₂MgH₆ as a new substance). Estimated cost: €1–3M; timeline: 2–4 years. CE marking for electrical/electronic applications.
+- **Japan**: METI approval for advanced materials; JIS certification for quality standards.
+- **China**: MIIT registration for new materials; GB/T standards compliance.
+
+### 7.3 Required Tests and Certifications
+- **Material Characterization**: XRD, SEM, EDX, XPS, and superconducting transition temperature (Tc) measurement per ASTM B714 or equivalent.
+- **Safety Testing**: Toxicity (LD50), flammability, reactivity with water/air. Performed by accredited labs (e.g., UL, SGS).
+- **Performance Testing**: Critical current density (Jc), upper critical field (Hc2), mechanical strength, thermal cycling stability.
+- **Long-Term Reliability**: Accelerated aging tests (thermal, electrical, mechanical) over 1000+ hours.
+
+### 7.4 Timeline and Cost Summary
+| Phase | Estimated Timeline | Estimated Cost |
+|-------|-------------------|----------------|
+| Pre-clinical characterization | 6–9 months | $1–2M |
+| Regulatory submission (DOE/FDA) | 12–24 months | $3–8M |
+| Environmental permits | 6–12 months | $0.5–1M |
+| International registrations | 12–36 months | $2–5M |
+| **Total** | **3–6 years** | **$6.5–16M** |
+
+### 7.5 Risk Mitigation
+- Engage regulatory consultants early (e.g., Exponent, Regulatory Affairs Professionals Society).
+- Parallel filing in multiple jurisdictions to reduce time-to-market.
+- Maintain a regulatory dossier with all test data, safety data sheets (SDS), and manufacturing process descriptions.
+- Establish a quality management system (ISO 9001 / ISO 13485) to streamline approvals.
