@@ -2218,3 +2218,40 @@ A weekly data quality report is generated (`reports/data_quality_report.md`) con
 - Breakdown by quality dimension.
 - Top 5 most common validation failures.
 - Recommendations for improving data collection protocols.
+
+
+## Model Performance Over Time
+
+Tracking the predictive accuracy of ML models over successive experimental cycles is essential for evaluating the feedback loop's effectiveness. A dedicated dashboard widget displays key performance metrics:
+
+- **Prediction Error**: Mean absolute error (MAE) and root mean squared error (RMSE) of predicted Tc vs. measured Tc, computed after each batch of new experiments.
+- **Ranking Stability**: Kendall tau rank correlation between model-predicted candidate rankings and rankings based on experimental Tc values.
+- **Retraining Impact**: Change in model performance before and after each retraining event, plotted as a time series.
+- **Uncertainty Calibration**: Reliability diagrams showing whether predicted confidence intervals match empirical coverage.
+
+These metrics are computed automatically by `scripts/evaluate_model_performance.py` and stored in the `model_performance` table. A weekly summary is appended to `reports/model_performance_report.md`.
+
+## Real Cloud Lab Integration
+
+To accelerate experimental throughput, the feedback loop integrates with a real cloud lab platform (e.g., Emerald Cloud Lab, Strateos, or a custom remote laboratory). The integration enables:
+
+- **Remote Experiment Execution**: Computational candidates are automatically queued for synthesis and characterization in the cloud lab. The system submits job specifications (precursors, pressure, temperature, duration) via the cloud lab's API.
+- **Real-Time Data Streaming**: Characterization data (XRD, resistivity, magnetization) is streamed back to the central database as it is collected, enabling near-instantaneous ingestion and model retraining.
+- **Resource Scheduling**: The adaptive DoE module optimizes the allocation of cloud lab resources (e.g., high-pressure cells, cryostats) across multiple candidate experiments to minimize idle time and maximize throughput.
+- **Error Handling**: If a cloud lab run fails (e.g., equipment malfunction, sample degradation), the system automatically re-queues the experiment with adjusted parameters or flags the candidate for manual review.
+
+Configuration details (API keys, endpoint URLs, resource limits) are stored in `config/cloud_lab_config.yaml`. The integration module is implemented in `scripts/cloud_lab_integration.py`.
+
+## Grant Proposal
+
+A grant proposal has been drafted to secure funding for scaling the experimental feedback loop infrastructure. The proposal targets the **DOE Office of Science Advanced Scientific Computing Research (ASCR) program** and is stored in `docs/grant_proposal.md`. Key elements include:
+
+- **Objective**: Establish a fully automated, closed-loop discovery platform for room-temperature superconductors, integrating computational prediction, cloud lab experimentation, and ML-driven feedback.
+- **Budget**: $2.5M over three years, covering personnel (2 postdocs, 1 software engineer), cloud lab access fees, computational resources (HPC allocation), and equipment (cryostats, high-pressure cells).
+- **Milestones**:
+  - Year 1: Deploy cloud lab integration, achieve 50 automated experiments per month.
+  - Year 2: Reduce model prediction error by 30% via continuous retraining, increase throughput to 200 experiments per month.
+  - Year 3: Demonstrate discovery of at least one new superconducting compound with Tc > 150 K at ambient pressure.
+- **Impact**: Accelerate materials discovery by 10× compared to traditional trial-and-error methods, reduce cost per candidate by 80%.
+
+The full proposal text, including budget justification, management plan, and references, is available in `docs/grant_proposal.md`.
