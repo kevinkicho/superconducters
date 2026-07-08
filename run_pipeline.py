@@ -9,7 +9,11 @@ Orchestrates:
   4. Output ranked candidates (output_ranked.py) – produce a sorted list with scores.
 
 Usage:
-  python run_pipeline.py [--query-args ...] [--candidates-args ...] [--predict-args ...] [--output-args ...]
+  python run_pipeline.py [--query-args ...] [--candidates-args ...] [--predict-args ...] [--output-args ...] [--watch] [--watch-file FILE]
+
+Event-driven mode:
+  --watch              Watch for changes to data/experimental_results.json and re-run pipeline.
+  --watch-file FILE    Specify a custom file to watch (default: data/experimental_results.json).
 
 All sub-scripts are expected to be in the same directory and expose a run() function
 that accepts keyword arguments and returns results.
@@ -8494,3 +8498,44 @@ def data_consistency_validation() -> bool:
         return True
     else:
         return False
+
+
+def watch_mode(watch_file: str = "data/experimental_results.json") -> None:
+    """
+    Event-driven mode: watch a file for changes and re-run the pipeline.
+    Uses a simple polling approach (every 5 seconds) to detect modifications.
+    """
+    import time
+    from pathlib import Path
+    print(f"[Watch] Watching {watch_file} for changes...")
+    last_mtime = Path(watch_file).stat().st_mtime if Path(watch_file).exists() else 0
+    while True:
+        time.sleep(5)
+        if Path(watch_file).exists():
+            current_mtime = Path(watch_file).stat().st_mtime
+            if current_mtime != last_mtime:
+                print(f"[Watch] Detected change in {watch_file}. Re-running pipeline...")
+                last_mtime = current_mtime
+                # Re-run the main pipeline logic (assumes run() is defined)
+                if 'run' in globals():
+                    run()
+                else:
+                    print("[Watch] No run() function found. Skipping.")
+        else:
+            print(f"[Watch] {watch_file} does not exist. Waiting...")
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Run the superconductor discovery pipeline.")
+    parser.add_argument("--watch", action="store_true", help="Enable event-driven mode watching data/experimental_results.json")
+    parser.add_argument("--watch-file", type=str, default="data/experimental_results.json", help="File to watch for changes")
+    args, _ = parser.parse_known_args()
+    if args.watch:
+        watch_mode(args.watch_file)
+    else:
+        # Fallback to original main logic if any
+        if 'run' in globals():
+            run()
+        else:
+            print("No run() function defined. Use --watch or define run().")
