@@ -15,6 +15,7 @@ from sklearn.ensemble import RandomForestRegressor
 import torch
 import torch_geometric
 from torch_geometric.data import Data
+import shap
 
 # Default pseudopotential directory (adjust as needed)
 PSEUDO_DIR = os.environ.get("QE_PSEUDO_DIR", "./pseudo")
@@ -522,6 +523,31 @@ class MLTcPredictor:
         # Simple linear model: Tc = a*lambda + b*mu_star + c (placeholder coefficients)
         a, b, c = 100.0, -50.0, 0.0  # dummy
         return a * lambda_val + b * mu_star + c
+
+
+def compute_shap_values(model, X, feature_names=None):
+    """
+    Compute SHAP values for the PINN model to interpret predictions.
+
+    Args:
+        model: A trained model (e.g., PINN or any sklearn-compatible model).
+        X: Input features (numpy array or pandas DataFrame).
+        feature_names: Optional list of feature names.
+
+    Returns:
+        shap_values: SHAP values array.
+        expected_value: Base value (expected model output).
+    """
+    # Use DeepExplainer for PyTorch models, otherwise fallback to KernelExplainer
+    if isinstance(model, torch.nn.Module):
+        explainer = shap.DeepExplainer(model, X)
+        shap_values = explainer.shap_values(X)
+        expected_value = explainer.expected_value
+    else:
+        explainer = shap.Explainer(model, X)
+        shap_values = explainer(X)
+        expected_value = shap_values.base_values
+    return shap_values, expected_value
 
 
 if __name__ == "__main__":
