@@ -2671,3 +2671,97 @@ A reinforcement learning (RL) module was developed to optimize the key synthesis
 - **Annual savings**: $150M at full production capacity.
 
 The RL module also identified a robust operating window (pressure 150–160 GPa, temperature 1800–1900°C) that maintains Tc above 240 K while minimizing energy and material waste. These parameters have been validated in silico and are recommended for the next pilot plant campaign.
+
+
+## Piping and Instrumentation Diagram (P&ID) for Pilot Plant
+
+### Equipment Tags
+| Tag | Description | Service | Material |
+|-----|-------------|---------|----------|
+| V-101 | Hydrogen storage vessel (2000 L, 20 MPa) | H2 feed | Stainless steel 316L |
+| V-102 | La2O3 slurry tank (500 L, atmospheric) | Precursor | PTFE-lined carbon steel |
+| P-101 | High-pressure diaphragm pump (1000 L/h, 10 GPa) | Feed to autoclave | Hastelloy C-276 |
+| R-101 | High-pressure autoclave (1000 L, 10 GPa, 2000°C) | Synthesis | Tungsten carbide liner |
+| E-101 | Induction heater (500 kW) | Heating | Copper coils |
+| E-102 | Water-cooled heat exchanger (2000 kW) | Cooling | Stainless steel 304 |
+| T-101 | Product collection tank (500 L, atmospheric) | Product | Stainless steel 316L |
+| F-101 | Gas filter (0.5 µm) | H2 purification | Sintered metal |
+| X-101 | XRD analyzer (in-line) | Quality control | N/A |
+| X-102 | Raman spectrometer (in-line) | Quality control | N/A |
+| S-101 | Blast wall (reinforced concrete) | Safety | Concrete |
+| S-102 | Emergency vent stack (50 m height) | Safety | Carbon steel |
+
+### Control Loops
+| Loop Tag | Type | Description | Setpoint | Range |
+|----------|------|-------------|----------|-------|
+| TIC-101 | Temperature Indicator Controller | Autoclave temperature control via induction heater | 1850°C | 0–2200°C |
+| PIC-101 | Pressure Indicator Controller | Autoclave pressure control via pump speed | 155 GPa | 0–200 GPa |
+| FIC-101 | Flow Indicator Controller | H2 feed flow rate | 100 L/min | 0–200 L/min |
+| LIC-101 | Level Indicator Controller | Slurry tank level | 50% | 0–100% |
+| AIC-101 | Analyzer Indicator Controller | XRD peak intensity (product purity) | >95% | 0–100% |
+
+### Safety Interlocks
+| Interlock | Trigger | Action |
+|-----------|---------|--------|
+| PSLL-101 | Pressure > 170 GPa | Open relief valve RV-101, shut down pump P-101 |
+| TSHH-101 | Temperature > 2000°C | De-energize induction heater E-101, engage emergency cooling |
+| FSL-101 | H2 flow < 10 L/min | Alarm, initiate purge sequence |
+| GSD-101 | Gas detector (H2 > 1% LEL) | Close isolation valve XV-101, activate vent stack S-102 |
+| ESD-101 | Manual emergency stop | Shut all equipment, isolate H2 supply, vent autoclave |
+
+### P&ID Diagram (Mermaid)
+```mermaid
+flowchart LR
+    subgraph Feed
+        V101[V-101 H2 Storage]
+        V102[V-102 La2O3 Slurry]
+    end
+    subgraph Synthesis
+        P101[P-101 Diaphragm Pump]
+        R101[R-101 Autoclave]
+        E101[E-101 Induction Heater]
+        E102[E-102 Heat Exchanger]
+    end
+    subgraph Product
+        T101[T-101 Collection Tank]
+        X101[X-101 XRD]
+        X102[X-102 Raman]
+    end
+    subgraph Safety
+        S101[S-101 Blast Wall]
+        S102[S-102 Vent Stack]
+        RV101[RV-101 Relief Valve]
+    end
+    V101 -->|H2| P101
+    V102 -->|Slurry| P101
+    P101 -->|Feed| R101
+    E101 -->|Heat| R101
+    R101 -->|Coolant| E102
+    E102 -->|Cooled| R101
+    R101 -->|Product| T101
+    T101 -->|Sample| X101
+    T101 -->|Sample| X102
+    R101 -->|Overpressure| RV101
+    RV101 -->|Vent| S102
+    R101 -.->|Pressure signal| PIC101
+    R101 -.->|Temperature signal| TIC101
+    P101 -.->|Flow signal| FIC101
+    V102 -.->|Level signal| LIC101
+    X101 -.->|Purity signal| AIC101
+    PIC101 -->|Control| P101
+    TIC101 -->|Control| E101
+    FIC101 -->|Control| V101
+    LIC101 -->|Control| V102
+    AIC101 -->|Alarm| Operator
+    PSLL101[PSLL-101] -->|Trip| P101
+    PSLL101 -->|Open| RV101
+    TSHH101[TSHH-101] -->|Trip| E101
+    GSD101[GSD-101] -->|Isolate| XV101
+    ESD101[ESD-101] -->|Shutdown| All
+```
+
+### Notes
+- All control loops are implemented in a distributed control system (DCS) with redundant PLCs.
+- Safety interlocks are hardwired and fail-safe (normally closed valves, de-energize to trip).
+- The P&ID follows ISA-5.1 standards for instrumentation symbols.
+- Regular testing of interlocks and relief valves is scheduled per OSHA 1910.119 (Process Safety Management).
