@@ -201,3 +201,139 @@ This roadmap outlines the phased approach to discovering and manufacturing room-
 2. **Short-term (1-3 months):** Complete TRL 4 validation (component validation in lab); begin wire fabrication trials.
 3. **Medium-term (3-6 months):** Scale to 100 g batches; initiate pilot production partnership.
 4. **Long-term (6-18 months):** Achieve TRL 7 with a functional power cable demo; file utility patents.
+
+
+## Detailed 3-Year Project Plan
+
+### Year 1: Discovery & Validation (Months 1–12)
+
+#### Milestones
+| Month | Milestone | Deliverable | Go/No-Go Gate |
+|-------|-----------|-------------|---------------|
+| 1–3 | Complete DFT/ML screening of ≥500 hydride & nickelate candidates | Ranked candidate list with predicted Tc, stability, synthesizability | Gate 1: At least 10 candidates with Tc>300K predicted at ≤10 GPa |
+| 4–6 | Synthesize top 5 candidates (mg scale) using high-pressure DAC or thin-film deposition | 5 samples with documented synthesis parameters | Gate 2: At least 2 candidates show Tc>200K at ≤50 GPa |
+| 7–9 | Full characterization (resistivity, SQUID, heat capacity, XRD, TEM) | Tc, Jc, Hc2, crystal structure for each candidate | Gate 3: At least 1 candidate with Tc>250K at ≤30 GPa |
+| 10–12 | Optimize composition/doping for top candidate; reproduce in 3 independent labs | Reproducibility report; provisional patent filing | Gate 4: Tc>280K at ≤10 GPa confirmed in ≥2 labs |
+
+#### Resource Requirements (Year 1)
+- **Personnel:** 5 FTE (2 computational scientists, 2 experimentalists, 1 lab manager)
+- **Equipment:** Diamond anvil cells (DAC) with laser heating ($500k), SQUID magnetometer ($300k), PPMS ($400k), XRD ($200k), glovebox ($50k)
+- **Budget:** $2.5M (personnel $1.2M, equipment $1.0M, consumables $0.3M)
+
+#### Risk Mitigation
+- **Risk:** No candidate reaches Tc>280K at ≤10 GPa → **Mitigation:** Expand screening to ternary/ quaternary hydrides; explore chemical precompression (clathrate cages) as alternative route.
+- **Risk:** Synthesis irreproducibility → **Mitigation:** Standardize protocols; share samples with external labs for blind verification.
+
+### Year 2: Optimization & Scaling (Months 13–24)
+
+#### Milestones
+| Month | Milestone | Deliverable | Go/No-Go Gate |
+|-------|-----------|-------------|---------------|
+| 13–15 | Scale synthesis to 1 g batches using optimized CVD or sol-gel method | 3 batches with consistent Tc within ±5 K | Gate 5: Batch-to-batch reproducibility confirmed |
+| 16–18 | Develop wire/tape fabrication process (e.g., powder-in-tube, thin-film deposition) | 10 cm wire/tape with Jc>10⁵ A/cm² at 77 K | Gate 6: Prototype conductor meets Jc target |
+| 19–21 | Demonstrate superconducting cable (1 m length) with current leads and cryostat | Functional cable demo at 77 K (or higher if ambient) | Gate 7: Cable carries >100 A without quenching |
+| 22–24 | Techno-economic analysis and life-cycle assessment (LCA) | Cost model ($/kA·m) and LCA report | Gate 8: Projected cost <$10/kA·m at scale; environmental impact acceptable |
+
+#### Resource Requirements (Year 2)
+- **Personnel:** 8 FTE (2 computational, 4 experimental, 1 process engineer, 1 technician)
+- **Equipment:** CVD reactor ($600k), wire drawing machine ($200k), cryostat ($150k), power supply ($100k)
+- **Budget:** $4.0M (personnel $2.0M, equipment $1.2M, consumables $0.8M)
+
+#### Risk Mitigation
+- **Risk:** Jc too low → **Mitigation:** Introduce artificial pinning centers (e.g., nanoparticles, irradiation); optimize grain boundaries.
+- **Risk:** Cost too high → **Mitigation:** Explore alternative precursors; reduce processing steps; partner with chemical suppliers.
+
+### Year 3: Manufacturing Pilot & Demonstration (Months 25–36)
+
+#### Milestones
+| Month | Milestone | Deliverable | Go/No-Go Gate |
+|-------|-----------|-------------|---------------|
+| 25–27 | Pilot production line (100 g batches) with quality control | 10 batches with Tc, Jc, Hc2 within spec | Gate 9: Production yield >80% |
+| 28–30 | Industrial partnership for continuous manufacturing | Joint development agreement; process transfer | Gate 10: Partner commits to scale-up |
+| 31–33 | Field demonstration: superconducting power cable (10 m) in grid simulator | Demo report with performance metrics | Gate 11: Cable meets utility requirements (e.g., >1 kA, <1% loss) |
+| 34–36 | Finalize patents, publish results, and prepare commercialization roadmap | Patent portfolio (≥3 utility patents), 2 peer-reviewed papers, business plan | Gate 12: Commercialization partner identified |
+
+#### Resource Requirements (Year 3)
+- **Personnel:** 12 FTE (2 computational, 6 experimental, 2 process engineers, 1 project manager, 1 business development)
+- **Equipment:** Pilot CVD reactor ($1.5M), continuous wire line ($1.0M), test facility ($0.5M)
+- **Budget:** $6.5M (personnel $3.0M, equipment $2.5M, consumables $1.0M)
+
+#### Risk Mitigation
+- **Risk:** Industrial partner not found → **Mitigation:** Engage multiple potential partners early (Year 2); consider spin-off company.
+- **Risk:** Regulatory hurdles (e.g., safety standards for new materials) → **Mitigation:** Proactive engagement with ASTM/IEC committees; fund third-party safety testing.
+
+### Gantt Chart (Mermaid)
+```mermaid
+gantt
+    title 3-Year Project Plan: Room-Temperature Superconductor
+    dateFormat  YYYY-MM-DD
+    axisFormat  %Y-%m
+
+    section Year 1: Discovery
+    DFT/ML screening           :a1, 2025-01-01, 90d
+    Synthesis (mg scale)       :a2, after a1, 90d
+    Characterization           :a3, after a2, 90d
+    Optimization & reproduction :a4, after a3, 90d
+    Gate 1 (10 candidates)     :milestone, 2025-04-01, 0d
+    Gate 2 (Tc>200K)          :milestone, 2025-07-01, 0d
+    Gate 3 (Tc>250K)          :milestone, 2025-10-01, 0d
+    Gate 4 (Tc>280K)          :milestone, 2026-01-01, 0d
+
+    section Year 2: Optimization
+    Scale to 1 g batches       :b1, 2026-01-01, 90d
+    Wire/tape fabrication      :b2, after b1, 90d
+    Cable demo (1 m)           :b3, after b2, 90d
+    Techno-economic analysis    :b4, after b3, 90d
+    Gate 5 (reproducibility)   :milestone, 2026-04-01, 0d
+    Gate 6 (Jc target)         :milestone, 2026-07-01, 0d
+    Gate 7 (cable demo)        :milestone, 2026-10-01, 0d
+    Gate 8 (cost target)       :milestone, 2027-01-01, 0d
+
+    section Year 3: Manufacturing
+    Pilot production line      :c1, 2027-01-01, 90d
+    Industrial partnership      :c2, after c1, 90d
+    Field demo (10 m cable)    :c3, after c2, 90d
+    Commercialization roadmap   :c4, after c3, 90d
+    Gate 9 (yield >80%)        :milestone, 2027-04-01, 0d
+    Gate 10 (partner commit)   :milestone, 2027-07-01, 0d
+    Gate 11 (field demo)       :milestone, 2027-10-01, 0d
+    Gate 12 (partner identified):milestone, 2028-01-01, 0d
+```
+
+### Go/No-Go Decision Gates Summary
+| Gate | Criteria | Decision |
+|------|----------|----------|
+| 1 | ≥10 candidates with Tc>300K at ≤10 GPa | Proceed to synthesis; else expand screening |
+| 2 | ≥2 candidates with Tc>200K at ≤50 GPa | Proceed to characterization; else revisit theory |
+| 3 | ≥1 candidate with Tc>250K at ≤30 GPa | Proceed to optimization; else explore alternative families |
+| 4 | Tc>280K at ≤10 GPa confirmed in ≥2 labs | Proceed to scaling; else continue optimization |
+| 5 | Batch-to-batch Tc within ±5 K | Proceed to wire fabrication; else refine synthesis |
+| 6 | Jc>10⁵ A/cm² at 77 K | Proceed to cable demo; else introduce pinning centers |
+| 7 | Cable carries >100 A without quench | Proceed to pilot; else redesign cable geometry |
+| 8 | Projected cost <$10/kA·m at scale | Proceed to manufacturing; else seek cost reduction |
+| 9 | Production yield >80% | Proceed to industrial partnership; else improve process |
+| 10 | Partner commits to scale-up | Proceed to field demo; else seek alternative partners |
+| 11 | Field demo meets utility requirements | Proceed to commercialization; else iterate design |
+| 12 | Commercialization partner identified | Finalize business plan; else consider spin-off |
+
+### Total Resource Summary
+| Year | Personnel (FTE) | Equipment Cost | Consumables | Total Budget |
+|------|----------------|---------------|-------------|--------------|
+| 1 | 5 | $1.0M | $0.3M | $2.5M |
+| 2 | 8 | $1.2M | $0.8M | $4.0M |
+| 3 | 12 | $2.5M | $1.0M | $6.5M |
+| **Total** | — | **$4.7M** | **$2.1M** | **$13.0M** |
+
+**Contingency (20%):** $2.6M → **Total program budget: $15.6M**
+
+### Key Assumptions
+- Screening leverages existing DFT/ML models (see `theoretical_framework.md`) and databases (Materials Project, AFLOW).
+- High-pressure synthesis uses diamond anvil cells (DAC) with laser heating; scaling uses CVD or sol-gel methods.
+- Characterization equipment is available in-house or via collaboration (see `characterization_techniques.md`).
+- Industrial partner engagement begins in Year 2 to ensure smooth technology transfer.
+
+### References
+- Drozdov et al., *Nature* 569, 528–531 (2019) – LaH₁₀ Tc~250K at 170 GPa.
+- Sun et al., *Nature* 621, 493–498 (2023) – Bilayer nickelate Tc~80K at 18 GPa.
+- Flores-Livas et al., *Physics Reports* 856, 1–78 (2020) – Review of hydride superconductivity.
+- Snider et al., *Nature* 586, 373–377 (2020) – Retracted carbonaceous sulfur hydride; lessons on reproducibility.
