@@ -498,3 +498,15 @@ def query_supercon_database(db_path=DATABASE_PATH, max_entries=100):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     query_supercon_database()
+
+
+def query_known_hydrides():
+    """Return known high-Tc hydrides from literature."""
+    hydrides = [
+        {'name': 'H3S', 'composition': 'H3S', 'Tc': 203, 'pressure': 155, 'synthesis_method': 'DAC', 'reference': 'Drozdov et al., Nature 2015'},
+        {'name': 'LaH10', 'composition': 'LaH10', 'Tc': 250, 'pressure': 170, 'synthesis_method': 'DAC', 'reference': 'Drozdov et al., Nature 2019'},
+        {'name': 'YH6', 'composition': 'YH6', 'Tc': 224, 'pressure': 166, 'synthesis_method': 'DAC', 'reference': 'Kong et al., Nat. Commun. 2021'},
+        {'name': 'YH9', 'composition': 'YH9', 'Tc': 243, 'pressure': 201, 'synthesis_method': 'DAC', 'reference': 'Kong et al., Nat. Commun. 2021'},
+        {'name': 'ThH10', 'composition': 'ThH10', 'Tc': 161, 'pressure': 170, 'synthesis_method': 'DAC', 'reference': 'Semenok et al., J. Phys. Chem. Lett. 2020'},
+    ]
+    return hydrides

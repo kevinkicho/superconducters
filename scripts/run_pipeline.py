@@ -43,6 +43,31 @@ import re
 # Constants for Tc prediction (BCS with McMillan formula)
 MU_STAR = 0.1  # Coulomb pseudopotential
 
+
+def research_room_temperature_superconductors():
+    """Search arXiv for recent papers on room temperature superconductors."""
+    import requests
+    import xml.etree.ElementTree as ET
+    base_url = 'http://export.arxiv.org/api/query'
+    query = 'search_query=all:room+temperature+superconductor&start=0&max_results=5&sortBy=submittedDate&sortOrder=descending'
+    url = base_url + '?' + query
+    try:
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            root = ET.fromstring(response.content)
+            ns = {'atom': 'http://www.w3.org/2005/Atom'}
+            for entry in root.findall('atom:entry', ns):
+                title = entry.find('atom:title', ns).text.strip()
+                summary = entry.find('atom:summary', ns).text.strip()
+                print(f'Title: {title}')
+                print(f'Summary: {summary[:200]}...')
+                print('---')
+        else:
+            print('Failed to fetch arXiv data')
+    except Exception as e:
+        print(f'Error: {e}')
+
+
 def query_database(db_path='materials.db'):
     """Query the materials database for candidate compounds."""
     conn = sqlite3.connect(db_path)
