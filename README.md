@@ -174,3 +174,28 @@ An executive summary of the project is available in [executive_summary.md](execu
 ## Final Report
 
 The final report of the project is available in [final_report.md](final_report.md).
+
+
+## Audit Trail
+
+All pipeline runs and experimental results are logged to `output/pipeline.log` and `output/audit.json`. The audit log records timestamps, input parameters, candidate materials evaluated, simulation results, and any errors or warnings. To view the latest audit trail:
+
+```
+cat output/audit.json | jq .
+```
+
+For a human-readable summary, see `output/audit_summary.md` (generated after each pipeline run).
+
+## Version-Controlled Pipeline
+
+The entire pipeline is version-controlled via Git. To set up automatic commits after each pipeline run, add a post-run hook or use a CI/CD workflow. Example using a simple shell script:
+
+```bash
+#!/bin/bash
+# After running the pipeline, commit and push changes
+git add -A
+git commit -m "Auto-commit: pipeline run $(date +%Y-%m-%d_%H:%M:%S)"
+git push origin main
+```
+
+For a more robust setup, configure a GitHub Actions workflow (see `.github/workflows/ci.yml`) that triggers on push and runs the pipeline, then commits any updated output files back to the repository. Ensure that `config.yaml` includes a `version_control` section with `auto_commit: true` to enable automatic commits.
