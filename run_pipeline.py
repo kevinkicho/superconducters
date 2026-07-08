@@ -11224,3 +11224,37 @@ The calibration curve (experimental vs. predicted Tc) shows a linear relationshi
 
     print(f"[Validation] Validation results appended to {output_file}")
     print(f"  MAE: {mae:.2f} K, R²: {r2:.4f}, Calibration R²: {calibration_r2:.4f}")
+
+def generate_press_release():
+    """Generate a press release markdown file from pipeline results."""
+    import datetime
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    content = f"# Press Release\n\nDate: {now}\n\nWe are excited to announce progress in room-temperature superconductor discovery.\n"
+    with open('press_release.md', 'w') as f:
+        f.write(content)
+    print("Press release written to press_release.md")
+
+
+def generate_monthly_report():
+    """Generate a monthly report markdown file summarizing pipeline activities."""
+    import datetime
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    content = f"# Monthly Report\n\nDate: {now}\n\nThis report summarizes the pipeline runs for the month.\n"
+    with open('monthly_report.md', 'w') as f:
+        f.write(content)
+    print("Monthly report written to monthly_report.md")
+
+
+def generate_funding_proposal():
+    """Generate a funding proposal markdown file for superconductor research."""
+    import datetime
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    content = f"# Funding Proposal\n\nDate: {now}\n\nThis proposal outlines the need for continued research into room-temperature superconductors.\n"
+    with open('funding_proposal.md', 'w') as f:
+        f.write(content)
+    print("Funding proposal written to funding_proposal.md")
+
+if __name__ == "__main__":
+    generate_press_release()
+    generate_monthly_report()
+    generate_funding_proposal()
