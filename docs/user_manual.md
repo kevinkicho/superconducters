@@ -189,9 +189,60 @@ python run_pipeline.py --dft-only
 
 Runs DFT on all candidates in `candidate_materials.md` that lack DFT results.
 
-## Screenshots
+## Tutorial
 
-*Screenshots to be added after deployment. Placeholder: `![Dashboard Overview](screenshots/dashboard_overview.png)`*
+This tutorial walks you through a complete example of using the Room-Temperature Superconductor Discovery Pipeline, from installation to viewing results.
+
+### Step 1: Installation
+
+Follow the installation steps in the [Installation](#installation) section. Ensure you have Python 3.9+ and Git installed.
+
+![Installation](screenshots/installation.png)
+
+### Step 2: Configuration
+
+Copy the `.env.example` to `.env` and set your API keys. For this tutorial, you only need `OPENAI_API_KEY`. Set `LOG_LEVEL=INFO`.
+
+![Configuration](screenshots/configuration.png)
+
+### Step 3: Running the Pipeline
+
+Run the pipeline with default settings:
+
+```bash
+python run_pipeline.py
+```
+
+You will see output similar to:
+
+```
+[INFO] Starting pipeline...
+[INFO] Scraping arXiv for superconductor papers...
+[INFO] Found 12 new papers.
+[INFO] Generating candidates...
+...
+[INFO] Pipeline complete. Results saved to candidate_materials.md.
+```
+
+![Pipeline Output](screenshots/pipeline_output.png)
+
+### Step 4: Viewing Results
+
+Open `candidate_materials.md` to see the generated candidates. Launch the dashboard:
+
+```bash
+streamlit run dashboard.py
+```
+
+Navigate to the Dashboard Overview tab to explore candidates interactively.
+
+![Dashboard Overview](screenshots/dashboard_overview.png)
+
+### Step 5: Next Steps
+
+- Review the [Interpreting Results](#interpreting-results) section for detailed explanations.
+- Try the advanced options described in [Running the Pipeline](#running-the-pipeline).
+- Contribute feedback via the dashboard to improve the ML models.
 
 ## Support
 
