@@ -2500,3 +2500,49 @@ Plots are generated automatically by `scripts/validation_plots.py` and stored in
 | R²     | 0.87   | > 0.90 |
 
 *Last updated: 2025-04-01*
+
+## Slack Alerts
+
+To enable real-time notifications when validation metrics exceed thresholds, the pipeline uses the `send_slack_alert()` function. This function sends a formatted message to a designated Slack channel via a webhook URL.
+
+### Setup
+
+1. Create a Slack app and enable Incoming Webhooks.
+2. Copy the webhook URL and set it as the environment variable `SLACK_WEBHOOK_URL`.
+3. (Optional) Set `SLACK_CHANNEL` to override the default channel.
+
+### Usage
+
+The function is called automatically by the periodic validation script (`scripts/periodic_validation.sh`) when RMSE exceeds 15 K. It can also be invoked manually:
+
+```python
+from utils.slack_alert import send_slack_alert
+
+send_slack_alert(
+    message="RMSE threshold exceeded: 16.2 K",
+    severity="warning",
+    attachments=[{"title": "Validation Report", "text": "See docs/figures/ for plots."}]
+)
+```
+
+### Parameters
+
+- `message` (str): The main alert text.
+- `severity` (str): One of `"info"`, `"warning"`, `"critical"`.
+- `attachments` (list, optional): A list of Slack attachment dicts for additional context.
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SLACK_WEBHOOK_URL` | Slack webhook URL (required) | — |
+| `SLACK_CHANNEL` | Target channel | `#alerts` |
+
+### Integration
+
+The `send_slack_alert()` function is used in the following pipeline components:
+- `scripts/periodic_validation.sh` — alerts on RMSE > 15 K
+- `scripts/watch_experimental_data.py` — alerts on ingestion failures
+- `run_pipeline.py` — alerts on pipeline errors or critical events
+
+For more details, see the function docstring in `utils/slack_alert.py`.
