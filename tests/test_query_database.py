@@ -265,3 +265,47 @@ def test_high_throughput_screening_with_feasibility():
     results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=10)
     assert len(results) == 1
     assert results[0]["name"] == "B"
+
+
+def test_query_by_multiple_filters():
+    """Test query with multiple filters simultaneously."""
+    mock_db = [
+        {"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9, "material_class": "cuprate"},
+        {"name": "B", "Tc": 150, "pressure": 100, "feasibility_score": 0.8, "material_class": "iron-based"},
+        {"name": "C", "Tc": 200, "pressure": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
+    ]
+    results = qdb.query(mock_db, argparse.Namespace(
+        name=None, tc_min=100, tc_max=250, pressure=None,
+        pressure_min=50, pressure_max=250, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=0.5, feasibility_score_max=1.0,
+        material_class="cuprate"
+    ))
+    assert len(results) == 1
+    assert results[0]["name"] == "C"
+
+
+def test_query_empty_database():
+    """Test query with empty database returns empty list."""
+    results = qdb.query([], argparse.Namespace(
+        name=None, tc_min=None, tc_max=None, pressure=None,
+        pressure_min=None, pressure_max=None, composition=None,
+        synthesis=None, synthesis_method=None, mechanism=None,
+        feasibility_score_min=None, feasibility_score_max=None,
+        material_class=None
+    ))
+    assert results == []
+
+
+def test_high_throughput_screening_max_results_zero():
+    """Test high_throughput_screening with max_results=0 returns empty list."""
+    mock_db = [{"name": "A", "Tc": 100, "pressure": 0, "feasibility_score": 0.9}]
+    results = qdb.high_throughput_screening(mock_db, min_tc=0, max_tc=500, max_pressure=100, min_feasibility=0.0, max_results=0)
+    assert results == []
+
+
+def test_high_throughput_screening_all_filtered():
+    """Test high_throughput_screening when all candidates are filtered out."""
+    mock_db = [{"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9}]
+    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=100, min_feasibility=0.0, max_results=10)
+    assert results == []

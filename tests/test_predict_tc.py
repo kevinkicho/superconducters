@@ -394,3 +394,46 @@ def test_missing_features():
     # Alternatively, if the function returns None for missing features, test that
     # result = ptc.predict_tc_with_uncertainty("UnknownMaterial", pressure=100)
     # assert result is None
+
+
+def test_predict_tc_with_uncertainty_known_material():
+    """Test predict_tc_with_uncertainty returns valid tuple for known material."""
+    tc, ci = ptc.predict_tc_with_uncertainty("H3S", pressure=155)
+    assert isinstance(tc, float)
+    assert isinstance(ci, float)
+    assert ci > 0
+
+
+def test_predict_tc_with_uncertainty_unknown_material():
+    """Test predict_tc_with_uncertainty raises ValueError for unknown material."""
+    with pytest.raises(ValueError):
+        ptc.predict_tc_with_uncertainty("Unknown", pressure=100)
+
+
+def test_generate_candidates_returns_list():
+    """Test generate_candidates returns list of candidate dicts."""
+    candidates = ptc.generate_candidates(n=3)
+    assert isinstance(candidates, list)
+    assert len(candidates) == 3
+    for c in candidates:
+        assert "name" in c
+        assert "Tc" in c
+        assert "uncertainty" in c
+
+
+def test_generate_candidates_zero():
+    """Test generate_candidates with n=0 returns empty list."""
+    candidates = ptc.generate_candidates(n=0)
+    assert candidates == []
+
+
+def test_average_valence():
+    """Test average_valence returns float for known composition."""
+    val = ptc.average_valence("H3S")
+    assert isinstance(val, float)
+
+
+def test_average_debye():
+    """Test average_debye returns float for known composition."""
+    debye = ptc.average_debye("H3S")
+    assert isinstance(debye, float)

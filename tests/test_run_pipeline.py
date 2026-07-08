@@ -2008,3 +2008,35 @@ def test_end_to_end_pipeline():
         assert "converged" in write_content, "Output should contain active learning convergence status"
         assert "expected_improvement" in write_content, "Output should contain acquisition function name"
         assert "5" in write_content, "Output should contain number of active learning iterations"
+
+
+def test_run_pipeline_empty_data():
+    """Test pipeline handles empty data gracefully."""
+    with patch('scripts.run_pipeline.load_data', return_value=[]), \
+         patch('scripts.run_pipeline.train_model', return_value=None), \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.run_pipeline()
+        assert result is not None
+
+
+def test_run_pipeline_load_data_failure():
+    """Test pipeline handles load_data exception."""
+    with patch('scripts.run_pipeline.load_data', side_effect=FileNotFoundError), \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        with pytest.raises(FileNotFoundError):
+            rp.run_pipeline()
+
+
+def test_run_pipeline_train_model_failure():
+    """Test pipeline handles train_model exception."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203}]), \
+         patch('scripts.run_pipeline.train_model', side_effect=ValueError("Training failed")), \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        with pytest.raises(ValueError):
+            rp.run_pipeline()

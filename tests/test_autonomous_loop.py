@@ -263,3 +263,38 @@ class TestAutonomousLoop:
             assert 'Arxiv timeout' in log_content
         finally:
             os.chdir(original_cwd)
+
+    def test_autonomous_loop_with_no_candidates(self, mock_external_services):
+        """Test loop when no candidates are generated."""
+        with patch('run_pipeline.generate_candidates', return_value=[]):
+            result = run_autonomous_loop(
+                arxiv_query='superconductor',
+                max_candidates=0,
+                min_tc=100,
+                max_e_above_hull=0.1
+            )
+            assert result['candidates_generated'] == 0
+
+    def test_autonomous_loop_retrain_model_failure(self, mock_external_services):
+        """Test loop handles retrain_model failure gracefully."""
+        with patch('run_pipeline.retrain_model', side_effect=Exception("Retrain failed")), \
+             patch('run_pipeline.generate_candidates', return_value=[{'formula': 'Mat1', 'predicted_tc': 200, 'structure': 'Fm-3m'}]):
+            result = run_autonomous_loop(
+                arxiv_query='superconductor',
+                max_candidates=1,
+                min_tc=100,
+                max_e_above_hull=0.1
+            )
+            assert 'error' in result or 'candidates_generated' in result
+
+    def test_autonomous_loop_cloud_lab_failure(self, mock_external_services):
+        """Test loop handles cloud lab submission failure."""
+        with patch('run_pipeline.requests.post', side_effect=Exception("Cloud lab timeout")), \
+             patch('run_pipeline.generate_candidates', return_value=[{'formula': 'Mat1', 'predicted_tc': 200, 'structure': 'Fm-3m'}]):
+            result = run_autonomous_loop(
+                arxiv_query='superconductor',
+                max_candidates=1,
+                min_tc=100,
+                max_e_above_hull=0.1
+            )
+            assert 'error' in result or 'candidates_generated' in result

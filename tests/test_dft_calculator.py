@@ -63,3 +63,35 @@ def test_fine_tune_pinn_on_real_data():
     assert final_rmse < 0.5 * initial_rmse, (
         f"RMSE reduction insufficient: {final_rmse / initial_rmse:.2%} of initial"
     )
+
+
+def test_get_device():
+    """Test get_device returns a torch device."""
+    device = get_device()
+    assert isinstance(device, torch.device)
+
+
+def test_fine_tune_pinn_on_real_data_no_improvement():
+    """Test fine-tuning with zero epochs does not change model."""
+    device = get_device()
+    model = SimpleModel().to(device)
+    initial_params = [p.clone() for p in model.parameters()]
+    real_data = []
+    for _ in range(2):
+        x = torch.randn(1, 10)
+        edge_index = torch.tensor([[0], [0]], dtype=torch.long)
+        graph = Data(x=x, edge_index=edge_index)
+        tc = torch.randn(1).item() * 10 + 100
+        real_data.append((graph, tc))
+    model = fine_tune_pinn_on_real_data(model, real_data, epochs=0, lr=1e-3, device=device)
+    final_params = [p for p in model.parameters()]
+    for p_initial, p_final in zip(initial_params, final_params):
+        assert torch.equal(p_initial, p_final)
+
+
+def test_fine_tune_pinn_on_real_data_empty_data():
+    """Test fine-tuning with empty data returns model unchanged."""
+    device = get_device()
+    model = SimpleModel().to(device)
+    model = fine_tune_pinn_on_real_data(model, [], epochs=5, lr=1e-3, device=device)
+    assert model is not None
