@@ -19,6 +19,37 @@ Start with the literature review to understand the current state of research, th
 Additionally, see the following key documents: [discovery_strategy.md](docs/discovery_strategy.md), [online_research_summary.md](docs/online_research_summary.md), [manufacturing_scalability.md](docs/manufacturing_scalability.md), [experimental_protocol_hydride.md](docs/experimental_protocol_hydride.md), [novel_mechanism.md](docs/novel_mechanism.md), [weekly_digest.md](docs/weekly_digest.md), and [project_health_report.md](docs/project_health_report.md).
 
 
+## Architecture
+
+```mermaid
+flowchart TD
+    A[Literature Review] --> B[Theoretical Framework]
+    B --> C[Candidate Materials]
+    C --> D[Synthesis Methods]
+    D --> E[Characterization Techniques]
+    E --> F{Superconducting?}
+    F -->|Yes| G[Roadmap & Commercialization]
+    F -->|No| C
+    C --> H[Pipeline: run_pipeline.py]
+    H --> I[Cloud Lab Integration]
+    I --> J[Validation & Audit]
+    J --> K[Market Analysis & Funding]
+    K --> L[Technology Transfer]
+```
+
+### Module Descriptions
+
+- **Literature Review**: Comprehensive survey of existing research on room-temperature superconductivity, including key papers and findings.
+- **Theoretical Framework**: Theoretical models (e.g., BCS theory, Eliashberg equations) used to predict and explain superconducting behavior.
+- **Candidate Materials**: Database of potential superconducting compounds with properties and predicted Tc values.
+- **Synthesis Methods**: Protocols for synthesizing candidate materials, including high-pressure synthesis and doping techniques.
+- **Characterization Techniques**: Methods for measuring Tc, critical current, and other superconducting properties (e.g., resistivity, magnetization).
+- **Pipeline (run_pipeline.py)**: Automated workflow that evaluates candidates, runs simulations, and generates reports.
+- **Cloud Lab Integration**: Automated submission of candidates to cloud-based synthesis and testing facilities.
+- **Validation & Audit**: Tracking of all pipeline runs with audit trails and validation scores.
+- **Market Analysis**: Economic analysis of potential markets, competitive landscape, and funding strategies.
+- **Technology Transfer**: Plan for commercializing successful superconductors, including IP and manufacturing scalability.
+
 ## Testing
 
 Unit tests are located in the `tests/` directory. To run all tests, use:
