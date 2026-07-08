@@ -4166,3 +4166,126 @@ def generate_research_paper(candidates: list, output_path: str = "docs/research_
         f.write("\n".join(lines))
     print(f"[ResearchPaper] Paper written to {output_path}")
     return output_path
+
+import pandas as pd
+import requests
+
+def causal_discovery(data: pd.DataFrame, treatment: str, outcome: str, common_causes: list = None) -> dict:
+    """
+    Perform causal discovery using DoWhy to estimate causal effect.
+    data: pandas DataFrame
+    treatment: column name for treatment variable
+    outcome: column name for outcome variable
+    common_causes: list of column names for common causes
+    Returns dict with estimated effect, confidence intervals, etc.
+    """
+    try:
+        import dowhy
+        from dowhy import CausalModel
+    except ImportError:
+        print("[CausalDiscovery] DoWhy not installed. Skipping.")
+        return {"error": "DoWhy not installed"}
+    model = CausalModel(
+        data=data,
+        treatment=treatment,
+        outcome=outcome,
+        common_causes=common_causes or []
+    )
+    identified_estimand = model.identify_effect()
+    estimate = model.estimate_effect(identified_estimand, method_name="backdoor.linear_regression")
+    return {
+        "estimate": estimate.value,
+        "confidence_intervals": estimate.get_confidence_intervals(),
+        "method": "linear_regression"
+    }
+
+def llm_hypothesis_generation(context: str, api_key: str = None) -> str:
+    """
+    Generate hypotheses for room-temperature superconductors using an LLM.
+    context: background information (e.g., recent findings, candidate list)
+    api_key: OpenAI API key (optional, will try to get from env)
+    Returns generated hypothesis text.
+    """
+    import os
+    key = api_key or os.environ.get("OPENAI_API_KEY")
+    if not key:
+        print("[LLM] No API key found. Skipping.")
+        return "No API key available."
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=key)
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a materials science researcher. Generate novel hypotheses for room-temperature superconductors."},
+                {"role": "user", "content": f"Based on the following context, propose new compounds, doping strategies, or synthesis methods:\n\n{context}"}
+            ],
+            max_tokens=1000,
+            temperature=0.7
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"[LLM] Error: {e}")
+        return f"Error: {e}"
+
+def cloud_lab_fallback_with_comparison(candidates: list, fallback_url: str = "https://cloudlab.example.com/api") -> dict:
+    """
+    Simulate cloud lab fallback: if local synthesis fails, submit to cloud lab and compare results.
+    candidates: list of candidate dicts with 'compound' and 'Tc'
+    fallback_url: URL of cloud lab API
+    Returns comparison report dict.
+    """
+    import requests
+    import json
+    report = {"local_results": [], "cloud_results": [], "comparison": []}
+    for cand in candidates:
+        compound = cand.get("compound", "unknown")
+        local_tc = cand.get("Tc", None)
+        report["local_results"].append({"compound": compound, "Tc": local_tc})
+        # Submit to cloud lab
+        try:
+            resp = requests.post(fallback_url, json={"compound": compound}, timeout=30)
+            if resp.status_code == 200:
+                cloud_data = resp.json()
+                cloud_tc = cloud_data.get("Tc", None)
+                report["cloud_results"].append({"compound": compound, "Tc": cloud_tc})
+                diff = (cloud_tc - local_tc) if (cloud_tc is not None and local_tc is not None) else None
+                report["comparison"].append({"compound": compound, "Tc_diff": diff})
+            else:
+                report["cloud_results"].append({"compound": compound, "error": f"HTTP {resp.status_code}"})
+        except Exception as e:
+            report["cloud_results"].append({"compound": compound, "error": str(e)})
+    return report
+
+def performance_profiling(func, *args, **kwargs) -> dict:
+    """
+    Profile a function's performance using cProfile and return timing stats.
+    func: callable
+    args, kwargs: arguments to pass to func
+    Returns dict with 'time_seconds', 'calls', etc.
+    """
+    import cProfile
+    import pstats
+    import io
+    profiler = cProfile.Profile()
+    profiler.enable()
+    result = func(*args, **kwargs)
+    profiler.disable()
+    s = io.StringIO()
+    ps = pstats.Stats(profiler, stream=s).sort_stats('cumulative')
+    ps.print_stats(20)
+    stats_str = s.getvalue()
+    # Extract total time from stats
+    lines = stats_str.split('\n')
+    total_time = None
+    for line in lines:
+        if line.strip().startswith('function calls'):
+            parts = line.split()
+            if len(parts) >= 4:
+                total_time = float(parts[2].replace('(', '').replace(')', ''))
+            break
+    return {
+        "result": result,
+        "total_time_seconds": total_time,
+        "profile_stats": stats_str
+    }
