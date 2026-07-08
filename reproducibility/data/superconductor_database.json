@@ -1,0 +1,123 @@
+[
+  {
+    "compound": "H3S",
+    "formula": "H3S",
+    "family": "hydride",
+    "measured_tc": 203,
+    "pressure_gpa": 155,
+    "synthesis_method": "Laser-heated diamond anvil cell",
+    "structure": "cubic Im-3m",
+    "reference": "Drozdov et al., Nature 525, 73-76 (2015)",
+    "doi": "10.1038/nature14964"
+  },
+  {
+    "compound": "LaH10",
+    "formula": "LaH10",
+    "family": "hydride",
+    "measured_tc": 250,
+    "pressure_gpa": 170,
+    "synthesis_method": "Compression of La with H2 in DAC",
+    "structure": "clathrate-like Fm-3m",
+    "reference": "Drozdov et al., Nature 569, 528-531 (2019)",
+    "doi": "10.1038/s41586-019-1201-8"
+  },
+  {
+    "compound": "YH6",
+    "formula": "YH6",
+    "family": "hydride",
+    "measured_tc": 224,
+    "pressure_gpa": 166,
+    "synthesis_method": "Laser-heated diamond anvil cell",
+    "structure": "cubic Im-3m",
+    "reference": "Kong et al., Nature Communications 12, 5075 (2021)",
+    "doi": "10.1038/s41467-021-25072-3"
+  },
+  {
+    "compound": "YH9",
+    "formula": "YH9",
+    "family": "hydride",
+    "measured_tc": 243,
+    "pressure_gpa": 201,
+    "synthesis_method": "Laser-heated diamond anvil cell",
+    "structure": "clathrate-like",
+    "reference": "Kong et al., Nature Communications 12, 5075 (2021)",
+    "doi": "10.1038/s41467-021-25072-3"
+  },
+  {
+    "compound": "YBa2Cu3O7-δ",
+    "formula": "YBa2Cu3O7-δ",
+    "family": "cuprate",
+    "measured_tc": 93,
+    "pressure_gpa": 0,
+    "synthesis_method": "Solid-state reaction + oxygen annealing",
+    "structure": "orthorhombic Pmmm",
+    "reference": "Wu et al., Physical Review Letters 58, 908-910 (1987)",
+    "doi": "10.1103/PhysRevLett.58.908"
+  },
+  {
+    "compound": "Bi2Sr2CaCu2O8+δ",
+    "formula": "Bi2Sr2CaCu2O8+δ",
+    "family": "cuprate",
+    "measured_tc": 95,
+    "pressure_gpa": 0,
+    "synthesis_method": "Floating zone method",
+    "structure": "tetragonal I4/mmm",
+    "reference": "Maeda et al., Japanese Journal of Applied Physics 27, L209-L210 (1988)",
+    "doi": "10.1143/JJAP.27.L209"
+  },
+  {
+    "compound": "HgBa2Ca2Cu3O8+δ",
+    "formula": "HgBa2Ca2Cu3O8+δ",
+    "family": "cuprate",
+    "measured_tc": 135,
+    "pressure_gpa": 0,
+    "synthesis_method": "High-pressure synthesis (ambient pressure stable)",
+    "structure": "tetragonal P4/mmm",
+    "reference": "Schilling et al., Nature 363, 56-58 (1993)",
+    "doi": "10.1038/363056a0"
+  },
+  {
+    "compound": "La3Ni2O7",
+    "formula": "La3Ni2O7",
+    "family": "nickelate",
+    "measured_tc": 80,
+    "pressure_gpa": 14,
+    "synthesis_method": "High-pressure synthesis (14 GPa)",
+    "structure": "bilayer Ruddlesden-Popper",
+    "reference": "Sun et al., Nature 621, 493-498 (2023)",
+    "doi": "10.1038/s41586-023-06424-7"
+  },
+  {
+    "compound": "Nd0.8Sr0.2NiO2",
+    "formula": "Nd0.8Sr0.2NiO2",
+    "family": "nickelate",
+    "measured_tc": 15,
+    "pressure_gpa": 0,
+    "synthesis_method": "Pulsed laser deposition + reduction",
+    "structure": "infinite-layer tetragonal",
+    "reference": "Li et al., Nature 572, 624-627 (2019)",
+    "doi": "10.1038/s41586-019-1496-5"
+  },
+  {
+    "compound": "FeSe",
+    "formula": "FeSe",
+    "family": "iron-based",
+    "measured_tc": 8,
+    "pressure_gpa": 0,
+    "synthesis_method": "Solid-state reaction",
+    "structure": "tetragonal P4/nmm",
+    "reference": "Hsu et al., Proceedings of the National Academy of Sciences 105, 14262-14264 (2008)",
+    "doi": "10.1073/pnas.0807325105"
+  },
+  {
+    "compound": "FeSe (monolayer on SrTiO3)",
+    "formula": "FeSe/SrTiO3",
+    "family": "iron-based",
+    "measured_tc": 100,
+    "pressure_gpa": 0,
+    "synthesis_method": "Molecular beam epitaxy",
+    "structure": "tetragonal (monolayer)",
+    "reference": "Wang et al., Chinese Physics Letters 29, 037402 (2012)",
+    "doi": "10.1088/0256-307X/29/3/037402"
+  }
+]

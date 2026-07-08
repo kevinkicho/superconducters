@@ -559,3 +559,80 @@ Slack alerts notify the team of critical events: pipeline failures, new high-Tc 
 4. Optionally, set `SLACK_CHANNEL` to override the default channel (default: #alerts).
 
 The pipeline will send alerts automatically on completion of each run. Test the configuration by running `python run_pipeline.py --test-slack`.
+
+## Reproducibility Package
+
+A reproducibility package is available in the `reproducibility/` directory. It contains:
+
+- **Dockerfile**: Container definition with all dependencies (Python 3.10, PyTorch, scikit-learn, etc.).
+- **environment.yml**: Conda environment specification for local setup.
+- **Makefile**: Convenience targets for setup, run, test, clean, and Docker build/run.
+- **data/superconductor_database.json**: Snapshot of the superconductor database used in the pipeline.
+
+### Using the Reproducibility Package
+
+#### Option 1: Docker (recommended)
+
+```bash
+# Build the Docker image
+make docker-build
+
+# Run the pipeline inside the container
+make docker-run
+```
+
+#### Option 2: Local Conda Environment
+
+```bash
+# Create the conda environment
+make setup
+
+# Activate the environment
+conda activate superconductor
+
+# Run the pipeline
+make run
+```
+
+#### Option 3: Manual Setup
+
+```bash
+# Create conda environment from file
+conda env create -f reproducibility/environment.yml
+conda activate superconductor
+
+# Run the pipeline
+python run_pipeline.py --export-format json --export-format csv
+```
+
+### Running Tests
+
+```bash
+make test
+```
+
+### Cleaning Up
+
+```bash
+make clean
+```
+
+## Scientific Overview Tab
+
+The dashboard now includes a **Scientific Overview** tab that provides a high-level summary of the research project. To access it:
+
+1. Start the dashboard server:
+   ```bash
+   streamlit run streamlit_dashboard.py
+   ```
+2. Open your browser to the URL shown in the terminal (typically `http://localhost:8501`).
+3. Click on the **Scientific Overview** tab in the sidebar.
+
+The Scientific Overview tab displays:
+- **Project Summary**: A brief description of the room-temperature superconductor discovery project.
+- **Key Metrics**: Current best Tc, number of candidates, pipeline status, and manufacturing readiness level.
+- **Recent Updates**: Latest research findings and pipeline runs.
+- **Quick Links**: Links to key documents (literature review, candidate materials, manufacturing scalability, etc.).
+- **Data Sources**: References to the superconductor database and external literature.
+
+This tab is designed to give stakeholders and new team members a quick understanding of the project's goals, progress, and current state.
