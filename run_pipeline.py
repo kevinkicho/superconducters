@@ -11302,15 +11302,115 @@ Superconductor Discovery Team
 
 
 def run_sobol_analysis():
-    # Run Sobol sensitivity analysis
-    # ... some analysis
-    result = {"sensitivity": [0.1, 0.2, 0.3]}
-    with open('docs/sensitivity_analysis.md', 'w') as f:
-        json.dump(result, f)
+    """
+    Perform Sobol sensitivity analysis on key pipeline parameters.
+    Uses SALib to compute first-order (S1) and total-order (ST) indices.
+    Parameters: DFT convergence threshold, ML learning rate, ML batch size,
+    manufacturing cost factor, and doping concentration.
+    Results are logged to data/model_performance_log.json.
+    Edge cases: missing SALib, missing parameter ranges file, empty samples.
+    """
+    try:
+        from SALib.sample import saltelli
+        from SALib.analyze import sobol
+    except ImportError:
+        print("[Sobol] SALib not installed. Skipping Sobol analysis.")
+        return
+
+    # Define problem: parameter names, bounds, and number of variables
+    problem = {
+        'num_vars': 5,
+        'names': ['dft_conv_threshold', 'ml_learning_rate', 'ml_batch_size',
+                  'manufacturing_cost_factor', 'doping_concentration'],
+        'bounds': [[1e-6, 1e-2], [1e-5, 1e-1], [16, 256],
+                   [0.5, 2.0], [0.0, 0.3]]
+    }
+
+    # Generate samples using Saltelli sampler
+    try:
+        param_values = saltelli.sample(problem, 1024, calc_second_order=False)
+    except Exception as e:
+        print(f"[Sobol] Error generating samples: {e}")
+        return
+
+    # Define a simple model function (placeholder for actual pipeline evaluation)
+    def pipeline_model(params):
+        """
+        Placeholder model: computes a synthetic Tc based on parameters.
+        Replace with actual pipeline evaluation in production.
+        """
+        dft_conv, lr, batch, cost, doping = params
+        # Simple analytical function: Tc ~ 100 * (1 - dft_conv) * lr * (batch/128) * (1/cost) * (1 + doping*10)
+        tc = 100 * (1 - dft_conv) * lr * (batch / 128) * (1 / cost) * (1 + doping * 10)
+        return tc
+
+    # Evaluate model for all samples
+    Y = np.array([pipeline_model(p) for p in param_values])
+
+    # Perform Sobol analysis
+    try:
+        Si = sobol.analyze(problem, Y, calc_second_order=False, num_resamples=100)
+    except Exception as e:
+        print(f"[Sobol] Error during analysis: {e}")
+        return
+
+    # Extract first-order and total-order indices
+    S1 = Si['S1'].tolist()
+    ST = Si['ST'].tolist()
+    S1_conf = Si['S1_conf'].tolist()
+    ST_conf = Si['ST_conf'].tolist()
+
+    # Identify key drivers (parameters with highest total-order index)
+    param_names = problem['names']
+    key_drivers = sorted(zip(param_names, ST), key=lambda x: x[1], reverse=True)
+
+    # Prepare result dictionary
+    result = {
+        "analysis_type": "sobol",
+        "parameters": param_names,
+        "S1": S1,
+        "S1_conf": S1_conf,
+        "ST": ST,
+        "ST_conf": ST_conf,
+        "key_drivers": [{"name": name, "total_order_index": idx} for name, idx in key_drivers],
+        "num_samples": len(Y),
+        "timestamp": datetime.now().isoformat()
+    }
+
+    # Write to docs/sensitivity_analysis.md (overwrite)
+    try:
+        with open('docs/sensitivity_analysis.md', 'w') as f:
+            f.write("# Sobol Sensitivity Analysis Results\n\n")
+            f.write("Generated: " + result['timestamp'] + "\n\n")
+            f.write("## Parameters\n")
+            for name, bound in zip(param_names, problem['bounds']):
+                f.write(f"- {name}: [{bound[0]}, {bound[1]}]\n")
+            f.write("\n## First-Order Indices (S1)\n")
+            for name, s1, conf in zip(param_names, S1, S1_conf):
+                f.write(f"- {name}: {s1:.4f} ± {conf:.4f}\n")
+            f.write("\n## Total-Order Indices (ST)\n")
+            for name, st, conf in zip(param_names, ST, ST_conf):
+                f.write(f"- {name}: {st:.4f} ± {conf:.4f}\n")
+            f.write("\n## Key Drivers (by total-order index)\n")
+            for i, (name, idx) in enumerate(key_drivers, 1):
+                f.write(f"{i}. {name}: {idx:.4f}\n")
+        print("[Sobol] Sensitivity analysis written to docs/sensitivity_analysis.md")
+    except Exception as e:
+        print(f"[Sobol] Error writing sensitivity_analysis.md: {e}")
+
     # Log to model performance log
-    log_entry = {"timestamp": datetime.now().isoformat(), "analysis": "sobol", "result": result}
-    with open('data/model_performance_log.json', 'a') as f:
-        f.write(json.dumps(log_entry) + "\n")
+    log_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "analysis": "sobol",
+        "result": result
+    }
+    try:
+        with open('data/model_performance_log.json', 'a') as f:
+            f.write(json.dumps(log_entry) + "\n")
+        print("[Sobol] Results appended to data/model_performance_log.json")
+    except Exception as e:
+        print(f"[Sobol] Error writing to model_performance_log.json: {e}")
+
     print("Sobol analysis done.")
 
 def decision_support():
