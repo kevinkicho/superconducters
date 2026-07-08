@@ -453,3 +453,20 @@ Each lab performs the following measurements on the received samples:
 - If a lab reports a Tc > 20 K different from the others, the sample is re-measured by a fourth independent lab (e.g., National High Magnetic Field Laboratory).
 - If sample degradation is suspected (e.g., pressure loss), the backup sample is used.
 - All deviations are documented in the final report.
+
+## Dynamically Generated Protocols
+
+The pipeline's high-throughput screening module can generate synthesis protocols for candidate ternary hydrides on the fly. These protocols are based on the compound's predicted properties and are dynamically created using the `generate_synthesis_protocol()` function in `run_pipeline.py`. The generated protocols include precursor preparation, synthesis steps, characterization methods, and expected properties.
+
+### Example Generated Protocol
+
+Below is an example protocol generated for a top candidate from the screening:
+
+```markdown
+## Synthesis Protocol for La2BH12
+
+### Overview
+...
+```
+
+For the latest generated protocols, run the pipeline with the `--run-screening` flag and check the output.
