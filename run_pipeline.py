@@ -5169,3 +5169,81 @@ def continuous_autonomous_loop(interval_hours: int = 24, max_candidates_per_run:
 
 
 # ===== End of new functions =====
+
+# ===== Model Versioning and Experiment Tracking Module =====
+
+import shutil
+
+class ModelVersionManager:
+    """Manages model versions, logging parameters, training data, performance metrics, and supporting rollback."""
+
+    def __init__(self, registry_path="model_versions.json"):
+        self.registry_path = registry_path
+        if not os.path.exists(registry_path):
+            with open(registry_path, "w") as f:
+                json.dump([], f)
+
+    def _load_registry(self):
+        with open(self.registry_path, "r") as f:
+            return json.load(f)
+
+    def _save_registry(self, registry):
+        with open(self.registry_path, "w") as f:
+            json.dump(registry, f, indent=2)
+
+    def log_version(self, model_path, parameters, training_data_hash, performance_metrics, notes=""):
+        """Log a new model version with metadata."""
+        registry = self._load_registry()
+        version_id = len(registry) + 1
+        entry = {
+            "version_id": version_id,
+            "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+            "model_path": model_path,
+            "parameters": parameters,
+            "training_data_hash": training_data_hash,
+            "performance_metrics": performance_metrics,
+            "notes": notes
+        }
+        registry.append(entry)
+        self._save_registry(registry)
+        print(f"[ModelVersionManager] Logged version {version_id}.")
+        return version_id
+
+    def get_version(self, version_id):
+        """Retrieve metadata for a specific version."""
+        registry = self._load_registry()
+        for entry in registry:
+            if entry["version_id"] == version_id:
+                return entry
+        return None
+
+    def list_versions(self):
+        """List all logged versions."""
+        return self._load_registry()
+
+    def log_version_with_backup(self, model_path, parameters, training_data_hash, performance_metrics, notes="", backup_dir="model_backups"):
+        """Log version and also backup the model file to a versioned copy."""
+        os.makedirs(backup_dir, exist_ok=True)
+        version_id = self.log_version(model_path, parameters, training_data_hash, performance_metrics, notes)
+        backup_path = os.path.join(backup_dir, f"model_v{version_id}.pt")
+        shutil.copy2(model_path, backup_path)
+        print(f"[ModelVersionManager] Backed up model to {backup_path}.")
+        return version_id
+
+    def rollback_to_version(self, version_id, backup_dir="model_backups"):
+        """Rollback by restoring the versioned backup."""
+        entry = self.get_version(version_id)
+        if entry is None:
+            print(f"[ModelVersionManager] Version {version_id} not found.")
+            return False
+        backup_path = os.path.join(backup_dir, f"model_v{version_id}.pt")
+        if not os.path.exists(backup_path):
+            print(f"[ModelVersionManager] Backup file {backup_path} does not exist.")
+            return False
+        # Backup current model before rollback
+        current_backup = os.path.join(backup_dir, f"model_pre_rollback_{datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pt")
+        shutil.copy2(entry["model_path"], current_backup)
+        # Restore the versioned backup
+        shutil.copy2(backup_path, entry["model_path"])
+        print(f"[ModelVersionManager] Rolled back to version {version_id} (restored {backup_path} to {entry['model_path']}).")
+        return True
