@@ -1529,3 +1529,25 @@ class ModelEnsemble:
         return {name: {'mae': np.mean(np.abs(np.array(y_true) - np.array(model_preds[name]))),
                         'rmse': np.sqrt(np.mean((np.array(y_true) - np.array(model_preds[name]))**2))}
                 for name in model_names}
+
+
+def predict_tc():
+    """Predict Tc for all entries in data/superconductor_database.json using McMillan-Allen-Dynes equation."""
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
+    with open(db_path, 'r') as f:
+        data = json.load(f)
+    print("\n========== McMillan-Allen-Dynes Tc Predictions ==========")
+    for entry in data:
+        lambda_ = entry['lambda']
+        omega_log = entry['omega_log']
+        mu_star = entry['mu_star']
+        # McMillan-Allen-Dynes formula
+        numerator = 1.04 * (1 + lambda_)
+        denominator = lambda_ - mu_star * (1 + 0.62 * lambda_)
+        if denominator <= 0:
+            tc = 0.0
+        else:
+            tc = (omega_log / 1.2) * math.exp(-numerator / denominator)
+        print(f"{entry.get('formula', 'Unknown'):20s} lambda={lambda_:.3f} omega_log={omega_log:.1f} mu*={mu_star:.3f} -> Tc={tc:.2f} K")
+    print("========================================================")
+    return data
