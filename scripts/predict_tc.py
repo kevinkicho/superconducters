@@ -1654,5 +1654,103 @@ def train_model():
     
     return model
 
+def train_gp_model():
+    """Train a Gaussian Process Regressor and return model with uncertainty."""
+    # Load data
+    data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
+    with open(data_path, 'r') as f:
+        data = json.load(f)
+    
+    X = []
+    y = []
+    dft_features = load_dft_features()
+    for entry in data:
+        formula = entry.get('formula', '')
+        tc = entry.get('tc', 0)
+        if not formula or tc == 0:
+            continue
+        elements = {}
+        pattern = r'([A-Z][a-z]*)(\d*\.?\d*)'
+        for match in re.finditer(pattern, formula):
+            elem = match.group(1)
+            count_str = match.group(2)
+            count = float(count_str) if count_str else 1.0
+            elements[elem] = elements.get(elem, 0) + count
+        total_atoms = sum(elements.values())
+        if total_atoms == 0:
+            continue
+        avg_valence = sum(VALENCE.get(e, 0) * c for e, c in elements.items()) / total_atoms
+        avg_debye = sum(DEBYE_TEMP.get(e, 100) * c for e, c in elements.items()) / total_atoms
+        avg_mass = sum(ATOMIC_MASS.get(e, 50) * c for e, c in elements.items()) / total_atoms
+        num_elements = len(elements)
+        dft = dft_features.get(formula, {})
+        dos_fermi = dft.get('dos_fermi', 0.0)
+        avg_phonon_freq = dft.get('avg_phonon_freq', 0.0)
+        X.append([avg_valence, avg_debye, avg_mass, num_elements, total_atoms, dos_fermi, avg_phonon_freq])
+        y.append(tc)
+    
+    X = np.array(X)
+    y = np.array(y)
+    
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Define kernel
+    kernel = C(1.0, (1e-3, 1e3)) * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e2))
+    gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10, alpha=1e-2, normalize_y=True)
+    gp.fit(X_train, y_train)
+    
+    # Predict with uncertainty
+    y_pred, y_std = gp.predict(X_test, return_std=True)
+    
+    # Compute metrics
+    r2 = r2_score(y_test, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    
+    # Calibration metrics: coverage of 95% confidence interval
+    z = 1.96  # 95% CI
+    lower = y_pred - z * y_std
+    upper = y_pred + z * y_std
+    coverage = np.mean((y_test >= lower) & (y_test <= upper))
+    
+    print(f"GP Test R2: {r2:.3f}, RMSE: {rmse:.3f} K, 95% CI Coverage: {coverage:.3f}")
+    
+    # Save model
+    model_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+    os.makedirs(model_dir, exist_ok=True)
+    model_path = os.path.join(model_dir, 'tc_gp_predictor.pkl')
+    joblib.dump(gp, model_path)
+    print(f"GP model saved to {model_path}")
+    
+    # Log performance with calibration metrics
+    log_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'model_performance_log.json')
+    log_entry = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "model": "GaussianProcessRegressor",
+        "features": ["avg_valence", "avg_debye", "avg_mass", "num_elements", "total_atoms", "dos_fermi", "avg_phonon_freq"],
+        "test_r2": r2,
+        "test_rmse": rmse,
+        "confidence_interval_95_coverage": coverage,
+        "n_samples": len(y)
+    }
+    try:
+        with open(log_path, 'r') as f:
+            log_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        log_data = []
+    log_data.append(log_entry)
+    with open(log_path, 'w') as f:
+        json.dump(log_data, f, indent=2)
+    print(f"Performance logged to {log_path}")
+    
+    return gp
+
 if __name__ == '__main__':
-    train_model()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', choices=['rf', 'gp'], default='rf', help='Model type: rf (Random Forest) or gp (Gaussian Process)')
+    args = parser.parse_args()
+    if args.model == 'gp':
+        train_gp_model()
+    else:
+        train_model()
