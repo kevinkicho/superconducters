@@ -1912,3 +1912,66 @@ class TestStressSelfHealing:
 #
 # These references are used to validate candidate materials and inform the pipeline's
 # machine learning models and DFT calculations.
+
+def test_end_to_end_pipeline():
+    """End-to-end integration test: simulate full pipeline run and verify all output files."""
+    import json
+    from unittest.mock import patch, MagicMock, call
+
+    # Mock data
+    mock_materials = [
+        {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+        {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+    ]
+    mock_model = MagicMock()
+    mock_model.predict.return_value = [200.0, 250.0]
+
+    def mock_predict_side_effect(name, pressure=None):
+        if name == "H3S":
+            return (203.0, 5.0)
+        elif name == "LaH10":
+            return (250.0, 8.0)
+        else:
+            return (100.0, 10.0)
+
+    mock_dft_result = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+    mock_cost_result = {"total_cost": 50000, "breakdown": {"materials": 20000, "synthesis": 30000}}
+    mock_cloud_result = {"submission_id": "sub-123", "status": "queued"}
+
+    with patch('scripts.run_pipeline.load_data', return_value=mock_materials), \
+         patch('scripts.run_pipeline.train_model', return_value=mock_model), \
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty', side_effect=mock_predict_side_effect), \
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation', return_value=mock_dft_result), \
+         patch('scripts.run_pipeline.cost_analysis', return_value=mock_cost_result), \
+         patch('scripts.run_pipeline.cloud_lab_submission', return_value=mock_cloud_result), \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        result = rp.run_pipeline()
+
+        # Verify pipeline completed
+        assert result is not None, "Pipeline should return a result"
+
+        # Collect all write calls
+        write_calls = mock_file.write.call_args_list
+        write_content = "".join([call[0][0] for call in write_calls])
+
+        # Check that key output files were written
+        expected_files = [
+            "candidate_materials.md",
+            "roadmap.md",
+            "cost_analysis.md",
+            "cloud_lab_submission.md"
+        ]
+        open_calls = [call[0][0] for call in mock_open.call_args_list if call[0][0].endswith('.md')]
+        for fname in expected_files:
+            assert any(fname in oc for oc in open_calls), f"Expected {fname} to be written"
+
+        # Verify content contains expected data
+        assert "H3S" in write_content, "Output should contain H3S data"
+        assert "LaH10" in write_content, "Output should contain LaH10 data"
+        assert "203.0" in write_content, "Output should contain predicted Tc for H3S"
+        assert "250.0" in write_content, "Output should contain predicted Tc for LaH10"
+        assert "50000" in write_content, "Output should contain cost analysis result"
+        assert "sub-123" in write_content, "Output should contain cloud submission ID"
