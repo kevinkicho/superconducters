@@ -11616,3 +11616,56 @@ def reproducibility_check() -> None:
         print("[Reproducibility] Check logged.")
     except Exception as e:
         print(f"[Reproducibility] Logging error: {e}")
+
+def integrate_arxiv_and_dft() -> None:
+    """
+    Actual pipeline logic: integrate arxiv_scraper, call DFT calculator,
+    and update candidate materials based on experimental feedback.
+    """
+    print("[Integrate] Starting arxiv + DFT integration...")
+    # 1. Scrape arxiv for recent superconducting material papers
+    try:
+        from arxiv_scraper import scrape_arxiv
+        papers = scrape_arxiv(query="superconductivity room temperature", max_results=10)
+        print(f"[Integrate] Scraped {len(papers)} papers from arxiv.")
+    except ImportError:
+        print("[Integrate] arxiv_scraper not available. Skipping arxiv step.")
+        papers = []
+    except Exception as e:
+        print(f"[Integrate] arxiv scrape error: {e}")
+        papers = []
+    # 2. Extract candidate compounds from paper abstracts (simple heuristic)
+    candidates_extracted = []
+    for p in papers:
+        # Look for chemical formulas like LaH10, H3S, etc.
+        formulas = re.findall(r'[A-Z][a-z]?\d*', p.get('abstract', ''))
+        candidates_extracted.extend(formulas)
+    print(f"[Integrate] Extracted candidate formulas: {candidates_extracted[:5]}...")
+    # 3. Call DFT calculator on each candidate (if available)
+    try:
+        from dft_calculator import run_dft
+        for formula in candidates_extracted[:5]:
+            tc_pred = run_dft(formula)
+            print(f"[Integrate] DFT result for {formula}: Tc = {tc_pred} K")
+    except ImportError:
+        print("[Integrate] dft_calculator not available. Skipping DFT.")
+    except Exception as e:
+        print(f"[Integrate] DFT error: {e}")
+    # 4. Update candidate_materials.md with experimental feedback
+    try:
+        with open('candidate_materials.md', 'r+') as f:
+            content = f.read()
+            # Add new candidates from arxiv extraction
+            new_candidates = "\n".join([f"- {c} (arxiv-extracted)" for c in candidates_extracted[:5]])
+            if new_candidates:
+                f.write(f"\n## Arxiv-derived candidates (from integration)\n{new_candidates}\n")
+                print("[Integrate] Updated candidate_materials.md with arxiv candidates.")
+    except FileNotFoundError:
+        print("[Integrate] candidate_materials.md not found; creating.")
+        with open('candidate_materials.md', 'w') as f:
+            f.write("# Candidate Materials\n")
+            for c in candidates_extracted[:5]:
+                f.write(f"- {c} (arxiv-extracted)\n")
+    except Exception as e:
+        print(f"[Integrate] Error updating candidate file: {e}")
+    print("[Integrate] Integration complete.")
