@@ -152,3 +152,64 @@ This protocol details the synthesis and characterization of LaH10, a near-room-t
 | **Total** | **$315,000** |
 
 *Note: Costs assume shared facility access for synchrotron and SQUID. If dedicated equipment is purchased, total may exceed $500,000.*
+
+
+## 4. Statistical Design of Experiments (DoE)
+
+### Objective
+Optimize synthesis conditions (pressure, temperature, doping) to maximize Tc and reproducibility using a response surface methodology (RSM).
+
+### Factors and Ranges
+| Factor | Symbol | Low (-1) | Center (0) | High (+1) |
+|--------|--------|----------|------------|-----------|
+| Pressure (GPa) | P | 140 | 160 | 180 |
+| Laser heating temperature (K) | T | 1500 | 1750 | 2000 |
+| Doping (e.g., C substitution for H, at%) | D | 0 | 5 | 10 |
+
+### Design
+- **Type**: Central composite design (CCD) with 3 factors → 20 runs (8 factorial, 6 axial, 6 center points).
+- **Randomization**: Run order randomized to minimize systematic bias.
+- **Replicates**: 3 center points per block to estimate pure error.
+
+### Response Variables
+1. **Critical temperature (Tc)** measured by four-probe resistance drop (K).
+2. **Phase purity** from XRD peak intensity ratio (I(111)/I(background)).
+3. **Synthesis success rate** (binary: 1 if Tc > 200 K, else 0).
+
+### Analysis
+- Fit a second-order polynomial model: Tc = β₀ + β₁P + β₂T + β₃D + β₁₁P² + β₂₂T² + β₃₃D² + β₁₂PT + β₁₃PD + β₂₃TD + ε.
+- ANOVA to identify significant factors (p < 0.05).
+- Response surface and contour plots to locate optimum.
+- Confirmatory runs at predicted optimum (n=3).
+
+### Software
+- Python with `pyDOE3` or `scikit-learn` for design generation and analysis.
+- JMP or Minitab for visualization (optional).
+
+## 5. High-Throughput Characterization Plan
+
+### Synchrotron X‑ray Diffraction (XRD)
+- **Beamline**: Advanced Photon Source (APS) 16‑ID‑B or equivalent (high‑flux, micro‑focus).
+- **Energy**: 30–50 keV (λ ≈ 0.4–0.25 Å) to penetrate DAC and reduce absorption.
+- **Detector**: Pilatus 2M or Dectris Eiger 4M, 0.1° step, 10 s exposure per frame.
+- **Automation**: Robotic sample changer for sequential DAC loading; automated peak fitting (GSAS‑II or DIOPTAS).
+- **Throughput**: 1 sample per 5 minutes → ~100 samples per 8‑hour shift.
+- **Data pipeline**: Real‑time reduction (pyFAI), phase identification (PDF‑4+), lattice parameter refinement.
+
+### Transport Measurements
+- **Resistivity**: Four‑probe van der Pauw geometry; AC excitation 10 µA, 17 Hz; lock‑in amplifier (SR830).
+- **Temperature range**: 4–300 K in closed‑cycle cryostat (0.5 K/min ramp).
+- **Magnetic field**: 0–9 T (superconducting magnet) for Hall effect and upper critical field (Hc₂).
+- **Automation**: LabVIEW or Python (PyVISA) script for multi‑sample switching (up to 8 samples per cooldown).
+- **Throughput**: 1 sample per 2 hours (including cooldown) → 4 samples per 8‑hour shift.
+
+### Integrated Workflow
+1. **Synthesis** (DAC, laser heating) → 2. **In‑situ XRD** (phase confirmation) → 3. **Transport** (Tc, Hc₂) → 4. **Ex‑situ XRD** (post‑measurement structure) → 5. **Data upload** to central database (MongoDB or SQLite).
+- **Active learning loop**: Bayesian optimization (GPyOpt) suggests next synthesis conditions based on previous Tc and phase purity.
+- **Expected throughput**: 5–10 fully characterized samples per week.
+
+### References
+- Box, G. E. P., & Draper, N. R. (2007). *Response Surfaces, Mixtures, and Ridge Analyses*. Wiley.
+- Drozdov, A. P. et al. (2019). Superconductivity in LaH₁₀. *Nature*, 569, 528–531. DOI: 10.1038/s41586-019-1201-8
+- Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride. *Phys. Rev. Lett.*, 122, 027001. DOI: 10.1103/PhysRevLett.122.027001
+- APS beamline 16‑ID‑B: https://www.aps.anl.gov/Beamlines/16-ID-B
