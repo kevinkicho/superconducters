@@ -210,6 +210,39 @@ def main():
                 else:
                     st.info("No research literature data available.")
 
+            with tab9:
+                st.subheader("Pareto Front: Tc vs. Synthesis Pressure/Cost")
+                df = fetch_pareto_front()
+                if df is not None and not df.empty:
+                    st.scatter_chart(df, x="pressure", y="tc", color="cost", use_container_width=True)
+                    st.dataframe(df, use_container_width=True)
+                else:
+                    st.info("No Pareto front data available.")
+
+            with tab10:
+                st.subheader("Uncertainty Intervals for Predicted Tc")
+                df = fetch_uncertainty_intervals()
+                if df is not None and not df.empty:
+                    st.line_chart(df, x="material", y=["predicted_tc", "lower_bound", "upper_bound"], use_container_width=True)
+                    st.dataframe(df, use_container_width=True)
+                else:
+                    st.info("No uncertainty interval data available.")
+
+            with tab11:
+                st.subheader("Status Panel")
+                status = fetch_status_panel()
+                if status is not None:
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Last Arxiv Scrape", status.get("last_arxiv_scrape", "N/A"))
+                    with col2:
+                        st.metric("Validation Metrics", status.get("validation_metrics", "N/A"))
+                    with col3:
+                        st.metric("Active Learning Iteration", status.get("active_learning_iteration", "N/A"))
+                    st.json(status)
+                else:
+                    st.info("No status panel data available.")
+
             if st.button("Refresh Now"):
                 st.rerun()
 
@@ -218,6 +251,58 @@ def main():
             st.rerun()
         else:
             break
+
+def fetch_pareto_front() -> Optional[pd.DataFrame]:
+    """Fetch Pareto front data (Tc vs. synthesis pressure/cost) from the API."""
+    try:
+        response = requests.get(f"{API_BASE_URL}/optimization/pareto", timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        if isinstance(data, list):
+            return pd.DataFrame(data)
+        elif isinstance(data, dict) and "points" in data:
+            return pd.DataFrame(data["points"])
+        else:
+            st.error("Unexpected Pareto front format.")
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to fetch Pareto front: {e}")
+        return None
+
+
+def fetch_uncertainty_intervals() -> Optional[pd.DataFrame]:
+    """Fetch uncertainty intervals for predicted Tc from the API."""
+    try:
+        response = requests.get(f"{API_BASE_URL}/predictions/uncertainty", timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        if isinstance(data, list):
+            return pd.DataFrame(data)
+        elif isinstance(data, dict) and "intervals" in data:
+            return pd.DataFrame(data["intervals"])
+        else:
+            st.error("Unexpected uncertainty intervals format.")
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to fetch uncertainty intervals: {e}")
+        return None
+
+
+def fetch_status_panel() -> Optional[Dict[str, Any]]:
+    """Fetch status panel data (last arxiv scrape time, validation metrics, active learning iteration)."""
+    try:
+        response = requests.get(f"{API_BASE_URL}/pipeline/status", timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        if isinstance(data, dict):
+            return data
+        else:
+            st.error("Unexpected status panel format.")
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Failed to fetch status panel: {e}")
+        return None
+
 
 if __name__ == "__main__":
     main()
