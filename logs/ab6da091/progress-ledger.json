@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "runId": "ab6da091-a9fa-49eb-9a21-350c6d0ba7bb",
-  "updatedAt": 1783469217209,
-  "lastCycle": 3,
+  "updatedAt": 1783469246265,
+  "lastCycle": 4,
   "observations": [
     {
       "kind": "skip",
@@ -302,6 +302,24 @@
         "run_pipeline.py"
       ],
       "at": 1783469203058
+    },
+    {
+      "kind": "commit",
+      "text": "Add a milestone section titled 'Experimental Validation of Top Candidate (6-Month Milestone)' to roadmap.md, including specific steps (e.g., synthesis, characterization, reproducibility checks) and responsible parties (e.g., lead experimentalist, data scientist).",
+      "cycle": 4,
+      "files": [
+        "roadmap.md"
+      ],
+      "at": 1783469222767
+    },
+    {
+      "kind": "commit",
+      "text": "Add unit tests in tests/test_run_pipeline.py for the active learning loop (e.g., test that experimental results feed back into the Bayesian optimization model and select next candidates) and for the new machine learning model integration (e.g., test that model predictions are used correctly in the pipeline).",
+      "cycle": 4,
+      "files": [
+        "tests/test_run_pipeline.py"
+      ],
+      "at": 1783469231276
     }
   ]
 }
