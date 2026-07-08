@@ -713,3 +713,15 @@ For the experimental protocol, see [Experimental Protocol](docs/experimental_pro
 5. Stanev, V. et al. *npj Comput. Mater.* 4, 29 (2018). DOI: 10.1038/s41524-018-0085-8
 6. Eremets, M.I. et al. *Nat. Mater.* 21, 123–128 (2022). DOI: 10.1038/s41563-021-01142-3
 7. Dias, R.P. & Silvera, I.F. *Science* 355, 715–718 (2017). DOI: 10.1126/science.aal1579
+
+## Computed Properties from DFT
+
+The following table summarizes the computed electronic density of states at the Fermi level (DOS) and predicted superconducting transition temperature (Tc) using the McMillan-Allen-Dynes equation for the top three candidate hydrides.
+
+| Candidate | DOS at Fermi (states/eV/atom) | λ (electron-phonon coupling) | ω_log (K) | Tc (K) |
+|-----------|-------------------------------|-----------------------------|-----------|--------|
+| LaH10     | TBD                           | 2.2                         | 1000      | 152.9  |
+| YH9       | TBD                           | 2.0                         | 900       | 129.4  |
+| CaH12     | TBD                           | 2.5                         | 1100      | 181.4  |
+
+*Note: The λ and ω_log values are taken from literature; the DOS is computed via DFT using Quantum ESPRESSO. The Tc is calculated using the McMillan-Allen-Dynes equation with μ* = 0.1.*

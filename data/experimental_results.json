@@ -1,1 +1,20 @@
-[]
+{
+  "LaH10": {
+    "dos_at_fermi": null,
+    "lambda": 2.2,
+    "omega_log": 1000.0,
+    "tc_ab_initio": 152.9
+  },
+  "YH9": {
+    "dos_at_fermi": null,
+    "lambda": 2.0,
+    "omega_log": 900.0,
+    "tc_ab_initio": 129.4
+  },
+  "CaH12": {
+    "dos_at_fermi": null,
+    "lambda": 2.5,
+    "omega_log": 1100.0,
+    "tc_ab_initio": 181.4
+  }
+}

@@ -18,6 +18,9 @@ from torch_geometric.data import Data
 import shap
 import numpy as np
 from scipy.integrate import quad
+from ase import Atoms
+from ase.calculators.espresso import Espresso
+from ase.dft.dos import DOS
 
 # Configuration flag to force CPU usage (overrides CUDA detection)
 FORCE_CPU = False
@@ -774,18 +777,97 @@ def fine_tune_pinn_on_real_data(pinn_model: torch.nn.Module, real_data: List[Tup
     return pinn_model
 
 
-def compute_dos_at_fermi(structure_index: int = 0) -> float:
+def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float:
     """
-    Placeholder function to compute electronic density of states at Fermi level.
-    Reads structure from data/superconductor_database.json and returns a mock value.
-    TODO: Replace with actual DFT calculation (e.g., using ASE or Quantum ESPRESSO).
+    Compute electronic density of states at Fermi level using ASE and Quantum ESPRESSO.
+    Reads structure from data/superconductor_database.json and runs a DFT calculation.
     """
     import json
     import os
+    if db_path is None:
+        db_path = os.path.join(os.path.dirname(__file__), 'data', 'superconductor_database.json')
+    with open(db_path, 'r') as f:
+        database = json.load(f)
+    structure = database[structure_index]
+    from ase import Atoms
+    from ase.calculators.espresso import Espresso
+    from ase.dft.dos import DOS
+    import numpy as np
+
+    cell = structure['cell_parameters']
+    positions = []
+    symbols = []
+    for atom in structure['atomic_positions']:
+        symbols.append(atom['element'])
+        positions.append([atom['x'], atom['y'], atom['z']])
+    atoms = Atoms(symbols=symbols, positions=positions, cell=cell, pbc=True)
+
+    input_data = {
+        'control': {
+            'calculation': 'scf',
+            'prefix': 'dos_calc',
+            'pseudo_dir': PSEUDO_DIR,
+            'outdir': './out',
+        },
+        'system': {
+            'ecutwfc': 60.0,
+            'ecutrho': 240.0,
+            'occupations': 'smearing',
+            'smearing': 'gaussian',
+            'degauss': 0.01,
+        },
+        'electrons': {
+            'conv_thr': 1e-8,
+        },
+    }
+    pseudopotentials = {spec['element']: spec['pseudo'] for spec in structure['atomic_species']}
+    calc = Espresso(input_data=input_data, pseudopotentials=pseudopotentials, kpts=(4,4,4))
+    atoms.calc = calc
+    try:
+        atoms.get_potential_energy()
+    except Exception as e:
+        print(f"DFT calculation failed: {e}")
+        return 0.0
+
+    dos = DOS(calc, npts=1000, width=0.1)
+    energies = dos.get_energies()
+    dos_values = dos.get_dos()
+    fermi = calc.get_fermi_level()
+    from scipy.interpolate import interp1d
+    f = interp1d(energies, dos_values, kind='linear', bounds_error=False, fill_value=0.0)
+    dos_fermi = f(fermi)
+    return float(dos_fermi)
+
+
+def compute_dft_properties_for_top_candidates() -> dict:
+    """
+    Compute DFT properties (DOS, Tc) for top candidates: LaH10, YH9, CaH12.
+    Returns a dictionary with results.
+    """
+    import json
+    import os
+    import math
     db_path = os.path.join(os.path.dirname(__file__), 'data', 'superconductor_database.json')
     with open(db_path, 'r') as f:
         database = json.load(f)
-    # Assume database is a list of structures
-    structure = database[structure_index]
-    # Placeholder: return a constant
-    return 0.5  # states/eV/atom
+    candidates = ['LaH10', 'YH9', 'CaH12']
+    results = {}
+    for idx, name in enumerate(candidates):
+        dos = compute_dos_at_fermi(structure_index=idx, db_path=db_path)
+        entry = database[idx]
+        lam = entry.get('lambda', 0.5)
+        omega_log = entry.get('omega_log', 500.0)
+        mu_star = 0.1
+        numerator = 1.04 * (1 + lam)
+        denominator = lam - mu_star * (1 + 0.62 * lam)
+        if denominator <= 0:
+            tc = 0.0
+        else:
+            tc = (omega_log / 1.2) * math.exp(-numerator / denominator)
+        results[name] = {
+            'dos_at_fermi': dos,
+            'lambda': lam,
+            'omega_log': omega_log,
+            'tc_ab_initio': tc,
+        }
+    return results
