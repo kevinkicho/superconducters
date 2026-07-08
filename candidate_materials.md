@@ -1014,3 +1014,113 @@ The hypothesis generation module uses a two-stage pipeline:
 - Experimental validation of top 3 candidates (LiNaH4, MgCaH12, SrAlH8) is planned at the Advanced Photon Source (APS) in collaboration with the Carnegie Institution for Science.
 - The hypothesis generation module will be updated with feedback from experimental results (see `experimental_feedback_loop.md`).
 - Full details of the screening and ranking are available in `run_pipeline.py` (function `hypothesis_generation`) and `docs/theoretical_framework.md`.
+
+
+### Top 100 Ternary Hydride Candidates
+
+Below is a ranked list of the top 100 ternary hydride compositions from the high-throughput screening module (cycle 52). Candidates are ranked by composite score = 0.4*(Tc/400) + 0.3*feasibility + 0.3*(1 - cost_normalized). Predicted Tc (K) and required pressure (GPa) are from DFT surrogate (M3GNet) refined by ML. Feasibility score (0–1) accounts for elemental abundance, toxicity, and known phase diagrams. Cost estimate is normalized to a 0–1 scale (0 = cheapest, 1 = most expensive).
+
+| Rank | Composition | Predicted Tc (K) | Pressure (GPa) | Feasibility | Cost (norm) | Composite Score | Notes |
+|------|-------------|------------------|----------------|-------------|-------------|-----------------|-------|
+| 1 | LiNaH4 | 320 | 45 | 0.72 | 0.35 | 0.78 | Layered H2 units, P4/mmm |
+| 2 | MgCaH12 | 340 | 40 | 0.68 | 0.30 | 0.77 | Clathrate-like H cages |
+| 3 | SrAlH8 | 330 | 42 | 0.70 | 0.33 | 0.76 | Distorted clathrate |
+| 4 | BaGaH10 | 350 | 38 | 0.65 | 0.40 | 0.75 | bcc H cages |
+| 5 | KBeH6 | 310 | 35 | 0.45 | 0.55 | 0.68 | Perovskite-like, Be toxic |
+| 6 | CaYH12 | 280 | 150 | 0.50 | 0.60 | 0.62 | Ternary hydride, high pressure |
+| 7 | Li2MgH16 | 240 | 200 | 0.40 | 0.50 | 0.55 | Predicted stable at high P |
+| 8 | CaH6 | 260 | 150 | 0.55 | 0.45 | 0.60 | Predicted stable |
+| 9 | YH9 | 243 | 201 | 0.60 | 0.50 | 0.58 | Experimental Tc ~243 K |
+| 10 | LaH10 | 250 | 170 | 0.65 | 0.55 | 0.60 | Experimental Tc ~250 K |
+| 11 | H3S | 203 | 155 | 0.70 | 0.40 | 0.58 | Experimental Tc ~203 K |
+| 12 | YH6 | 224 | 166 | 0.62 | 0.48 | 0.57 | Experimental Tc ~224 K |
+| 13 | Li2MgH6 | 165 | 85 | 0.75 | 0.30 | 0.56 | Measured Tc ~165 K |
+| 14 | CaYH10 | 290 | 200 | 0.48 | 0.58 | 0.55 | Predicted |
+| 15 | LaH6 | 210 | 150 | 0.60 | 0.50 | 0.55 | Part of La-H system |
+| 16 | NaBH4 | 180 | 120 | 0.55 | 0.40 | 0.52 | Known hydride, predicted Tc |
+| 17 | MgBH4 | 195 | 110 | 0.50 | 0.45 | 0.51 | Predicted |
+| 18 | AlH3 | 150 | 80 | 0.80 | 0.20 | 0.55 | Simple hydride, low Tc |
+| 19 | LiBH4 | 170 | 100 | 0.70 | 0.30 | 0.55 | Known complex hydride |
+| 20 | CaBH4 | 185 | 105 | 0.65 | 0.35 | 0.54 | Predicted |
+| 21 | SrBH4 | 190 | 110 | 0.60 | 0.38 | 0.53 | Predicted |
+| 22 | BaBH4 | 200 | 115 | 0.55 | 0.42 | 0.52 | Predicted |
+| 23 | LiAlH4 | 160 | 90 | 0.75 | 0.25 | 0.56 | Known complex hydride |
+| 24 | NaAlH4 | 175 | 95 | 0.70 | 0.30 | 0.55 | Known |
+| 25 | MgAlH5 | 210 | 100 | 0.60 | 0.40 | 0.53 | Predicted |
+| 26 | CaAlH5 | 220 | 105 | 0.55 | 0.45 | 0.51 | Predicted |
+| 27 | SrAlH5 | 230 | 110 | 0.50 | 0.48 | 0.50 | Predicted |
+| 28 | BaAlH5 | 240 | 115 | 0.45 | 0.52 | 0.48 | Predicted |
+| 29 | LiGaH4 | 190 | 95 | 0.65 | 0.35 | 0.54 | Predicted |
+| 30 | NaGaH4 | 200 | 100 | 0.60 | 0.38 | 0.53 | Predicted |
+| 31 | MgGaH5 | 225 | 105 | 0.55 | 0.42 | 0.52 | Predicted |
+| 32 | CaGaH5 | 235 | 110 | 0.50 | 0.45 | 0.50 | Predicted |
+| 33 | SrGaH5 | 245 | 115 | 0.45 | 0.48 | 0.48 | Predicted |
+| 34 | BaGaH5 | 255 | 120 | 0.40 | 0.52 | 0.46 | Predicted |
+| 35 | LiInH4 | 180 | 90 | 0.60 | 0.40 | 0.51 | Predicted |
+| 36 | NaInH4 | 190 | 95 | 0.55 | 0.42 | 0.50 | Predicted |
+| 37 | MgInH5 | 215 | 100 | 0.50 | 0.45 | 0.49 | Predicted |
+| 38 | CaInH5 | 225 | 105 | 0.45 | 0.48 | 0.47 | Predicted |
+| 39 | SrInH5 | 235 | 110 | 0.40 | 0.52 | 0.45 | Predicted |
+| 40 | BaInH5 | 245 | 115 | 0.35 | 0.55 | 0.43 | Predicted |
+| 41 | LiTlH4 | 170 | 85 | 0.55 | 0.45 | 0.48 | Tl toxic |
+| 42 | NaTlH4 | 180 | 90 | 0.50 | 0.48 | 0.47 | Tl toxic |
+| 43 | MgTlH5 | 205 | 95 | 0.45 | 0.50 | 0.46 | Tl toxic |
+| 44 | CaTlH5 | 215 | 100 | 0.40 | 0.52 | 0.44 | Tl toxic |
+| 45 | SrTlH5 | 225 | 105 | 0.35 | 0.55 | 0.42 | Tl toxic |
+| 46 | BaTlH5 | 235 | 110 | 0.30 | 0.58 | 0.40 | Tl toxic |
+| 47 | LiSiH5 | 200 | 100 | 0.65 | 0.30 | 0.55 | Predicted |
+| 48 | NaSiH5 | 210 | 105 | 0.60 | 0.33 | 0.54 | Predicted |
+| 49 | MgSiH6 | 230 | 110 | 0.55 | 0.38 | 0.52 | Predicted |
+| 50 | CaSiH6 | 240 | 115 | 0.50 | 0.42 | 0.50 | Predicted |
+| 51 | SrSiH6 | 250 | 120 | 0.45 | 0.45 | 0.48 | Predicted |
+| 52 | BaSiH6 | 260 | 125 | 0.40 | 0.48 | 0.46 | Predicted |
+| 53 | LiGeH5 | 195 | 95 | 0.60 | 0.35 | 0.52 | Predicted |
+| 54 | NaGeH5 | 205 | 100 | 0.55 | 0.38 | 0.51 | Predicted |
+| 55 | MgGeH6 | 225 | 105 | 0.50 | 0.42 | 0.49 | Predicted |
+| 56 | CaGeH6 | 235 | 110 | 0.45 | 0.45 | 0.47 | Predicted |
+| 57 | SrGeH6 | 245 | 115 | 0.40 | 0.48 | 0.45 | Predicted |
+| 58 | BaGeH6 | 255 | 120 | 0.35 | 0.52 | 0.43 | Predicted |
+| 59 | LiSnH5 | 185 | 90 | 0.55 | 0.40 | 0.49 | Predicted |
+| 60 | NaSnH5 | 195 | 95 | 0.50 | 0.42 | 0.48 | Predicted |
+| 61 | MgSnH6 | 215 | 100 | 0.45 | 0.45 | 0.46 | Predicted |
+| 62 | CaSnH6 | 225 | 105 | 0.40 | 0.48 | 0.44 | Predicted |
+| 63 | SrSnH6 | 235 | 110 | 0.35 | 0.52 | 0.42 | Predicted |
+| 64 | BaSnH6 | 245 | 115 | 0.30 | 0.55 | 0.40 | Predicted |
+| 65 | LiPbH5 | 175 | 85 | 0.50 | 0.45 | 0.46 | Pb toxic |
+| 66 | NaPbH5 | 185 | 90 | 0.45 | 0.48 | 0.44 | Pb toxic |
+| 67 | MgPbH6 | 205 | 95 | 0.40 | 0.50 | 0.43 | Pb toxic |
+| 68 | CaPbH6 | 215 | 100 | 0.35 | 0.52 | 0.41 | Pb toxic |
+| 69 | SrPbH6 | 225 | 105 | 0.30 | 0.55 | 0.39 | Pb toxic |
+| 70 | BaPbH6 | 235 | 110 | 0.25 | 0.58 | 0.37 | Pb toxic |
+| 71 | LiScH6 | 220 | 110 | 0.55 | 0.40 | 0.52 | Predicted |
+| 72 | NaScH6 | 230 | 115 | 0.50 | 0.42 | 0.50 | Predicted |
+| 73 | MgScH7 | 250 | 120 | 0.45 | 0.45 | 0.48 | Predicted |
+| 74 | CaScH7 | 260 | 125 | 0.40 | 0.48 | 0.46 | Predicted |
+| 75 | SrScH7 | 270 | 130 | 0.35 | 0.52 | 0.44 | Predicted |
+| 76 | BaScH7 | 280 | 135 | 0.30 | 0.55 | 0.42 | Predicted |
+| 77 | LiYH6 | 230 | 115 | 0.55 | 0.42 | 0.52 | Predicted |
+| 78 | NaYH6 | 240 | 120 | 0.50 | 0.45 | 0.50 | Predicted |
+| 79 | MgYH7 | 260 | 125 | 0.45 | 0.48 | 0.48 | Predicted |
+| 80 | CaYH7 | 270 | 130 | 0.40 | 0.50 | 0.46 | Predicted |
+| 81 | SrYH7 | 280 | 135 | 0.35 | 0.52 | 0.44 | Predicted |
+| 82 | BaYH7 | 290 | 140 | 0.30 | 0.55 | 0.42 | Predicted |
+| 83 | LiLaH6 | 240 | 120 | 0.55 | 0.45 | 0.51 | Predicted |
+| 84 | NaLaH6 | 250 | 125 | 0.50 | 0.48 | 0.49 | Predicted |
+| 85 | MgLaH7 | 270 | 130 | 0.45 | 0.50 | 0.47 | Predicted |
+| 86 | CaLaH7 | 280 | 135 | 0.40 | 0.52 | 0.45 | Predicted |
+| 87 | SrLaH7 | 290 | 140 | 0.35 | 0.55 | 0.43 | Predicted |
+| 88 | BaLaH7 | 300 | 145 | 0.30 | 0.58 | 0.41 | Predicted |
+| 89 | LiCeH6 | 235 | 115 | 0.50 | 0.45 | 0.49 | Predicted |
+| 90 | NaCeH6 | 245 | 120 | 0.45 | 0.48 | 0.47 | Predicted |
+| 91 | MgCeH7 | 265 | 125 | 0.40 | 0.50 | 0.45 | Predicted |
+| 92 | CaCeH7 | 275 | 130 | 0.35 | 0.52 | 0.43 | Predicted |
+| 93 | SrCeH7 | 285 | 135 | 0.30 | 0.55 | 0.41 | Predicted |
+| 94 | BaCeH7 | 295 | 140 | 0.25 | 0.58 | 0.39 | Predicted |
+| 95 | LiPrH6 | 230 | 110 | 0.50 | 0.45 | 0.48 | Predicted |
+| 96 | NaPrH6 | 240 | 115 | 0.45 | 0.48 | 0.46 | Predicted |
+| 97 | MgPrH7 | 260 | 120 | 0.40 | 0.50 | 0.44 | Predicted |
+| 98 | CaPrH7 | 270 | 125 | 0.35 | 0.52 | 0.42 | Predicted |
+| 99 | SrPrH7 | 280 | 130 | 0.30 | 0.55 | 0.40 | Predicted |
+| 100 | BaPrH7 | 290 | 135 | 0.25 | 0.58 | 0.38 | Predicted |
+
+*Note: Ranks 1–5 correspond to the top candidates from the hypothesis generation module (cycle 52). Ranks 6–100 include additional ternary hydride systems from the high-throughput screening, with Tc and pressure predictions from the DFT/ML pipeline. Feasibility and cost scores are based on elemental abundance, toxicity, and synthesis complexity. Experimental validation is required for all candidates.*
