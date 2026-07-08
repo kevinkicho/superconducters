@@ -5313,28 +5313,34 @@ def proposed_rt_superconductor_strategy() -> dict:
     """
     return {
         "chemistry": [
-            "Hydride superconductors: LaH10, YH6, YH9, and carbonaceous sulfur hydride (CSH) under high pressure (150-300 GPa) show Tc up to 287 K.",
-            "Ternary hydrides: Li2MgH16, CaYH12, etc., predicted via crystal structure prediction and density functional theory (DFT).",
-            "Doping strategies: Substituting lighter elements (e.g., Li, Be) to increase hydrogen content and electron-phonon coupling.",
-            "Clathrate structures: Hydrogen-rich clathrates (e.g., H3S) with strong covalent H-H bonds and high Debye temperature.",
-            "Nickelate and cuprate analogs: Exploring layered nickelates (e.g., Nd0.8Sr0.2NiO2) with similar antiferromagnetic spin fluctuations.",
-            "Iron-based superconductors: Doping FeSe with intercalants (e.g., Li, Na) to enhance Tc via pressure or chemical pressure."
+            "Hydride superconductors: LaH10, YH6, YH9, and carbonaceous sulfur hydride (CSH) under high pressure (150-300 GPa) show Tc up to 287 K. [1][2]",
+            "Ternary hydrides: Li2MgH16, CaYH12, etc., predicted via crystal structure prediction and density functional theory (DFT). [3]",
+            "Doping strategies: Substituting lighter elements (e.g., Li, Be) to increase hydrogen content and electron-phonon coupling. [4]",
+            "Clathrate structures: Hydrogen-rich clathrates (e.g., H3S) with strong covalent H-H bonds and high Debye temperature. [5]",
+            "Nickelate and cuprate analogs: Exploring layered nickelates (e.g., Nd0.8Sr0.2NiO2) with similar antiferromagnetic spin fluctuations. [6]",
+            "Iron-based superconductors: Doping FeSe with intercalants (e.g., Li, Na) to enhance Tc via pressure or chemical pressure. [7]",
+            "Recent claims of room-temperature superconductivity in modified lead-apatite (LK-99) remain controversial and unconfirmed. [8]",
+            "Ternary hydrides under high pressure: CaH6, YH4, and others predicted to have Tc > 200 K. [9]"
         ],
         "physics": [
-            "Electron-phonon coupling (BCS theory): High-frequency hydrogen phonons (up to 4000 K) enable high Tc via strong coupling.",
-            "Pressure-induced metallization: High pressure (100-300 GPa) compresses lattice, increases electronic density of states at Fermi level.",
-            "Isotope effect: Confirms phonon-mediated pairing; hydrogen/deuterium substitution shifts Tc.",
-            "Spin fluctuations: In cuprates and nickelates, antiferromagnetic fluctuations mediate d-wave pairing.",
-            "Topological superconductivity: Possible in doped topological insulators (e.g., Bi2Se3) with Majorana modes.",
-            "Quantum criticality: Near a quantum phase transition, enhanced fluctuations may boost pairing."
+            "Electron-phonon coupling (BCS theory): High-frequency hydrogen phonons (up to 4000 K) enable high Tc via strong coupling. [1]",
+            "Pressure-induced metallization: High pressure (100-300 GPa) compresses lattice, increases electronic density of states at Fermi level. [2]",
+            "Isotope effect: Confirms phonon-mediated pairing; hydrogen/deuterium substitution shifts Tc. [5]",
+            "Spin fluctuations: In cuprates and nickelates, antiferromagnetic fluctuations mediate d-wave pairing. [6]",
+            "Topological superconductivity: Possible in doped topological insulators (e.g., Bi2Se3) with Majorana modes. [10]",
+            "Quantum criticality: Near a quantum phase transition, enhanced fluctuations may boost pairing. [11]",
+            "Excitonic pairing: Proposed in bilayer graphene and transition metal dichalcogenides under strong magnetic fields. [12]",
+            "Magnetic field effects: Upper critical fields in hydrides exceed 100 T, indicating strong coupling. [13]"
         ],
         "manufacturing": [
-            "High-pressure synthesis: Diamond anvil cell (DAC) or multi-anvil press for hydride formation at >100 GPa.",
-            "Laser heating: Combined with DAC to promote reaction and crystallization.",
-            "Thin film deposition: Pulsed laser deposition (PLD) or molecular beam epitaxy (MBE) for layered compounds.",
-            "Chemical vapor deposition (CVD): For carbon-based superconductors (e.g., CSH) and doped graphene.",
-            "High-throughput screening: Use machine learning and DFT to predict stable compounds, then synthesize promising candidates.",
-            "Metastable phase stabilization: Rapid quenching or epitaxial strain to retain high-pressure phases at ambient conditions."
+            "High-pressure synthesis: Diamond anvil cell (DAC) or multi-anvil press for hydride formation at >100 GPa. [1]",
+            "Laser heating: Combined with DAC to promote reaction and crystallization. [2]",
+            "Thin film deposition: Pulsed laser deposition (PLD) or molecular beam epitaxy (MBE) for layered compounds. [6]",
+            "Chemical vapor deposition (CVD): For carbon-based superconductors (e.g., CSH) and doped graphene. [14]",
+            "High-throughput screening: Use machine learning and DFT to predict stable compounds, then synthesize promising candidates. [15]",
+            "Metastable phase stabilization: Rapid quenching or epitaxial strain to retain high-pressure phases at ambient conditions. [16]",
+            "Electrochemical intercalation: For layered materials (e.g., FeSe) to tune carrier density. [7]",
+            "Flux growth: For single-crystal growth of cuprate and nickelate superconductors. [6]"
         ]
     }
 
