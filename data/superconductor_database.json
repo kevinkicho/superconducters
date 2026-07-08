@@ -3049,6 +3049,34 @@
       "prediction_method": null,
       "confidence_score": null
     }
+  },
+  {
+    "name": "YH6",
+    "Tc": 224,
+    "pressure": 166,
+    "structure": "cubic, Fm-3m (clathrate)",
+    "reference": "Kong et al., Nature Communications 12, 5075 (2021)",
+    "doi": "10.1038/s41467-021-25072-3",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 166 GPa, temperature 2000 K",
+    "lambda": 2.0,
+    "omega_log": 1100,
+    "mu_star": 0.1,
+    "Tc_error": 5,
+    "pressure_error": 5,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Y", "H2"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "Nature Communications",
+      "database_id": "YH6-2021",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   }
 ]
 
