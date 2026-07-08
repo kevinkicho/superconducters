@@ -515,6 +515,31 @@ def collaboration_hub_tab():
 
 
 
+def document_sync_tab():
+    st.header("Document Sync")
+    st.info("Document Sync tab - placeholder.")
+
+
+def validation_dashboard_tab():
+    st.header("Validation Dashboard")
+    st.info("Validation Dashboard tab - placeholder.")
+
+
+def manufacturing_simulation_tab():
+    st.header("Manufacturing Simulation")
+    st.info("Manufacturing Simulation tab - placeholder.")
+
+
+def supply_chain_tab():
+    st.header("Supply Chain")
+    st.info("Supply Chain tab - placeholder.")
+
+
+def pipeline_health_tab():
+    st.header("Pipeline Health")
+    st.info("Pipeline Health tab - placeholder.")
+
+
 def data_export_tab():
     st.header("Data Export")
     data_type = st.selectbox("Select data to export", ["Candidate Materials", "Experimental Results"])
