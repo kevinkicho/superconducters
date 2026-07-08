@@ -205,3 +205,44 @@ For RTSC, the most promising non-BCS mechanisms are excitonic and plasmonic, as 
 - M. L. Cohen and P. W. Anderson, in *Superconductivity in d- and f-Band Metals* (1972).
 - A. P. Drozdov et al., Nature 525, 73 (2015).
 - M. Somayazulu et al., Phys. Rev. Lett. 122, 027001 (2019).
+
+## 10.4 Physics-Informed Neural Network for Eliashberg Equation
+
+A Physics-Informed Neural Network (PINN) offers a data-efficient and differentiable approach to solving the Eliashberg equations, enabling rapid and accurate prediction of the superconducting critical temperature (Tc) from first-principles input. This section describes the PINN architecture, loss function, training data, and integration into the multi-fidelity pipeline as the high-fidelity Tc predictor.
+
+### 10.4.1 Architecture
+
+The PINN is a fully connected feedforward neural network with residual connections (ResNet blocks) to handle the nonlinear integral equations. The network takes as input the Matsubara frequency index \(n\), the temperature \(T\), and a set of material-specific parameters: the electron-phonon coupling spectrum \(\alpha^2 F(\Omega)\) (discretized on a frequency grid), the Coulomb pseudopotential \(\mu^*\), and the Debye temperature \(\Theta_D\). The outputs are the gap function \(\Delta(i\omega_n)\) and the renormalization function \(Z(i\omega_n)\) at each Matsubara frequency. The network is designed to satisfy the symmetry \(\Delta(-i\omega_n) = \Delta(i\omega_n)^*\) and \(Z(-i\omega_n) = Z(i\omega_n)^*\).
+
+### 10.4.2 Loss Function
+
+The total loss \(\mathcal{L}\) is a weighted sum of a physics-informed loss and a data loss:
+
+\[
+\mathcal{L} = \lambda_{\text{phys}} \mathcal{L}_{\text{phys}} + \lambda_{\text{data}} \mathcal{L}_{\text{data}} + \lambda_{\text{reg}} \mathcal{L}_{\text{reg}}
+\]
+
+- **Physics loss** \(\mathcal{L}_{\text{phys}}\): enforces the Eliashberg equations (Eqs. 2.2–2.3) at a set of collocation points \((n, T, \alpha^2 F, \mu^*, \Theta_D)\). The residual is computed as the mean squared error of the left-hand side minus right-hand side of both equations. Automatic differentiation computes the necessary derivatives.
+- **Data loss** \(\mathcal{L}_{\text{data}}\): matches the network output to known solutions (e.g., from iterative Eliashberg solvers or experimental Tc values) for a small set of training materials.
+- **Regularization** \(\mathcal{L}_{\text{reg}}\): L2 weight decay to prevent overfitting.
+
+The hyperparameters \(\lambda_{\text{phys}}, \lambda_{\text{data}}, \lambda_{\text{reg}}\) are tuned via validation on a held-out set.
+
+### 10.4.3 Training Data
+
+Training data is generated from two sources:
+1. **Synthetic data**: Solve the Eliashberg equations numerically for a wide range of \(\alpha^2 F(\Omega)\) spectra (e.g., Lorentzian peaks, Debye models, realistic DFT-derived spectra for hydrides, cuprates, etc.) and \(\mu^*\) values (0.1–0.2). The solver uses the iterative method on a fine Matsubara grid (e.g., 4096 frequencies) and outputs \(\Delta(i\omega_n)\) and \(Z(i\omega_n)\) for temperatures from 0.1 K to 400 K. This yields a large dataset of ~10^5–10^6 samples.
+2. **Experimental data**: Tc values and Eliashberg functions from the literature (e.g., for Nb, Pb, H3S, LaH10) are used as a small validation set and to calibrate the data loss.
+
+### 10.4.4 Integration as High-Fidelity Tc Predictor
+
+The trained PINN serves as the high-fidelity predictor in the multi-fidelity optimization pipeline (see Section 10.3 of run_pipeline.py). Given a candidate material’s \(\alpha^2 F(\Omega)\) (from DFT phonon calculations) and \(\mu^*\) (estimated from electronic structure), the PINN evaluates Tc in milliseconds, compared to hours for a full iterative Eliashberg solution. The PINN output includes both \(\Delta(i\omega_n)\) and \(Z(i\omega_n)\), from which Tc is extracted as the temperature where the gap vanishes. Uncertainty quantification is obtained via Monte Carlo dropout or an ensemble of PINNs (see Section 10.3 of dft_calculator.py).
+
+This approach bridges the gap between low-fidelity machine learning models (e.g., GNNs) and expensive DFT+Eliashberg calculations, enabling rapid screening of thousands of candidate compounds for room-temperature superconductivity.
+
+### References
+- M. Raissi, P. Perdikaris, and G. E. Karniadakis, *Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations*, J. Comput. Phys. 378, 686 (2019).
+- L. Lu, X. Meng, Z. Mao, and G. E. Karniadakis, *DeepXDE: A deep learning library for solving differential equations*, SIAM Rev. 63, 208 (2021).
+- S. Wang, Y. Teng, and P. Perdikaris, *Understanding and mitigating gradient flow pathologies in physics-informed neural networks*, SIAM J. Sci. Comput. 43, A3055 (2021).
+- A. P. Drozdov et al., *Superconductivity at 250 K in lanthanum hydride under high pressure*, Nature 525, 73 (2015).
+- M. Somayazulu et al., *Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures*, Phys. Rev. Lett. 122, 027001 (2019).
