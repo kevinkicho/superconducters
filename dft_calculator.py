@@ -543,6 +543,37 @@ class MLTcPredictor:
             idx = torch.argmax(probs, dim=1).item()
             return classes[idx]
 
+    def compute_coherence_length_penetration_depth(self, structure):
+        """Compute coherence length (xi) and penetration depth (lambda_L) from the PINN model.
+
+        Uses predicted Tc and material parameters (superfluid density, effective mass, Fermi velocity).
+        Returns dict with 'coherence_length' and 'penetration_depth' in meters.
+        """
+        # Get predicted Tc from PINN model
+        graph = self._structure_to_graph(structure)
+        with torch.no_grad():
+            tc_pred = self.gnn_model(graph).item()
+        # Material parameters (defaults if not provided)
+        n_s = structure.get('n_s', 1e28)  # superfluid density (m^-3)
+        m_eff = structure.get('m_eff', 9.10938356e-31)  # effective mass (kg)
+        v_F = structure.get('v_F', 1e6)  # Fermi velocity (m/s)
+        # Constants
+        hbar = 1.054571817e-34  # J*s
+        k_B = 1.380649e-23  # J/K
+        e = 1.602176634e-19  # C
+        mu0 = 4 * math.pi * 1e-7  # N/A^2
+        # BCS gap at T=0: Delta = 1.764 * k_B * Tc
+        delta = 1.764 * k_B * tc_pred
+        # Coherence length (BCS): xi = hbar * v_F / (pi * Delta)
+        xi = hbar * v_F / (math.pi * delta)
+        # London penetration depth: lambda_L = sqrt(m_eff / (mu0 * n_s * e^2))
+        lambda_L = math.sqrt(m_eff / (mu0 * n_s * e**2))
+        return {
+            'coherence_length': xi,
+            'penetration_depth': lambda_L,
+            'tc_predicted': tc_pred
+        }
+
 
 def compute_shap_values(model, X, feature_names=None):
     """
