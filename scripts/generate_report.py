@@ -280,38 +280,48 @@ def generate_pdf_pandoc(md_files: dict, output_path: str) -> bool:
         os.unlink(md_path)
 
 
-def main():
-    if len(sys.argv) > 1:
-        output_path = sys.argv[1]
-    else:
-        output_path = "report.pdf"
-
+def generate_report(output_path: str = "report.pdf") -> bool:
+    """Generate PDF report from markdown files and pipeline results.
+    Returns True if successful, False otherwise.
+    """
     md_files = load_markdown_files()
     pipeline_results = load_pipeline_results()
 
     if not md_files and not pipeline_results:
         print("No markdown files or pipeline results found. Nothing to generate.")
-        sys.exit(1)
+        return False
 
     # Try pandoc first (most robust for markdown)
     if generate_pdf_pandoc(md_files, output_path):
-        return
+        return True
+
+    # Try WeasyPrint next (HTML-based, good for complex layouts)
+    html = build_html_report(md_files, pipeline_results)
+    if HAVE_WEASYPRINT:
+        generate_pdf_weasyprint(html, output_path)
+        return True
 
     # Try LaTeX next (if pipeline results are available)
     if generate_pdf_latex(md_files, pipeline_results, output_path):
-        return
+        return True
 
-    # Fallback to HTML-based PDF
-    html = build_html_report(md_files, pipeline_results)
-
-    if HAVE_WEASYPRINT:
-        generate_pdf_weasyprint(html, output_path)
-    elif HAVE_REPORTLAB:
+    # Fallback to reportlab
+    if HAVE_REPORTLAB:
         generate_pdf_reportlab(html, output_path)
+        return True
+
+    print("Error: No PDF generation method available.")
+    print("Install one of: pandoc, weasyprint, pdflatex, or reportlab.")
+    return False
+
+
+def main():
+    if len(sys.argv) > 1:
+        output_path = sys.argv[1]
     else:
-        print("Error: No PDF generation method available.")
-        print("Install one of: pandoc, pdflatex, weasyprint, or reportlab.")
-        sys.exit(1)
+        output_path = "report.pdf"
+    success = generate_report(output_path)
+    sys.exit(0 if success else 1)
 
 if __name__ == "__main__":
     main()
