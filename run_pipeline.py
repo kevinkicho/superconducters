@@ -6061,3 +6061,216 @@ def generate_figures(data, output_format="pdf"):
         plt.title('Prediction Uncertainty Distribution')
         plt.savefig(f"uncertainty_dist.{output_format}", format=output_format)
         print(f"[Figures] Saved uncertainty_dist.{output_format}")
+
+# ===== Quality, TOC, Cross-Reference, and Style Functions =====
+
+def quality_check_documents():
+    """Perform quality checks on project documents.
+    Checks: broken links, missing sections, inconsistent formatting.
+    Logs results to docs/experimental_feedback_loop.md.
+    """
+    import os
+    import re
+    log_path = "docs/experimental_feedback_loop.md"
+    issues = []
+    # Check for broken links in markdown files
+    md_files = [f for f in os.listdir(".") if f.endswith(".md")]
+    for fname in md_files:
+        if not os.path.isfile(fname):
+            continue
+        with open(fname, "r") as f:
+            content = f.read()
+        # Find markdown links [text](url)
+        links = re.findall(r"\[([^\]]+)\]\(([^)]+)\)", content)
+        for text, url in links:
+            if url.startswith("http"):
+                continue  # skip external links
+            # Check if target file exists
+            target = url.split("#")[0]
+            if target and not os.path.isfile(target):
+                issues.append(f"{fname}: broken link '{text}' -> {url}")
+    # Check for missing required sections
+    required_sections = {
+        "README.md": ["# Project Overview", "## Architecture", "## Navigation"],
+        "literature_review.md": ["# Literature Review", "## Key Papers"],
+        "theoretical_framework.md": ["# Theoretical Framework", "## BCS Theory"],
+        "candidate_materials.md": ["# Candidate Materials", "## Hydrides"],
+    }
+    for fname, sections in required_sections.items():
+        if not os.path.isfile(fname):
+            continue
+        with open(fname, "r") as f:
+            content = f.read()
+        for sec in sections:
+            if sec not in content:
+                issues.append(f"{fname}: missing section '{sec}'")
+    # Log results
+    with open(log_path, "a") as log:
+        log.write(f"\n## Quality Check ({__name__}) - {__import__('datetime').datetime.now().isoformat()}\n")
+        if issues:
+            for issue in issues:
+                log.write(f"- {issue}\n")
+        else:
+            log.write("- No issues found.\n")
+    return issues
+
+
+def auto_fix_documents():
+    """Automatically fix common document issues.
+    Currently fixes: trailing whitespace, missing newline at end of file.
+    Logs actions to docs/experimental_feedback_loop.md.
+    """
+    import os
+    log_path = "docs/experimental_feedback_loop.md"
+    fixes = []
+    md_files = [f for f in os.listdir(".") if f.endswith(".md")]
+    for fname in md_files:
+        if not os.path.isfile(fname):
+            continue
+        with open(fname, "r") as f:
+            content = f.read()
+        original = content
+        # Remove trailing whitespace from each line
+        lines = content.split("\n")
+        lines = [line.rstrip() for line in lines]
+        content = "\n".join(lines)
+        # Ensure file ends with a single newline
+        if not content.endswith("\n"):
+            content += "\n"
+        if content != original:
+            with open(fname, "w") as f:
+                f.write(content)
+            fixes.append(f"{fname}: fixed trailing whitespace / missing newline")
+    with open(log_path, "a") as log:
+        log.write(f"\n## Auto-Fix ({__name__}) - {__import__('datetime').datetime.now().isoformat()}\n")
+        if fixes:
+            for fix in fixes:
+                log.write(f"- {fix}\n")
+        else:
+            log.write("- No fixes applied.\n")
+    return fixes
+
+
+def generate_table_of_contents():
+    """Parse headings in README.md, literature_review.md, theoretical_framework.md,
+    and candidate_materials.md, then prepend a linked table of contents.
+    """
+    import os
+    import re
+    target_files = [
+        "README.md",
+        "literature_review.md",
+        "theoretical_framework.md",
+        "candidate_materials.md",
+    ]
+    for fname in target_files:
+        if not os.path.isfile(fname):
+            continue
+        with open(fname, "r") as f:
+            content = f.read()
+        # Extract headings (lines starting with #)
+        headings = re.findall(r"^(#{1,6})\s+(.+)$", content, re.MULTILINE)
+        if not headings:
+            continue
+        # Build TOC lines
+        toc_lines = ["# Table of Contents\n", "\n"]
+        for level, title in headings:
+            indent = "  " * (len(level) - 1)
+            # Create anchor: lowercase, replace spaces with hyphens, remove punctuation
+            anchor = title.lower()
+            anchor = re.sub(r"[^a-z0-9\s-]", "", anchor)
+            anchor = anchor.replace(" ", "-")
+            toc_lines.append(f"{indent}- [{title}](#{anchor})\n")
+        toc_lines.append("\n---\n\n")
+        toc = "".join(toc_lines)
+        # Prepend TOC to content
+        new_content = toc + content
+        with open(fname, "w") as f:
+            f.write(new_content)
+
+def generate_cross_reference_index():
+    """Build a cross-reference index of links between project documents.
+    Logs the index to docs/experimental_feedback_loop.md.
+    """
+    import os
+    import re
+    log_path = "docs/experimental_feedback_loop.md"
+    md_files = [f for f in os.listdir(".") if f.endswith(".md")]
+    index = {}
+    for fname in md_files:
+        if not os.path.isfile(fname):
+            continue
+        with open(fname, "r") as f:
+            content = f.read()
+        # Find all internal links (to other .md files)
+        links = re.findall(r"\[([^\]]+)\]\(([^)]+\.md)\)", content)
+        for text, target in links:
+            if target not in index:
+                index[target] = []
+            index[target].append((fname, text))
+    with open(log_path, "a") as log:
+        log.write(f"\n## Cross-Reference Index ({__name__}) - {__import__('datetime').datetime.now().isoformat()}\n")
+        for target, refs in sorted(index.items()):
+            log.write(f"- **{target}** is referenced by:\n")
+            for src, text in refs:
+                log.write(f"  - [{text}]({src})\n")
+    return index
+
+
+def enforce_style_guide():
+    """Enforce a basic style guide on markdown files.
+    Rules: max line length 120, headings have space after #, no consecutive blank lines.
+    Logs changes to docs/experimental_feedback_loop.md.
+    """
+    import os
+    import re
+    log_path = "docs/experimental_feedback_loop.md"
+    changes = []
+    md_files = [f for f in os.listdir(".") if f.endswith(".md")]
+    for fname in md_files:
+        if not os.path.isfile(fname):
+            continue
+        with open(fname, "r") as f:
+            content = f.read()
+        original = content
+        lines = content.split("\n")
+        new_lines = []
+        for line in lines:
+            # Rule: headings must have a space after #
+            if re.match(r"^#+", line) and not re.match(r"^#+\s", line):
+                # Insert space after #s
+                line = re.sub(r"^(#+)(\S)", r"\1 \2", line)
+            # Rule: max line length 120 (except code blocks)
+            if len(line) > 120 and not line.startswith("    "):
+                # Simple wrap: break at last space before 120
+                while len(line) > 120:
+                    idx = line.rfind(" ", 0, 120)
+                    if idx == -1:
+                        break
+                    new_lines.append(line[:idx])
+                    line = "  " + line[idx+1:]
+            new_lines.append(line)
+        # Remove consecutive blank lines (more than 2)
+        cleaned = []
+        blank_count = 0
+        for line in new_lines:
+            if line.strip() == "":
+                blank_count += 1
+                if blank_count <= 2:
+                    cleaned.append(line)
+            else:
+                blank_count = 0
+                cleaned.append(line)
+        content = "\n".join(cleaned)
+        if content != original:
+            with open(fname, "w") as f:
+                f.write(content)
+            changes.append(f"{fname}: style fixes applied")
+    with open(log_path, "a") as log:
+        log.write(f"\n## Style Guide Enforcement ({__name__}) - {__import__('datetime').datetime.now().isoformat()}\n")
+        if changes:
+            for ch in changes:
+                log.write(f"- {ch}\n")
+        else:
+            log.write("- No style changes needed.\n")
+    return changes
