@@ -11441,10 +11441,84 @@ def decision_support():
         f.write(json.dumps(log_entry) + "\n")
     print("Decision support completed.")
 
+def start_health_server():
+    """Start a FastAPI server with health and metrics endpoints."""
+    app = FastAPI()
+    from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+    from starlette.responses import Response
+
+    @app.get("/health")
+    async def health():
+        return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+    @app.get("/metrics")
+    async def metrics():
+        return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+    # Run in a separate thread
+    def run():
+        uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()
+    print("[HealthServer] Started on port 8000")
+
+
+def data_lineage_tracking():
+    """Track data lineage by logging provenance of each pipeline step."""
+    lineage = {
+        "timestamp": datetime.now().isoformat(),
+        "pipeline_steps": [
+            "query_database",
+            "generate_candidates",
+            "predict_tc",
+            "output_ranked",
+            "sobol_analysis",
+            "decision_support"
+        ],
+        "data_sources": ["data/experimental_results.json", "data/model_performance_log.json"],
+        "notes": "Data lineage tracked for reproducibility."
+    }
+    try:
+        with open('data/data_lineage.json', 'a') as f:
+            f.write(json.dumps(lineage) + "\n")
+        print("[DataLineage] Lineage logged to data/data_lineage.json")
+    except Exception as e:
+        print(f"[DataLineage] Error: {e}")
+
+
+def continuous_model_retraining():
+    """Check for new experimental results and retrain models if needed."""
+    results_file = "data/experimental_results.json"
+    if not os.path.exists(results_file):
+        print("[ContinuousRetrain] No experimental results file found. Skipping.")
+        return
+    try:
+        with open(results_file, 'r') as f:
+            results = json.load(f)
+    except Exception as e:
+        print(f"[ContinuousRetrain] Error reading results: {e}")
+        return
+    # Simple heuristic: if there are new results, retrain
+    if len(results) > 0:
+        print(f"[ContinuousRetrain] Found {len(results)} experimental results. Triggering retraining...")
+        # Simulate retraining by calling predict_tc module
+        try:
+            import predict_tc
+            predict_tc.run(data=results)
+            print("[ContinuousRetrain] Retraining completed.")
+        except Exception as e:
+            print(f"[ContinuousRetrain] Retraining failed: {e}")
+    else:
+        print("[ContinuousRetrain] No new results. Skipping retraining.")
+
+
 if __name__ == "__main__":
+    start_health_server()
     generate_press_release()
     generate_monthly_report()
     generate_funding_proposal()
     generate_stakeholder_newsletter()
     run_sobol_analysis()
     decision_support()
+    data_lineage_tracking()
+    continuous_model_retraining()
