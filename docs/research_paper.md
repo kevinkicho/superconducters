@@ -181,3 +181,7 @@ The following figures are generated from the data and analysis presented in this
 *Histograms and kernel density estimates of predicted Tc uncertainty for top 50 candidate hydrides from the random forest model. The shaded region indicates the 95% confidence interval. Model uncertainty is dominated by limited training data for ternary hydrides. Method from Ref. [20].*
 
 *Note: All figures are generated using the scripts in the `scripts/` directory. To regenerate, run `python scripts/generate_figures.py`.*
+
+## LaTeX Source
+
+The LaTeX source for this paper is available at [docs/research_paper.tex](docs/research_paper.tex).
