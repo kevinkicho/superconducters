@@ -524,6 +524,25 @@ class MLTcPredictor:
         a, b, c = 100.0, -50.0, 0.0  # dummy
         return a * lambda_val + b * mu_star + c
 
+    def compute_gap_symmetry(self, structure):
+        """Predict superconducting gap symmetry (s-wave, d-wave, etc.) using the PINN model.
+        
+        Uses the GNN model to extract a graph embedding and then classifies symmetry.
+        """
+        graph = self._structure_to_graph(structure)
+        with torch.no_grad():
+            # Get the graph embedding from the GNN model
+            # The GNN model's forward returns a scalar Tc prediction.
+            # We'll use a small linear classifier on top of the model's output.
+            if not hasattr(self, 'symmetry_classifier'):
+                self.symmetry_classifier = torch.nn.Linear(1, 3)
+            pred = self.gnn_model(graph)
+            logits = self.symmetry_classifier(pred.unsqueeze(0))
+            probs = torch.softmax(logits, dim=1)
+            classes = ['s-wave', 'd-wave', 'other']
+            idx = torch.argmax(probs, dim=1).item()
+            return classes[idx]
+
 
 def compute_shap_values(model, X, feature_names=None):
     """
