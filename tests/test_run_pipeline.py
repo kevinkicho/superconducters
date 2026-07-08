@@ -3,6 +3,7 @@ import json
 import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+import subprocess
 from unittest.mock import patch, MagicMock, call
 
 # Import the pipeline module (assumed to be scripts.run_pipeline)
@@ -1339,3 +1340,17 @@ class TestPerformanceAndStress:
         written_files = set(c[0][0] for c in open_calls)
         for fname in expected_files:
             assert fname in written_files, f"Output file {fname} was not written"
+
+    @patch('scripts.run_pipeline.subprocess.run')
+    def test_generate_docker_image_success(self, mock_subprocess_run):
+        """Test that generate_docker_image runs Docker commands successfully."""
+        # Mock subprocess.run to return a successful result
+        mock_subprocess_run.return_value = MagicMock(returncode=0, stdout=b"Success", stderr=b"")
+
+        # Call the function
+        result = rp.generate_docker_image()
+
+        # Verify subprocess.run was called with the expected Docker commands
+        assert mock_subprocess_run.call_count >= 1
+        # Verify the function returned True or success indicator
+        assert result is True
