@@ -2380,3 +2380,28 @@ A Streamlit dashboard (`dashboard/experimental_monitor.py`) provides real-time v
 - **Alert history**: A log of recent alerts and their resolution status.
 
 The dashboard is designed to be run on a dedicated server or cloud instance, accessible to the research team via a web browser. It refreshes automatically every 30 seconds to provide near-real-time updates.
+
+
+## Real-Time Data Ingestion
+
+The `real_time_data_ingestion` function in `run_pipeline.py` provides a streaming ingestion pipeline for experimental data as it is generated. It subscribes to a message queue (e.g., RabbitMQ or Kafka) that receives raw data from characterization instruments (XRD, resistivity, SQUID, etc.) in real time. Each message is parsed, validated against the schema, and inserted into the central database within seconds of acquisition. The function also triggers downstream processes such as model retraining and candidate re-ranking upon successful ingestion.
+
+**Output**: A JSON log entry per ingested record, written to `logs/ingestion_stream.log`, containing the experiment ID, timestamp, data type, and validation status. A summary report (`reports/real_time_ingestion_summary.json`) is updated every hour with ingestion rates, error counts, and latency statistics.
+
+## External Validation Report
+
+The `generate_external_validation_report` function in `run_pipeline.py` compiles a comprehensive report comparing computational predictions against experimental results from external laboratories or published literature. It queries the database for experiments marked as "external" (i.e., performed by partner labs or extracted from papers) and computes metrics such as prediction error (ΔTc), accuracy of crystal structure prediction, and synthesis success rate. The report includes statistical summaries, per-candidate breakdowns, and visualizations (e.g., parity plots, residual histograms).
+
+**Output**: A PDF report (`reports/external_validation_report.pdf`) and a JSON data file (`reports/external_validation_data.json`) containing all comparison data. The report is automatically generated after each batch of external validation experiments is ingested, or on demand via the pipeline CLI.
+
+## Document Quality Assurance
+
+The `quality_check_documents` function in `run_pipeline.py` performs automated quality assurance on all project documentation files (Markdown, reStructuredText, etc.). It checks for broken internal links, missing images, inconsistent formatting, and adherence to the project style guide. The function uses a combination of regex patterns, a Markdown parser, and the `enforce_style_guide` helper to produce a detailed quality report.
+
+**Output**: A JSON report (`reports/document_quality.json`) listing each checked file, the number of issues found, severity levels, and suggested fixes. The function can be run as part of the CI pipeline or manually via `python run_pipeline.py --quality-check`.
+
+## Real Cloud Lab Integration
+
+The `cloud_lab_integration` module in `run_pipeline.py` provides a direct interface to a remote cloud laboratory (e.g., Emerald Cloud Lab, Strateos) for automated synthesis and characterization of candidate compounds. The integration allows the pipeline to submit synthesis recipes, monitor experiment progress in real time, and retrieve results automatically. It handles authentication, job submission, status polling, and data retrieval via REST APIs. The module also includes a retry mechanism with exponential backoff for transient failures.
+
+**Output**: A log of all cloud lab interactions (`logs/cloud_lab.log`) and a database table (`cloud_lab_jobs`) that tracks each submitted job with its status, start/end times, and result references. The pipeline can optionally trigger model retraining immediately upon receiving results from the cloud lab.
