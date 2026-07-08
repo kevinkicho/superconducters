@@ -312,3 +312,6 @@ where ω_log is the logarithmic average phonon frequency. This matches the Allen
 **Sources**:
 - Udrescu & Tegmark, "AI Feynman: A physics-inspired method for symbolic regression," *Science Advances* 6, eaay2631 (2020). [https://www.science.org/doi/10.1126/sciadv.aay2631](https://www.science.org/doi/10.1126/sciadv.aay2631)
 - Wang et al., "Symbolic regression for predicting Tc in hydride superconductors," *Phys. Rev. B* 107, 134514 (2023). [https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134514](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134514)
+
+
+## 13. Unified Model: ...

@@ -880,3 +880,6 @@ For this held-out set, the predicted Tc values from DFT and ML are in close agre
 ### Discussion
 
 The held-out set shows excellent agreement between predictions and literature values, but this is expected because the literature values were used as training targets for the DFT models. The ML model, which was trained on a separate dataset, shows slightly higher error. The true test will be when these candidates are synthesized and measured in the cloud lab. The blind validation protocol ensures that no data leakage occurs between training and validation sets.
+
+
+## New Ternary Hydride Families ...
