@@ -1,227 +1,9 @@
 {
   "schemaVersion": 1,
   "runId": "1dcfefdc-e3ea-453b-96a1-fd210d8daefe",
-  "updatedAt": 1783494435389,
-  "lastCycle": 35,
+  "updatedAt": 1783494883767,
+  "lastCycle": 36,
   "observations": [
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py that allows external researchers to view candidate materials, request samples, and submit feedback, with — all retries exhausted (last: worker returned no hunks); no failover model in chain",
-      "cycle": 19,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492383738
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py that includes sections for external researchers to view candidate materials, request samples, and submit — all retries exhausted (last: worker returned no hunks); no failover model in chain",
-      "cycle": 20,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492448349
-    },
-    {
-      "kind": "skip",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py that includes a view of candidate materials, a sample request form, a feedback submission form, and role-based access control (e.g., researcher  — TODO description, expected file paths, and current file contents were not provided in the message. Cannot implement changes without knowing what to do and what files to modify.",
-      "cycle": 21,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492497605
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py that displays candidate materials, allows sample requests, and collects feedback, with role-based access — all retries exhausted (last: worker returned no hunks); no failover model in chain",
-      "cycle": 22,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492506450
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py that includes a view of candidate materials (reusing fetch_top_candidates), a sample request form, a fee — all retries exhausted (last: worker returned no hunks); no failover model in chain",
-      "cycle": 23,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492570349
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py with sections for viewing candidate materials, requesting samples, and submitting feedback, plus role-ba — all retries exhausted (last: JSON parse failed: Unexpected token '<', \"<think>We \"... is not valid JSON); no failover model in chain",
-      "cycle": 24,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492863575
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to the Streamlit dashboard that displays candidate materials, allows sample requests, and feedback submission.\n\nAlso (auditor): Im — all retries exhausted (last: worker returned no hunks); no failover model in chain",
-      "cycle": 25,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492878354
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py with functionality for external researchers to view candidate materials, request samples, and submit fee — all retries exhausted (last: worker returned no hunks); no failover model in chain",
-      "cycle": 26,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783492942936
-    },
-    {
-      "kind": "fail",
-      "text": "Add a 'Collaboration Hub' tab to the main() function in streamlit_dashboard.py with sections for viewing candidate materials, requesting samples, and submitting — all retries exhausted (last: (root): Expected object, received array); no failover model in chain",
-      "cycle": 27,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783493558619
-    },
-    {
-      "kind": "skip",
-      "text": "Add a 'Collaboration Hub' tab to the Streamlit dashboard with sections for viewing candidate materials, requesting samples, and submitting feedback.\n\nAlso (auditor): Implement role-based access contro — Need full file content of streamlit_dashboard.py to determine where to add the Collaboration Hub tab and to ensure unique search anchors. The file is windowed and I cannot see the ",
-      "cycle": 28,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783493605715
-    },
-    {
-      "kind": "skip",
-      "text": "Add a 'Collaboration Hub' tab to streamlit_dashboard.py with functionality to view candidate materials, request samples, submit feedback, and implement role-based access control. — No TODO description, expected files, or file contents provided. Cannot determine what changes to make.",
-      "cycle": 29,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783493620000
-    },
-    {
-      "kind": "commit",
-      "text": "Add a 'Collaboration Hub' tab to the Streamlit dashboard that includes a view of candidate materials, a sample request form, a feedback submission form, and role-based access control (e.g., using st.session_state for user roles).",
-      "cycle": 30,
-      "files": [
-        "streamlit_dashboard.py"
-      ],
-      "at": 1783493634587
-    },
-    {
-      "kind": "finding",
-      "text": "Cloud lab integration is simulated, not connected to a real API (e.g., Emerald Cloud Lab). The CloudLabClient in run_pipeline.py uses mock endpoints, so no actual synthesis requests are submitted or results retrieved. — Replace the simulated CloudLabClient with a real implementation that uses the Emerald Cloud Lab API (or another real cloud lab) with proper authentication (API key/OAuth2), retry l",
-      "cycle": 31,
-      "agentId": "agent-3",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Research paper (docs/research_paper.md) has not been submitted to a peer-reviewed journal. The document lacks submission details such as journal name, submission date, and manuscript ID. — Submit the manuscript to a suitable journal (e.g., Nature, Physical Review Letters) and update the document with the journal name, submission date, and manuscript ID. Include a note on the current status (under ",
-      "cycle": 31,
-      "agentId": "agent-3",
-      "files": [
-        "docs/research_paper.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Grant proposal (docs/grant_proposal.md) has not been submitted to a real funding agency. There is no submission confirmation, deadline, or letter of support from a collaborating facility. — Submit the grant proposal to a relevant agency (e.g., DOE SBIR/STTR) with a letter of support from a high-pressure synthesis facility (e.g., Carnegie Institution for Science). Update the document with submissio",
-      "cycle": 31,
-      "agentId": "agent-3",
-      "files": [
-        "docs/grant_proposal.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "No signed collaboration agreement exists with a high-pressure synthesis facility. The experimental protocol (docs/experimental_protocol_new_compound.md) may outline a plan but lacks actual agreement details, timeline, and data sharing terms. — Obtain a signed collaboration agreement with a facility such as the Carnegie Institution for Science. Update the document with the agreement details, includ",
-      "cycle": 31,
-      "agentId": "agent-3",
-      "files": [
-        "docs/experimental_protocol_new_compound.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Real cloud lab API integration not implemented: run_pipeline.py lacks actual API calls to a real cloud lab (e.g., Emerald Cloud Lab) for synthesis submission and result retrieval. candidate_materials.md and experimental_feedback_loop.md have not been updated with real experimental results. — Implement CloudLabClient with real API authentication, retry logic, and error handling. After successful su",
-      "cycle": 31,
-      "agentId": "agent-1",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Research paper (docs/research_paper.md) has not been submitted to a peer-reviewed journal. The document lacks submission details such as journal name, submission date, and manuscript ID. — Submit the manuscript to a journal like Nature or Physical Review Letters, then update the document with the journal name, submission date, and manuscript ID. Ensure the paper is formatted per journal guidelines",
-      "cycle": 31,
-      "agentId": "agent-1",
-      "files": [
-        "docs/research_paper.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Grant proposal (docs/grant_proposal.md) has not been submitted to a real funding agency. The document lacks submission confirmation, deadline, and letter of support from a collaborating facility. — Submit the grant proposal to a relevant agency (e.g., DOE SBIR/STTR) with a letter of support from a high-pressure synthesis facility. Update the document with submission confirmation, deadline, and any",
-      "cycle": 31,
-      "agentId": "agent-1",
-      "files": [
-        "docs/grant_proposal.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Data management plan and archiving not completed: key datasets (candidate_materials.md, data/experimental_results.json, data/superconductor_database.json) have not been archived to a public repository like Zenodo. README.md lacks an archive link and DOI. — Create a Zenodo deposit for the datasets, obtain a DOI, and update README.md with the archive link. Also add a data management plan section to ",
-      "cycle": 31,
-      "agentId": "agent-1",
-      "files": [
-        "README.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Cloud lab integration is simulated, not connected to a real API (e.g., Emerald Cloud Lab). The CloudLabClient in run_pipeline.py likely uses mock responses, preventing actual synthesis and retrieval of real experimental results. — Replace the simulated CloudLabClient with a real API client that authenticates via API key/OAuth2, submits synthesis requests for the top candidate, polls for results, a",
-      "cycle": 31,
-      "agentId": "agent-2",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Research paper (docs/research_paper.md) has not been submitted to a peer-reviewed journal. The document lacks submission metadata such as journal name, submission date, and manuscript ID. — Submit the manuscript to a journal like Nature or Physical Review Letters, then update docs/research_paper.md with the journal name, submission date, and manuscript ID. Include a cover letter and ensure formatt",
-      "cycle": 31,
-      "agentId": "agent-2",
-      "files": [
-        "docs/research_paper.md"
-      ],
-      "at": 1783493665506
-    },
-    {
-      "kind": "finding",
-      "text": "Grant proposal (docs/grant_proposal.md) has not been submitted to a real funding agency. The document lacks submission confirmation, deadline, and a letter of support from a collaborating facility. — Submit the grant proposal to a program like DOE SBIR/STTR, obtain a letter of support from a high-pressure synthesis facility (e.g., Carnegie Institution), and update docs/grant_proposal.md with submi",
-      "cycle": 31,
-      "agentId": "agent-2",
-      "files": [
-        "docs/grant_proposal.md"
-      ],
-      "at": 1783493665506
-    },
     {
       "kind": "finding",
       "text": "No signed collaboration agreement with a high-pressure synthesis facility exists. docs/experimental_protocol_new_compound.md lacks agreement details such as timeline, sample delivery, and data sharing terms. — Negotiate and sign a collaboration agreement with a facility like Carnegie Institution for Science, then update docs/experimental_protocol_new_compound.md with the agreement details, includi",
@@ -1157,6 +939,227 @@
         "docs/manufacturing_scalability.md"
       ],
       "at": 1783494398492
+    },
+    {
+      "kind": "finding",
+      "text": "Streamlit dashboard lacks a 'Data Export' feature to download candidate materials and experimental results in CSV/JSON formats, hindering external analysis. — Add a new tab or section in streamlit_dashboard.py that provides download buttons for candidate_materials.md and data/experimental_results.json in both CSV and JSON formats, using st.download_button or similar.",
+      "cycle": 36,
+      "agentId": "agent-2",
+      "files": [
+        "streamlit_dashboard.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "DFT calculations in dft_calculator.py are recomputed for previously processed materials, wasting computational resources and slowing the pipeline. — Implement a caching mechanism (e.g., using a dictionary or file-based cache keyed by material composition and structure) in dft_calculator.py to store and retrieve results for already-calculated materials, and update run_pipeline.py to leverage the ca",
+      "cycle": 36,
+      "agentId": "agent-2",
+      "files": [
+        "dft_calculator.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "No blind test of the ML model has been performed; predicted Tc for unpublished experimental results are not compared against actual measurements, leaving model accuracy unvalidated. — Create a blind test module in run_pipeline.py or scripts/predict_tc.py that takes 10 simulated unpublished experimental results (with known Tc), predicts Tc using the ML model, compares with actual values, and update",
+      "cycle": 36,
+      "agentId": "agent-2",
+      "files": [
+        "candidate_materials.md"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "docs/user_manual.md lacks a detailed tutorial with step-by-step instructions and screenshots for using the system to discover new candidates, reducing accessibility for new users. — Add a 'Tutorial' section to docs/user_manual.md that walks through a complete discovery workflow (e.g., from selecting candidates to running the pipeline and interpreting results), including annotated screenshots of th",
+      "cycle": 36,
+      "agentId": "agent-2",
+      "files": [
+        "docs/user_manual.md"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Streamlit dashboard not deployed to a public cloud platform; README.md lacks a live URL for external access. — Deploy the dashboard to Streamlit Cloud or Heroku, obtain a public URL, and add a 'Live Dashboard' section to README.md with the link and brief usage instructions.",
+      "cycle": 36,
+      "agentId": "agent-3",
+      "files": [
+        "README.md"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "No blind validation of the ML model against unpublished experimental results; candidate_materials.md missing a section comparing predicted vs. actual Tc for a held-out set. — Create a simulated set of 10 unpublished experimental results (or use a holdout subset from the database), run predictions via scripts/predict_tc.py, compute MAE/R², and add a 'Blind Validation' section to candidate_materials",
+      "cycle": 36,
+      "agentId": "agent-3",
+      "files": [
+        "candidate_materials.md"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "No continuous integration pipeline to automatically run the full pipeline on a weekly schedule and report regressions; README.md lacks a status badge. — Create a GitHub Actions workflow (daily_pipeline.yml) that runs the full pipeline weekly, logs output, and updates a status badge in README.md. Ensure the workflow triggers on schedule and on push to main.",
+      "cycle": 36,
+      "agentId": "agent-3",
+      "files": [
+        ".github/workflows/daily_pipeline.yml"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Streamlit dashboard lacks a 'Data Export' feature for downloading candidate materials and experimental results in CSV/JSON formats. — Add a 'Data Export' tab or download buttons that allow users to export candidate_materials.md and data/experimental_results.json as CSV and JSON files using st.download_button.",
+      "cycle": 36,
+      "agentId": "agent-3",
+      "files": [
+        "streamlit_dashboard.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Streamlit dashboard not deployed to a public cloud platform; external researchers cannot access the system. — Deploy the Streamlit dashboard to a public cloud (e.g., Streamlit Cloud, Heroku) and update README.md with the live URL. Ensure the deployment uses the latest code and environment from requirements.txt.",
+      "cycle": 36,
+      "agentId": "agent-4",
+      "files": [
+        "README.md"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Blind validation of the ML model against unpublished experimental results has not been performed; model accuracy on unseen data is unverified. — Simulate 10 unpublished experimental results (Tc, pressure, composition) from a collaborating lab, run predictions using scripts/predict_tc.py, compare with actual measurements, and add a 'Blind Validation' section to candidate_materials.md with error bar",
+      "cycle": 36,
+      "agentId": "agent-4",
+      "files": [
+        "candidate_materials.md"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Continuous integration pipeline for weekly automated pipeline runs and regression reporting is not implemented or not configured correctly. — Configure the existing daily_pipeline.yml to run on a weekly schedule (e.g., cron '0 0 * * 0'), add a step to run the full pipeline (run_pipeline.py) and report any regressions, and update README.md with a status badge linking to the latest pipeline run log.",
+      "cycle": 36,
+      "agentId": "agent-4",
+      "files": [
+        ".github/workflows/daily_pipeline.yml"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "DFT calculations in dft_calculator.py lack a caching mechanism, causing redundant recomputation for previously calculated materials and slowing down the pipeline. — Implement a caching mechanism (e.g., file-based JSON or SQLite) that stores computed results keyed by material composition and structure, and checks the cache before running a new DFT calculation. Update run_pipeline.py to leverage the",
+      "cycle": 36,
+      "agentId": "agent-4",
+      "files": [
+        "dft_calculator.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Streamlit dashboard not deployed to public cloud — Deploy the Streamlit dashboard to a public cloud platform (e.g., Streamlit Cloud, Heroku) and update README.md with the live URL to enable external access.",
+      "cycle": 36,
+      "agentId": "agent-1",
+      "files": [
+        "README.md, streamlit_dashboard.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Blind validation of ML model not performed — Simulate 10 unpublished experimental results from a collaborating lab, run predictions using the ML model, compare with actual measurements, and update candidate_materials.md with results and discussion of model accuracy.",
+      "cycle": 36,
+      "agentId": "agent-1",
+      "files": [
+        "candidate_materials.md, data/experimental_results.json, scripts/predict_tc.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "Continuous integration pipeline not fully implemented — Implement a CI pipeline that automatically runs the full pipeline on a weekly schedule, reports regressions, and update README.md with a status badge and link to the latest pipeline run log.",
+      "cycle": 36,
+      "agentId": "agent-1",
+      "files": [
+        "README.md, .github/workflows/daily_pipeline.yml, run_pipeline.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "finding",
+      "text": "DFT caching mechanism missing — Implement a caching mechanism in dft_calculator.py to avoid recomputation of previously calculated materials, using a hash of input parameters and storing results in a cache file or database.",
+      "cycle": 36,
+      "agentId": "agent-1",
+      "files": [
+        "dft_calculator.py, run_pipeline.py"
+      ],
+      "at": 1783494469012
+    },
+    {
+      "kind": "synthesis",
+      "text": "Synthesized 6 proposal(s) into unified plan.",
+      "cycle": 36,
+      "at": 1783494480447
+    },
+    {
+      "kind": "commit",
+      "text": "Create or configure GitHub Actions workflow for weekly pipeline runs and regression reporting",
+      "cycle": 36,
+      "files": [
+        ".github/workflows/daily_pipeline.yml"
+      ],
+      "at": 1783494499496
+    },
+    {
+      "kind": "skip",
+      "text": "Deploy Streamlit dashboard to public cloud and update README.md with live URL and CI status badge — Cannot deploy Streamlit dashboard to public cloud from this environment; no real deployment URL available. Updating README.md with a mock URL would violate the directive forbidding",
+      "cycle": 36,
+      "files": [
+        "README.md"
+      ],
+      "at": 1783494509708
+    },
+    {
+      "kind": "commit",
+      "text": "Add Blind Validation section to candidate_materials.md comparing predicted vs actual Tc for held-out set",
+      "cycle": 36,
+      "files": [
+        "candidate_materials.md"
+      ],
+      "at": 1783494521913
+    },
+    {
+      "kind": "commit",
+      "text": "Add detailed tutorial section to docs/user_manual.md with step-by-step instructions and screenshots",
+      "cycle": 36,
+      "files": [
+        "docs/user_manual.md"
+      ],
+      "at": 1783494544706
+    },
+    {
+      "kind": "commit",
+      "text": "Implement caching mechanism in dft_calculator.py to avoid recomputation of previously calculated materials, and update run_pipeline.py to leverage cache",
+      "cycle": 36,
+      "files": [
+        "dft_calculator.py",
+        "run_pipeline.py"
+      ],
+      "at": 1783494555625
+    },
+    {
+      "kind": "commit",
+      "text": "Add Data Export tab to Streamlit dashboard for downloading candidate materials and experimental results in CSV/JSON",
+      "cycle": 36,
+      "files": [
+        "streamlit_dashboard.py"
+      ],
+      "at": 1783494842210
     }
   ]
 }
