@@ -11,6 +11,13 @@
         "event": "pipeline_start",
         "status": "success"
       }
-    ]
+  ,
+  {
+    "timestamp": "2025-04-09T14:00:00",
+    "nas_trials": [],
+    "best_architecture": null,
+    "validation_metrics": {}
+  }
+  ]
   }
 ]
