@@ -2044,3 +2044,46 @@ Based on the data quality assessment, the report provides actionable recommendat
 - Increase sampling frequency for fields with high variance
 
 These recommendations are logged in the `recommendations` table and can be acknowledged or dismissed via the dashboard.
+
+
+## Adaptive Design of Experiments
+
+### Method: Bayesian Optimization Using Digital Twin
+
+To accelerate the discovery of room-temperature superconducting compounds, we employ an adaptive design of experiments (DoE) framework powered by Bayesian optimization (BO) and a digital twin of the synthesis process. The digital twin is a high-fidelity computational model that simulates the entire experimental workflow — from precursor mixing and high-pressure synthesis to structural characterization and transport measurements. It incorporates physics-based simulations (e.g., density functional theory for electronic structure, molecular dynamics for phase stability) and machine learning surrogates trained on historical experimental data.
+
+Bayesian optimization treats the synthesis parameter space (precursors, pressure, temperature, duration, method) as a black-box function whose output is the measured superconducting transition temperature (Tc). A Gaussian process (GP) surrogate model captures the relationship between synthesis conditions and Tc, providing both a predicted mean and an uncertainty estimate. The acquisition function (e.g., expected improvement, upper confidence bound) balances exploration of unexplored regions with exploitation of known high-Tc conditions. At each iteration, the BO algorithm proposes a set of synthesis conditions that maximize the acquisition function, which are then executed in the physical lab.
+
+### Digital Twin Integration
+
+The digital twin serves as a virtual testbed for rapid screening of candidate synthesis conditions before committing to physical experiments. It integrates:
+- **Thermodynamic phase diagrams** to predict stable phases under given P-T conditions.
+- **Kinetic models** for reaction pathways and grain growth.
+- **Defect and doping models** to estimate carrier concentration and pairing mechanisms.
+- **Superconducting property predictors** (BCS, excitonic, topological, PINN) to estimate Tc and critical fields.
+
+By running the digital twin in parallel with BO, we can pre-filter infeasible or low-potential conditions, reducing the number of physical experiments needed. The digital twin is continuously updated with new experimental data, improving its predictive accuracy over time.
+
+### Output: Proposed Synthesis Conditions
+
+The adaptive DoE system outputs a ranked list of proposed synthesis conditions for the next batch of experiments. Each proposal includes:
+- **Compound formula** (e.g., LaH₁₀, YH₆, C-S-H)
+- **Precursor materials and stoichiometry**
+- **Synthesis parameters**: pressure (GPa), temperature (K), duration (hours), method (e.g., laser-heated diamond anvil cell, multi-anvil press)
+- **Predicted Tc** (mean and 95% confidence interval from the GP surrogate)
+- **Uncertainty estimate** (standard deviation of the GP prediction)
+- **Acquisition function value** (expected improvement or UCB score)
+- **Digital twin validation status** (passed/failed with reason)
+
+These proposals are stored in the `proposed_synthesis_conditions` table in the central database and are displayed in the dashboard for operator review. The operator can accept, modify, or reject proposals before they are queued for execution. Accepted proposals are automatically forwarded to the lab automation system (see [Cloud Lab API Integration](#cloud-lab-api-integration)).
+
+### Feedback Loop Integration
+
+The adaptive DoE module is tightly integrated with the existing feedback loop:
+1. After each experimental batch, results are ingested via the Data Ingestion Protocol.
+2. The digital twin is retrained/updated with the new data.
+3. The GP surrogate model is refitted to the expanded dataset.
+4. A new set of proposals is generated and presented to the operator.
+5. The cycle repeats, converging toward optimal synthesis conditions for room-temperature superconductivity.
+
+This closed-loop approach dramatically reduces the number of experiments required to discover high-Tc compounds, aligning with the project's goal of accelerating the development of room-temperature superconductors.
