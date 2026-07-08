@@ -1536,12 +1536,12 @@ Note: This pilot cost is higher than the target $100/kg due to small scale. At 1
 4. **Political instability**: Rare earth mines in Myanmar, Congo. Mitigation: long-term contracts with stable suppliers.
 
 ### Alternative Suppliers
-| Material | Primary Supplier | Alternative 1 | Alternative 2 |
-|----------|-----------------|---------------|---------------|
-| Lanthanum | China (Baotou) | Lynas (Australia) | MP Materials (USA) |
-| Yttrium | China (Jiangxi) | Lynas (Australia) | Solvay (Belgium) |
-| Hydrogen | Air Liquide (global) | Linde (global) | On-site electrolysis |
-| Sulfur | Saudi Aramco | Freeport-McMoRan (USA) | Gazprom (Russia) |
+| Material | Primary Source Country | Geopolitical Risk Score (1-10) | Alternative 1 | Alternative 2 |
+|----------|----------------------|-------------------------------|---------------|---------------|
+| Lanthanum | China (Baotou) | 8 | Lynas (Australia) | MP Materials (USA) |
+| Yttrium | China (Jiangxi) | 8 | Lynas (Australia) | Solvay (Belgium) |
+| Hydrogen | Global (natural gas) | 5 | Linde (global) | On-site electrolysis |
+| Sulfur | Saudi Arabia | 6 | Freeport-McMoRan (USA) | Gazprom (Russia) |
 
 ## Lifecycle Assessment
 
@@ -1574,3 +1574,48 @@ A cradle-to-gate lifecycle assessment (LCA) for 1 kg of room-temperature superco
 - Develop chemical precompression to reduce pressure to <10 GPa, lowering energy demand.
 - Implement closed-loop hydrogen recycling.
 - Substitute rare earths with more abundant elements (e.g., yttrium from ion-adsorption clays).
+
+
+## Pilot Plant Design
+
+### Process Flow Diagram (Mermaid)
+```mermaid
+graph TD
+    A[Raw Material Storage] --> B[Reactor 1: Synthesis]
+    B --> C[Quench Tank]
+    C --> D[Centrifuge]
+    D --> E[Wash Station]
+    E --> F[Drying Oven]
+    F --> G[Sintering Furnace]
+    G --> H[Quality Control]
+    H --> I[Final Product Storage]
+```
+
+### Equipment List with Specifications
+| Equipment | Specification | Quantity | Material of Construction |
+|-----------|--------------|----------|--------------------------|
+| Reactor 1 | 500 L, SS316, 10 bar, 1200°C | 2 | Stainless Steel 316 |
+| Quench Tank | 1000 L, SS304, ambient | 1 | Stainless Steel 304 |
+| Centrifuge | 2000 rpm, 50 kg/hr | 1 | SS316 |
+| Wash Station | 200 L, deionized water | 2 | Polypropylene |
+| Drying Oven | 200°C, 100 kg capacity | 1 | Mild Steel |
+| Sintering Furnace | 1400°C, 50 kg batch | 2 | Refractory-lined |
+| QC Station | XRD, SEM, resistivity | 1 | Lab-grade |
+
+### Operating Conditions
+- **Reactor temperature**: 1100–1200°C
+- **Reactor pressure**: 5–8 bar
+- **Quench rate**: 100°C/s
+- **Drying temperature**: 150°C for 4 hours
+- **Sintering temperature**: 1350°C for 6 hours
+- **Atmosphere**: Argon (99.999% purity)
+
+### Cost Estimate
+| Item | Annual Cost (USD) |
+|------|-------------------|
+| Raw materials | $2,500,000 |
+| Equipment depreciation | $800,000 |
+| Utilities (electricity, water, gas) | $600,000 |
+| Labor (10 operators, 2 engineers) | $1,200,000 |
+| Maintenance | $300,000 |
+| **Total** | **$5,400,000** |
