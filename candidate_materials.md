@@ -598,18 +598,18 @@ This section synthesizes current knowledge from the literature (see references i
 
 ## Ab Initio Tc and Consistency with PINN Predictions
 
-| Compound | AbInitioTc (K) | ConsistencyFlag | CloudLabStatus | ValidationScore |
-|----------|----------------|-----------------|----------------|-----------------|
-| H3S | TBD | TBD | | |
-| LaH10 | TBD | TBD | | |
-| YH9 | TBD | TBD | | |
-| C-H-S | TBD | TBD | | |
-| Li2MgH16 | TBD | TBD | | |
-| CaH6 | TBD | TBD | | |
-| CaYH12 | TBD | TBD | | |
-| YH6 | TBD | TBD | | |
-| LaH6 | TBD | TBD | | |
-| CaYH10 | TBD | TBD | | |
+| Compound | AbInitioTc (K) | ConsistencyFlag | CloudLabStatus | ValidationScore | PilotPlantReady |
+|----------|----------------|-----------------|----------------|-----------------|-----------------|
+| H3S | TBD | TBD | | | No |
+| LaH10 | TBD | TBD | | | No |
+| YH9 | TBD | TBD | | | No |
+| C-H-S | TBD | TBD | | | No |
+| Li2MgH16 | TBD | TBD | | | No |
+| CaH6 | TBD | TBD | | | No |
+| CaYH12 | TBD | TBD | | | No |
+| YH6 | TBD | TBD | | | No |
+| LaH6 | TBD | TBD | | | No |
+| CaYH10 | TBD | TBD | | | No |
 
 *Note: Values will be populated by running `compute_ab_initio_tc()` in `dft_calculator.py`.*
 
