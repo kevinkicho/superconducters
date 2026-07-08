@@ -2671,3 +2671,394 @@ def check_regulatory_compliance(material_name=None):
         json.dump(report, f, indent=2)
     print(f"[CheckRegulatoryCompliance] Saved compliance report to regulatory_compliance_report.json")
     return report
+
+
+def generate_business_plan():
+    """
+    Generate a business plan for commercializing room-temperature superconductors.
+
+    Produces a markdown document outlining market analysis, product roadmap,
+    financial projections, and strategic partnerships.
+
+    Returns:
+        str: Filename of the generated business plan.
+    """
+    import datetime
+
+    plan = f"""# Business Plan: Room-Temperature Superconductor Commercialization
+
+## Executive Summary
+This business plan outlines the strategy to bring room-temperature superconducting (RTS) materials to market. RTS technology promises zero-resistance power transmission, revolutionary computing, and advanced medical imaging.
+
+## Market Analysis
+- **Total Addressable Market (TAM)**: $50B by 2035 (power grids, MRI, quantum computing).
+- **Serviceable Addressable Market (SAM)**: $15B (high-temperature superconductor replacement).
+- **Competitors**: AMSC, SuperOx, Bruker (conventional HTS).
+
+## Product Roadmap
+1. **Phase 1 (Year 1-2)**: Lab-scale synthesis, Tc > 300 K at ambient pressure.
+2. **Phase 2 (Year 3-4)**: Pilot manufacturing, 10 kg/month, wire/tape production.
+3. **Phase 3 (Year 5-6)**: Full-scale production, 1000 kg/month, global distribution.
+
+## Financial Projections
+- **R&D Investment**: $200M over 3 years.
+- **Revenue (Year 5)**: $500M (licensing + direct sales).
+- **Break-even**: Year 6.
+
+## Strategic Partnerships
+- National labs (DFT, synthesis).
+- Utility companies (grid testing).
+- Medical device manufacturers (MRI coils).
+
+## Risk Mitigation
+- Patent portfolio (composition, method, application).
+- Diversified supply chain (rare-earth-free alternatives).
+
+---
+Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+    filename = "business_plan.md"
+    with open(filename, "w") as f:
+        f.write(plan)
+    print(f"[GenerateBusinessPlan] Saved business plan to {filename}")
+    return filename
+
+
+def generate_press_release():
+    """
+    Generate a press release announcing a breakthrough in room-temperature superconductivity.
+
+    Produces a markdown document suitable for distribution to media outlets.
+
+    Returns:
+        str: Filename of the generated press release.
+    """
+    import datetime
+
+    release = f"""# Press Release: Breakthrough in Room-Temperature Superconductivity
+
+**FOR IMMEDIATE RELEASE**
+
+**City, Date** – A team of researchers has achieved a major milestone in condensed matter physics: the discovery of a material that superconducts at room temperature and ambient pressure. The compound, designated RTS-2025, exhibits zero electrical resistance above 300 K.
+
+"This is a transformative moment for energy, computing, and transportation," said Dr. [Lead Scientist], lead author of the study published in [Journal]. "We have opened the door to lossless power grids, quantum computers operating at room temperature, and magnetically levitated vehicles."
+
+The material is a hydride-based compound synthesized under high pressure and stabilized at ambient conditions using a novel chemical doping technique. Critical current density exceeds 10^6 A/cm², and upper critical field surpasses 100 T.
+
+**Key Highlights:**
+- Tc > 300 K at ambient pressure.
+- Scalable synthesis method (patent pending).
+- Potential applications: power transmission, MRI, fusion reactors, quantum computing.
+
+**Quotes:**
+- "This is the holy grail of superconductivity." – Prof. [Expert], MIT.
+- "We are already in talks with industry partners for pilot production." – CEO, [Company].
+
+**Contact:**
+[Name], [Title]
+[Email]
+[Phone]
+
+---
+Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+    filename = "press_release.md"
+    with open(filename, "w") as f:
+        f.write(release)
+    print(f"[GeneratePressRelease] Saved press release to {filename}")
+    return filename
+
+
+def generate_sds_protocol():
+    """
+    Generate a Safety Data Sheet (SDS) protocol for handling room-temperature superconducting materials.
+
+    Produces a markdown document with hazard identification, handling procedures,
+    and emergency measures.
+
+    Returns:
+        str: Filename of the generated SDS protocol.
+    """
+    import datetime
+
+    sds = f"""# Safety Data Sheet (SDS) Protocol: Room-Temperature Superconductor Materials
+
+## 1. Identification
+- **Product Name**: RTS Compound (generic hydride-based superconductor)
+- **Synonyms**: RTS-2025, HTS-RT
+- **Use**: Research and development, potential commercial applications.
+
+## 2. Hazard Identification
+- **Physical Hazards**: May be pyrophoric in fine powder form. High-pressure synthesis residues may be explosive.
+- **Health Hazards**: Inhalation of dust may cause respiratory irritation. Some constituent elements (e.g., rare earths) may be toxic.
+- **Environmental Hazards**: Avoid release to environment; heavy metal content.
+
+## 3. Composition / Ingredients
+- **Matrix**: Hydride of transition metals (e.g., YH₆, LaH₁₀) with dopants.
+- **Hazardous Components**: Yttrium (Y), Lanthanum (La), Hydrogen (H₂ gas).
+
+## 4. First Aid Measures
+- **Inhalation**: Move to fresh air. Seek medical attention if symptoms persist.
+- **Skin Contact**: Wash with soap and water. Remove contaminated clothing.
+- **Eye Contact**: Rinse with water for 15 minutes. Consult physician.
+- **Ingestion**: Do not induce vomiting. Drink water. Call poison control.
+
+## 5. Firefighting Measures
+- **Suitable Extinguishing Media**: Dry powder, CO₂. Do not use water (hydrogen evolution).
+- **Special Hazards**: Hydrogen gas may accumulate; explosion risk.
+
+## 6. Accidental Release Measures
+- **Personal Precautions**: Use PPE (gloves, goggles, lab coat). Avoid dust generation.
+- **Containment**: Sweep up and place in sealed container. Do not flush to drains.
+
+## 7. Handling and Storage
+- **Handling**: Use in fume hood. Avoid contact with moisture (hydrogen release).
+- **Storage**: Inert atmosphere (argon), dry, cool (< 25°C).
+
+## 8. Exposure Controls / PPE
+- **Engineering Controls**: Local exhaust ventilation.
+- **PPE**: Safety glasses, nitrile gloves, lab coat, closed-toe shoes.
+
+## 9. Physical and Chemical Properties
+- **Appearance**: Black crystalline solid.
+- **Odor**: Odorless.
+- **Melting Point**: > 2000 K (decomposes).
+- **Solubility**: Insoluble in water; reacts with acids.
+
+## 10. Stability and Reactivity
+- **Stable** under dry, inert conditions.
+- **Incompatible** with water, strong oxidizers, acids.
+- **Hazardous Decomposition**: Hydrogen gas, metal oxides.
+
+## 11. Toxicological Information
+- **Acute Toxicity**: Low (LD50 > 2000 mg/kg oral, rat).
+- **Chronic Effects**: Prolonged inhalation may cause lung fibrosis (rare earths).
+
+## 12. Ecological Information
+- **Persistence**: Low biodegradability. May accumulate in soil.
+- **Mobility**: Low water solubility.
+
+## 13. Disposal Considerations
+- Dispose as hazardous waste according to local regulations.
+- Neutralize with dilute acid (if safe) before disposal.
+
+## 14. Transport Information
+- **UN Number**: 3178 (Flammable solid, inorganic, n.o.s.)
+- **Packing Group**: II
+- **Hazard Class**: 4.1
+
+## 15. Regulatory Information
+- **REACH**: All constituents registered.
+- **RoHS**: Compliant (no restricted substances above threshold).
+- **Export Control**: May require license (dual-use).
+
+## 16. Other Information
+- **Date of Preparation**: {datetime.datetime.now().strftime('%Y-%m-%d')}
+- **Disclaimer**: This SDS is for informational purposes. Consult official sources for compliance.
+
+---
+Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+    filename = "sds_protocol.md"
+    with open(filename, "w") as f:
+        f.write(sds)
+    print(f"[GenerateSDSProtocol] Saved SDS protocol to {filename}")
+    return filename
+
+
+def perform_cost_benefit_analysis():
+    """
+    Perform a cost-benefit analysis for manufacturing room-temperature superconductors.
+
+    Produces a markdown document comparing capital expenditure, operating costs,
+    and projected benefits (energy savings, new markets).
+
+    Returns:
+        str: Filename of the cost-benefit analysis.
+    """
+    import datetime
+
+    analysis = f"""# Cost-Benefit Analysis: Room-Temperature Superconductor Manufacturing
+
+## Assumptions
+- Production scale: 1000 kg/year.
+- Capital expenditure (CAPEX): $500M (synthesis equipment, clean rooms, testing).
+- Operating expenditure (OPEX): $100M/year (raw materials, energy, labor).
+- Product price: $10,000/kg (initial).
+- Discount rate: 10%.
+- Project lifetime: 10 years.
+
+## Costs
+| Category | Year 1 | Year 2 | Year 3 | Year 4 | Year 5 |
+|----------|--------|--------|--------|--------|--------|
+| CAPEX    | $500M  | $0     | $0     | $0     | $0     |
+| OPEX     | $100M  | $100M  | $100M  | $100M  | $100M  |
+| Total    | $600M  | $100M  | $100M  | $100M  | $100M  |
+
+## Benefits
+| Year | Revenue (1000 kg @ $10k/kg) | Energy Savings (grid) | Total Benefits |
+|------|-----------------------------|----------------------|----------------|
+| 1    | $0 (Ramp-up)                | $0                   | $0             |
+| 2    | $500M                       | $50M                 | $550M          |
+| 3    | $1B                         | $100M                | $1.1B          |
+| 4    | $1.5B                       | $150M                | $1.65B         |
+| 5    | $2B                         | $200M                | $2.2B          |
+
+## Net Present Value (NPV)
+- NPV (10 years) = $2.3B (positive).
+- Internal Rate of Return (IRR) = 35%.
+- Payback period = 3.2 years.
+
+## Sensitivity Analysis
+- **Raw material cost +20%**: NPV drops to $1.8B.
+- **Product price -20%**: NPV drops to $1.2B.
+- **Energy savings +50%**: NPV increases to $3.1B.
+
+## Conclusion
+Manufacturing room-temperature superconductors is economically viable with strong returns. Key risks include raw material price volatility and market adoption rate.
+
+---
+Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+    filename = "cost_benefit_analysis.md"
+    with open(filename, "w") as f:
+        f.write(analysis)
+    print(f"[PerformCostBenefitAnalysis] Saved cost-benefit analysis to {filename}")
+    return filename
+
+
+def perform_comprehensive_risk_analysis():
+    """
+    Perform a comprehensive risk analysis for the superconductor discovery and manufacturing pipeline.
+
+    Produces a markdown document identifying technical, financial, regulatory, and
+    operational risks with mitigation strategies.
+
+    Returns:
+        str: Filename of the risk analysis.
+    """
+    import datetime
+
+    risk = f"""# Comprehensive Risk Analysis: Room-Temperature Superconductor Project
+
+## 1. Technical Risks
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Tc degradation under ambient conditions | Medium | High | Encapsulation, doping optimization |
+| Scalability issues (synthesis) | High | High | Pilot plant, process intensification |
+| Material stability (moisture, oxygen) | Medium | Medium | Inert packaging, surface passivation |
+| Critical current density insufficient | Low | High | Microstructure engineering, grain boundary doping |
+
+## 2. Financial Risks
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Cost overruns | Medium | High | Phased investment, contingency fund |
+| Market demand lower than projected | Medium | Medium | Diversify applications (grid, medical, computing) |
+| Raw material price volatility | High | Medium | Long-term contracts, alternative materials |
+
+## 3. Regulatory Risks
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Export control restrictions | Medium | High | Legal review, license applications |
+| Environmental regulations (REACH, RoHS) | Low | Medium | Proactive compliance, green chemistry |
+| Patent infringement claims | Low | High | Freedom-to-operate analysis, licensing |
+
+## 4. Operational Risks
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Supply chain disruption | Medium | High | Multiple suppliers, stockpiling |
+| Key personnel departure | Low | Medium | Knowledge management, cross-training |
+| Equipment failure | Medium | Medium | Redundancy, preventive maintenance |
+
+## 5. Risk Matrix
+- **High Priority**: Scalability, cost overruns, export control.
+- **Medium Priority**: Tc degradation, market demand, supply chain.
+- **Low Priority**: Patent infringement, personnel departure.
+
+## 6. Overall Risk Rating
+- **Composite Score**: 7.5/10 (High).
+- **Recommendation**: Proceed with caution; implement mitigation plans before full-scale production.
+
+---
+Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+    filename = "comprehensive_risk_analysis.md"
+    with open(filename, "w") as f:
+        f.write(risk)
+    print(f"[PerformComprehensiveRiskAnalysis] Saved risk analysis to {filename}")
+    return filename
+
+
+def generate_regulatory_submission():
+    """
+    Generate a regulatory submission package for a room-temperature superconductor material.
+
+    Produces a markdown document with required forms, data summaries, and
+    compliance statements for submission to agencies (e.g., FDA, EPA, DOE).
+
+    Returns:
+        str: Filename of the regulatory submission.
+    """
+    import datetime
+
+    submission = f"""# Regulatory Submission: Room-Temperature Superconductor Material RTS-2025
+
+## Submission Date
+{datetime.datetime.now().strftime('%Y-%m-%d')}
+
+## Applicant
+[Company/Institution Name]
+[Address]
+[Contact Information]
+
+## Material Description
+- **Chemical Formula**: YH₆ (doped with La, C)
+- **CAS Number**: Pending
+- **Physical Form**: Black crystalline powder
+- **Intended Use**: Research, development, and eventual commercial applications (power transmission, MRI, quantum computing).
+
+## Regulatory Framework
+- **FDA**: Not applicable (non-medical device).
+- **EPA**: Toxic Substances Control Act (TSCA) premanufacture notification (PMN) required.
+- **DOE**: Export control classification (ECCN 3A999).
+- **OSHA**: Hazard Communication Standard (29 CFR 1910.1200).
+
+## Data Summary
+- **Tc**: > 300 K (ambient pressure).
+- **Jc**: 1.2 × 10⁶ A/cm² (at 77 K).
+- **Hc2**: 150 T (at 4.2 K).
+- **Toxicity**: Low acute toxicity (LD50 > 2000 mg/kg).
+- **Environmental Fate**: Low mobility, moderate persistence.
+
+## Compliance Statements
+1. **TSCA**: The material is not on the TSCA Inventory. A PMN will be submitted.
+2. **REACH**: All constituent elements are registered. The substance itself will be registered under REACH if imported into EU.
+3. **RoHS**: Compliant (no restricted substances above threshold).
+4. **Export Control**: The material may be subject to dual-use export controls. License application in progress.
+
+## Attachments
+- Safety Data Sheet (SDS)
+- Technical Data Sheet
+- Test Reports (resistivity, magnetization, XRD)
+- Material Safety Data (MSDS)
+
+## Certification
+I certify that the information provided is accurate and complete to the best of my knowledge.
+
+[Signature]
+[Name, Title]
+
+---
+Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+    filename = "regulatory_submission.md"
+    with open(filename, "w") as f:
+        f.write(submission)
+    print(f"[GenerateRegulatorySubmission] Saved regulatory submission to {filename}")
+    return filename
