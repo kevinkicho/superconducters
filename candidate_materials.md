@@ -653,6 +653,9 @@ Manufacturing room-temperature superconductors at scale remains a challenge. Cur
 
 ## Cloud Lab Validation Results
 
+> **Note:** The CloudLabValidated column currently reflects literature-reported experimental validation, not results from a cloud lab. This column is a placeholder until real cloud lab experiments are run.
+
+
 | Candidate | CloudLabValidated | ValidationMethod |
 |-----------|-------------------|-----------------|
 | H3S | Yes | High-pressure DAC + laser heating |
