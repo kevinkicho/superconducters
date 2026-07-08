@@ -339,3 +339,18 @@ The following risk register consolidates technical, market, regulatory, and oper
 - **Low (1–7)**: Accept or monitor with periodic review.
 
 All risks are reviewed quarterly by the risk management committee. Mitigation owners report progress and update risk scores as new information becomes available.
+
+
+## Security Audit
+
+### API Endpoints
+- **Vulnerability**: Unauthenticated access to candidate generation and screening APIs could allow unauthorized users to submit malicious payloads or extract proprietary data.
+- **Mitigation**: Implement OAuth 2.0 with JWT tokens for all API endpoints. Use rate limiting and IP whitelisting. Validate and sanitize all inputs. Use HTTPS with TLS 1.3.
+
+### Data Storage
+- **Vulnerability**: Sensitive research data (candidate materials, synthesis parameters) stored in plaintext could be exposed in a breach.
+- **Mitigation**: Encrypt data at rest using AES-256. Use environment-specific secrets management (e.g., HashiCorp Vault). Implement strict access controls with role-based access (RBAC). Regularly audit access logs.
+
+### User Authentication
+- **Vulnerability**: Weak password policies and lack of multi-factor authentication (MFA) increase risk of account takeover.
+- **Mitigation**: Enforce strong password policies (minimum 12 characters, complexity). Require MFA for all users. Implement account lockout after failed attempts. Use secure session management with short-lived tokens.
