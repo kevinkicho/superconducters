@@ -1804,9 +1804,47 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', choices=['rf', 'gp'], default='rf', help='Model type: rf (Random Forest) or gp (Gaussian Process)')
     parser.add_argument('--benchmark', action='store_true', help='Run benchmark instead of training')
+    parser.add_argument('--predict', type=str, help='Predict Tc for a composition (e.g., Nb3Sn). Requires trained model.')
+    parser.add_argument('--composition', type=str, help='Alternative to --predict, same usage.')
     args = parser.parse_args()
     if args.benchmark:
         benchmark()
+    elif args.predict or args.composition:
+        comp = args.predict or args.composition
+        # Load the appropriate trained model
+        model_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+        if args.model == 'gp':
+            model_path = os.path.join(model_dir, 'tc_gp_predictor.pkl')
+        else:
+            model_path = os.path.join(model_dir, 'tc_rf_predictor.pkl')
+        if not os.path.exists(model_path):
+            print(f"[Error] No trained model found at {model_path}. Train first with --model {args.model}.")
+            sys.exit(1)
+        model = joblib.load(model_path)
+        # Parse composition into features
+        features = composition_to_features(comp)
+        if features is None:
+            print(f"[Error] Could not parse composition: {comp}")
+            sys.exit(1)
+        X = np.array([features])
+        if args.model == 'gp':
+            y_pred, y_std = model.predict(X, return_std=True)
+            ci_95 = 1.96 * y_std[0]
+            print(f"Predicted Tc: {y_pred[0]:.2f} K")
+            print(f"95% confidence interval: [{y_pred[0]-ci_95:.2f}, {y_pred[0]+ci_95:.2f}] K")
+        else:
+            # Random forest does not provide uncertainty natively; use ensemble std
+            y_pred = model.predict(X)[0]
+            # Estimate std from tree predictions if possible
+            try:
+                tree_preds = np.array([tree.predict(X)[0] for tree in model.estimators_])
+                y_std = np.std(tree_preds)
+                ci_95 = 1.96 * y_std
+                print(f"Predicted Tc: {y_pred:.2f} K")
+                print(f"95% confidence interval (from tree ensemble): [{y_pred-ci_95:.2f}, {y_pred+ci_95:.2f}] K")
+            except:
+                print(f"Predicted Tc: {y_pred:.2f} K")
+                print("Confidence interval not available for Random Forest without tree predictions.")
     elif args.model == 'gp':
         train_gp_model()
     else:

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "2283ae8d-d41b-41ff-803b-f9b7c50da390",
+  "writtenAt": 1783552160509,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Implement dft_calculator.py with a working DFT wrapper (e.g., using ASE to run Quantum ESPRESSO) that computes electron-phonon coupling and Tc for candidate structures, or provide a clear interface to external DFT codes.",
+      "expectedFiles": [
+        "dft_calculator.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement scripts/generate_candidates.py with candidate generation logic: read from data/superconductor_database.json, apply ML models, and implement the multi-criteria decision support algorithm (weighted scoring) described in docs/discovery_strategy.md.",
+      "expectedFiles": [
+        "scripts/generate_candidates.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement scripts/predict_tc.py with Tc prediction logic (e.g., McMillan-Allen-Dynes equation or a trained ML model) that accepts composition/structure and outputs predicted Tc with confidence interval.",
+      "expectedFiles": [
+        "scripts/predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement run_pipeline.py to orchestrate the full discovery pipeline: load data, run generate_candidates, predict_tc, score candidates, and output results to data/experimental_results.json.",
+      "expectedFiles": [
+        "run_pipeline.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Populate data/superconductor_database.json with real superconductor data (composition, Tc, pressure, structure) from the SuperCon database or literature, ensuring at least 50 entries to support ML training and candidate screening.",
+      "expectedFiles": [
+        "data/superconductor_database.json"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement missing functions (fetch_materials_project, fetch_icsd, fetch_arxiv) in scripts/api_client.py or rewrite tests to use PipelineClient methods (e.g., get_candidates). Also correct patch targets to match requests.Session usage.",
+      "expectedFiles": [
+        "tests/test_api_client.py",
+        "scripts/api_client.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Consolidate duplicate documentation files: keep root-level candidate_materials.md as authoritative, update docs/candidate_materials.md to reference it or remove; ensure consistency between root and docs versions of discovery_strategy.md and other duplicated files.",
+      "expectedFiles": [
+        "candidate_materials.md",
+        "docs/candidate_materials.md",
+        "discovery_strategy.md",
+        "docs/discovery_strategy.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update proposed_chemistry_physics.md to include a dedicated 'Scalability Analysis for Top Candidate' subsection for YH10 (or the highest-scoring compound) covering pressure reduction via chemical precompression, precursor costs, thin-film stabilization, and a pathway to ambient-pressure synthesis.",
+      "expectedFiles": [
+        "proposed_chemistry_physics.md"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}

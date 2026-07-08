@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "runId": "43e79fa7-6d4e-4e81-8d1b-b65003969d4e",
+  "updatedAt": 1783551108202,
+  "lastCycle": 1,
+  "observations": [
+    {
+      "kind": "commit",
+      "text": "Consolidate duplicate run_pipeline.py files (root and scripts/) into a single entry point. Wire scripts/arxiv_scraper.py into run_pipeline.py so that its output updates docs/online_research_summary.md and candidate_materials.md automatically.",
+      "cycle": 1,
+      "files": [
+        "run_pipeline.py",
+        "scripts/run_pipeline.py",
+        "scripts/arxiv_scraper.py"
+      ],
+      "at": 1783551062183
+    },
+    {
+      "kind": "fail",
+      "text": "Implement real DFT computation logic in dft_calculator.py using an open-source engine (e.g., ASE + GPAW) to compute electronic structure and electron-phonon cou — all retries exhausted (last: worker returned no hunks); no failover model in chain",
+      "cycle": 1,
+      "files": [
+        "dft_calculator.py"
+      ],
+      "at": 1783551062352
+    },
+    {
+      "kind": "skip",
+      "text": "Populate data/superconductor_database.json with verified Tc, composition, and pressure data from SuperCon or literature mining, ensuring scripts/generate_candidates.py and scripts/predict_tc.py load f — run stopping",
+      "cycle": 1,
+      "files": [
+        "data/superconductor_database.json",
+        "scripts/generate_candidates.py",
+        "scripts/predict_tc.py"
+      ],
+      "at": 1783551071087
+    },
+    {
+      "kind": "skip",
+      "text": "Add a dedicated subsection on 'chemical precompression' strategies (e.g., ternary hydrides Li2MgH16, CaYH12) under Manufacturing Pathways in proposed_chemistry_physics.md to detail approaches for lowe — run stopping",
+      "cycle": 1,
+      "files": [
+        "proposed_chemistry_physics.md"
+      ],
+      "at": 1783551071087
+    },
+    {
+      "kind": "commit",
+      "text": "Implement missing functions (fetch_materials_project, fetch_icsd, fetch_arxiv) in scripts/api_client.py and add 'from unittest.mock import patch' to tests, or rewrite tests to use PipelineClient. Also create a minimal FastAPI server (app.py) implementing /candidates, /submit, /batch_predict endpoints, or modify client for offline mode.",
+      "cycle": 1,
+      "files": [
+        "tests/test_api_client.py",
+        "scripts/api_client.py",
+        "app.py"
+      ],
+      "at": 1783551102800
+    }
+  ]
+}
