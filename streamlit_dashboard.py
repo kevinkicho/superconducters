@@ -8,7 +8,7 @@ import threading
 import json
 import plotly.graph_objects as go
 from typing import Optional, Dict, Any
-from run_pipeline import live_external_validation, what_if_analysis
+from run_pipeline import live_external_validation, what_if_analysis, generate_press_release, generate_monthly_report
 import smtplib
 from email.mime.text import MIMEText
 import logging
@@ -1042,6 +1042,24 @@ def update_knowledge_graph(papers: Optional[list] = None) -> None:
         logger.info(f"Knowledge graph updated. Total nodes: {len(kg['nodes'])}")
     except Exception as e:
         logger.error(f"Error updating knowledge graph: {e}")
+
+tabs = st.tabs(["Dashboard", "Knowledge Graph", "Settings", "Funding Proposals", "Press Releases", "Monthly Report"])
+
+with tabs[4]:
+    st.header("Press Releases")
+    if "press_releases" not in st.session_state:
+        st.session_state.press_releases = "No press releases yet."
+    if st.button("Generate New Press Release"):
+        st.session_state.press_releases = generate_press_release()
+    st.markdown(st.session_state.press_releases)
+
+with tabs[5]:
+    st.header("Monthly Report")
+    if "monthly_report" not in st.session_state:
+        st.session_state.monthly_report = "No monthly report yet."
+    if st.button("Generate New Monthly Report"):
+        st.session_state.monthly_report = generate_monthly_report()
+    st.markdown(st.session_state.monthly_report)
 
 def query_knowledge_graph(query: str) -> str:
     """Answer natural language questions from the knowledge graph using rule-based matching."""
