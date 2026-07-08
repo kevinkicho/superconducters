@@ -598,18 +598,18 @@ This section synthesizes current knowledge from the literature (see references i
 
 ## Ab Initio Tc and Consistency with PINN Predictions
 
-| Compound | AbInitioTc (K) | ConsistencyFlag | CloudLabStatus | ValidationScore | PilotPlantReady | CommercialScaleReady |
-|----------|----------------|-----------------|----------------|-----------------|-----------------|----------------------|
-| H3S | 203 | High | | | No | No |
-| LaH10 | 250 | High | | | No | No |
-| YH9 | 243 | High | | | No | No |
-| C-H-S | 287 | Low | | | No | No |
-| Li2MgH16 | 240 | Medium | | | No | No |
-| CaH6 | 260 | Medium | | | No | No |
-| CaYH12 | 280 | Medium | | | No | No |
-| YH6 | 224 | High | | | No | No |
-| LaH6 | TBD | TBD | | | No | No |
-| CaYH10 | TBD | TBD | | | No | No |
+| Compound | AbInitioTc (K) | ConsistencyFlag | CloudLabStatus | ValidationScore | PilotPlantReady | CommercialScaleReady | PredictedStructure | DFT_Tc | DFT_Consistency | DecisionRank |
+|----------|----------------|-----------------|----------------|-----------------|-----------------|----------------------|--------------------|--------|-----------------|--------------|
+| H3S | 203 | High | | | No | No | cubic Im-3m | 203 | High | 8 |
+| LaH10 | 250 | High | | | No | No | clathrate-like | 250 | High | 4 |
+| YH9 | 243 | High | | | No | No | clathrate-like | 243 | High | 5 |
+| C-H-S | 287 | Low | | | No | No | theoretical | 287 | Low | 1 |
+| Li2MgH16 | 240 | Medium | | | No | No | theoretical | 240 | Medium | 6 |
+| CaH6 | 260 | Medium | | | No | No | theoretical | 260 | Medium | 3 |
+| CaYH12 | 280 | Medium | | | No | No | theoretical | 280 | Medium | 2 |
+| YH6 | 224 | High | | | No | No | theoretical | 224 | High | 7 |
+| LaH6 | TBD | TBD | | | No | No | theoretical | TBD | TBD | 9 |
+| CaYH10 | TBD | TBD | | | No | No | theoretical | TBD | TBD | 10 |
 
 *Note: Values will be populated by running `compute_ab_initio_tc()` in `dft_calculator.py`.*
 
