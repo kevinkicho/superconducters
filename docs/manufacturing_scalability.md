@@ -1383,3 +1383,18 @@ A global sensitivity analysis was performed using Sobol indices to quantify the 
 | Hydrogen flow rate (sccm) | 0.02 | 0.04 |
 
 **Interpretation**: Pressure and precursor purity dominate the variance in Tc, together accounting for over 70% of the first-order effects. The total-order indices indicate moderate interactions between pressure and temperature. These results suggest that process control efforts should prioritize pressure stability and precursor quality to maximize reproducibility and performance.
+
+## Cloud-Scale Screening
+
+### Architecture
+The cloud-scale screening module is designed to parallelize the evaluation of candidate materials across a large parameter space. The architecture leverages either AWS Batch or Dask to distribute computational tasks across multiple nodes. The system consists of a task queue, worker nodes, a result aggregator, and a persistent storage layer (S3 or local filesystem). Each worker runs a containerized environment with the necessary dependencies (DFT codes, ML models, etc.) and processes a batch of candidate configurations. The task queue is populated by a scheduler that reads from the candidate materials database and splits the workload into chunks of configurable size.
+
+### Implementation
+The implementation is based on the `scale_performance()` function in `run_pipeline.py`. It supports two backends:
+- **AWS Batch**: Uses AWS Batch job definitions and job queues. The scheduler submits jobs to the queue, and workers are auto-scaled based on the number of pending tasks. Results are written to an S3 bucket and aggregated by a final reduce step.
+- **Dask**: Uses a Dask cluster (local or distributed via SSH/SLURM). The scheduler creates a Dask graph of tasks, and workers execute them in parallel. Results are collected into a Dask DataFrame and saved to disk.
+
+The module handles task retries, logging, and error reporting. It also integrates with the existing monitoring system to track progress and resource utilization.
+
+### Expected Throughput
+The expected throughput depends on the computational cost per candidate and the number of workers. For a typical DFT-based screening (approx. 10 minutes per candidate on a single core), a cluster of 1000 cores can screen 144,000 candidates per day. With ML-based surrogate models (milliseconds per candidate), throughput can exceed 10 million candidates per day. The system is designed to scale linearly with the number of workers, limited only by the task queue throughput and storage I/O. For the current candidate database of 10,000 materials, the full screening can be completed in under 2 hours with 1000 cores.
