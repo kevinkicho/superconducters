@@ -681,3 +681,48 @@ While current room-temperature superconductors require extreme pressures, we pro
 - Troyan, I. A. et al. (2024). Epitaxial stabilization of high-pressure YH₃ phase on MgO substrate. *Advanced Materials*, 36, 2309876. https://doi.org/10.1002/adma.202309876
 
 This section will be updated as new experimental results and theoretical predictions emerge. The proposed chemistry and physics serve as a living framework for the project's ongoing research.
+## API Documentation
+
+Deployment of the FastAPI application is not yet available. To run the API locally, follow these steps:
+
+1. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Run the FastAPI server**:
+   ```bash
+   uvicorn run_pipeline:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+3. **API Key Authentication**:
+   The API uses an API key for authentication. Set the environment variable `API_KEY` to your key before starting the server:
+   ```bash
+   export API_KEY=your-secret-key
+   ```
+   Include the key in requests via the `X-API-Key` header:
+   ```bash
+   curl -H "X-API-Key: your-secret-key" http://localhost:8000/predict
+   ```
+
+4. **Rate Limiting**:
+   The API is rate-limited to 100 requests per minute per IP address. Exceeding this limit will return a `429 Too Many Requests` response.
+
+5. **Quick-Start Example**:
+   ```bash
+   curl -X POST "http://localhost:8000/predict" \
+        -H "X-API-Key: your-secret-key" \
+        -H "Content-Type: application/json" \
+        -d '{"composition": "LaH10", "pressure": 150, "temperature": 250}'
+   ```
+
+   Expected response (example):
+   ```json
+   {
+     "predicted_tc": 250.0,
+     "confidence": 0.85,
+     "candidate_rank": 1
+   }
+   ```
+
+For more details, refer to the source code in `run_pipeline.py`.
