@@ -468,5 +468,24 @@ This section is dynamically updated by the `update_readme_statistics()` function
 
 ### Deployed URLs
 
-- **Streamlit Dashboard**: [Deployed URL placeholder — will be updated by `update_readme_statistics()`]
-- **REST API**: [Deployed URL placeholder — will be updated by `update_readme_statistics()`]
+- **Streamlit Dashboard**: [Deploy to Heroku and update this URL](https://your-app.herokuapp.com)
+- **REST API**: [Deploy to Heroku and update this URL](https://your-api.herokuapp.com)
+
+
+## Usage
+
+### Running the Dashboard Locally
+
+1. Install dependencies: `pip install streamlit requests pandas`
+2. Set environment variables `CLOUD_LAB_API_URL` (optional, defaults to http://localhost:8000/api/v1) and `CLOUD_LAB_API_KEY` if required.
+3. Run: `streamlit run streamlit_dashboard.py`
+4. Open the URL shown in the terminal (usually http://localhost:8501).
+
+### Deploying to Heroku
+
+1. Create a `Procfile` with: `web: streamlit run streamlit_dashboard.py --server.port $PORT`
+2. Create a `requirements.txt` with: `streamlit`, `requests`, `pandas`.
+3. Commit and push to Heroku: `heroku create your-app-name && git push heroku main`
+4. Set config vars: `heroku config:set CLOUD_LAB_API_URL=<your-api-url>`
+5. Open the app: `heroku open`
+6. Update the deployed URL in the "Deployed URLs" section above.
