@@ -3420,3 +3420,41 @@ A Monte Carlo simulation (10,000 iterations) was performed to assess the uncerta
 4. Maintain a buffer stock of critical components (press anvils, cBN) to mitigate supply chain disruptions.
 
 The Monte Carlo analysis confirms that the full-scale plant design is economically robust, with a >99% probability of achieving the target production cost of $100/kg.
+
+
+## Pilot Plant Construction Plan
+
+### Gantt Chart (Phased Timeline)
+
+| Phase | Activity | Duration | Start | End |
+|-------|----------|----------|-------|-----|
+| 1 | Site selection and permitting | 6 months | Q1 2026 | Q2 2026 |
+| 2 | Detailed engineering design | 8 months | Q3 2026 | Q4 2026 |
+| 3 | Procurement of long-lead items (high-pressure presses, cBN) | 12 months | Q3 2026 | Q2 2027 |
+| 4 | Civil construction and utilities | 10 months | Q1 2027 | Q4 2027 |
+| 5 | Equipment installation and commissioning | 6 months | Q1 2028 | Q2 2028 |
+| 6 | Pilot runs and process optimization | 4 months | Q3 2028 | Q4 2028 |
+| 7 | Full-scale validation and handover | 2 months | Q1 2029 | Q1 2029 |
+
+### Vendor Selection Criteria
+
+1. **Technical capability**: Proven track record in high-pressure equipment (≥10 GPa), gas handling, and precision machining.
+2. **Quality certifications**: ISO 9001, ASME Boiler and Pressure Vessel Code compliance.
+3. **Delivery lead time**: Ability to deliver within 12 months of order.
+4. **After-sales support**: On-site commissioning, training, and 24/7 remote support.
+5. **Cost competitiveness**: Total cost of ownership (purchase + installation + maintenance) within budget.
+6. **References**: At least three references from similar-scale pilot plants.
+7. **Safety record**: Zero lost-time incidents in the past 3 years.
+
+### Risk Mitigation for Delays
+
+| Risk | Probability | Impact | Mitigation Strategy |
+|------|-------------|--------|---------------------|
+| Permitting delays (environmental, zoning) | Medium | High | Engage regulatory consultants early; parallel track with design; maintain buffer of 2 months. |
+| Long-lead equipment delays (presses, cBN) | High | Critical | Order 18 months in advance; maintain relationships with multiple suppliers; consider leasing backup units. |
+| Construction labor shortage | Medium | Medium | Partner with local unions; offer competitive wages; cross-train workers. |
+| Technology scale-up issues (yield <80%) | High | Critical | Run parallel pilot lines; incorporate modular design to isolate failures; have contingency to revert to lab-scale for troubleshooting. |
+| Supply chain disruption (lanthanum, hydrogen) | Medium | High | Maintain 3-month buffer stock; diversify suppliers; develop recycling processes. |
+| Budget overrun | Medium | Medium | Include 20% contingency in budget; monthly cost reviews; value engineering reviews at each phase. |
+
+This pilot plant construction plan ensures a systematic, risk-aware approach to scaling from lab to pre-commercial production, with clear milestones and contingency measures.
