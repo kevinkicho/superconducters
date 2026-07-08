@@ -1461,3 +1461,16 @@ A dedicated Grafana dashboard (`Validation Overview`) displays:
 - Out-of-distribution warning count
 
 All validation data is exported to a `validation_results` table for audit and reproducibility.
+
+## Autonomous
+
+The autonomous discovery and manufacturing system integrates the experimental feedback loop with self-driving laboratories, AI-driven candidate generation, and robotic synthesis to accelerate the search for room-temperature superconducting compounds. The system operates in a closed loop without human intervention:
+
+1. **Candidate Generation**: Generative models (e.g., variational autoencoders, diffusion models) propose novel crystal structures and compositions predicted to exhibit high Tc. Candidates are filtered by stability, synthesizability, and cost constraints.
+2. **Synthesis Planning**: Reinforcement learning (RL) agents optimize synthesis parameters (precursors, pressure, temperature, duration) for each candidate, leveraging historical data and thermodynamic simulations.
+3. **Robotic Execution**: Synthesis instructions are dispatched to a cloud lab (e.g., Emerald Cloud Lab) where robotic arms prepare samples under controlled conditions. Real-time sensors monitor reaction progress.
+4. **Automated Characterization**: Synthesized samples are automatically transferred to characterization stations (XRD, resistivity, SQUID, heat capacity). Raw data is parsed and ingested into the database via the automated ingestion pipeline.
+5. **Model Update**: Ingested results trigger retraining of ML models (as described in Model Retraining). The updated models refine candidate rankings and synthesis recommendations.
+6. **Iteration**: The loop repeats, with the system autonomously selecting the next batch of candidates based on acquisition functions (e.g., expected improvement, upper confidence bound) that balance exploration and exploitation.
+
+This autonomous pipeline is designed to operate 24/7, dramatically reducing the time from prediction to validation. The system logs all decisions and outcomes for auditability and continuous improvement. By combining high-throughput experimentation with adaptive learning, the autonomous loop aims to discover and manufacture room-temperature superconducting compounds at an unprecedented pace.
