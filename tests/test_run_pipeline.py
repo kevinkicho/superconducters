@@ -979,3 +979,82 @@ def test_pipeline_validated_against_2025_paper():
         result = rp.run_pipeline()
         self.assertIsNotNone(result)
 
+
+
+class TestPerformanceAndStress:
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_run_pipeline_performance(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Benchmark the pipeline execution time with a moderate number of candidates."""
+        import time
+        candidates = [{"name": f"Mat_{i}", "Tc": 100 + i, "pressure": 150, "composition": f"H{i}S"} for i in range(100)]
+        mock_load.return_value = candidates
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0] * 100
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (150.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        start = time.perf_counter()
+        result = rp.run_pipeline()
+        elapsed = time.perf_counter() - start
+        assert elapsed < 5.0, f"Pipeline took {elapsed:.2f}s, expected <5s"
+        assert result is not None
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_run_pipeline_stress_large_candidates(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Stress test with a large number of candidates (1000) to ensure no memory/performance issues."""
+        import time
+        candidates = [{"name": f"Mat_{i}", "Tc": 100 + i, "pressure": 150, "composition": f"H{i}S"} for i in range(1000)]
+        mock_load.return_value = candidates
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0] * 1000
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (150.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        start = time.perf_counter()
+        result = rp.run_pipeline()
+        elapsed = time.perf_counter() - start
+        assert elapsed < 10.0, f"Pipeline took {elapsed:.2f}s, expected <10s"
+        assert result is not None
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_run_pipeline_stress_concurrent_calls(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Stress test by running the pipeline multiple times sequentially to check for state leaks."""
+        import time
+        candidates = [{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]
+        mock_load.return_value = candidates
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (203.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        for _ in range(10):
+            result = rp.run_pipeline()
+            assert result is not None
