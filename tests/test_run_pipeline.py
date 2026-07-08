@@ -859,3 +859,123 @@ def test_pipeline_validated_against_2025_paper():
         # We can check that the call arguments contain the candidate name
         call_args = mock_manufacturing.call_args
         self.assertIn("H3S", str(call_args))
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('scripts.run_pipeline.generative_model')
+    @patch('scripts.run_pipeline.stability_filter')
+    @patch('scripts.run_pipeline.rl_optimizer')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_end_to_end(self, mock_open, mock_rl, mock_stability, mock_generative, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Comprehensive end-to-end validation test using synthetic data."""
+        # Synthetic data: list of candidate materials with known properties
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"},
+            {"name": "YH6", "Tc": 180, "pressure": 120, "composition": "YH6"}
+        ]
+        # Mock train_model to return a model with predict method
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0, 180.0]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty to return (Tc, uncertainty) for each candidate
+        def predict_side_effect(name, pressure=None):
+            mapping = {
+                "H3S": (203.0, 5.0),
+                "LaH10": (250.0, 8.0),
+                "YH6": (180.0, 3.0)
+            }
+            return mapping.get(name, (100.0, 10.0))
+        mock_predict.side_effect = predict_side_effect
+
+        # Mock DFT calculation
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Mock external database query
+        mock_ext_db.return_value = [{"name": "MgB2", "Tc": 39, "pressure": 0, "composition": "MgB2"}]
+
+        # Mock digital twin simulation
+        mock_digital_twin.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+
+        # Mock manufacturing scalability
+        mock_manufacturing.return_value = {"yield": 0.85, "cost": 12.5}
+
+        # Mock generative model
+        mock_generative.return_value = [{"name": "NewCompound1", "Tc": 220, "pressure": 160, "composition": "H3S_LaH10"}]
+
+        # Mock stability filter
+        mock_stability.return_value = [{"name": "H3S", "Tc": 203, "pressure": 155, "stable": True}]
+
+        # Mock RL optimizer
+        mock_rl.return_value = {"best_candidate": "H3S", "optimized_params": {"pressure": 150, "temperature": 200}}
+
+        # Mock open to capture file writes
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline
+        result = rp.run_pipeline()
+
+        # Assertions: verify each module was called appropriately
+        mock_load.assert_called_once()
+        mock_train.assert_called_once()
+        # predict_tc_with_uncertainty should be called for each candidate (including from external DB)
+        # At least 3 original + 1 external = 4 calls
+        self.assertGreaterEqual(mock_predict.call_count, 4)
+        # DFT should be called for high-uncertainty candidates (if threshold logic)
+        self.assertGreaterEqual(mock_dft.call_count, 1)
+        # External database query should be called
+        mock_ext_db.assert_called_once()
+        # Digital twin simulation should be called
+        mock_digital_twin.assert_called()
+        # Manufacturing scalability should be called
+        mock_manufacturing.assert_called()
+        # Generative model should be called
+        mock_generative.assert_called()
+        # Stability filter should be called
+        mock_stability.assert_called()
+        # RL optimizer should be called
+        mock_rl.assert_called()
+        # Check that open was called to write output files (e.g., candidate_materials.md, roadmap.md)
+        self.assertGreaterEqual(mock_open.call_count, 1)
+
+        # Edge case: missing data (empty list)
+        mock_load.return_value = []
+        with self.assertRaises(ValueError):
+            rp.run_pipeline()
+
+        # Edge case: API failure (external DB raises exception)
+        mock_ext_db.side_effect = ConnectionError("API unavailable")
+        mock_load.return_value = [{"name": "H3S", "Tc": 203, "pressure": 155}]
+        # Should handle gracefully, e.g., log warning and continue
+        result = rp.run_pipeline()
+        # Verify that pipeline still runs without external data
+        self.assertIsNotNone(result)
+
+        # Edge case: DFT calculation fails
+        mock_dft.side_effect = RuntimeError("DFT convergence failure")
+        # Should handle and continue with ML predictions
+        result = rp.run_pipeline()
+        self.assertIsNotNone(result)
+
+        # Edge case: generative model returns empty list
+        mock_generative.return_value = []
+        result = rp.run_pipeline()
+        self.assertIsNotNone(result)
+
+        # Edge case: stability filter returns empty list
+        mock_stability.return_value = []
+        result = rp.run_pipeline()
+        self.assertIsNotNone(result)
+
+        # Edge case: RL optimizer returns None
+        mock_rl.return_value = None
+        result = rp.run_pipeline()
+        self.assertIsNotNone(result)
+
