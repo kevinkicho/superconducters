@@ -3362,3 +3362,339 @@ def role_based_access(required_role: str) -> str:
     if role_hierarchy.get(role, 0) < role_hierarchy.get(required_role, 0):
         raise HTTPException(status_code=403, detail="Insufficient permissions")
     return role
+
+
+# ===== Cloud Lab Integration =====
+def integrate_cloud_lab():
+    """Integrate with cloud lab API for automated synthesis and characterization.
+    
+    This function connects to a cloud lab service (e.g., Emerald Cloud Lab, 
+    Strateos) to submit synthesis requests and retrieve results.
+    """
+    import requests
+    cloud_lab_url = os.environ.get("CLOUD_LAB_URL", "https://api.cloudlab.example.com")
+    api_key = os.environ.get("CLOUD_LAB_API_KEY", "")
+    if not api_key:
+        print("[CloudLab] No CLOUD_LAB_API_KEY set. Skipping cloud lab integration.")
+        return
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    # Example: submit a synthesis job for a candidate compound
+    candidate = {
+        "compound": "Lu-N-H",
+        "synthesis_parameters": {
+            "pressure_GPa": 1.0,
+            "temperature_K": 2000,
+            "precursors": ["Lu", "N2", "H2"]
+        },
+        "characterization": ["resistance", "XRD", "magnetization"]
+    }
+    try:
+        resp = requests.post(f"{cloud_lab_url}/synthesis", json=candidate, headers=headers, timeout=60)
+        if resp.status_code == 200:
+            job_id = resp.json().get("job_id")
+            print(f"[CloudLab] Synthesis job submitted: {job_id}")
+            # Poll for results (simplified)
+            import time
+            for _ in range(10):
+                time.sleep(30)
+                status_resp = requests.get(f"{cloud_lab_url}/synthesis/{job_id}", headers=headers)
+                if status_resp.status_code == 200:
+                    status = status_resp.json().get("status")
+                    if status == "completed":
+                        results = status_resp.json().get("results")
+                        print(f"[CloudLab] Job completed: {results}")
+                        return results
+                    elif status == "failed":
+                        print(f"[CloudLab] Job failed: {status_resp.json().get('error')}")
+                        return None
+            print("[CloudLab] Job did not complete in polling window.")
+        else:
+            print(f"[CloudLab] Failed to submit job: {resp.status_code} {resp.text}")
+    except Exception as e:
+        print(f"[CloudLab] Error: {e}")
+    return None
+
+
+# ===== Continuous Learning Loop =====
+def continuous_learning_loop():
+    """Periodic literature updates and model retraining.
+    
+    This function:
+      1. Fetches new papers from arXiv (superconductivity).
+      2. Extracts new compounds and Tc values.
+      3. Updates the superconductor database.
+      4. Retrains the ML models if new data is available.
+    """
+    import subprocess
+    import json
+    from datetime import datetime
+    print("[ContinuousLearning] Starting continuous learning loop...")
+    # Step 1: Fetch new literature using arxiv_scraper if available
+    try:
+        arxiv_mod = importlib.import_module("arxiv_scraper")
+        new_papers = arxiv_mod.fetch_recent(query="superconductivity", max_results=10)
+        print(f"[ContinuousLearning] Fetched {len(new_papers)} new papers.")
+    except ImportError:
+        print("[ContinuousLearning] arxiv_scraper not available. Skipping literature fetch.")
+        new_papers = []
+    # Step 2: Extract compounds and Tc from new papers (simplified placeholder)
+    new_entries = []
+    for paper in new_papers:
+        # In a real implementation, use NLP to extract compound names and Tc
+        # For now, we just log the paper
+        print(f"[ContinuousLearning] Paper: {paper.get('title', 'Unknown')}")
+    # Step 3: Update database if new entries found
+    if new_entries:
+        db_path = "data/superconductor_database.json"
+        try:
+            with open(db_path, "r") as f:
+                db = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            db = []
+        db.extend(new_entries)
+        with open(db_path, "w") as f:
+            json.dump(db, f, indent=2)
+        print(f"[ContinuousLearning] Added {len(new_entries)} new entries to database.")
+    # Step 4: Retrain models if new data is significant
+    if len(new_entries) > 5:
+        print("[ContinuousLearning] Retraining models with new data...")
+        try:
+            train_mod = importlib.import_module("train_models")
+            train_mod.run()
+            print("[ContinuousLearning] Model retraining completed.")
+        except Exception as e:
+            print(f"[ContinuousLearning] Model retraining failed: {e}")
+    print("[ContinuousLearning] Continuous learning loop completed.")
+
+
+# ===== Scale Performance (Parallel Computing) =====
+def scale_performance():
+    """Scale performance using Dask or multiprocessing for parallel computation.
+    
+    This function distributes candidate evaluation across multiple workers.
+    """
+    try:
+        import dask
+        from dask import delayed, compute
+        from dask.distributed import Client
+        use_dask = True
+    except ImportError:
+        use_dask = False
+    if use_dask:
+        print("[ScalePerformance] Using Dask for parallel execution.")
+        try:
+            client = Client(n_workers=4, threads_per_worker=2)
+        except Exception as e:
+            print(f"[ScalePerformance] Could not start Dask client: {e}")
+            client = None
+        # Example: parallel candidate evaluation
+        candidates = ["YH9", "LaH10", "CaH6", "Li2MgH16"]
+        @delayed
+        def evaluate(candidate):
+            # Placeholder for actual evaluation
+            import time
+            time.sleep(1)
+            return {"candidate": candidate, "score": 0.8}
+        tasks = [evaluate(c) for c in candidates]
+        results = compute(*tasks)
+        print(f"[ScalePerformance] Parallel evaluation results: {results}")
+        if client:
+            client.close()
+    else:
+        print("[ScalePerformance] Dask not available. Using multiprocessing.")
+        from multiprocessing import Pool
+        def evaluate_mp(candidate):
+            import time
+            time.sleep(1)
+            return {"candidate": candidate, "score": 0.8}
+        candidates = ["YH9", "LaH10", "CaH6", "Li2MgH16"]
+        with Pool(processes=4) as pool:
+            results = pool.map(evaluate_mp, candidates)
+        print(f"[ScalePerformance] Multiprocessing results: {results}")
+    print("[ScalePerformance] Performance scaling completed.")
+
+
+# ===== Validate Predictions =====
+def validate_predictions():
+    """Compute error metrics and add ValidationScore column to predictions.
+    
+    This function:
+      1. Loads predictions from predictions_log.json.
+      2. Computes RMSE, MAE, R² if actual values are available.
+      3. Adds a ValidationScore to each prediction entry.
+      4. Saves updated predictions.
+    """
+    import json
+    import numpy as np
+    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+    print("[ValidatePredictions] Validating predictions...")
+    try:
+        with open("predictions_log.json", "r") as f:
+            predictions = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("[ValidatePredictions] No predictions log found. Creating placeholder.")
+        predictions = []
+    if not predictions:
+        print("[ValidatePredictions] No predictions to validate.")
+        return
+    # Filter predictions that have actual values
+    with_actual = [p for p in predictions if "actual" in p and p["actual"] is not None]
+    if not with_actual:
+        print("[ValidatePredictions] No predictions with actual values found.")
+        return
+    predicted = np.array([p["predicted"] for p in with_actual])
+    actual = np.array([p["actual"] for p in with_actual])
+    mae = mean_absolute_error(actual, predicted)
+    rmse = np.sqrt(mean_squared_error(actual, predicted))
+    r2 = r2_score(actual, predicted)
+    print(f"[ValidatePredictions] MAE: {mae:.2f} K, RMSE: {rmse:.2f} K, R²: {r2:.3f}")
+    # Add ValidationScore to each prediction
+    for p in predictions:
+        if "actual" in p and p["actual"] is not None:
+            error = abs(p["predicted"] - p["actual"])
+            # Score: 1.0 if error < 5 K, decreasing linearly to 0 at 50 K
+            score = max(0.0, 1.0 - error / 50.0)
+            p["ValidationScore"] = round(score, 3)
+        else:
+            p["ValidationScore"] = None
+    # Save updated predictions
+    with open("predictions_log.json", "w") as f:
+        json.dump(predictions, f, indent=2)
+    print("[ValidatePredictions] Validation scores added to predictions_log.json.")
+    # Log validation metrics
+    metrics = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "mae": mae,
+        "rmse": rmse,
+        "r2": r2,
+        "num_validated": len(with_actual)
+    }
+    try:
+        with open("validation_metrics.json", "a") as f:
+            f.write(json.dumps(metrics) + "\n")
+    except Exception as e:
+        print(f"[ValidatePredictions] Failed to write validation metrics: {e}")
+    print("[ValidatePredictions] Validation complete.")
+
+
+# ===== Generate Machine-Readable Protocol =====
+def generate_machine_readable_protocol():
+    """Generate a JSON synthesis protocol for a candidate compound.
+    
+    This function produces a structured JSON file that can be consumed by
+    automated synthesis platforms (e.g., cloud labs, robotic arms).
+    """
+    import json
+    from datetime import datetime
+    print("[MachineReadableProtocol] Generating machine-readable synthesis protocol...")
+    # Example protocol for a candidate compound
+    protocol = {
+        "protocol_version": "1.0",
+        "generated_at": datetime.utcnow().isoformat(),
+        "compound": {
+            "name": "YH9",
+            "formula": "YH9",
+            "target_Tc": 262,
+            "pressure_GPa": 201
+        },
+        "synthesis_steps": [
+            {
+                "step": 1,
+                "action": "load_precursors",
+                "materials": [
+                    {"name": "Yttrium", "purity": "99.9%", "form": "foil"},
+                    {"name": "Hydrogen", "purity": "99.999%", "form": "gas"}
+                ],
+                "environment": {
+                    "atmosphere": "argon glovebox",
+                    "O2_level_ppm": "<0.1",
+                    "H2O_level_ppm": "<0.1"
+                }
+            },
+            {
+                "step": 2,
+                "action": "load_diamond_anvil_cell",
+                "parameters": {
+                    "anvil_material": "diamond",
+                    "culet_size_um": 100,
+                    "gasket_material": "rhenium",
+                    "gasket_thickness_um": 30
+                }
+            },
+            {
+                "step": 3,
+                "action": "compress",
+                "parameters": {
+                    "target_pressure_GPa": 201,
+                    "ramp_rate_GPa_per_hour": 10
+                }
+            },
+            {
+                "step": 4,
+                "action": "laser_heat",
+                "parameters": {
+                    "laser_wavelength_nm": 1064,
+                    "power_W": 50,
+                    "spot_size_um": 20,
+                    "target_temperature_K": 2000,
+                    "duration_seconds": 10
+                }
+            },
+            {
+                "step": 5,
+                "action": "cool_down",
+                "parameters": {
+                    "cooling_rate_K_per_minute": 100,
+                    "final_temperature_K": 300
+                }
+            },
+            {
+                "step": 6,
+                "action": "characterize",
+                "techniques": [
+                    {
+                        "method": "four-probe resistance",
+                        "parameters": {
+                            "current_uA": 10,
+                            "temperature_range_K": [4, 300],
+                            "sweep_rate_K_per_minute": 1
+                        }
+                    },
+                    {
+                        "method": "X-ray diffraction",
+                        "parameters": {
+                            "source": "synchrotron",
+                            "wavelength_angstrom": 0.413,
+                            "detector": "Pilatus 1M"
+                        }
+                    },
+                    {
+                        "method": "magnetization",
+                        "parameters": {
+                            "applied_field_Oe": 10,
+                            "temperature_range_K": [4, 300]
+                        }
+                    }
+                ]
+            }
+        ],
+        "safety_notes": [
+            "High-pressure experiments require proper shielding.",
+            "Laser safety goggles required during heating.",
+            "Hydrogen gas is flammable; use in ventilated area."
+        ],
+        "expected_outputs": {
+            "Tc_K": 262,
+            "structure": "cubic, Fm-3m (clathrate)",
+            "sample_quality": "polycrystalline"
+        }
+    }
+    # Write protocol to file
+    output_path = "synthesis_protocol_YH9.json"
+    try:
+        with open(output_path, "w") as f:
+            json.dump(protocol, f, indent=2)
+        print(f"[MachineReadableProtocol] Protocol written to {output_path}")
+    except Exception as e:
+        print(f"[MachineReadableProtocol] Failed to write protocol: {e}")
+    print("[MachineReadableProtocol] Protocol generation complete.")

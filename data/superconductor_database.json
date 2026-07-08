@@ -2912,6 +2912,118 @@
       "prediction_method": "Eliashberg",
       "confidence_score": 0.8
     }
+  },
+  {
+    "name": "Lu-N-H (1 GPa)",
+    "Tc": 294,
+    "pressure": 1,
+    "structure": "unknown (claimed near-ambient)",
+    "reference": "Dasenbrock-Gammon et al., Nature 615, 244 (2023)",
+    "doi": "10.1038/s41586-023-05742-0",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 1 GPa, temperature 25 °C (claimed)",
+    "lambda": null,
+    "omega_log": null,
+    "mu_star": null,
+    "Tc_error": 5,
+    "pressure_error": 0.5,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": "controversial, replication ongoing",
+    "synthesis_conditions": {
+      "precursor_materials": ["Lu", "N2", "H2"],
+      "sample_quality": "claimed, not widely replicated"
+    },
+    "external_database": {
+      "source_database": "Nature",
+      "database_id": "Lu-N-H-2023",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
+  },
+  {
+    "name": "CSH (267 GPa)",
+    "Tc": 287.7,
+    "pressure": 267,
+    "structure": "unknown (claimed carbonaceous sulfur hydride)",
+    "reference": "Snider et al., Nature 586, 373 (2020)",
+    "doi": "10.1038/s41586-020-2801-z",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 267 GPa, temperature 2000 K",
+    "lambda": null,
+    "omega_log": null,
+    "mu_star": null,
+    "Tc_error": 5,
+    "pressure_error": 10,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": "claimed, not widely replicated",
+    "synthesis_conditions": {
+      "precursor_materials": ["C", "S", "H2"],
+      "sample_quality": "claimed"
+    },
+    "external_database": {
+      "source_database": "Nature",
+      "database_id": "CSH-2020",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
+  },
+  {
+    "name": "YH9 (201 GPa)",
+    "Tc": 262,
+    "pressure": 201,
+    "structure": "cubic, Fm-3m (clathrate)",
+    "reference": "Kong et al., Nature Communications 12, 5075 (2021)",
+    "doi": "10.1038/s41467-021-25372-8",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 201 GPa, temperature 2000 K",
+    "lambda": 2.0,
+    "omega_log": 1100,
+    "mu_star": 0.1,
+    "Tc_error": 5,
+    "pressure_error": 5,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Y", "H2"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "Nature Communications",
+      "database_id": "YH9-2021",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
+  },
+  {
+    "name": "LaH10 (170 GPa)",
+    "Tc": 250,
+    "pressure": 170,
+    "structure": "cubic, Fm-3m (clathrate)",
+    "reference": "Drozdov et al., Nature 569, 528 (2019)",
+    "doi": "10.1038/s41586-019-1201-8",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 170 GPa, temperature 2000 K",
+    "lambda": 2.2,
+    "omega_log": 1150,
+    "mu_star": 0.1,
+    "Tc_error": 5,
+    "pressure_error": 5,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["La", "H2"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "Nature",
+      "database_id": "LaH10-2019",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   }
 ]
 
