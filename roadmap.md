@@ -176,3 +176,26 @@
 
 **Total timeline**: 8 months from start to production deployment.
 **Total resource estimate**: 5–7 FTE, $500k–$800k (including cloud infrastructure, equipment, and personnel).
+
+
+## Experimental Validation of Top Candidate (6-Month Milestone)
+
+**Objective**: Rigorously validate the top candidate material (identified from computational screening and initial synthesis) through independent, reproducible experiments.
+
+### Steps
+1. **Synthesis of top candidate** (Months 1–2): Produce at least 5 independent batches using the optimized synthesis protocol (e.g., high-pressure diamond anvil cell or thin-film deposition). Lead: Lead Experimentalist.
+2. **Characterization** (Months 2–4): Measure resistivity, magnetic susceptibility (SQUID), specific heat, and critical current density. Confirm zero resistance and Meissner effect. Lead: Lead Experimentalist, Data Scientist (for analysis).
+3. **Reproducibility checks** (Months 3–5): Repeat measurements on all batches; share samples with a collaborating lab for blind verification. Target: >80% of batches show consistent Tc within ±5 K. Lead: Lead Experimentalist, Collaborating PI.
+4. **Data analysis and reporting** (Months 5–6): Compile all results, perform statistical analysis (mean Tc, standard deviation, outlier detection), and prepare a manuscript for submission to a high-impact journal. Lead: Data Scientist, Lead Experimentalist.
+
+### Responsible Parties
+- **Lead Experimentalist**: Oversees synthesis and characterization; ensures protocol adherence.
+- **Data Scientist**: Manages data pipeline, statistical analysis, and reproducibility metrics.
+- **Collaborating PI**: Provides independent validation and access to alternative characterization tools.
+- **Project Manager**: Tracks milestones, coordinates resources, and reports to steering committee.
+
+### Success Criteria
+- Tc > 300 K at ambient pressure (or > 250 K at < 10 GPa if ambient not yet achieved).
+- Critical current density > 10⁵ A/cm² at operating temperature.
+- At least two independent labs confirm superconductivity.
+- All raw data and analysis code deposited in a public repository (e.g., Zenodo, GitHub).
