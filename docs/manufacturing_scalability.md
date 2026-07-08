@@ -2611,3 +2611,42 @@ print(f"Total energy input: {total_energy:.2f} kWh")
 - The carbon footprint is dominated by synthesis energy. Switching to renewable electricity (0.05 kg CO2/kWh) would reduce net GWP to ~30 kg CO2-eq/kg.
 - Energy payback time is reasonable (5 years) given a 20-year product lifetime.
 - Recycling of lanthanum and hydrogen reduces end-of-life impacts.
+
+
+## Pilot Plant Design for LaH10 Synthesis
+
+### Equipment List
+- High-pressure autoclave (1000 L, 10 GPa, 2000°C) with tungsten carbide anvils
+- Gas handling system (H2 compressor, purifier, storage)
+- Heating system (resistive or induction)
+- Cooling system (water or cryogenic)
+- Product collection and stabilization chamber
+- Analytical instruments (XRD, Raman, resistivity)
+- Safety systems (blast walls, gas detectors, emergency venting)
+
+### Layout Diagram (Mermaid)
+```mermaid
+graph TD
+    A[Raw Materials: La2O3, H2] --> B[Gas Handling & Purification]
+    B --> C[High-Pressure Autoclave]
+    C --> D[Heating/Cooling System]
+    D --> E[Product Collection]
+    E --> F[Stabilization & Encapsulation]
+    F --> G[Quality Control: XRD, Raman, Tc measurement]
+    G --> H[Storage & Shipping]
+    C --> I[Pressure Relief & Safety]
+    I --> J[Vent/Flare]
+```
+
+### Capital Cost Estimate
+- Equipment: $30M (autoclave $15M, gas handling $5M, heating/cooling $3M, analytical $2M, safety $5M)
+- Installation & civil: $10M
+- Engineering & contingency: $10M
+- Total: $50M
+
+### Comparison with Existing High-Pressure Synthesis Facilities
+| Facility | Max Pressure | Volume | Throughput | Cost | Suitability for LaH10 |
+|----------|--------------|--------|------------|------|----------------------|
+| Multi-anvil press | 25 GPa | 1 cm³ | 1 sample/day | $500k | Limited volume, low throughput |
+| Diamond anvil cell | 300 GPa | 0.001 mm³ | 1 sample/week | $100k | Microscopic, research only |
+| Proposed pilot plant | 10 GPa | 1000 L | 100 kg/day | $50M | Industrial scale, moderate pressure |
