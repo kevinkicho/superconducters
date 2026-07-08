@@ -5,6 +5,7 @@ Generates input files, runs calculations, and extracts phonon frequencies
 and electron-phonon coupling constants (lambda).
 """
 
+import math
 import os
 import subprocess
 import re
@@ -331,6 +332,29 @@ def run_full_dft_calculation(
         "phonon_frequencies": phonon_freqs,
         "elph": elph_result,
     }
+
+
+def compute_tc_mcmillan_allen_dynes(lambda_val, omega_log, mu_star=0.1):
+    """
+    Compute superconducting critical temperature Tc using the McMillan-Allen-Dynes formula.
+
+    Tc = (omega_log / 1.2) * exp( -1.04 * (1 + lambda) / (lambda - mu_star * (1 + 0.62 * lambda)) )
+
+    Args:
+        lambda_val: Electron-phonon coupling constant (dimensionless).
+        omega_log: Logarithmic average phonon frequency (K).
+        mu_star: Coulomb pseudopotential (default 0.1 for hydrides).
+
+    Returns:
+        Tc in Kelvin.
+    """
+    if lambda_val <= mu_star:
+        return 0.0  # No superconductivity
+    numerator = -1.04 * (1 + lambda_val)
+    denominator = lambda_val - mu_star * (1 + 0.62 * lambda_val)
+    exponent = numerator / denominator
+    tc = (omega_log / 1.2) * math.exp(exponent)
+    return tc
 
 
 if __name__ == "__main__":
