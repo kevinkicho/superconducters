@@ -484,12 +484,22 @@ class MLTcPredictor:
         """Predict Tc with uncertainty using Monte Carlo dropout.
         Returns (mean, std)."""
         if not self.gnn_trained or self.gnn_model is None:
-            # Fallback: use random forest with uncertainty via bootstrap
+            # Fallback: use random forest with uncertainty via ensemble of trees
             lambda_val = structure.get('lambda', 0.0)
             omega_log = structure.get('omega_log', 0.0)
             mu_star = structure.get('mu_star', 0.1)
-            mean = self.predict_tc_ml(lambda_val, omega_log, mu_star)
-            std = 0.0  # placeholder
+            # Compute predictions from each tree in the random forest
+            if hasattr(self, 'rf_model') and self.rf_model is not None and hasattr(self.rf_model, 'estimators_'):
+                tree_preds = []
+                for tree in self.rf_model.estimators_:
+                    pred = tree.predict([[lambda_val, omega_log, mu_star]])[0]
+                    tree_preds.append(pred)
+                mean = sum(tree_preds) / len(tree_preds)
+                variance = sum((p - mean) ** 2 for p in tree_preds) / len(tree_preds)
+                std = math.sqrt(variance)
+            else:
+                mean = self.predict_tc_ml(lambda_val, omega_log, mu_star)
+                std = 0.0
             return mean, std
         graph = self._structure_to_graph(structure)
         self.gnn_model.train()  # enable dropout
