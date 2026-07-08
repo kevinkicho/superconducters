@@ -3077,6 +3077,90 @@
       "prediction_method": null,
       "confidence_score": null
     }
+  },
+  {
+    "name": "YH10",
+    "Tc": 300,
+    "pressure": 200,
+    "structure": "cubic, Fm-3m (clathrate)",
+    "reference": "Peng et al., Phys. Rev. Lett. 119, 107001 (2017)",
+    "doi": "10.1103/PhysRevLett.119.107001",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 200 GPa, temperature 2000 K",
+    "lambda": 2.7,
+    "omega_log": 1200,
+    "mu_star": 0.1,
+    "Tc_error": 10,
+    "pressure_error": 10,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": "predicted, not yet experimentally confirmed as pure YH10",
+    "synthesis_conditions": {
+      "precursor_materials": ["Y", "H2"],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "Physical Review Letters",
+      "database_id": "YH10-2017",
+      "predicted_Tc": 300,
+      "prediction_method": "first-principles structure prediction + BCS",
+      "confidence_score": 0.7
+    }
+  },
+  {
+    "name": "CaH12",
+    "Tc": 220,
+    "pressure": 175,
+    "structure": "sodalite-like clathrate, Pm-3n",
+    "reference": "Wang et al., PNAS 109, 6463 (2012)",
+    "doi": "10.1073/pnas.1118168109",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 175 GPa, temperature 2000 K",
+    "lambda": 1.8,
+    "omega_log": 1000,
+    "mu_star": 0.1,
+    "Tc_error": 10,
+    "pressure_error": 25,
+    "measurement_method": "predicted",
+    "composition_uncertainty": "predicted, not yet experimentally synthesized",
+    "synthesis_conditions": {
+      "precursor_materials": ["Ca", "H2"],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "PNAS",
+      "database_id": "CaH12-2012",
+      "predicted_Tc": 220,
+      "prediction_method": "first-principles structure prediction + BCS",
+      "confidence_score": 0.6
+    }
+  },
+  {
+    "name": "MgH16",
+    "Tc": 265,
+    "pressure": 225,
+    "structure": "cubic, Fm-3m (clathrate)",
+    "reference": "Feng et al., Phys. Rev. B 92, 140506(R) (2015)",
+    "doi": "10.1103/PhysRevB.92.140506",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 225 GPa, temperature 2000 K",
+    "lambda": 2.2,
+    "omega_log": 1100,
+    "mu_star": 0.1,
+    "Tc_error": 5,
+    "pressure_error": 25,
+    "measurement_method": "predicted",
+    "composition_uncertainty": "predicted, not yet experimentally synthesized",
+    "synthesis_conditions": {
+      "precursor_materials": ["Mg", "H2"],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "Physical Review B",
+      "database_id": "MgH16-2015",
+      "predicted_Tc": 265,
+      "prediction_method": "first-principles structure prediction + BCS",
+      "confidence_score": 0.65
+    }
   }
 ]
 
