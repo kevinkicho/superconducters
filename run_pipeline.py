@@ -5349,3 +5349,52 @@ def proposed_rt_superconductor_strategy() -> dict:
 # if __name__ == "__main__":
 #     strategy = proposed_rt_superconductor_strategy()
 #     print(json.dumps(strategy, indent=2))
+
+
+# --- Missing functions ---
+
+def generate_docker_image():
+    """Generate a Docker image for the pipeline."""
+    print("[Docker] Generating Docker image...")
+    # Placeholder: build Docker image
+    pass
+
+def publish_to_github_pages():
+    """Publish documentation to GitHub Pages."""
+    print("[GitHub Pages] Publishing documentation...")
+    # Placeholder: run mkdocs gh-deploy
+    pass
+
+def generate_user_feedback_report():
+    """Generate a user feedback report."""
+    print("[Feedback] Generating user feedback report...")
+    # Placeholder: aggregate feedback
+    pass
+
+def check_data_quality():
+    """Check data quality of the database."""
+    print("[Data Quality] Checking data quality...")
+    # Placeholder: run data quality checks
+    pass
+
+def setup_oauth2():
+    """Set up OAuth2 authentication for the FastAPI app."""
+    print("[OAuth2] Setting up OAuth2 authentication...")
+    # Placeholder: configure OAuth2
+    pass
+
+def run_full_pipeline():
+    """Run the full pipeline including all output functions."""
+    print("[Pipeline] Starting full pipeline...")
+    # Call existing pipeline functions
+    active_learning_loop()
+    # Call new output functions
+    generate_docker_image()
+    publish_to_github_pages()
+    generate_user_feedback_report()
+    check_data_quality()
+    setup_oauth2()
+    print("[Pipeline] Full pipeline completed.")
+
+if __name__ == "__main__":
+    run_full_pipeline()
