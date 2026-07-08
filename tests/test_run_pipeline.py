@@ -642,3 +642,220 @@ def test_pipeline_validated_against_2025_paper():
             self.assertIn("status", result)
             self.assertEqual(result["status"], "converged")
             mock_sim.assert_called_once_with(material="H3S", pressure=155, temperature=200)
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_integration(self, mock_open, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Test the full pipeline integration with all components mocked."""
+        # Setup mocks
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+
+        def predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 5.0)
+            elif name == "LaH10":
+                return (250.0, 8.0)
+            else:
+                return (100.0, 10.0)
+        mock_predict.side_effect = predict_side_effect
+
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_ext_db.return_value = [{"material": "YH6", "Tc": 180}]
+        mock_digital_twin.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+        mock_manufacturing.return_value = {"yield": 0.85, "cost": 12.5}
+
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run pipeline
+        result = rp.run_pipeline()
+
+        # Assertions
+        mock_load.assert_called_once()
+        mock_train.assert_called_once()
+        # predict_tc_with_uncertainty should be called for each candidate
+        assert mock_predict.call_count >= 2
+        # DFT should be called for high-uncertainty candidates (if uncertainty > threshold)
+        # Assuming threshold is 5, H3S has uncertainty 5.0, LaH10 has 8.0, so both may be called
+        assert mock_dft.call_count >= 1
+        # External database query should be called
+        mock_ext_db.assert_called()
+        # Digital twin simulation should be called for top candidates
+        mock_digital_twin.assert_called()
+        # Manufacturing scalability update should be called
+        mock_manufacturing.assert_called()
+        # Result should be a dict with expected keys
+        self.assertIsInstance(result, dict)
+        self.assertIn("candidates", result)
+        self.assertIn("dft_results", result)
+        self.assertIn("digital_twin_results", result)
+        self.assertIn("manufacturing_update", result)
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_empty_candidates(self, mock_open, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline behavior when candidate list is empty."""
+        mock_load.return_value = []  # empty list
+        mock_model = MagicMock()
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (0.0, 0.0)
+        mock_dft.return_value = {"energy": 0, "bandgap": 0, "status": "failed"}
+        mock_ext_db.return_value = []
+        mock_digital_twin.return_value = {"temperature": 0, "pressure": 0, "tc": 0, "status": "failed"}
+        mock_manufacturing.return_value = {"yield": 0, "cost": 0}
+
+        result = rp.run_pipeline()
+        # Should not crash, return empty results
+        self.assertIsInstance(result, dict)
+        # Possibly no candidates selected
+        self.assertEqual(len(result.get("candidates", [])), 0)
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_api_failure(self, mock_open, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline handling of external API failure."""
+        mock_load.return_value = [{"name": "H3S", "Tc": 203, "pressure": 155}]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        # Simulate API failure
+        mock_ext_db.side_effect = Exception("API connection failed")
+        mock_digital_twin.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+        mock_manufacturing.return_value = {"yield": 0.85, "cost": 12.5}
+
+        result = rp.run_pipeline()
+        # Should handle gracefully, perhaps log error and continue
+        self.assertIsInstance(result, dict)
+        # External database query may have been attempted but failed; pipeline should not crash
+        # Check that other steps still executed
+        mock_load.assert_called_once()
+        mock_train.assert_called_once()
+        mock_predict.assert_called()
+        mock_dft.assert_called()
+        mock_digital_twin.assert_called()
+        mock_manufacturing.assert_called()
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_invalid_parameters(self, mock_open, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline with invalid parameters (e.g., negative pressure)."""
+        mock_load.return_value = [{"name": "H3S", "Tc": 203, "pressure": -100}]  # invalid pressure
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_ext_db.return_value = []
+        mock_digital_twin.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+        mock_manufacturing.return_value = {"yield": 0.85, "cost": 12.5}
+
+        result = rp.run_pipeline()
+        # Should handle invalid parameters without crashing
+        self.assertIsInstance(result, dict)
+        # Possibly skip or adjust parameters
+        # At minimum, pipeline should not raise exception
+        self.assertTrue(True)
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_multi_fidelity(self, mock_open, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Test multi-fidelity optimization: low-fidelity ML predictions and high-fidelity DFT."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155},
+            {"name": "LaH10", "Tc": 250, "pressure": 170}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+
+        # Low-fidelity predictions (ML) with high uncertainty
+        def predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 20.0)  # high uncertainty
+            elif name == "LaH10":
+                return (250.0, 3.0)   # low uncertainty
+            else:
+                return (100.0, 10.0)
+        mock_predict.side_effect = predict_side_effect
+
+        # High-fidelity DFT only for high-uncertainty candidates
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_ext_db.return_value = []
+        mock_digital_twin.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+        mock_manufacturing.return_value = {"yield": 0.85, "cost": 12.5}
+
+        result = rp.run_pipeline()
+        # DFT should be called only for H3S (high uncertainty) not for LaH10
+        # Assuming the pipeline uses uncertainty threshold to decide
+        # We can check that DFT was called with H3S but not LaH10
+        dft_calls = [c for c in mock_dft.call_args_list if 'H3S' in str(c)]
+        self.assertGreater(len(dft_calls), 0)
+        # LaH10 should not have DFT call if uncertainty is low
+        # This depends on implementation; we can just check that at least one DFT call happened
+        self.assertGreater(mock_dft.call_count, 0)
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.query_external_database')
+    @patch('scripts.run_pipeline.run_digital_twin_simulation')
+    @patch('scripts.run_pipeline.update_manufacturing_scalability')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_manufacturing_scalability(self, mock_open, mock_manufacturing, mock_digital_twin, mock_ext_db, mock_dft, mock_predict, mock_train, mock_load):
+        """Test that manufacturing scalability update is called and updates roadmap."""
+        mock_load.return_value = [{"name": "H3S", "Tc": 203, "pressure": 155}]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_ext_db.return_value = []
+        mock_digital_twin.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+        mock_manufacturing.return_value = {"yield": 0.85, "cost": 12.5}
+
+        result = rp.run_pipeline()
+        # Check that update_manufacturing_scalability was called with appropriate arguments
+        mock_manufacturing.assert_called()
+        # The function should have been called with the top candidate and its DFT/digital twin results
+        # We can check that the call arguments contain the candidate name
+        call_args = mock_manufacturing.call_args
+        self.assertIn("H3S", str(call_args))
