@@ -437,3 +437,131 @@ Any delay in screening, synthesis, or characterization tasks will directly push 
 - Parallelize thin-film and high-pressure synthesis tracks to reduce critical path length.
 - Establish pre-approved material transfer agreements with partner labs to avoid administrative delays.
 - Use agile sprint planning (2-week cycles) for screening and optimization tasks to quickly re-prioritize based on results.
+
+## 5-Year Plan Extension (2028–2030)
+
+### Overview
+This extension builds on the 3-year plan (2025–2027) to achieve TRL 7 by 2030. The focus shifts from discovery to manufacturing scale-up, pilot plant construction, and field demonstration.
+
+### Milestones
+
+| Year | Quarter | Milestone | TRL | Description |
+|------|---------|-----------|-----|-------------|
+| 2028 | Q1 | M7 | 6 | Pilot plant design complete, equipment procurement initiated |
+| 2028 | Q2 | M8 | 6 | Pilot plant construction begins, process validation runs |
+| 2028 | Q3 | M9 | 6 | First pilot batch produced (kg-scale), quality metrics met |
+| 2028 | Q4 | M10 | 7 | Short-length wire/tape fabricated from pilot material |
+| 2029 | Q1 | M11 | 7 | Field demo preparation: cable design, partner site selection |
+| 2029 | Q2 | M12 | 7 | Field demo execution: 10 m cable tested in grid simulator |
+| 2029 | Q3 | M13 | 7 | Performance validation: Jc > 10⁵ A/cm² at 77 K, Tc > 300 K |
+| 2029 | Q4 | M14 | 7 | Commercialization plan finalized, licensing agreements signed |
+| 2030 | Q1 | M15 | 7 | Pilot plant operational, continuous production at 100 kg/month |
+| 2030 | Q2 | M16 | 7 | Field demo in real grid (1 km cable), regulatory approvals |
+| 2030 | Q3 | M17 | 7 | Technology transfer to manufacturing partner, scale-up to tonnage |
+| 2030 | Q4 | M18 | 8 | Commercial product launch, revenue generation begins |
+
+### Decision Gates
+
+- **Gate 6 (2028-01-01):** Pilot plant design review — go/no-go for construction. Criteria: successful scale-up synthesis (kg-scale), Jc > 10⁵ A/cm², Tc > 300 K at ambient pressure, cost < $100/g.
+- **Gate 7 (2029-01-01):** Field demo readiness — go/no-go for field test. Criteria: pilot batch reproducibility (Cpk > 1.33), wire/tape performance meets spec, partner commitment secured.
+- **Gate 8 (2030-01-01):** Commercialization go/no-go. Criteria: field demo successful, cost < $10/g, market demand validated, IP portfolio protected.
+
+### Risk Mitigation
+
+| Risk | Probability | Impact | Mitigation Strategy |
+|------|-------------|--------|---------------------|
+| Pilot plant cost overrun | Medium | High | Maintain 20% contingency, phased procurement, modular design |
+| Scale-up synthesis failure | Medium | High | Parallel synthesis routes (CVD, sol-gel, solid-state), backup candidates |
+| Field demo performance shortfall | Low | High | Overdesign cable by 20%, multiple test sites, accelerated life testing |
+| Regulatory delays | Medium | Medium | Engage regulators early, pre-submit documentation, hire regulatory consultant |
+| IP infringement | Low | High | Freedom-to-operate analysis, patent landscape, cross-licensing |
+| Market adoption slow | Medium | Medium | Early adopter partnerships, government subsidies, phased pricing |
+
+### Resource Requirements
+
+#### Personnel (FTE)
+
+| Role | 2028 | 2029 | 2030 |
+|------|------|------|------|
+| Project Manager | 1 | 1 | 1 |
+| Process Engineer | 3 | 4 | 5 |
+| Materials Scientist | 2 | 2 | 2 |
+| Characterization Specialist | 2 | 2 | 2 |
+| Quality Engineer | 1 | 2 | 2 |
+| Electrical Engineer (cable) | 1 | 2 | 2 |
+| Technician | 4 | 6 | 8 |
+| Regulatory Affairs | 0.5 | 1 | 1 |
+| Business Development | 0.5 | 1 | 1 |
+| **Total** | **15** | **21** | **24** |
+
+#### Equipment & Infrastructure
+
+- Pilot plant facility (cleanroom, glovebox, furnaces, CVD reactors, sputter coater) — $5M capital
+- Wire/tape fabrication line (extrusion, rolling, annealing, coating) — $3M capital
+- Characterization lab (XRD, SEM, PPMS, MPMS) — $2M capital (shared with R&D)
+- Field demo equipment (cable termination, cryostat, power supply, data acquisition) — $1M capital
+- Total capital: $11M
+
+#### Budget (USD)
+
+| Year | Personnel | Equipment | Consumables | Travel & Misc | Total |
+|------|-----------|-----------|-------------|---------------|-------|
+| 2028 | $2,250,000 | $4,000,000 | $500,000 | $250,000 | $7,000,000 |
+| 2029 | $3,150,000 | $3,000,000 | $600,000 | $300,000 | $7,050,000 |
+| 2030 | $3,600,000 | $2,000,000 | $700,000 | $350,000 | $6,650,000 |
+| **Total** | **$9,000,000** | **$9,000,000** | **$1,800,000** | **$900,000** | **$20,700,000** |
+
+*Note: Personnel costs at $150,000/FTE/year. Equipment includes capital purchases and maintenance. Consumables include precursors, gases, substrates, and sample holders. Travel includes conferences, partner visits, and field demo logistics.*
+
+### Funding Milestones
+
+- **2028 Q1:** Secure $5M grant from DOE ARPA-E (ULTRA/SCALE program) or NSF PFI for pilot plant construction.
+- **2028 Q3:** Raise $10M Series A venture capital from clean energy/quantum technology funds.
+- **2029 Q1:** Secure $3M SBIR/STTR Phase II for field demo.
+- **2029 Q3:** Partner with utility company for cost-sharing ($2M) on field demo.
+- **2030 Q1:** Close $20M Series B for commercial scale-up.
+- **2030 Q3:** Revenue from first commercial sales ($5M).
+
+### Gantt Chart (Mermaid)
+
+```mermaid
+gantt
+    title 5-Year Plan Extension (2028–2030)
+    dateFormat  YYYY-MM-DD
+    axisFormat  %Y-Q%q
+    
+    section Pilot Plant
+    Design & procurement           :2028-01-01, 2028-06-30
+    Construction & commissioning   :2028-04-01, 2028-12-31
+    Process validation runs        :2028-07-01, 2029-03-31
+    Continuous production          :2029-04-01, 2030-12-31
+    
+    section Wire/Tape Fabrication
+    Short sample fabrication       :2028-10-01, 2029-03-31
+    Long-length wire development   :2029-01-01, 2029-09-30
+    Performance optimization       :2029-04-01, 2029-12-31
+    
+    section Field Demonstration
+    Site selection & preparation   :2029-01-01, 2029-06-30
+    Cable installation & testing   :2029-07-01, 2029-12-31
+    Grid integration demo          :2030-01-01, 2030-06-30
+    
+    section Commercialization
+    Business plan & licensing      :2029-01-01, 2029-12-31
+    Manufacturing partnership       :2029-07-01, 2030-06-30
+    Product launch                 :2030-07-01, 2030-12-31
+    
+    section Funding
+    Grant applications             :2028-01-01, 2028-06-30
+    Series A raise                 :2028-04-01, 2028-12-31
+    SBIR/STTR Phase II             :2029-01-01, 2029-06-30
+    Series B raise                 :2030-01-01, 2030-06-30
+    Revenue generation             :2030-07-01, 2030-12-31
+```
+
+### Critical Path
+
+The critical path runs through: Pilot plant design → construction → process validation → short sample fabrication → long-length wire → field demo → commercialization. The longest chain is approximately 3 years (2028 Q1 to 2030 Q4). Parallel tracks (funding, partnership development) have float and can be accelerated.
+
+### Conclusion
+This 5-year extension provides a realistic pathway to TRL 7 by 2030, with clear milestones, decision gates, risk mitigation, and resource requirements. Success depends on sustained funding, strong partnerships, and rigorous technical execution.
