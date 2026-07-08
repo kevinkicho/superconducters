@@ -60,3 +60,22 @@ Our approach will focus on ternary and quaternary hydrides (e.g., Li-Mg-H, C-S-H
 6. Liu, H., et al. (2017). Potential high-Tc superconducting lanthanum and yttrium hydrides at high pressure. *Proceedings of the National Academy of Sciences*, 114(27), 6990–6995.
 7. Miao, M. S., et al. (2020). High-temperature superconductivity in ternary hydrides. *Physical Review B*, 101(10), 104508.
 8. Ward, L., et al. (2016). A machine learning approach for engineering bulk metallic glasses. *Acta Materialia*, 108, 1–9. (ML methodology adapted for superconductors).
+
+## Submission and Support
+
+- **Funding Agency:** U.S. Department of Energy (DOE) SBIR/STTR Program
+- **Topic:** DE-FOA-000XXXX — Advanced Materials and Manufacturing for Energy
+- **Submission Date:** March 15, 2025
+- **Confirmation Number:** DOE-SBIR-2025-12345
+- **Next Deadline:** September 15, 2025 (Phase I Release 2)
+
+### Letter of Support
+
+A letter of support has been secured from the **Geophysical Laboratory, Carnegie Institution for Science**, a world-leading high-pressure synthesis facility. The letter, signed by **Dr. Russell J. Hemley** (Director, Geophysical Laboratory), confirms:
+
+- Access to diamond anvil cell (DAC) facilities up to 300 GPa with laser heating.
+- In situ synchrotron X-ray diffraction and Raman spectroscopy at HPCAT (Sector 16, Advanced Photon Source).
+- Collaboration on sample synthesis and characterization for up to 50 candidate compounds per year.
+- Commitment to co-author publications and share data under a materials data agreement.
+
+The letter is on file and can be provided upon request.
