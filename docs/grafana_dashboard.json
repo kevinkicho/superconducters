@@ -1,0 +1,104 @@
+{
+  "dashboard": {
+    "title": "Pipeline Health, Model Performance & API Latency",
+    "uid": "pipeline-monitoring",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Pipeline Health - Uptime",
+        "type": "stat",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "up{job=\"pipeline\"}",
+            "legendFormat": "Uptime"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "id": 2,
+        "title": "Pipeline Health - Error Rate",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "rate(pipeline_errors_total[5m])",
+            "legendFormat": "Error rate"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 8,
+          "y": 0
+        }
+      },
+      {
+        "id": 3,
+        "title": "Model Performance - Accuracy",
+        "type": "gauge",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "model_accuracy",
+            "legendFormat": "Accuracy"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 16,
+          "y": 0
+        }
+      },
+      {
+        "id": 4,
+        "title": "Model Performance - Loss",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "model_loss",
+            "legendFormat": "Loss"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "API Latency - Response Time",
+        "type": "graph",
+        "datasource": "Prometheus",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(api_request_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "p95 latency"
+          }
+        ],
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        }
+      }
+    ],
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timezone": "browser",
+    "refresh": "30s"
+  }
+}
