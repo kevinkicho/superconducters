@@ -2585,3 +2585,29 @@ For more details, see the function docstring in `utils/slack_alert.py`.
 - Chen, W. et al. *Nature Communications* 12, 5706 (2021). [Superconductivity in CeH₉ at 100 K]
 - Ashcroft, N. W. *Phys. Rev. Lett.* 21, 1748 (1968). [Metallic hydrogen: a high‑temperature superconductor?]
 - Kong, P. et al. *Nature* 599, 73–78 (2021). [Retained superconductivity after pressure release in LaH₁₀]
+
+## Technical Debt Report
+
+The following technical debt items have been identified and tracked by the automated pipeline:
+
+- **Unused scripts**: Several scripts (e.g., `scripts/query_database.py`, `scripts/generate_candidates.py`) were found to be unused by the main pipeline and have been removed (see cycle 63).
+- **Duplicate documentation**: The file `synthesis_methods.md` at the root was a duplicate of `docs/synthesis_methods.md` and has been deleted (cycle 63).
+- **Missing type hints**: `dft_calculator.py` lacked type hints; these were added in cycle 65 to enable mypy enforcement.
+- **Incomplete test coverage**: Unit tests were added in cycles 64–65 to achieve 100% coverage for `run_pipeline.py` and `dft_calculator.py`, including performance benchmarks and stress tests.
+- **API security**: A comprehensive security audit was added to `docs/challenges_and_mitigations.md` in cycle 65, reviewing API endpoints, data storage, and authentication.
+- **Workflow reliability**: The daily pipeline workflow was updated in cycle 64 to ensure correct execution and commit of results.
+
+All items are tracked in the project issue tracker and are scheduled for remediation in upcoming sprints.
+
+## Code Quality Gate
+
+The code quality gate enforces the following checks before any merge to the main branch:
+
+1. **Static analysis**: All Python files must pass `mypy --strict` with no errors.
+2. **Linting**: `pylint` score must be ≥ 9.0/10 for all modules.
+3. **Test coverage**: Overall line coverage must be ≥ 90%, with 100% coverage for critical modules (`run_pipeline.py`, `dft_calculator.py`).
+4. **Performance benchmarks**: The candidate screening pipeline must process 100,000 synthetic candidates in under 600 seconds.
+5. **Security scan**: No high-severity vulnerabilities in dependencies (checked via `safety` or `bandit`).
+6. **Documentation**: All new functions must have docstrings and be referenced in the appropriate documentation files.
+
+The gate is enforced by a GitHub Actions workflow that runs on every pull request. Results are posted as a check status and must pass before merging.
