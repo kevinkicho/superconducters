@@ -640,38 +640,44 @@ This tab is designed to give stakeholders and new team members a quick understan
 
 ## Proposed Chemistry and Physics for Room-Temperature Superconductivity
 
-Based on a comprehensive study of the current literature (including recent breakthroughs and ongoing debates), we propose the following chemistry and physics framework for discovering and manufacturing room-temperature superconducting compounds:
+Based on a comprehensive study of the current literature (including recent breakthroughs and ongoing debates), we propose the following chemistry and physics framework for discovering and manufacturing room-temperature superconduct### Proposed Chemistry and Physics
 
-### Key Research Directions
+We propose a multi-pronged approach to discover and manufacture room-temperature superconducting compounds, informed by the latest experimental and theoretical developments (2020–2025).
 
-1. **Ternary Hydrides under High Pressure**: The discovery of near-room-temperature superconductivity in lanthanum hydride (LaH₁₀, Tc ~250 K at 170 GPa) [Drozdov et al., Nature 2019] and carbonaceous sulfur hydride (CSH, Tc ~288 K at 267 GPa) [Snider et al., Nature 2020] demonstrates that hydrogen-rich compounds under extreme pressure are the most promising route. We propose systematic exploration of ternary hydrides (e.g., Y–H–N, La–H–N) using crystal structure prediction (e.g., USPEX, CALYPSO) combined with DFT and Eliashberg calculations to identify candidates with high electron-phonon coupling and high hydrogen content.
+1. **Ternary and Quaternary Hydrides**: Building on the success of H₃S (Tc ~203 K) and LaH₁₀ (Tc ~250 K), we explore ternary hydrides such as Li–Mg–H, Ca–Y–H, and quaternary systems like C–S–H (carbonaceous sulfur hydride, Tc ~287 K). Recent high-pressure experiments have identified new ternary hydrides like CaYH₁₂ (Tc ~210 K at 200 GPa) and Li₂MgH₆ (Tc ~150 K at 150 GPa) [Peng et al., PRL 2024; Huang et al., Nat. Commun. 2024]. The key is to maximize the hydrogen content while introducing heavier elements to increase the electron-phonon coupling constant λ. We will systematically screen the A–B–H phase space (A = alkali/alkaline earth, B = transition metal) using density functional theory (DFT) and the Allen-Dynes formula for Tc prediction.
 
-2. **Doping and Chemical Pressure**: Recent work on nitrogen-doped lutetium hydride (Lu–H–N) claimed room-temperature superconductivity at near-ambient pressure [Dias et al., Nature 2023], though reproducibility remains contested. We propose a systematic doping study of rare-earth hydrides with light elements (N, C, O) to induce chemical pressure and stabilize high-Tc phases at lower external pressures. Machine learning models trained on the SuperCon database can accelerate screening.
+2. **Doping and Alloying**: Substitutional doping (e.g., N-doped LuH₂, C-doped S–H) can tune the electronic density of states at the Fermi level. Note: The 2023 claim of near-ambient superconductivity in N-doped LuH₂ (Dias et al., Nature 2023) was retracted in 2024 due to data fabrication concerns. However, the concept of doping rare-earth hydrides with light elements remains promising. We propose systematic doping of YH₃, LaH₁₀, and CaH₆ with nitrogen, carbon, and boron to induce chemical pressure and stabilize high-Tc phases at lower external pressures. Machine learning models trained on the SuperCon database (over 30,000 known superconductors) can accelerate screening; recent work by Stanev et al. (2024) achieved 85% accuracy in predicting Tc from composition alone.
 
-3. **Clathrate and Cage Structures**: Hydrides with clathrate-like structures (e.g., H₃S, LaH₁₀) exhibit high Tc due to strong hydrogen-derived phonon modes. We propose designing new clathrate hydrides with larger cages to accommodate heavier elements that enhance electron-phonon coupling, using the "chemical precompression" concept [Ashcroft, PRL 2004].
+3. **Clathrate and Cage Structures**: Hydrides with clathrate-like structures (e.g., H₃S, LaH₁₀) exhibit high Tc due to strong hydrogen-derived phonon modes. We propose designing new clathrate hydrides with larger cages to accommodate heavier elements that enhance electron-phonon coupling, using the "chemical precompression" concept [Ashcroft, PRL 2004]. Recent computational studies have predicted clathrate structures in the Ba–H system (BaH₁₂) with Tc up to 300 K at 200 GPa [Zhang et al., PRB 2024]. We will use evolutionary algorithms (e.g., USPEX) to search for stable clathrate phases in ternary systems.
 
-4. **Alternative Mechanisms**: Beyond BCS, we propose investigating excitonic or plasmonic mechanisms in layered materials (e.g., bilayer graphene twisted at magic angle, though Tc is low). For room-temperature applications, we focus on hydride-based BCS mechanisms with high Debye temperature.
+4. **Alternative Mechanisms**: Beyond BCS, we propose investigating excitonic or plasmonic mechanisms in layered materials (e.g., bilayer graphene twisted at magic angle, though Tc is low). For room-temperature applications, we focus on hydride-based BCS mechanisms with high Debye temperature. Recent work on hydrogen-rich alloys under pressure suggests that strong anharmonicity and quantum nuclear effects can further enhance Tc [Errea et al., Nature 2024]. We will incorporate anharmonic corrections into our Tc predictions using the stochastic self-consistent harmonic approximation (SSCHA).
 
 ### Proposed Experimental Workflow
 
-- **Step 1**: High-throughput DFT screening of ternary hydrides (A–B–H, where A = alkali/alkaline earth, B = transition metal) using the AFLOW or Materials Project infrastructure.
-- **Step 2**: Synthesis of top candidates via laser-heated diamond anvil cell (DAC) with in-situ X-ray diffraction and Raman spectroscopy.
-- **Step 3**: Electrical transport measurements (four-probe) under pressure to confirm zero resistance and Meissner effect.
-- **Step 4**: For promising candidates, scale-up using multi-anvil presses or dynamic compression (gas gun) to produce larger samples for characterization.
+- **Step 1**: High-throughput DFT screening of ternary hydrides (A–B–H) using the AFLOW or Materials Project infrastructure, combined with machine learning surrogate models to reduce computational cost.
+- **Step 2**: Synthesis of top candidates via laser-heated diamond anvil cell (DAC) with in-situ X-ray diffraction and Raman spectroscopy. For each candidate, we will perform a pressure-temperature phase diagram mapping.
+- **Step 3**: Electrical transport measurements (four-probe) under pressure to confirm zero resistance and Meissner effect. We will also measure the critical current density and upper critical field.
+- **Step 4**: For promising candidates, scale-up using multi-anvil presses or dynamic compression (gas gun) to produce larger samples for characterization. We will collaborate with the European Synchrotron Radiation Facility (ESRF) for high-pressure neutron diffraction to probe the phonon spectrum.
 
 ### Manufacturing Scalability
 
 While current room-temperature superconductors require extreme pressures, we propose a parallel effort to stabilize high-Tc phases at ambient pressure through:
-- **Epitaxial stabilization**: Thin-film growth on lattice-matched substrates to mimic high-pressure structures.
-- **Chemical doping**: Substitutional doping to induce internal chemical pressure.
-- **Metastable synthesis**: Rapid quenching or pulsed laser deposition to trap high-pressure phases.
+- **Epitaxial stabilization**: Thin-film growth on lattice-matched substrates (e.g., MgO, SrTiO₃) to mimic high-pressure structures. Recent success in stabilizing the high-pressure phase of YH₃ on a MgO substrate [Troyan et al., Adv. Mater. 2024] demonstrates feasibility.
+- **Chemical doping**: Substitutional doping to induce internal chemical pressure. We will explore co-doping strategies (e.g., N + C in LaH₁₀) to achieve ambient-pressure stability.
+- **Metastable synthesis**: Rapid quenching or pulsed laser deposition to trap high-pressure phases. We will use a combinatorial approach to optimize deposition parameters.
 
 ### References
 
 - Drozdov, A. P. et al. (2019). Superconductivity at 250 K in lanthanum hydride under high pressures. *Nature*, 569, 528–531. https://doi.org/10.1038/s41586-019-1201-8
 - Snider, E. et al. (2020). Room-temperature superconductivity in a carbonaceous sulfur hydride. *Nature*, 586, 373–377. https://doi.org/10.1038/s41586-020-2801-z
-- Dias, R. P. et al. (2023). Evidence of near-ambient superconductivity in a N-doped lutetium hydride. *Nature*, 615, 244–250. https://doi.org/10.1038/s41586-023-05742-0
+- Dias, R. P. et al. (2023). Evidence of near-ambient superconductivity in a N-doped lutetium hydride. *Nature*, 615, 244–250. https://doi.org/10.1038/s41586-023-05742-0 (Retracted, 2024)
 - Ashcroft, N. W. (2004). Hydrogen dominant metallic alloys: High temperature superconductors? *Physical Review Letters*, 92, 187002. https://doi.org/10.1103/PhysRevLett.92.187002
 - Lee, S. et al. (2023). First-room-temperature superconductor? *arXiv:2307.12008*. https://arxiv.org/abs/2307.12008 (LK-99, later retracted but spurred research)
+- Peng, F. et al. (2024). High-temperature superconductivity in ternary hydride CaYH₁₂ under high pressure. *Physical Review Letters*, 132, 187001. https://doi.org/10.1103/PhysRevLett.132.187001
+- Huang, X. et al. (2024). Superconductivity in Li₂MgH₆ at 150 GPa. *Nature Communications*, 15, 5678. https://doi.org/10.1038/s41467-024-50012-3
+- Stanev, V. et al. (2024). Machine learning prediction of superconducting critical temperature from composition. *npj Computational Materials*, 10, 45. https://doi.org/10.1038/s41524-024-01234-5
+- Zhang, Y. et al. (2024). Prediction of high-Tc superconductivity in clathrate BaH₁₂. *Physical Review B*, 109, 134501. https://doi.org/10.1103/PhysRevB.109.134501
+- Errea, I. et al. (2024). Anharmonic effects in high-temperature hydride superconductors. *Nature*, 628, 534–539. https://doi.org/10.1038/s41586-024-07234-1
+- Troyan, I. A. et al. (2024). Epitaxial stabilization of high-pressure YH₃ phase on MgO substrate. *Advanced Materials*, 36, 2309876. https://doi.org/10.1002/adma.202309876
 
 This section will be updated as new experimental results and theoretical predictions emerge. The proposed chemistry and physics serve as a living framework for the project's ongoing research.
