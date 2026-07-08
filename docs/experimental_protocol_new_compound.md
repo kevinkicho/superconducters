@@ -454,6 +454,46 @@ Each lab performs the following measurements on the received samples:
 - If sample degradation is suspected (e.g., pressure loss), the backup sample is used.
 - All deviations are documented in the final report.
 
+## Round-Robin Validation
+
+### Overview
+To ensure reproducibility and robustness of the synthesis and characterization results, a round-robin validation will be conducted across three independent facilities. Each facility will independently synthesize the target compound following the protocol described in Sections 1–2, characterize it using the methods in Section 3, and submit their raw data and analysis results to a central repository.
+
+### Participating Facilities
+1. **Facility A** – Carnegie Institution for Science (Washington, DC, USA) – Lead synthesis lab.
+2. **Facility B** – Max Planck Institute for Chemistry (Mainz, Germany) – Independent synthesis and characterization.
+3. **Facility C** – University of Tokyo (Tokyo, Japan) – Independent synthesis and characterization.
+
+### Protocol for Each Facility
+- Each facility receives a coded sample of the precursor materials (La metal, NH3BH3) from a central distributor. The sample identity is blinded.
+- Each facility follows the exact same synthesis protocol (Sections 1–2) using their own DAC and laser heating setup.
+- Each facility performs the characterization measurements (Section 3) on their synthesized sample.
+- Each facility records all parameters (pressure, temperature, laser power, heating duration, etc.) in a standardized electronic lab notebook (ELN) template.
+
+### Results Submission
+- Raw data (XRD patterns, resistivity vs. temperature, AC susceptibility, specific heat) are uploaded to a shared Zenodo community (DOI reserved).
+- Analysis scripts (Python/Jupyter notebooks) are pre-registered on the Open Science Framework (OSF) before measurements begin.
+- Each facility independently reduces their data using the pre-registered scripts and submits the results to a private GitHub repository.
+
+### Reproducibility Analysis
+- After all facilities submit, the sample codes are unblinded.
+- The lead lab performs a meta-analysis:
+  - Weighted average of Tc (onset, midpoint, zero-resistance) across facilities.
+  - Inter-lab variance (standard deviation, coefficient of variation).
+  - Comparison of structural parameters (lattice constant, volume) from XRD.
+  - Assessment of systematic biases (e.g., pressure calibration differences).
+- A reproducibility score is computed using the following criteria:
+  - **Excellent**: Tc within ±5 K across all facilities, lattice constant within ±0.02 Å.
+  - **Good**: Tc within ±10 K, lattice constant within ±0.05 Å.
+  - **Moderate**: Tc within ±20 K, lattice constant within ±0.1 Å.
+  - **Poor**: Tc deviation >20 K or lattice constant >0.1 Å.
+- Results are documented in a round-robin report, which is appended to the final publication.
+
+### Contingency
+- If a facility reports a Tc > 20 K different from the others, the sample is re-measured by a fourth independent lab (e.g., National High Magnetic Field Laboratory).
+- If sample degradation is suspected (e.g., pressure loss), the backup sample is used.
+- All deviations are documented in the final report.
+
 ## Dynamically Generated Protocols
 
 The pipeline's high-throughput screening module can generate synthesis protocols for candidate ternary hydrides on the fly. These protocols are based on the compound's predicted properties and are dynamically created using the `generate_synthesis_protocol()` function in `run_pipeline.py`. The generated protocols include precursor preparation, synthesis steps, characterization methods, and expected properties.
