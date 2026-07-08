@@ -1387,3 +1387,77 @@ Alert rules (defined in `prometheus/alerts.yml`):
 | IngestionFailure | ingestion_error_rate > 0.05 for 10m | critical |
 
 All alerts are logged to a dedicated `alert_history` table for post-mortem analysis and compliance auditing.
+
+
+## Cloud Lab Integration
+
+Cloud lab integration enables automated, high-throughput synthesis and characterization of candidate compounds. The system connects to remote cloud laboratory platforms (e.g., Emerald Cloud Lab, Strateos) via REST APIs. Each experiment request includes:
+- Candidate compound identifier and predicted Tc
+- Synthesis parameters (precursors, pressure, temperature, duration, method) optimized by the reinforcement learning (RL) agent
+- Characterization protocol (XRD, resistivity, SQUID, heat capacity)
+- Priority and scheduling constraints
+
+Upon completion, the cloud lab returns structured results (parsed raw data, quality metrics, measured Tc) which are automatically ingested into the central database via the Data Ingestion Protocol. The integration module (`scripts/cloud_lab_integration.py`) handles:
+- Authentication and session management
+- Experiment submission and status polling
+- Result retrieval and validation
+- Error handling and retry logic
+
+Key metrics exposed via Prometheus:
+- `cloud_lab_submissions_total` (counter)
+- `cloud_lab_success_rate` (gauge)
+- `cloud_lab_turnaround_time_seconds` (histogram)
+
+## Continuous Learning
+
+Continuous learning ensures that ML models are retrained as new experimental data accumulates. The retraining pipeline (`scripts/continuous_learning.py`) runs automatically every 24 hours (configurable) and performs the following steps:
+
+1. **Data Aggregation**: Queries the database for all experiments with validated measurements added since the last retraining.
+2. **Feature Engineering**: Computes updated feature vectors (compositional, structural, electronic) using the same pipeline as initial training.
+3. **Model Retraining**: Retrains all active models (random forest, gradient boosting, neural network, Gaussian process) on the combined historical + new data. The training script uses the same hyperparameters as the best-performing model version, unless a hyperparameter search is triggered (see below).
+4. **Model Evaluation**: Evaluates retrained models on a held-out test set (10% of all data, stratified by compound family). Computes RMSE, R², MAE, and max error. If the new model outperforms the current production model by at least 5% in RMSE, it is promoted to production.
+5. **Versioning**: Each retrained model is assigned a new version ID (e.g., `v2.3.1`). Model artifacts (pickle files, ONNX) are stored in a model registry (e.g., MLflow) with metadata (training date, data range, performance metrics).
+6. **Hyperparameter Search**: If the rolling MAE exceeds 1.5× baseline for two consecutive windows, a hyperparameter search (Bayesian optimization over 50 trials) is triggered to find better parameters.
+
+Outputs:
+- Updated model registry entries
+- Prometheus metrics: `model_retrain_duration_seconds`, `model_performance_rmse`, `model_performance_r2`
+- Slack/email notification to the ML team with performance comparison
+
+## Validation
+
+Validation encompasses both experimental validation of computational predictions and cross-validation of the models themselves. The validation workflow is as follows:
+
+### Experimental Validation
+
+For each candidate compound that reaches the top of the ranking (e.g., top 5 by predicted Tc with uncertainty < 10 K), an experimental validation request is generated. The request includes:
+- Predicted Tc and confidence interval
+- Recommended synthesis parameters (from RL optimization)
+- Characterization checklist (XRD, resistivity, magnetization, heat capacity)
+- Priority level (high for top candidates)
+
+The validation results are compared to predictions using:
+- Absolute error = |predicted Tc - measured Tc|
+- Signed error = predicted Tc - measured Tc
+- Relative error = |predicted Tc - measured Tc| / measured Tc (if measured Tc > 0)
+
+A validation report is generated (`docs/validation_reports/{candidate_id}.md`) summarizing the comparison, any discrepancies, and recommendations for model improvement.
+
+### Model Cross-Validation
+
+All models undergo k-fold cross-validation (k=5) on the full training dataset after each retraining. Cross-validation metrics (mean RMSE, standard deviation) are stored in the `model_versions` table. Models with cross-validation RMSE standard deviation > 20% of mean RMSE are flagged for review.
+
+### Out-of-Distribution Detection
+
+Before making predictions for a new candidate, the system checks whether its feature vector lies within the convex hull of the training data. If not, a warning is logged and the prediction is marked as "extrapolation" with reduced confidence. This is implemented via a one-class SVM trained on the training feature space.
+
+### Validation Dashboard
+
+A dedicated Grafana dashboard (`Validation Overview`) displays:
+- Prediction error distribution (histogram)
+- Error vs. predicted Tc scatter plot
+- Per-model validation metrics (RMSE, R², MAE)
+- Number of validated candidates per week
+- Out-of-distribution warning count
+
+All validation data is exported to a `validation_results` table for audit and reproducibility.
