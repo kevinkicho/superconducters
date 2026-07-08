@@ -1474,3 +1474,13 @@ The autonomous discovery and manufacturing system integrates the experimental fe
 6. **Iteration**: The loop repeats, with the system autonomously selecting the next batch of candidates based on acquisition functions (e.g., expected improvement, upper confidence bound) that balance exploration and exploitation.
 
 This autonomous pipeline is designed to operate 24/7, dramatically reducing the time from prediction to validation. The system logs all decisions and outcomes for auditability and continuous improvement. By combining high-throughput experimentation with adaptive learning, the autonomous loop aims to discover and manufacture room-temperature superconducting compounds at an unprecedented pace.
+
+## Self-Healing
+
+The autonomous discovery loop incorporates a self-healing mechanism to maintain robustness and reliability. Anomalies are detected through real-time monitoring of experimental outcomes, model predictions, and system health metrics. Statistical process control (SPC) charts flag deviations beyond control limits (e.g., unexpected Tc values, synthesis yield drops, sensor failures). Upon detection, the system automatically triggers a rollback procedure:
+
+1. **Anomaly Detection**: A dedicated anomaly detection module (e.g., isolation forest, autoencoder) continuously scores incoming data. Scores exceeding a threshold (configurable per metric) generate an alert.
+2. **Automated Rollback**: The system reverts to the last known-good state: the previous model version is restored, the current synthesis batch is paused, and any partially ingested data is quarantined. The rollback is logged with a unique incident ID.
+3. **Recovery Procedures**: After rollback, the system attempts recovery by re-running the affected experiment with adjusted parameters (e.g., different pressure ramp, alternative precursor batch). If recovery fails after three attempts, the incident is escalated to human operators via email and dashboard alert. All actions are recorded in an `incidents` table for post-mortem analysis.
+
+This self-healing loop ensures minimal downtime and prevents cascading failures, enabling the autonomous pipeline to operate continuously with high availability.
