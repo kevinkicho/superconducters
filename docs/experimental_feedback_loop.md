@@ -2309,3 +2309,49 @@ A grant proposal has been drafted to secure funding for scaling the experimental
 - **Impact**: Accelerate materials discovery by 10× compared to traditional trial-and-error methods, reduce cost per candidate by 80%.
 
 The full proposal text, including budget justification, management plan, and references, is available in `docs/grant_proposal.md`.
+
+
+## Document Quality Check
+
+The `check_document_quality` function in `run_pipeline.py` performs automated quality assurance on all project documentation. It evaluates:
+
+- **Spelling and grammar**: Uses a language model to detect typos, grammatical errors, and awkward phrasing.
+- **Consistency**: Verifies that terminology (e.g., "Tc", "critical temperature", "superconducting transition") is used uniformly across documents.
+- **Completeness**: Checks that required sections (overview, methodology, results, references) are present and non-empty.
+- **Readability**: Computes Flesch-Kincaid grade level and suggests simplifications for overly complex sentences.
+
+**Output**: A JSON report (`reports/document_quality_report.json`) listing each document, its score (0–100), and a list of issues with severity (error, warning, info). The report is generated after every pipeline run and can be viewed in the dashboard.
+
+## Automated Document Fixes
+
+The `fix_document_automatically` function in `run_pipeline.py` applies corrections to documentation based on the quality check report. It supports:
+
+- **Spelling corrections**: Replaces misspelled words with the most likely correct spelling (using a domain-specific dictionary for superconductivity terms).
+- **Grammar fixes**: Adjusts subject-verb agreement, tense consistency, and punctuation.
+- **Terminology standardization**: Replaces deprecated or inconsistent terms (e.g., "high-temp superconductor" → "high-temperature superconductor").
+- **Section reordering**: Moves misplaced sections to their correct location according to a predefined template.
+
+**Output**: A diff file (`reports/automated_fixes.diff`) showing the changes applied. The function is idempotent — it only modifies files that have issues and logs all changes for review.
+
+## Cross-Reference Index
+
+The `build_cross_reference_index` function in `run_pipeline.py` generates a cross-reference index of all project documents. It:
+
+- **Scans all markdown files** in the repository for headings, links, and key terms (e.g., compound names, experiment IDs, model names).
+- **Builds a graph** of references: which documents link to which others, and which terms appear where.
+- **Detects broken links** (internal and external) and reports them.
+- **Generates an index file** (`docs/cross_reference_index.md`) with a table of contents, term-to-document mapping, and link health summary.
+
+**Output**: The index file is updated after each pipeline run. It includes a section for "Orphaned Documents" (files not linked from any other document) and "Most Referenced Documents" (by inbound link count).
+
+## Style Guide Enforcement
+
+The `enforce_style_guide` function in `run_pipeline.py` ensures all documentation adheres to the project style guide defined in `STYLE_GUIDE.md`. It checks:
+
+- **Heading hierarchy**: No jumps from H1 to H3 without an H2 in between.
+- **Code blocks**: All code blocks are fenced with the correct language identifier.
+- **Image alt text**: Every image has a descriptive alt attribute.
+- **List formatting**: Consistent use of `-` vs `*` for unordered lists, and proper indentation.
+- **Capitalization rules**: Section titles use title case, acronyms are defined on first use.
+
+**Output**: A style violation report (`reports/style_violations.json`) with file, line number, rule violated, and suggested fix. The function can optionally auto-fix certain violations (e.g., adding missing alt text) when run with the `--auto-fix` flag.
