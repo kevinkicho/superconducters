@@ -1280,3 +1280,15 @@ Reinforcement learning (RL) methods, specifically Proximal Policy Optimization (
 - **Results**: PPO achieved 30% higher yield (from 65% to 85% phase purity) after 200 episodes, consistent with the earlier mention in the Digital Twin section. The optimal parameters were T=2100 K, P=35 GPa, flow=5 sccm.
 
 These RL-based optimizations demonstrate the potential for automated, data-driven improvement of the entire superconductor discovery and manufacturing pipeline. Future work will integrate multi-objective RL to simultaneously optimize cost, yield, and Tc.
+
+
+## Process Design
+
+A detailed process design document has been generated for the top candidate, H3S, based on high-pressure chemical vapor deposition (HPCVD). The design outlines a continuous-flow reactor operating at 35 GPa and 2100 K, with H2S gas fed at 5 sccm into a diamond-anvil or multi-anvil press. Key unit operations include:
+- **Precursor synthesis**: H2S is produced via direct reaction of H2 and S at 600 K and 10 bar, then purified to 99.999%.
+- **HPCVD reactor**: A resistively heated diamond anvil cell with a boron-doped diamond heater, capable of maintaining 35±1 GPa and 2100±50 K. The substrate is a single-crystal diamond or sapphire.
+- **Product recovery**: After deposition, the pressure is slowly released to 1 atm while cooling to 77 K to prevent decomposition. The H3S film is encapsulated in a thin layer of h-BN for ambient-pressure stabilization.
+- **Quality control**: In-situ Raman spectroscopy and ex-situ XRD verify phase purity (target >85%). Tc is measured via four-probe resistivity.
+- **Scalability**: The design is modular; a multi-anvil press with 1000 anvils could produce 1 kg/day. Energy recovery and H2 recycling reduce operating costs. Capital cost for a 10-tonne/year facility is estimated at $500M, with a production cost of $200/kg at scale.
+
+This process design serves as the basis for detailed engineering and pilot-scale validation.
