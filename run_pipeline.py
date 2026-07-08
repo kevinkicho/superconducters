@@ -8525,6 +8525,108 @@ def watch_mode(watch_file: str = "data/experimental_results.json") -> None:
             print(f"[Watch] {watch_file} does not exist. Waiting...")
 
 
+def high_throughput_screening() -> None:
+    """
+    High-throughput screening module: iterate over candidate materials,
+    call dft_calculator.py for each, populate data/experimental_results.json
+    with computed electronic properties and predicted Tc, and update
+    candidate_materials.md with the new data.
+    """
+    import json
+    import os
+    import sys
+    from pathlib import Path
+
+    # Paths
+    candidate_file = "candidate_materials.md"
+    results_file = "data/experimental_results.json"
+    dft_module = "dft_calculator"
+
+    if not os.path.exists(candidate_file):
+        print("[HighThroughput] candidate_materials.md not found. Skipping.")
+        return
+
+    # Read candidates
+    with open(candidate_file, "r") as f:
+        content = f.read()
+
+    # Parse candidates: assume each candidate is a section starting with "## "
+    # and may have a checkbox line with formula and properties.
+    # We'll look for lines like "- [ ] LaH10 - ..." or similar.
+    lines = content.split("\n")
+    candidates = []
+    for i, line in enumerate(lines):
+        if line.startswith("- [ ]"):
+            # Extract candidate name (first word after checkbox)
+            parts = line.split(" - ")
+            if len(parts) >= 2:
+                name = parts[0].replace("- [ ]", "").strip()
+                candidates.append((i, name, line))
+            else:
+                # fallback: take the whole line after checkbox
+                name = line.replace("- [ ]", "").strip()
+                candidates.append((i, name, line))
+
+    if not candidates:
+        print("[HighThroughput] No uncomputed candidates found. Skipping.")
+        return
+
+    # Import dft_calculator
+    try:
+        dft = importlib.import_module(dft_module)
+    except ImportError:
+        print("[HighThroughput] Could not import dft_calculator. Skipping.")
+        return
+
+    # Load existing results
+    if os.path.exists(results_file):
+        with open(results_file, "r") as f:
+            results = json.load(f)
+    else:
+        results = []
+
+    # Iterate over candidates
+    for idx, name, line in candidates:
+        print(f"[HighThroughput] Processing candidate: {name}")
+        try:
+            # Call dft_calculator's compute function (assumes it has a function compute_properties(name))
+            props = dft.compute_properties(name)
+        except AttributeError:
+            print(f"[HighThroughput] dft_calculator has no compute_properties function. Skipping {name}.")
+            continue
+        except Exception as e:
+            print(f"[HighThroughput] Error computing {name}: {e}")
+            continue
+
+        # Build result entry
+        entry = {
+            "compound": name,
+            "dos_at_fermi": props.get("dos_at_fermi", None),
+            "band_gap": props.get("band_gap", None),
+            "predicted_tc": props.get("predicted_tc", None),
+            "pressure": props.get("pressure", None),
+            "method": "DFT (ASE)",
+            "date": datetime.now().isoformat()
+        }
+        results.append(entry)
+
+        # Update candidate_materials.md: replace the checkbox line with computed data
+        # We'll add computed properties after the candidate name in the line.
+        # For example: "- [x] LaH10 - Tc: 250 K, DOS: 2.5 states/eV"
+        new_line = f"- [x] {name} - Tc: {props.get('predicted_tc', 'N/A')} K, DOS: {props.get('dos_at_fermi', 'N/A')} states/eV"
+        lines[idx] = new_line
+
+    # Write updated results
+    with open(results_file, "w") as f:
+        json.dump(results, f, indent=2)
+    print(f"[HighThroughput] Updated {results_file} with {len(candidates)} entries.")
+
+    # Write updated candidate file
+    with open(candidate_file, "w") as f:
+        f.write("\n".join(lines))
+    print(f"[HighThroughput] Updated {candidate_file} with computed properties.")
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Run the superconductor discovery pipeline.")
