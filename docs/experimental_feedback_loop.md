@@ -2087,3 +2087,39 @@ The adaptive DoE module is tightly integrated with the existing feedback loop:
 5. The cycle repeats, converging toward optimal synthesis conditions for room-temperature superconductivity.
 
 This closed-loop approach dramatically reduces the number of experiments required to discover high-Tc compounds, aligning with the project's goal of accelerating the development of room-temperature superconductors.
+
+
+## Human-in-the-Loop Approval
+
+### Workflow
+
+Before any proposed synthesis conditions are forwarded to the lab automation system, a human operator must review and approve them. The approval workflow is as follows:
+
+1. **Proposal Generation**: The adaptive DoE module generates a ranked list of proposed synthesis conditions (see [Output: Proposed Synthesis Conditions](#output-proposed-synthesis-conditions)).
+2. **Dashboard Notification**: The proposals are displayed in the Streamlit dashboard with a status of "Pending Approval". The operator is notified via email and/or in-app alert.
+3. **Review**: The operator reviews each proposal, examining the predicted Tc, uncertainty, digital twin validation status, and any additional context (e.g., historical data for similar compounds).
+4. **Decision**: The operator can:
+   - **Approve**: The proposal is queued for execution in the lab automation system.
+   - **Modify**: The operator adjusts synthesis parameters (e.g., pressure, temperature, duration) and then approves the modified proposal.
+   - **Reject**: The proposal is discarded, and the operator may provide a reason (e.g., safety concern, resource constraint).
+5. **Execution**: Approved proposals are automatically forwarded to the lab automation system (see [Cloud Lab API Integration](#cloud-lab-api-integration)).
+
+### Configuration
+
+The human-in-the-loop approval system is configurable via environment variables or a configuration file (`config/approval_config.yaml`). Key configuration parameters include:
+
+- `approval_required` (boolean): Enables or disables the human-in-the-loop step. When set to `false`, proposals are automatically approved and forwarded without operator intervention.
+- `approval_timeout` (integer, seconds): Maximum time the system waits for operator approval before triggering fallback behavior.
+- `notification_channels` (list): List of notification methods (e.g., email, Slack, dashboard alert).
+- `auto_approve_criteria` (optional): Rules for automatic approval of low-risk proposals (e.g., predicted Tc below a threshold, high confidence).
+- `operator_roles` (list): List of user roles permitted to approve proposals (e.g., "principal_investigator", "lab_manager").
+
+### Fallback Behavior
+
+If the operator does not respond within the configured `approval_timeout`, the system executes the following fallback actions in order:
+
+1. **Escalation**: Send a reminder notification to the operator and escalate to a secondary operator (if configured).
+2. **Auto-approve with logging**: If no response after the escalation, the system automatically approves the highest-ranked proposal (by acquisition function value) and logs the decision with a timestamp and reason ("timeout fallback").
+3. **Pause pipeline**: If auto-approve is disabled or fails, the pipeline pauses and no new proposals are executed until manual intervention. An alert is sent to all operators.
+
+All fallback actions are recorded in the `approval_log` table in the central database for auditability.
