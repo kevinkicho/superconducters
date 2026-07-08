@@ -417,3 +417,58 @@ All items are tracked in the project management system. Regular reviews ensure p
 |--------------|--------|---|---|---|-----|-------------------|
 | Batch-to-batch variability | Inconsistent product quality | 8 | 5 | 4 | 160 | Statistical process control; in-line monitoring; feedback loop to synthesis |
 | Cost overruns | Project termination | 7 | 4 | 3 | 84 | Phased investment; contingency budget; regular cost reviews |
+
+
+## HAZOP Analysis for Top Candidate Pilot Plant
+
+### Candidate: YH₃ (Yttrium Trihydride) — Pilot Plant Scale-Up
+
+#### Deviation: High Pressure Exceeds Design Limits
+- **Cause**: Compressor failure, regulator malfunction, or operator error during pressurization.
+- **Consequence**: Catastrophic vessel rupture, release of hydrogen gas, potential explosion, loss of sample and equipment.
+- **Safeguard**: Multiple pressure relief valves, burst disks, real-time pressure monitoring with automatic shutdown, redundant pressure control systems, operator training and strict SOPs.
+
+#### Deviation: Temperature Deviation During Synthesis
+- **Cause**: Heater controller failure, cooling system malfunction, power outage.
+- **Consequence**: Incomplete reaction, formation of undesired phases, reduced Tc, or thermal runaway leading to decomposition.
+- **Safeguard**: Dual thermocouples with cross-validation, backup power supply, emergency cooling system, temperature ramp rate limits, automated abort if deviation exceeds ±5°C.
+
+#### Deviation: Hydrogen Contamination
+- **Cause**: Impure hydrogen feed, leaks in gas lines, desorption from vessel walls.
+- **Consequence**: Incorporation of oxygen or nitrogen, suppression of superconductivity, formation of competing hydrides.
+- **Safeguard**: High-purity hydrogen (99.9999%), in-line gas purifiers, mass spectrometry monitoring of exhaust, regular leak testing, passivation of vessel surfaces.
+
+#### Deviation: Cooling Rate Too Fast
+- **Cause**: Malfunction of controlled cooling system, operator error in recipe.
+- **Consequence**: Quenching of metastable phase, introduction of microcracks, reduced sample integrity.
+- **Safeguard**: Programmable cooling profiles with interlock, real-time thermal imaging, post-synthesis annealing step to relieve stress.
+
+#### Deviation: Sample Contamination from Crucible
+- **Cause**: Reaction between sample and crucible material at high temperature/pressure.
+- **Consequence**: Incorporation of foreign elements, altered stoichiometry, suppressed Tc.
+- **Safeguard**: Use of inert crucibles (e.g., BN, Al₂O₃), pre-test compatibility studies, sacrificial liner, post-synthesis EDX analysis.
+
+#### Deviation: Power Outage During Long Synthesis
+- **Cause**: Grid failure, generator failure.
+- **Consequence**: Loss of pressure and temperature control, sample degradation, potential safety hazard if pressure released abruptly.
+- **Safeguard**: Uninterruptible power supply (UPS) for control systems, emergency generator for critical loads, automatic safe shutdown sequence, manual override procedures.
+
+#### Deviation: Operator Error in Recipe Parameters
+- **Cause**: Misreading instructions, incorrect input of pressure/temperature/time.
+- **Consequence**: Off-specification product, wasted materials, potential safety incident.
+- **Safeguard**: Recipe management system with validation checks, barcode scanning of materials, two-person verification for critical steps, training and certification program.
+
+#### Deviation: Inadequate Mixing of Precursors
+- **Cause**: Insufficient milling time, improper ball-to-powder ratio, segregation during transfer.
+- **Consequence**: Inhomogeneous sample, local stoichiometry variations, broad superconducting transition.
+- **Safeguard**: Optimized milling protocol, use of mechanical alloying with process control agent, in-line homogeneity check via XRF, statistical sampling.
+
+#### Deviation: Leak in High-Pressure Vessel
+- **Cause**: Seal degradation, O-ring failure, microcrack from thermal cycling.
+- **Consequence**: Gradual pressure loss, incomplete reaction, hydrogen escape (flammable), potential asphyxiation hazard.
+- **Safeguard**: Helium leak testing before each run, pressure decay monitoring, redundant seals, hydrogen sensors in facility, emergency ventilation.
+
+#### Deviation: Data Acquisition Failure
+- **Cause**: Sensor malfunction, data logger crash, communication loss.
+- **Consequence**: Loss of process data, inability to verify synthesis conditions, compromised quality assurance.
+- **Safeguard**: Redundant sensors, local data buffering, periodic data backup, manual logging as fallback, post-run data integrity check.
