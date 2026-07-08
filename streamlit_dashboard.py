@@ -368,4 +368,28 @@ def collaboration_hub_tab():
         feedback_submitted = st.form_submit_button("Submit Feedback")
         if feedback_submitted:
             st.success("Feedback submitted. Thank you!")
+    
+    # Data Export section
+    st.subheader("Data Export")
+    data_export_tab()
 
+
+
+def data_export_tab():
+    st.header("Data Export")
+    data_type = st.selectbox("Select data to export", ["Candidate Materials", "Experimental Results"])
+    if data_type == "Candidate Materials":
+        df = fetch_top_candidates()
+    else:
+        df = fetch_experimental_results()
+    if df is not None:
+        st.dataframe(df)
+        csv = df.to_csv(index=False)
+        json_str = df.to_json(orient="records", indent=2)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("Download CSV", csv, file_name=f"{data_type.lower().replace(' ', '_')}.csv", mime="text/csv")
+        with col2:
+            st.download_button("Download JSON", json_str, file_name=f"{data_type.lower().replace(' ', '_')}.json", mime="application/json")
+    else:
+        st.info("No data available.")
