@@ -93,6 +93,17 @@ def fetch_manufacturing_progress() -> Optional[pd.DataFrame]:
         st.error(f"Failed to fetch manufacturing progress: {e}")
         return None
 
+def fetch_research_literature():
+    """Return a DataFrame of recent room-temperature superconductor research findings."""
+    data = [
+        {"Material": "H3S (Sulfur Hydride)", "Tc (K)": 203, "Pressure (GPa)": 150, "Reference": "Drozdov et al., Nature 2015", "URL": "https://doi.org/10.1038/nature14964"},
+        {"Material": "LaH10 (Lanthanum Decahydride)", "Tc (K)": 250, "Pressure (GPa)": 170, "Reference": "Somayazulu et al., PRL 2019", "URL": "https://doi.org/10.1103/PhysRevLett.122.027001"},
+        {"Material": "CSH (Carbonaceous Sulfur Hydride)", "Tc (K)": 287, "Pressure (GPa)": 267, "Reference": "Snider et al., Nature 2020", "URL": "https://doi.org/10.1038/s41586-020-2801-z"},
+        {"Material": "LK-99 (Pb10-xCux(PO4)6O)", "Tc (K)": "Room temp (claimed)", "Pressure (GPa)": "Ambient", "Reference": "Lee et al., arXiv 2023", "URL": "https://arxiv.org/abs/2307.12008"},
+    ]
+    return pd.DataFrame(data)
+
+
 def main():
     st.set_page_config(page_title="Superconductor Pipeline Dashboard", layout="wide")
     st.title("🔬 Superconductor Research Pipeline Dashboard")
@@ -104,14 +115,15 @@ def main():
     auto_refresh = st.sidebar.checkbox("Enable auto-refresh", value=True)
 
     # Create tabs
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
         "Pipeline Status",
         "Top Candidates",
         "Experimental Results",
         "Manufacturing Progress",
         "Experiment Status",
         "Live Monitoring",
-        "What-If Analysis"
+        "What-If Analysis",
+        "Research Literature"
     ])
 
     placeholder = st.empty()
@@ -187,6 +199,16 @@ def main():
                             st.json(result)
                     else:
                         st.error("What-if analysis failed.")
+            with tab8:
+                st.subheader("Research Literature")
+                df = fetch_research_literature()
+                if df is not None and not df.empty:
+                    st.dataframe(df, use_container_width=True)
+                    st.markdown("**Sources:**")
+                    for _, row in df.iterrows():
+                        st.markdown(f"- [{row['Reference']}]({row['URL']})")
+                else:
+                    st.info("No research literature data available.")
 
             if st.button("Refresh Now"):
                 st.rerun()
