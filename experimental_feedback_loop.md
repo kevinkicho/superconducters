@@ -50,3 +50,36 @@ Add the following to your crontab to run the pipeline every hour:
 ```
 
 The `--watch` flag (see `run_pipeline.py`) enables event-driven mode, which processes only new or updated entries in `data/experimental_results.json` and updates the candidate ranking accordingly.
+
+
+## Cloud Lab API Integration
+
+The closed-loop cycle is now extended with a cloud lab API that enables automated submission of synthesis and characterization experiments. The API is hosted at `https://api.cloudlab.example.com/v1` and requires authentication via a bearer token stored in the environment variable `CLOUD_LAB_API_KEY`.
+
+### Authentication
+
+All requests include the header `Authorization: Bearer <token>`. The token is validated on each request; a 401 response triggers a credential refresh or alert.
+
+### Retry Logic
+
+To handle transient failures, the client implements exponential backoff with jitter:
+- Initial delay: 1 second
+- Maximum delay: 60 seconds
+- Retry count: 3
+- Retry on: 429 (rate limit), 502, 503, 504 (server errors)
+
+### Error Handling
+
+- **4xx errors** (except 429): logged and reported; no retry.
+- **5xx errors**: retried as above; if all retries fail, the experiment is marked as `failed` in the database and an alert is sent.
+- **Timeout**: 30-second timeout per request; on timeout, retry with backoff.
+
+### Role in Closed-Loop Cycle
+
+1. **Candidate Selection**: The pipeline selects top candidates from `candidate_materials.md`.
+2. **API Submission**: For each candidate, a synthesis/characterization request is sent to the cloud lab API with parameters (pressure, temperature, composition).
+3. **Result Retrieval**: The API returns a job ID; the pipeline polls for completion (GET `/jobs/{id}`) every 60 seconds.
+4. **Data Ingestion**: On completion, results (e.g., Tc, structure) are parsed and appended to `data/experimental_results.json`.
+5. **Model Update**: The new data triggers retraining of the ML model (see `scripts/predict_tc.py`) and updates the candidate ranking.
+
+This integration automates the experimental feedback loop, reducing human latency and enabling high-throughput screening of candidate compounds.
