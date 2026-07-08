@@ -2231,6 +2231,16 @@ Tracking the predictive accuracy of ML models over successive experimental cycle
 
 These metrics are computed automatically by `scripts/evaluate_model_performance.py` and stored in the `model_performance` table. A weekly summary is appended to `reports/model_performance_report.md`.
 
+## Model Performance Over Time
+
+The system logs model performance metrics (RMSE and R²) over time to track prediction accuracy improvements. The `data/model_performance_log.json` file stores a time-series of evaluation results, with each entry containing:
+
+- **timestamp**: ISO 8601 date of evaluation
+- **rmse**: Root mean squared error (K) on held-out experimental Tc values
+- **r2**: Coefficient of determination
+
+A sample plot of RMSE and R² over time is available at [figures/model_performance_over_time.png](figures/model_performance_over_time.png). The plot is regenerated after each model retraining cycle and shows the trend of prediction accuracy as more experimental data is ingested.
+
 ## Real Cloud Lab Integration
 
 To accelerate experimental throughput, the feedback loop integrates with a real cloud lab platform (e.g., Emerald Cloud Lab, Strateos, or a custom remote laboratory). The integration enables:
@@ -2240,7 +2250,27 @@ To accelerate experimental throughput, the feedback loop integrates with a real 
 - **Resource Scheduling**: The adaptive DoE module optimizes the allocation of cloud lab resources (e.g., high-pressure cells, cryostats) across multiple candidate experiments to minimize idle time and maximize throughput.
 - **Error Handling**: If a cloud lab run fails (e.g., equipment malfunction, sample degradation), the system automatically re-queues the experiment with adjusted parameters or flags the candidate for manual review.
 
-Configuration details (API keys, endpoint URLs, resource limits) are stored in `config/cloud_lab_config.yaml`. The integration module is implemented in `scripts/cloud_lab_integration.py`.
+### Cloud Lab Setup Instructions
+
+To configure the cloud lab integration, you must provide the following environment variables or set them in `config/cloud_lab_config.yaml`:
+
+- **CLOUD_LAB_API_KEY**: Your API key for the cloud lab platform (e.g., Emerald Cloud Lab API key).
+- **CLOUD_LAB_ENDPOINT**: The base URL of the cloud lab API (e.g., `https://api.emeraldcloudlab.com/v1`).
+- **CLOUD_LAB_RESOURCE_LIMITS**: JSON object specifying maximum concurrent experiments, pressure cells, cryostats, etc.
+
+Example configuration in `config/cloud_lab_config.yaml`:
+
+```yaml
+cloud_lab:
+  api_key: ${CLOUD_LAB_API_KEY}
+  endpoint: ${CLOUD_LAB_ENDPOINT}
+  resource_limits:
+    max_concurrent_experiments: 10
+    max_pressure_cells: 4
+    max_cryostats: 2
+```
+
+The integration module (`scripts/cloud_lab_integration.py`) reads these settings at startup. Ensure the API key is kept secure and not committed to version control.
 
 ## Grant Proposal
 
