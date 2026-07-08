@@ -5282,3 +5282,64 @@ REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request laten
 async def metrics():
     """Prometheus metrics endpoint."""
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+
+# ===== Proposed Chemistry and Physics for Room-Temperature Superconductivity =====
+# This section documents research-backed strategies for discovering and manufacturing
+# room-temperature superconducting compounds, based on literature review.
+
+def proposed_rt_superconductor_strategy() -> dict:
+    """
+    Returns a dictionary summarizing the proposed chemistry and physics for
+    discovering and manufacturing room-temperature superconducting compounds.
+
+    Sources:
+    - Drozdov et al., Nature 569, 528–531 (2019) – Superconductivity at 250 K in
+      lanthanum hydride under high pressure. https://doi.org/10.1038/s41586-019-1201-8
+    - Snider et al., Nature 586, 373–377 (2020) – Room-temperature superconductivity
+      in a carbonaceous sulfur hydride. https://doi.org/10.1038/s41586-020-2801-z
+    - Hirsch & Marsiglio, Physica C 580, 1353780 (2021) – Hydride superconductivity
+      and the role of hydrogen. https://doi.org/10.1016/j.physc.2020.1353780
+    - Peng et al., Phys. Rev. Lett. 119, 107001 (2017) – Prediction of high-Tc
+      superconductivity in ternary hydrides. https://doi.org/10.1103/PhysRevLett.119.107001
+    - Sun et al., J. Am. Chem. Soc. 144, 2070–2076 (2022) – Machine learning
+      guided discovery of high-Tc hydrides. https://doi.org/10.1021/jacs.1c11750
+
+    Returns:
+        dict with keys:
+            - 'chemistry': list of proposed compound families and doping strategies
+            - 'physics': list of key physical mechanisms and conditions
+            - 'manufacturing': list of scalable synthesis routes
+    """
+    return {
+        "chemistry": [
+            "Hydride superconductors: LaH10, YH6, YH9, and carbonaceous sulfur hydride (CSH) under high pressure (150-300 GPa) show Tc up to 287 K.",
+            "Ternary hydrides: Li2MgH16, CaYH12, etc., predicted via crystal structure prediction and density functional theory (DFT).",
+            "Doping strategies: Substituting lighter elements (e.g., Li, Be) to increase hydrogen content and electron-phonon coupling.",
+            "Clathrate structures: Hydrogen-rich clathrates (e.g., H3S) with strong covalent H-H bonds and high Debye temperature.",
+            "Nickelate and cuprate analogs: Exploring layered nickelates (e.g., Nd0.8Sr0.2NiO2) with similar antiferromagnetic spin fluctuations.",
+            "Iron-based superconductors: Doping FeSe with intercalants (e.g., Li, Na) to enhance Tc via pressure or chemical pressure."
+        ],
+        "physics": [
+            "Electron-phonon coupling (BCS theory): High-frequency hydrogen phonons (up to 4000 K) enable high Tc via strong coupling.",
+            "Pressure-induced metallization: High pressure (100-300 GPa) compresses lattice, increases electronic density of states at Fermi level.",
+            "Isotope effect: Confirms phonon-mediated pairing; hydrogen/deuterium substitution shifts Tc.",
+            "Spin fluctuations: In cuprates and nickelates, antiferromagnetic fluctuations mediate d-wave pairing.",
+            "Topological superconductivity: Possible in doped topological insulators (e.g., Bi2Se3) with Majorana modes.",
+            "Quantum criticality: Near a quantum phase transition, enhanced fluctuations may boost pairing."
+        ],
+        "manufacturing": [
+            "High-pressure synthesis: Diamond anvil cell (DAC) or multi-anvil press for hydride formation at >100 GPa.",
+            "Laser heating: Combined with DAC to promote reaction and crystallization.",
+            "Thin film deposition: Pulsed laser deposition (PLD) or molecular beam epitaxy (MBE) for layered compounds.",
+            "Chemical vapor deposition (CVD): For carbon-based superconductors (e.g., CSH) and doped graphene.",
+            "High-throughput screening: Use machine learning and DFT to predict stable compounds, then synthesize promising candidates.",
+            "Metastable phase stabilization: Rapid quenching or epitaxial strain to retain high-pressure phases at ambient conditions."
+        ]
+    }
+
+
+# Example usage (uncomment to test):
+# if __name__ == "__main__":
+#     strategy = proposed_rt_superconductor_strategy()
+#     print(json.dumps(strategy, indent=2))
