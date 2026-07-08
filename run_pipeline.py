@@ -329,6 +329,7 @@ def main():
     # Step 4: Output ranked results
     print("[Pipeline] Writing ranked output...")
     out_mod.run(predictions, *args.output_args)
+    reproducibility_check()
     print("[Pipeline] Pipeline completed successfully.")
 
     # Step 5: Active learning loop (optional)
