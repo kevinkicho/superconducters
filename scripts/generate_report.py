@@ -250,6 +250,36 @@ def generate_pdf_latex(md_files: dict, pipeline_results: dict, output_path: str)
             return False
 
 
+def generate_pdf_pandoc(md_files: dict, output_path: str) -> bool:
+    """Generate PDF from markdown files using pandoc."""
+    if not shutil.which("pandoc"):
+        print("pandoc not found. Skipping pandoc PDF generation.")
+        return False
+    # Combine all markdown files into one
+    combined = ""
+    for name, content in md_files.items():
+        combined += f"# {name}\n\n{content}\n\n"
+    # Write to temp file
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
+        md_path = f.name
+        f.write(combined)
+    try:
+        result = subprocess.run(
+            ["pandoc", md_path, "-o", output_path, "--pdf-engine=xelatex"],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            print(f"PDF report generated (pandoc): {output_path}")
+            return True
+        else:
+            print("pandoc compilation failed.")
+            print(result.stderr[:500])
+            return False
+    finally:
+        os.unlink(md_path)
+
+
 def main():
     if len(sys.argv) > 1:
         output_path = sys.argv[1]
@@ -263,7 +293,11 @@ def main():
         print("No markdown files or pipeline results found. Nothing to generate.")
         sys.exit(1)
 
-    # Try LaTeX first
+    # Try pandoc first (most robust for markdown)
+    if generate_pdf_pandoc(md_files, output_path):
+        return
+
+    # Try LaTeX next (if pipeline results are available)
     if generate_pdf_latex(md_files, pipeline_results, output_path):
         return
 
@@ -276,7 +310,7 @@ def main():
         generate_pdf_reportlab(html, output_path)
     else:
         print("Error: No PDF generation method available.")
-        print("Install one of: pdflatex, weasyprint, or reportlab.")
+        print("Install one of: pandoc, pdflatex, weasyprint, or reportlab.")
         sys.exit(1)
 
 if __name__ == "__main__":
