@@ -4706,3 +4706,166 @@ This report summarizes the overall health of the project, including progress, ri
     with open("docs/project_health_report.md", "w") as f:
         f.write(content)
     print("[Health] Written docs/project_health_report.md")
+
+
+# --- SuperCon validation, auto-retraining, circuit breaker, and feedback ---
+import requests
+import pandas as pd
+import logging
+from typing import List, Tuple, Optional
+from datetime import datetime, timedelta
+import time
+
+class CircuitBreaker:
+    """Circuit breaker pattern for external API calls."""
+    
+    def __init__(self, failure_threshold: int = 5, recovery_timeout: float = 30.0, half_open_max_retries: int = 3):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.half_open_max_retries = half_open_max_retries
+        self.state = "CLOSED"
+        self.failure_count = 0
+        self.last_failure_time = None
+        self.half_open_retries = 0
+        self.logger = logging.getLogger(__name__)
+
+    def call(self, func, *args, **kwargs):
+        """Execute the given function with circuit breaker protection."""
+        if self.state == "OPEN":
+            if time.time() - self.last_failure_time >= self.recovery_timeout:
+                self.state = "HALF_OPEN"
+                self.half_open_retries = 0
+                self.logger.info("Circuit breaker transitioning to HALF_OPEN")
+            else:
+                raise Exception("Circuit breaker is OPEN. Request blocked.")
+        
+        try:
+            result = func(*args, **kwargs)
+            if self.state == "HALF_OPEN":
+                self.half_open_retries += 1
+                if self.half_open_retries >= self.half_open_max_retries:
+                    self.state = "CLOSED"
+                    self.failure_count = 0
+                    self.logger.info("Circuit breaker reset to CLOSED after successful half-open retries")
+            else:
+                self.failure_count = 0
+            return result
+        except Exception as e:
+            self.failure_count += 1
+            self.last_failure_time = time.time()
+            if self.failure_count >= self.failure_threshold:
+                self.state = "OPEN"
+                self.logger.warning(f"Circuit breaker tripped to OPEN after {self.failure_count} failures")
+            raise e
+
+
+def validate_with_supercon(compound: str) -> dict:
+    """Validate a candidate compound against the SuperCon database.
+    
+    Attempts to load a local SuperCon data file (supercon_data.csv) and checks
+    if the compound is listed. Returns a dict with validation status and details.
+    """
+    logger = logging.getLogger(__name__)
+    supercon_file = "supercon_data.csv"
+    
+    if not os.path.exists(supercon_file):
+        logger.warning(f"SuperCon data file '{supercon_file}' not found. Skipping validation.")
+        return {"validated": False, "reason": "No SuperCon database available", "compound": compound}
+    
+    try:
+        df = pd.read_csv(supercon_file)
+        if "compound" not in df.columns:
+            logger.error("SuperCon CSV missing 'compound' column")
+            return {"validated": False, "reason": "Invalid database format", "compound": compound}
+        
+        known = df["compound"].str.strip().str.lower().tolist()
+        if compound.strip().lower() in known:
+            return {"validated": True, "reason": "Compound found in SuperCon database", "compound": compound}
+        else:
+            return {"validated": False, "reason": "Compound not in SuperCon database", "compound": compound}
+    except Exception as e:
+        logger.error(f"Error reading SuperCon data: {e}")
+        return {"validated": False, "reason": f"Database read error: {e}", "compound": compound}
+
+
+def auto_retrain_on_new_data() -> None:
+    """Automatically retrain Tc prediction models when new experimental data is available.
+    
+    Checks for a file 'new_experimental_data.csv'. If found, loads it, merges with
+    existing training data, and triggers retraining via predict_tc.retrain_model().
+    """
+    logger = logging.getLogger(__name__)
+    new_data_file = "new_experimental_data.csv"
+    training_data_file = "training_data.csv"
+    
+    if not os.path.exists(new_data_file):
+        logger.info("No new experimental data found. Skipping retraining.")
+        return
+    
+    try:
+        new_df = pd.read_csv(new_data_file)
+        if new_df.empty:
+            logger.info("New data file is empty. Skipping retraining.")
+            return
+        
+        # Merge with existing training data if available
+        if os.path.exists(training_data_file):
+            existing_df = pd.read_csv(training_data_file)
+            combined_df = pd.concat([existing_df, new_df], ignore_index=True)
+        else:
+            combined_df = new_df
+        
+        # Save combined data
+        combined_df.to_csv(training_data_file, index=False)
+        logger.info(f"Combined training data saved to {training_data_file} ({len(combined_df)} rows)")
+        
+        # Import and call retrain function from predict_tc module
+        try:
+            predict_tc = importlib.import_module("predict_tc")
+            if hasattr(predict_tc, "retrain_model"):
+                predict_tc.retrain_model(combined_df)
+                logger.info("Model retrained successfully on new data.")
+            else:
+                logger.warning("predict_tc module does not have retrain_model function.")
+        except ImportError:
+            logger.error("Could not import predict_tc module for retraining.")
+        
+        # Remove the new data file after processing
+        os.remove(new_data_file)
+        logger.info(f"Removed processed new data file: {new_data_file}")
+    except Exception as e:
+        logger.error(f"Error during auto-retraining: {e}")
+
+
+def streamlit_feedback() -> None:
+    """Render a feedback form in the Streamlit dashboard for user input on predictions.
+    
+    Collects rating (1-5) and optional comment, saves to feedback_log.csv.
+    """
+    import streamlit as st
+    
+    st.subheader("Feedback on Predictions")
+    with st.form(key="feedback_form"):
+        compound = st.text_input("Compound (optional)", help="Enter the compound you are providing feedback on.")
+        rating = st.slider("Rating", 1, 5, 3, help="How accurate was the prediction?")
+        comment = st.text_area("Comments (optional)", help="Any additional comments or suggestions.")
+        submitted = st.form_submit_button("Submit Feedback")
+        
+        if submitted:
+            feedback_entry = {
+                "timestamp": datetime.now().isoformat(),
+                "compound": compound,
+                "rating": rating,
+                "comment": comment
+            }
+            feedback_file = "feedback_log.csv"
+            try:
+                if os.path.exists(feedback_file):
+                    df = pd.read_csv(feedback_file)
+                else:
+                    df = pd.DataFrame(columns=["timestamp", "compound", "rating", "comment"])
+                df = pd.concat([df, pd.DataFrame([feedback_entry])], ignore_index=True)
+                df.to_csv(feedback_file, index=False)
+                st.success("Thank you for your feedback!")
+            except Exception as e:
+                st.error(f"Failed to save feedback: {e}")
