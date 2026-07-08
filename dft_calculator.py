@@ -22,6 +22,9 @@ from ase import Atoms
 from ase.calculators.espresso import Espresso
 from ase.dft.dos import DOS
 
+# Cache for DFT results: keyed by structure hash (tuple of cell, positions, etc.)
+_dft_cache = {}
+
 # Configuration flag to force CPU usage (overrides CUDA detection)
 FORCE_CPU = False
 
@@ -781,6 +784,7 @@ def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float
     """
     Compute electronic density of states at Fermi level using ASE and Quantum ESPRESSO.
     Reads structure from data/superconductor_database.json and runs a DFT calculation.
+    Uses cache to avoid recomputation.
     """
     import json
     import os
@@ -789,6 +793,10 @@ def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float
     with open(db_path, 'r') as f:
         database = json.load(f)
     structure = database[structure_index]
+    # Create a hash key for the structure
+    cache_key = (structure_index, db_path)
+    if cache_key in _dft_cache:
+        return _dft_cache[cache_key]
     from ase import Atoms
     from ase.calculators.espresso import Espresso
     from ase.dft.dos import DOS
@@ -827,6 +835,7 @@ def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float
         atoms.get_potential_energy()
     except Exception as e:
         print(f"DFT calculation failed: {e}")
+        _dft_cache[cache_key] = 0.0
         return 0.0
 
     dos = DOS(calc, npts=1000, width=0.1)
@@ -836,6 +845,7 @@ def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float
     from scipy.interpolate import interp1d
     f = interp1d(energies, dos_values, kind='linear', bounds_error=False, fill_value=0.0)
     dos_fermi = f(fermi)
+    _dft_cache[cache_key] = float(dos_fermi)
     return float(dos_fermi)
 
 
