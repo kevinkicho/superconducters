@@ -218,7 +218,13 @@ def main() -> None:
                         help="Output JSON file for raw data (optional)")
     parser.add_argument("--no-update", action="store_true",
                         help="Do not update the summary markdown file")
+    parser.add_argument("--extract-candidates", action="store_true",
+                        help="Extract candidate materials and append to database and candidates file")
     args = parser.parse_args()
+
+    if args.extract_candidates:
+        extract_candidates_from_paper(args.query, args.max_results)
+        return
 
     print(f"Fetching up to {args.max_results} papers for query: '{args.query}'...")
     papers = fetch_papers(args.query, args.max_results, args.start)
@@ -258,6 +264,107 @@ def main() -> None:
         update_summary(papers, args.query)
 
     print("\nDone.")
+
+
+def extract_candidates_from_paper(query: str = DEFAULT_QUERY, max_results: int = DEFAULT_MAX_RESULTS) -> None:
+    """
+    Fetch recent papers from arXiv, parse for material compositions and Tc values,
+    and append new candidate entries to candidate_materials.md and data/superconductor_database.json.
+    """
+    papers = fetch_papers(query, max_results)
+    if not papers:
+        print("No papers fetched.", file=sys.stderr)
+        return
+
+    # Paths relative to script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    candidates_path = os.path.join(script_dir, "..", "candidate_materials.md")
+    database_path = os.path.join(script_dir, "..", "data", "superconductor_database.json")
+
+    # Load existing database to avoid duplicates
+    existing_entries = []
+    if os.path.exists(database_path):
+        try:
+            with open(database_path, "r", encoding="utf-8") as f:
+                existing_entries = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            existing_entries = []
+
+    existing_ids = {entry.get("id") for entry in existing_entries if "id" in entry}
+    existing_formulas = {entry.get("formula", "").strip().lower() for entry in existing_entries}
+
+    new_entries = []
+    new_candidate_lines = []
+
+    for paper in papers:
+        entities = extract_entities(paper["summary"])
+        materials = entities["materials"]
+        tc_values = entities["tc_values"]
+        pressure_values = entities["pressure_values"]
+
+        if not materials or not tc_values:
+            continue
+
+        # Use the first material and first Tc as primary
+        primary_material = materials[0] if materials else ""
+        primary_tc = tc_values[0] if tc_values else None
+        primary_pressure = pressure_values[0] if pressure_values else None
+
+        # Check for duplicates by arXiv ID
+        paper_id = paper["id"]
+        if paper_id in existing_ids:
+            continue
+
+        # Also check by formula (case-insensitive)
+        formula_lower = primary_material.strip().lower()
+        if formula_lower in existing_formulas:
+            continue
+
+        # Build database entry
+        entry = {
+            "id": paper_id,
+            "title": paper["title"],
+            "formula": primary_material,
+            "tc": primary_tc,
+            "pressure": primary_pressure,
+            "source": paper["link"],
+            "summary": paper["summary"][:500],
+            "date_added": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+        }
+        new_entries.append(entry)
+        existing_ids.add(paper_id)
+        existing_formulas.add(formula_lower)
+
+        # Build candidate_materials.md entry
+        candidate_line = (
+            f"\n### {primary_material}\n"
+            f"- **Predicted Tc**: {primary_tc} K\n"
+            f"- **Pressure**: {primary_pressure} GPa\n"
+            f"- **Source**: [{paper['title'][:80]}]({paper['link']})\n"
+            f"- **Date added**: {entry['date_added']}\n"
+        )
+        new_candidate_lines.append(candidate_line)
+
+    if not new_entries:
+        print("No new candidates found.")
+        return
+
+    # Append to database
+    existing_entries.extend(new_entries)
+    try:
+        with open(database_path, "w", encoding="utf-8") as f:
+            json.dump(existing_entries, f, indent=2)
+        print(f"Added {len(new_entries)} new entries to {database_path}")
+    except IOError as e:
+        print(f"Error writing to database: {e}", file=sys.stderr)
+
+    # Append to candidate_materials.md
+    try:
+        with open(candidates_path, "a", encoding="utf-8") as f:
+            f.write("\n".join(new_candidate_lines))
+        print(f"Appended {len(new_candidate_lines)} candidates to {candidates_path}")
+    except IOError as e:
+        print(f"Error writing to candidates file: {e}", file=sys.stderr)
 
 
 if __name__ == "__main__":
