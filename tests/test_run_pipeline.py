@@ -2254,3 +2254,314 @@ def test_sobol_sensitivity_analysis():
         result = rp.sobol_sensitivity_analysis()
         assert isinstance(result, dict)
         assert 'S1' in result or 'ST' in result or 'total' in result
+
+
+# ===== Unit tests for scripts/arxiv_scraper.py =====
+
+class TestArxivScraper:
+
+    @patch('scripts.arxiv_scraper.ArxivFetcher')
+    def test_fetch_papers_success(self, mock_fetcher):
+        """Test that fetch_papers returns a list of papers."""
+        mock_instance = MagicMock()
+        mock_instance.fetch.return_value = [
+            {"title": "Paper 1", "authors": ["Author A"], "abstract": "Abstract 1"},
+            {"title": "Paper 2", "authors": ["Author B"], "abstract": "Abstract 2"}
+        ]
+        mock_fetcher.return_value = mock_instance
+        from scripts.arxiv_scraper import fetch_papers
+        papers = fetch_papers(query="superconductivity", max_results=10)
+        assert len(papers) == 2
+        assert papers[0]["title"] == "Paper 1"
+
+    @patch('scripts.arxiv_scraper.ArxivFetcher')
+    def test_fetch_papers_empty(self, mock_fetcher):
+        """Test that fetch_papers returns empty list when no results."""
+        mock_instance = MagicMock()
+        mock_instance.fetch.return_value = []
+        mock_fetcher.return_value = mock_instance
+        from scripts.arxiv_scraper import fetch_papers
+        papers = fetch_papers(query="nonexistent", max_results=10)
+        assert papers == []
+
+    @patch('scripts.arxiv_scraper.ArxivFetcher')
+    def test_fetch_papers_error(self, mock_fetcher):
+        """Test that fetch_papers handles network errors gracefully."""
+        mock_instance = MagicMock()
+        mock_instance.fetch.side_effect = ConnectionError("Network error")
+        mock_fetcher.return_value = mock_instance
+        from scripts.arxiv_scraper import fetch_papers
+        with pytest.raises(ConnectionError):
+            fetch_papers(query="superconductivity", max_results=10)
+
+
+# ===== Unit tests for scripts/generate_candidates.py =====
+
+class TestGenerateCandidates:
+
+    @patch('scripts.generate_candidates.load_materials_data')
+    def test_generate_candidates_success(self, mock_load):
+        """Test that generate_candidates returns a list of candidate dicts."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        from scripts.generate_candidates import generate_candidates
+        candidates = generate_candidates(min_tc=200, max_pressure=200)
+        assert len(candidates) == 2
+        assert candidates[0]["name"] == "H3S"
+
+    @patch('scripts.generate_candidates.load_materials_data')
+    def test_generate_candidates_empty(self, mock_load):
+        """Test that generate_candidates returns empty list when no materials match."""
+        mock_load.return_value = []
+        from scripts.generate_candidates import generate_candidates
+        candidates = generate_candidates(min_tc=200, max_pressure=200)
+        assert candidates == []
+
+    @patch('scripts.generate_candidates.load_materials_data')
+    def test_generate_candidates_filtering(self, mock_load):
+        """Test that generate_candidates filters by Tc and pressure."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155},
+            {"name": "LaH10", "Tc": 250, "pressure": 170},
+            {"name": "MgB2", "Tc": 39, "pressure": 0}
+        ]
+        from scripts.generate_candidates import generate_candidates
+        candidates = generate_candidates(min_tc=100, max_pressure=160)
+        assert len(candidates) == 1
+        assert candidates[0]["name"] == "H3S"
+
+
+# ===== Unit tests for scripts/query_database.py =====
+
+class TestQueryDatabase:
+
+    @patch('scripts.query_database.get_connection')
+    def test_query_materials_success(self, mock_get_conn):
+        """Test that query_materials returns results from database."""
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_cursor.fetchall.return_value = [
+            ("H3S", 203, 155),
+            ("LaH10", 250, 170)
+        ]
+        mock_cursor.description = [("name",), ("tc",), ("pressure",)]
+        mock_conn.cursor.return_value = mock_cursor
+        mock_get_conn.return_value = mock_conn
+        from scripts.query_database import query_materials
+        results = query_materials("SELECT name, tc, pressure FROM materials WHERE tc > 200")
+        assert len(results) == 2
+        assert results[0]["name"] == "H3S"
+
+    @patch('scripts.query_database.get_connection')
+    def test_query_materials_empty(self, mock_get_conn):
+        """Test that query_materials returns empty list when no results."""
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_cursor.fetchall.return_value = []
+        mock_cursor.description = [("name",), ("tc",)]
+        mock_conn.cursor.return_value = mock_cursor
+        mock_get_conn.return_value = mock_conn
+        from scripts.query_database import query_materials
+        results = query_materials("SELECT name, tc FROM materials WHERE tc > 1000")
+        assert results == []
+
+    @patch('scripts.query_database.get_connection')
+    def test_query_materials_error(self, mock_get_conn):
+        """Test that query_materials handles database errors."""
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_cursor.execute.side_effect = Exception("DB error")
+        mock_conn.cursor.return_value = mock_cursor
+        mock_get_conn.return_value = mock_conn
+        from scripts.query_database import query_materials
+        with pytest.raises(Exception):
+            query_materials("SELECT * FROM nonexistent")
+
+
+# ===== Unit tests for scripts/api_client.py =====
+
+class TestApiClient:
+
+    @patch('scripts.api_client.requests.get')
+    def test_get_material_success(self, mock_get):
+        """Test that get_material returns material data on success."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"name": "H3S", "tc": 203}
+        mock_get.return_value = mock_response
+        from scripts.api_client import get_material
+        result = get_material("H3S")
+        assert result["name"] == "H3S"
+        assert result["tc"] == 203
+
+    @patch('scripts.api_client.requests.get')
+    def test_get_material_not_found(self, mock_get):
+        """Test that get_material returns None on 404."""
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_get.return_value = mock_response
+        from scripts.api_client import get_material
+        result = get_material("Nonexistent")
+        assert result is None
+
+    @patch('scripts.api_client.requests.get')
+    def test_get_material_network_error(self, mock_get):
+        """Test that get_material raises on network error."""
+        mock_get.side_effect = ConnectionError("Network error")
+        from scripts.api_client import get_material
+        with pytest.raises(ConnectionError):
+            get_material("H3S")
+
+    @patch('scripts.api_client.requests.post')
+    def test_submit_candidate_success(self, mock_post):
+        """Test that submit_candidate returns success response."""
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {"id": 123, "status": "queued"}
+        mock_post.return_value = mock_response
+        from scripts.api_client import submit_candidate
+        result = submit_candidate({"name": "NewMaterial", "composition": "H3S"})
+        assert result["id"] == 123
+        assert result["status"] == "queued"
+
+    @patch('scripts.api_client.requests.post')
+    def test_submit_candidate_error(self, mock_post):
+        """Test that submit_candidate raises on server error."""
+        mock_response = MagicMock()
+        mock_response.status_code = 500
+        mock_response.raise_for_status.side_effect = Exception("Server error")
+        mock_post.return_value = mock_response
+        from scripts.api_client import submit_candidate
+        with pytest.raises(Exception):
+            submit_candidate({"name": "BadMaterial"})
+
+
+# ===== Integration tests for full pipeline =====
+
+class TestFullPipelineIntegration:
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.arxiv_scraper.fetch_papers')
+    @patch('scripts.run_pipeline.generate_candidates.generate_candidates')
+    @patch('scripts.run_pipeline.query_database.query_materials')
+    @patch('scripts.run_pipeline.api_client.get_material')
+    @patch('scripts.run_pipeline.api_client.submit_candidate')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_with_all_components(self, mock_open, mock_submit, mock_get_mat,
+                                                mock_query, mock_gen_candidates, mock_fetch,
+                                                mock_dft, mock_predict, mock_train, mock_load):
+        """Integration test simulating the full pipeline including arxiv, candidates, DB, API."""
+        # Mock load_data
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        # Mock train_model
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+        # Mock predict_tc_with_uncertainty
+        def predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 5.0)
+            elif name == "LaH10":
+                return (250.0, 8.0)
+            else:
+                return (100.0, 10.0)
+        mock_predict.side_effect = predict_side_effect
+        # Mock DFT
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        # Mock arxiv scraper
+        mock_fetch.return_value = [
+            {"title": "New superconductor discovery", "authors": ["Author"], "abstract": "..."}
+        ]
+        # Mock generate_candidates
+        mock_gen_candidates.return_value = [
+            {"name": "Candidate1", "composition": "H3S", "Tc": 203, "pressure": 155}
+        ]
+        # Mock query_database
+        mock_query.return_value = [
+            {"name": "H3S", "tc": 203, "pressure": 155}
+        ]
+        # Mock api_client.get_material
+        mock_get_mat.return_value = {"name": "H3S", "tc": 203}
+        # Mock api_client.submit_candidate
+        mock_submit.return_value = {"id": 1, "status": "queued"}
+        # Mock open
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline
+        result = rp.run_pipeline()
+
+        # Verify that all components were called
+        mock_load.assert_called_once()
+        mock_train.assert_called_once()
+        assert mock_predict.call_count >= 1
+        assert mock_dft.call_count >= 1
+        mock_fetch.assert_called_once()
+        mock_gen_candidates.assert_called_once()
+        mock_query.assert_called_once()
+        mock_get_mat.assert_called_once()
+        mock_submit.assert_called_once()
+        # Verify that open was called to write output files
+        assert mock_open.call_count >= 1
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.arxiv_scraper.fetch_papers')
+    @patch('scripts.run_pipeline.generate_candidates.generate_candidates')
+    @patch('scripts.run_pipeline.query_database.query_materials')
+    @patch('scripts.run_pipeline.api_client.get_material')
+    @patch('scripts.run_pipeline.api_client.submit_candidate')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_full_pipeline_with_errors(self, mock_open, mock_submit, mock_get_mat,
+                                        mock_query, mock_gen_candidates, mock_fetch,
+                                        mock_dft, mock_predict, mock_train, mock_load):
+        """Integration test where one component fails and pipeline handles it gracefully."""
+        # Mock load_data to return data
+        mock_load.return_value = [{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]
+        # Mock train_model
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        # Mock predict_tc_with_uncertainty
+        mock_predict.return_value = (203.0, 5.0)
+        # Mock DFT to fail
+        mock_dft.side_effect = Exception("DFT convergence failed")
+        # Mock arxiv scraper to return empty
+        mock_fetch.return_value = []
+        # Mock generate_candidates to return empty
+        mock_gen_candidates.return_value = []
+        # Mock query_database to return empty
+        mock_query.return_value = []
+        # Mock api_client.get_material to return None
+        mock_get_mat.return_value = None
+        # Mock api_client.submit_candidate to raise
+        mock_submit.side_effect = Exception("API unavailable")
+        # Mock open
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline (should not crash)
+        result = rp.run_pipeline()
+
+        # Verify that the pipeline still completes (maybe with partial results)
+        assert result is not None
+        # Verify that all components were called
+        mock_load.assert_called_once()
+        mock_train.assert_called_once()
+        mock_predict.assert_called_once()
+        mock_dft.assert_called_once()
+        mock_fetch.assert_called_once()
+        mock_gen_candidates.assert_called_once()
+        mock_query.assert_called_once()
+        mock_get_mat.assert_called_once()
+        mock_submit.assert_called_once()
