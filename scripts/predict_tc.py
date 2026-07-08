@@ -1551,3 +1551,61 @@ def predict_tc():
         print(f"{entry.get('formula', 'Unknown'):20s} lambda={lambda_:.3f} omega_log={omega_log:.1f} mu*={mu_star:.3f} -> Tc={tc:.2f} K")
     print("========================================================")
     return data
+
+
+def train_model():
+    """Load database, extract features, train RandomForest model, save."""
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
+    with open(db_path, 'r') as f:
+        data = json.load(f)
+    
+    # Extract features and target
+    X = []
+    y = []
+    for entry in data:
+        formula = entry.get('formula', '')
+        tc = entry.get('tc', None)
+        if not formula or tc is None:
+            continue
+        # Parse formula to get element counts
+        elements = {}
+        pattern = r'([A-Z][a-z]*)(\d*\.?\d*)'
+        for match in re.finditer(pattern, formula):
+            elem = match.group(1)
+            count_str = match.group(2)
+            count = float(count_str) if count_str else 1.0
+            elements[elem] = elements.get(elem, 0) + count
+        total_atoms = sum(elements.values())
+        if total_atoms == 0:
+            continue
+        # Compute average valence, Debye temp, atomic mass
+        avg_valence = sum(VALENCE.get(e, 0) * c for e, c in elements.items()) / total_atoms
+        avg_debye = sum(DEBYE_TEMP.get(e, 100) * c for e, c in elements.items()) / total_atoms
+        avg_mass = sum(ATOMIC_MASS.get(e, 50) * c for e, c in elements.items()) / total_atoms
+        # Also include number of elements and total atoms
+        num_elements = len(elements)
+        X.append([avg_valence, avg_debye, avg_mass, num_elements, total_atoms])
+        y.append(tc)
+    
+    X = np.array(X)
+    y = np.array(y)
+    
+    # Train Random Forest
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X, y)
+    
+    # Save model
+    model_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+    os.makedirs(model_dir, exist_ok=True)
+    model_path = os.path.join(model_dir, 'tc_predictor.pkl')
+    joblib.dump(model, model_path)
+    print(f"Model saved to {model_path}")
+    
+    # Optionally evaluate
+    from sklearn.model_selection import cross_val_score
+    scores = cross_val_score(model, X, y, cv=min(5, len(X)), scoring='r2')
+    print(f"Cross-validation R2: {scores.mean():.3f} +/- {scores.std():.3f}")
+    return model
+
+if __name__ == '__main__':
+    train_model()
