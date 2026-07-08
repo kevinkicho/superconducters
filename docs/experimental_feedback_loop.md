@@ -1917,3 +1917,70 @@ The weights for each criterion are determined by domain experts and can be adjus
 6. Rank candidates by descending closeness coefficient.
 
 The TOPSIS ranking is updated after each retraining cycle and is displayed in the candidate dashboard.
+
+
+## Cloud Lab Integration with Fallback
+
+### Overview
+Cloud lab integration enables remote execution of synthesis and characterization experiments on candidate compounds via a cloud-based laboratory platform (e.g., Emerald Cloud Lab, Strateos). This accelerates the feedback loop by allowing parallel, automated experiments without requiring physical presence. A fallback mechanism ensures continuity when cloud lab resources are unavailable or when experiments require specialized equipment not offered by the cloud provider.
+
+### Implementation
+1. **Cloud Lab API Client**: A Python module (`cloud_lab_client.py`) wraps the cloud lab's REST API. It handles authentication, experiment submission, status polling, and result retrieval.
+2. **Experiment Templates**: Predefined templates for common synthesis methods (solid-state reaction, high-pressure synthesis, chemical vapor deposition) and characterization techniques (XRD, resistivity, SQUID). Each template specifies required parameters, equipment, and expected output formats.
+3. **Fallback Logic**: The system checks cloud lab availability (via health endpoint) before each experiment. If the cloud lab is unreachable or reports capacity limits, the experiment is routed to a local lab queue. The fallback is configurable via environment variables (`CLOUD_LAB_ENABLED`, `LOCAL_LAB_QUEUE_URL`).
+4. **Result Synchronization**: Results from both cloud and local labs are ingested into the central database using the same schema, ensuring uniform processing.
+
+### Configuration
+Configuration is stored in `config/cloud_lab.yaml`:
+```yaml
+cloud_lab:
+  api_url: "https://api.cloudlab.example.com/v1"
+  api_key: "${CLOUD_LAB_API_KEY}"
+  experiment_timeout: 3600  # seconds
+  max_retries: 3
+  fallback:
+    enabled: true
+    local_lab_queue: "amqp://localhost:5672/experiments"
+    fallback_threshold: 2  # consecutive failures before switching to fallback
+```
+
+### Usage
+- **Submitting an Experiment**: Call `submit_experiment(candidate_id, template_name, parameters)` from the pipeline. The function returns an experiment ID and status.
+- **Monitoring**: Use `get_experiment_status(experiment_id)` to poll status. The pipeline waits for completion or timeout.
+- **Fallback Activation**: If the cloud lab fails, the system automatically enqueues the experiment to the local lab. Operators are notified via the alerting system.
+
+## Real-Time Monitoring and Alerts
+
+### Overview
+Real-time monitoring provides live visibility into ongoing experiments, data ingestion, model retraining, and system health. Alerts notify operators of critical events such as experiment failures, data quality issues, or model performance degradation.
+
+### Implementation
+1. **Metrics Collection**: A Prometheus exporter (`metrics_exporter.py`) exposes metrics from the pipeline components: experiment success rate, ingestion latency, model retraining duration, circuit breaker state, and feedback loop cycle time.
+2. **Dashboard**: A Grafana dashboard (`dashboards/experimental_feedback_loop.json`) visualizes key metrics with panels for experiment throughput, error rates, and candidate ranking changes.
+3. **Alert Rules**: Alertmanager rules define thresholds:
+   - `ExperimentFailureRate > 20%` over 1 hour → critical alert
+   - `IngestionLatency > 5 minutes` → warning alert
+   - `ModelRetrainingFailed` → critical alert
+   - `CircuitBreakerOpen` → critical alert
+4. **Notification Channels**: Alerts are sent via Slack, email, and PagerDuty. Configuration is in `config/alerts.yaml`.
+
+### Configuration
+```yaml
+alerts:
+  prometheus_url: "http://localhost:9090"
+  alertmanager_url: "http://localhost:9093"
+  notification:
+    slack_webhook: "${SLACK_WEBHOOK_URL}"
+    email_smtp: "smtp.example.com:587"
+    email_recipients: ["ops@example.com"]
+    pagerduty_service_key: "${PAGERDUTY_KEY}"
+  thresholds:
+    experiment_failure_rate: 0.2
+    ingestion_latency_seconds: 300
+    retraining_failure: true
+```
+
+### Usage
+- **Viewing Dashboard**: Access Grafana at `https://grafana.example.com/d/experimental-feedback-loop`.
+- **Acknowledging Alerts**: Operators can acknowledge alerts via Slack commands or the Alertmanager UI.
+- **Customizing Alerts**: Modify thresholds in `config/alerts.yaml` and reload the Alertmanager configuration.
