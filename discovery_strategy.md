@@ -400,3 +400,26 @@ The discovery process is organized as a prioritized screening pipeline that comb
 - Every 50 experiments, the GNN surrogate and CVAE are retrained on the combined dataset.
 - The priority weights (w1, w2, w3) are adjusted based on historical success rates.
 - The pipeline ensures that the most promising candidates are synthesized first, accelerating the discovery of room-temperature superconductors.
+
+
+## 16. Model Performance Metrics and Screening Pipeline Feedback
+
+### 16.1 Surrogate Model (GNN) Metrics
+- **Root Mean Square Error (RMSE):** Computed on a held-out test set of known superconductors (e.g., 20% of the database). Target RMSE < 30 K for Tc predictions at pressures ≤ 100 GPa.
+- **R² Score:** Target > 0.85 for the same test set, indicating strong correlation between predicted and experimental Tc.
+- **Precision/Recall for Tc > 250 K:** Precision > 0.7, Recall > 0.8 to ensure high-confidence candidates are not missed.
+- **False Positive Rate (FPR):** Monitored via periodic experimental validation of low-priority candidates. FPR < 0.2 is acceptable; if exceeded, the GNN is retrained with additional negative examples.
+
+### 16.2 Generative Model (CVAE) Metrics
+- **Validity:** Fraction of generated structures that are physically plausible (e.g., reasonable bond lengths, no overlapping atoms). Target > 90%.
+- **Novelty:** Fraction of generated compounds not present in the training set. Target > 80% to ensure exploration of new chemical space.
+- **Diversity:** Average pairwise Tanimoto distance of generated compositions. Target > 0.4 to avoid mode collapse.
+- **Tc Distribution:** The generated candidates should span a range of predicted Tc values, with at least 10% exceeding 250 K at ≤ 50 GPa.
+
+### 16.3 Impact on Screening Pipeline
+- **Weight Adjustment:** If the GNN RMSE exceeds 30 K, the priority weight w1 (Tc_pred) is reduced from 0.5 to 0.3, and w2 (pressure) is increased to 0.4, to favor lower-pressure candidates that are easier to synthesize.
+- **Gate Threshold Tuning:** If the false positive rate for Tc > 250 K exceeds 0.2, the Gate 3 threshold is raised to 270 K to reduce wasted synthesis attempts.
+- **Retraining Triggers:** The models are retrained every 50 experiments or whenever the RMSE degrades by more than 10% from the previous retraining. Retraining incorporates all new experimental data, including failures.
+- **Candidate Queue Re-ranking:** After each retraining, the entire candidate queue is re-scored and re-sorted using the updated models and weights, ensuring the most promising candidates are always at the top.
+
+This feedback loop ensures that the screening pipeline adapts to model performance, continuously improving the efficiency of the discovery process.
