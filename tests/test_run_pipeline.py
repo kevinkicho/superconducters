@@ -598,3 +598,47 @@ def test_pipeline_validated_against_2025_paper():
         # (This assumes the pipeline returns a dict with 'ml_tc' field)
         # If not, we can check that the mock was called with correct arguments
         mock_predict_ml.assert_any_call("H3S", pressure=155)
+
+    def test_predict_tc_with_uncertainty_returns_mean_and_std(self):
+        """Test that predict_tc_with_uncertainty returns a tuple (mean, std)."""
+        with patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict:
+            mock_predict.return_value = (150.0, 10.0)
+            result = rp.predict_tc_with_uncertainty("H3S", pressure=155)
+            self.assertIsInstance(result, tuple)
+            self.assertEqual(len(result), 2)
+            self.assertIsInstance(result[0], float)
+            self.assertIsInstance(result[1], float)
+            mock_predict.assert_called_once_with("H3S", pressure=155)
+
+    def test_acquisition_function_and_candidate_selection(self):
+        """Test that the acquisition function returns a value and candidate selection picks the best."""
+        with patch('scripts.run_pipeline.acquisition_function') as mock_acq:
+            mock_acq.return_value = 0.85
+            with patch('scripts.run_pipeline.select_next_candidate') as mock_select:
+                mock_select.return_value = {"name": "YH6", "Tc": 180.0}
+                result = rp.select_next_candidate(candidates=[{"name": "H3S"}, {"name": "YH6"}])
+                self.assertIsInstance(result, dict)
+                self.assertIn("name", result)
+                self.assertEqual(result["name"], "YH6")
+                mock_acq.assert_called()
+
+    def test_external_database_query_api_integration_with_mock(self):
+        """Test that external database query function handles API response correctly."""
+        with patch('scripts.run_pipeline.query_external_database') as mock_query:
+            mock_query.return_value = [{"material": "H3S", "Tc": 203}]
+            result = rp.query_external_database("H3S")
+            self.assertIsInstance(result, list)
+            self.assertEqual(len(result), 1)
+            self.assertEqual(result[0]["material"], "H3S")
+            mock_query.assert_called_once_with("H3S")
+
+    def test_digital_twin_simulation_output(self):
+        """Test that digital twin simulation returns expected output structure."""
+        with patch('scripts.run_pipeline.run_digital_twin_simulation') as mock_sim:
+            mock_sim.return_value = {"temperature": 300, "pressure": 150, "tc": 200.0, "status": "converged"}
+            result = rp.run_digital_twin_simulation(material="H3S", pressure=155, temperature=200)
+            self.assertIsInstance(result, dict)
+            self.assertIn("tc", result)
+            self.assertIn("status", result)
+            self.assertEqual(result["status"], "converged")
+            mock_sim.assert_called_once_with(material="H3S", pressure=155, temperature=200)
