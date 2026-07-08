@@ -733,3 +733,42 @@ def compute_phonon_tc_for_candidates(candidates: List[Dict], prefix_base: str = 
             "pinn_tc": None,
         }
     return results
+
+
+def fine_tune_pinn_on_real_data(pinn_model, real_data, epochs=10, lr=1e-4, device=None):
+    """
+    Fine-tune a pre-trained PINN (simulation-trained) on real experimental data
+    using sim-to-real transfer learning.
+
+    Args:
+        pinn_model: Pre-trained PyTorch model (e.g., a GNN).
+        real_data: List of tuples (graph, tc_measured) where graph is a torch_geometric Data object
+                   and tc_measured is a float.
+        epochs: Number of fine-tuning epochs.
+        lr: Learning rate.
+        device: Torch device (default: auto-detect).
+
+    Returns:
+        Fine-tuned model.
+    """
+    if device is None:
+        device = get_device()
+    pinn_model = pinn_model.to(device)
+    pinn_model.train()
+    optimizer = torch.optim.Adam(pinn_model.parameters(), lr=lr)
+    loss_fn = torch.nn.MSELoss()
+
+    for epoch in range(epochs):
+        total_loss = 0.0
+        for graph, tc_measured in real_data:
+            graph = graph.to(device)
+            optimizer.zero_grad()
+            pred = pinn_model(graph).squeeze()
+            loss = loss_fn(pred, torch.tensor(tc_measured, device=device))
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+        avg_loss = total_loss / len(real_data)
+        print(f"Epoch {epoch+1}/{epochs}, Loss: {avg_loss:.6f}")
+
+    return pinn_model
