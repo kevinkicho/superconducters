@@ -707,3 +707,6 @@ To confirm superconductivity and structural properties, the following measuremen
 - Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001. https://doi.org/10.1103/PhysRevLett.122.027001
 - Peng, F. et al. (2020). Hydrogen clathrate structures in rare earth hydrides at high pressures: Possible route to room-temperature superconductivity. *Physical Review B*, 101, 134508. https://doi.org/10.1103/PhysRevB.101.134508
 - Sun, Y. et al. (2021). High-temperature superconductivity in ternary hydrides: A computational perspective. *Journal of Physics: Condensed Matter*, 33, 164001. https://doi.org/10.1088/1361-648X/abe5c7
+
+## Machine-Readable Protocol
+For robotic synthesis, a machine-readable JSON protocol is available at [robotic_synthesis_protocol.json](robotic_synthesis_protocol.json).
