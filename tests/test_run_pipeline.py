@@ -1914,7 +1914,9 @@ class TestStressSelfHealing:
 # machine learning models and DFT calculations.
 
 def test_end_to_end_pipeline():
-    """End-to-end integration test: simulate full pipeline run and verify all output files."""
+    """End-to-end integration test: simulate full pipeline run and verify all output files.
+    Covers arxiv scraping, validation, cloud lab submission, and active learning convergence.
+    """
     import json
     from unittest.mock import patch, MagicMock, call
 
@@ -1938,12 +1940,32 @@ def test_end_to_end_pipeline():
     mock_cost_result = {"total_cost": 50000, "breakdown": {"materials": 20000, "synthesis": 30000}}
     mock_cloud_result = {"submission_id": "sub-123", "status": "queued"}
 
+    # Arxiv scraping mocks
+    mock_arxiv_papers = [
+        {"title": "High-temperature superconductivity in H3S", "authors": ["Drozdov, A.P."], "year": 2015, "doi": "10.1038/nature14964"},
+        {"title": "Superconductivity at 250 K in LaH10", "authors": ["Drozdov, A.P."], "year": 2019, "doi": "10.1038/s41586-019-1201-8"}
+    ]
+    mock_validated_candidates = [
+        {"name": "H3S", "Tc": 203, "pressure": 155, "source": "arxiv", "validated": True},
+        {"name": "LaH10", "Tc": 250, "pressure": 170, "source": "arxiv", "validated": True}
+    ]
+    mock_active_learning_result = {
+        "converged": True,
+        "iterations": 5,
+        "best_candidate": "LaH10",
+        "best_tc": 250.0,
+        "acquisition_function": "expected_improvement"
+    }
+
     with patch('scripts.run_pipeline.load_data', return_value=mock_materials), \
          patch('scripts.run_pipeline.train_model', return_value=mock_model), \
          patch('scripts.run_pipeline.predict_tc_with_uncertainty', side_effect=mock_predict_side_effect), \
          patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation', return_value=mock_dft_result), \
          patch('scripts.run_pipeline.cost_analysis', return_value=mock_cost_result), \
          patch('scripts.run_pipeline.cloud_lab_submission', return_value=mock_cloud_result), \
+         patch('scripts.run_pipeline.arxiv_scraper', return_value=mock_arxiv_papers), \
+         patch('scripts.run_pipeline.validate_candidate', return_value=mock_validated_candidates), \
+         patch('scripts.run_pipeline.active_learning_loop', return_value=mock_active_learning_result), \
          patch('builtins.open', new_callable=MagicMock) as mock_open:
         mock_file = MagicMock()
         mock_open.return_value.__enter__.return_value = mock_file
@@ -1962,7 +1984,9 @@ def test_end_to_end_pipeline():
             "candidate_materials.md",
             "roadmap.md",
             "cost_analysis.md",
-            "cloud_lab_submission.md"
+            "cloud_lab_submission.md",
+            "arxiv_sources.md",
+            "active_learning_report.md"
         ]
         open_calls = [call[0][0] for call in mock_open.call_args_list if call[0][0].endswith('.md')]
         for fname in expected_files:
@@ -1975,3 +1999,12 @@ def test_end_to_end_pipeline():
         assert "250.0" in write_content, "Output should contain predicted Tc for LaH10"
         assert "50000" in write_content, "Output should contain cost analysis result"
         assert "sub-123" in write_content, "Output should contain cloud submission ID"
+        # Arxiv scraping assertions
+        assert "10.1038/nature14964" in write_content, "Output should contain arxiv DOI for H3S"
+        assert "10.1038/s41586-019-1201-8" in write_content, "Output should contain arxiv DOI for LaH10"
+        # Validation assertions
+        assert "validated" in write_content, "Output should contain validation status"
+        # Active learning assertions
+        assert "converged" in write_content, "Output should contain active learning convergence status"
+        assert "expected_improvement" in write_content, "Output should contain acquisition function name"
+        assert "5" in write_content, "Output should contain number of active learning iterations"
