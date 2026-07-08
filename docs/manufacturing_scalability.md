@@ -1445,3 +1445,28 @@ Scalability analysis:
 - **Environmental impact**: High-pressure processes require significant energy, but the resulting superconductors enable lossless power transmission, offsetting the energy cost over the product lifetime.
 
 Future directions include exploring ternary and quaternary hydrides with lower pressure requirements, using machine learning to predict stable stoichiometries, and developing scalable synthesis methods such as high-pressure chemical vapor deposition (CVD) or solvothermal methods. The chemistry and physics of these materials are well understood from BCS theory, and the main barrier is engineering scalable high-pressure reactors. With continued investment, pilot-scale production (1,000 tonnes/year) is achievable within 10 years.
+
+
+## Performance Profiling
+
+To optimize the manufacturing pipeline, we profile the runtime of each stage in the synthesis and characterization process. The following table summarizes typical stage runtimes for a pilot-scale batch (1 kg equivalent) using a large-volume press with chemical precompression (target pressure <50 GPa).
+
+| Stage | Runtime (hours) | Bottleneck | Optimization Recommendation |
+|-------|-----------------|------------|----------------------------|
+| Precursor mixing & loading | 2 | Manual handling | Automate with robotic powder handling; reduce to 0.5 h |
+| High-pressure ramp (0→50 GPa) | 4 | Pump speed | Upgrade to dual-stage intensifier; reduce to 2 h |
+| High-temperature soak (1500 K) | 6 | Furnace ramp rate | Use induction heating; reduce to 3 h |
+| Quench & pressure release | 1 | Cooling rate | Add active cooling loop; reduce to 0.5 h |
+| Sample recovery & cleaning | 1 | Manual extraction | Design quick-release die; reduce to 0.3 h |
+| X-ray diffraction (phase ID) | 0.5 | Detector readout | Use area detector; reduce to 0.2 h |
+| Resistivity measurement (Tc) | 1 | Probe station setup | Integrate in-situ probes; reduce to 0.5 h |
+| Data analysis & QC | 2 | Manual review | Deploy ML classifier; reduce to 0.5 h |
+| **Total** | **17.5** | — | **Target: 7.5 h** |
+
+**Key optimization levers:**
+- **Parallelization**: Run multiple presses simultaneously (e.g., 4 presses → throughput 4×).
+- **Continuous processing**: Replace batch press with a belt press or twin-screw extruder for continuous precursor feeding and pressure cycling.
+- **In-situ monitoring**: Embed Raman and resistivity probes in the press to eliminate post-processing characterization steps.
+- **Machine learning**: Train a model to predict optimal pressure/temperature profiles from precursor composition, reducing trial-and-error runs.
+
+With these optimizations, the total runtime per batch can be reduced from 17.5 h to under 8 h, enabling a throughput of 3 batches/day per press. At 10 presses, annual capacity reaches ~10,000 kg/year, aligning with the target production cost of $100/kg.
