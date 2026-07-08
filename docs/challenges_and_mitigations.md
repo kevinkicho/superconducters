@@ -251,3 +251,13 @@ Automation is critical for accelerating the discovery and manufacturing of room-
 - **Continuous Learning**: Use natural language processing to mine the latest literature for new candidate materials and synthesis methods. Update predictive models automatically to incorporate new data.
 
 Automation not only increases throughput but also improves reproducibility by reducing human error and enabling standardized protocols.
+
+## Automated Patent Application Generation
+
+To accelerate the path from discovery to commercialization, an automated patent draft generation pipeline has been implemented. The pipeline produces a USPTO-compliant patent application draft that includes:
+
+- **Numbered Claims**: A set of independent and dependent claims covering the composition of matter, synthesis method, and device applications of the room-temperature superconductor.
+- **Detailed Description**: A thorough description of the invention, including background, summary, brief description of the drawings, and detailed explanation of the preferred embodiments, with reference to experimental data and theoretical models.
+- **Placeholder for Drawings**: A placeholder section for figures (e.g., crystal structure diagrams, Tc vs. pressure plots, synthesis flowcharts) that will be filled with actual graphics before filing.
+
+The generated draft is saved as a Markdown file and can be converted to the required USPTO XML format via a post-processing script. The latest draft is available at: [Generated Patent Draft](docs/generated_patent_draft.md).
