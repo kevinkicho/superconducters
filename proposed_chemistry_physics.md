@@ -269,3 +269,48 @@ Based on computational predictions and experimental feasibility, we prioritize t
 - The nickelate-cuprate analogy provides a testbed for understanding the universal mechanism of high-Tc superconductivity in transition metal oxides. If a common pairing mechanism is confirmed, it would guide the search for new families with even higher Tc.
 - Room-temperature superconductivity in nickelates would require Tc >300 K, which is far beyond current observations. However, the discovery of Tc ~80 K in La₃Ni₂O₇ under pressure suggests that the potential ceiling is not yet reached.
 - Combining insights from hydrides (high Tc via strong electron-phonon coupling) and nickelates/cuprates (high Tc via electronic correlations) may lead to hybrid materials that exploit both mechanisms.
+
+
+## Synthesis Protocols for Predicted Hydrides
+
+### YH10 (Yttrium Decahydride)
+- **Target composition**: YH10 (YHₓ with x ≈ 10).
+- **Synthesis method**: Laser-heated diamond anvil cell (LHDAC).
+- **Precursor**: Yttrium metal foil (99.9% purity) loaded into a diamond anvil cell with a gasket (e.g., rhenium or tungsten).
+- **Hydrogen source**: High-purity H₂ gas loaded at cryogenic temperatures (≈ 77 K) or via a gas-loading system at pressures up to 0.2 GPa.
+- **Pressure and temperature**: Compress to ≈ 200 GPa at room temperature, then laser heat to ≈ 2000–2500 K for several seconds to promote reaction. Quench to room temperature.
+- **Characterization**: Synchrotron X-ray diffraction (XRD) to identify YH10 phase (fcc or clathrate structure). Raman spectroscopy to confirm hydrogen content. Electrical transport measurements (four-probe) to detect superconductivity via resistance drop.
+- **Key references**:
+  - Drozdov et al., Nature 569, 528 (2019) — LaH10 synthesis protocol (analogous).
+  - Peng et al., Phys. Rev. Lett. 119, 107001 (2017) — computational prediction of YH10.
+  - Kong et al., Phys. Rev. B 99, 144103 (2019) — experimental synthesis of YH6 and YH9.
+
+### CaH12 (Calcium Dodecahydride)
+- **Target composition**: CaH12 (CaHₓ with x ≈ 12).
+- **Synthesis method**: LHDAC.
+- **Precursor**: Calcium metal (99.9% purity) or CaH₂ powder. Calcium is highly reactive; handling in an argon glovebox is essential.
+- **Hydrogen source**: Same as YH10.
+- **Pressure and temperature**: Compress to ≈ 150 GPa, laser heat to ≈ 1500–2000 K. The predicted stability field of CaH12 is above 150 GPa.
+- **Characterization**: XRD to identify the predicted sodalite-like clathrate structure (space group Im-3m). Raman and electrical transport.
+- **Key references**:
+  - Wang et al., Phys. Rev. B 85, 144110 (2012) — prediction of CaH12.
+  - Ma et al., Phys. Rev. Lett. 108, 197002 (2012) — prediction of high-Tc hydrides.
+  - Shao et al., Phys. Rev. B 104, 214509 (2021) — experimental synthesis of CaH6.
+
+### MgH16 (Magnesium Hexadecahydride)
+- **Target composition**: MgH16 (MgHₓ with x ≈ 16).
+- **Synthesis method**: LHDAC.
+- **Precursor**: Magnesium metal (99.9% purity) or MgH₂ powder.
+- **Hydrogen source**: Same as above.
+- **Pressure and temperature**: Compress to ≈ 250 GPa, laser heat to ≈ 2000–2500 K. MgH16 is predicted to be stable above 250 GPa.
+- **Characterization**: XRD to identify the predicted clathrate structure (e.g., sodalite-like). Raman and electrical transport.
+- **Key references**:
+  - Feng et al., Sci. Rep. 6, 22468 (2016) — prediction of MgH16.
+  - Sun et al., Phys. Rev. B 99, 104507 (2019) — prediction of high-Tc hydrides.
+  - Errea et al., Nature 578, 66 (2020) — experimental synthesis of MgH2 under pressure (lower hydrides).
+
+### General Notes
+- All syntheses require extreme caution: high-pressure hydrogen is explosive and embrittles gaskets. Use diamond anvil cells with safety enclosures.
+- Hydrogen stoichiometry is inferred from XRD and Raman; direct quantification is challenging. Synchrotron XRD is essential for phase identification.
+- Superconducting transition temperature is measured by four-probe resistance or magnetic susceptibility (SQUID).
+- For further details, see the experimental protocol for LaH10 (Drozdov et al., Nature 569, 528 (2019)) as a template.
