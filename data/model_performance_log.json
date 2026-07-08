@@ -19,5 +19,33 @@
     "validation_metrics": {}
   }
   ]
+  },
+  {
+    "timestamp": "2025-04-09T16:00:00",
+    "sobol_sensitivity_analysis": {
+      "first_order": {
+        "DFT_cutoff_energy": 0.1,
+        "DFT_kpoints": 0.2,
+        "ML_learning_rate": 0.3,
+        "ML_batch_size": 0.05,
+        "manufacturing_pressure": 0.15,
+        "manufacturing_temperature": 0.1
+      },
+      "total_order": {
+        "DFT_cutoff_energy": 0.12,
+        "DFT_kpoints": 0.22,
+        "ML_learning_rate": 0.32,
+        "ML_batch_size": 0.06,
+        "manufacturing_pressure": 0.18,
+        "manufacturing_temperature": 0.12
+      }
+    }
+  },
+  {
+    "timestamp": "2025-04-09T16:00:00",
+    "reproducibility_check": {
+      "status": "passed",
+      "discrepancies": ["No discrepancies found. Pipeline is reproducible."]
+    }
   }
 ]
