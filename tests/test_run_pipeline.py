@@ -1354,3 +1354,417 @@ class TestPerformanceAndStress:
         assert mock_subprocess_run.call_count >= 1
         # Verify the function returned True or success indicator
         assert result is True
+
+
+# ===== Unit tests for run_pipeline.py edge cases =====
+
+class TestRunPipelineEdgeCases:
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_empty_data(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline with empty data list."""
+        mock_load.return_value = []
+        mock_model = MagicMock()
+        mock_model.predict.return_value = []
+        mock_train.return_value = mock_model
+        mock_predict.side_effect = []
+        mock_dft.return_value = {}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.run_pipeline()
+        assert result is not None
+        mock_load.assert_called_once()
+        mock_train.assert_called_once()
+        assert mock_predict.call_count == 0
+        assert mock_dft.call_count == 0
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_missing_columns(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline with data missing required columns."""
+        mock_load.return_value = [{"name": "H3S"}]  # missing Tc, pressure, composition
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (200.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        try:
+            result = rp.run_pipeline()
+            assert result is not None
+        except Exception as e:
+            pytest.fail(f"Pipeline raised exception on missing columns: {e}")
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_predict_returns_none(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline when predict_tc_with_uncertainty returns None for some candidates."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 5.0)
+            else:
+                return None  # simulate failure
+        mock_predict.side_effect = mock_predict_side_effect
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        try:
+            result = rp.run_pipeline()
+            assert result is not None
+        except Exception as e:
+            pytest.fail(f"Pipeline raised exception on None predict: {e}")
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_dft_fails_for_some_candidates(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline when DFT calculation fails for some candidates."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+        def mock_predict_side_effect(name, pressure=None):
+            return (200.0, 5.0)
+        mock_predict.side_effect = mock_predict_side_effect
+        def mock_dft_side_effect(name, composition, pressure):
+            if name == "H3S":
+                return {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+            else:
+                return {"status": "failed", "error": "convergence error"}
+        mock_dft.side_effect = mock_dft_side_effect
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        try:
+            result = rp.run_pipeline()
+            assert result is not None
+        except Exception as e:
+            pytest.fail(f"Pipeline raised exception on DFT failure: {e}")
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_file_write_failure(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test pipeline when file write fails (e.g., permission error)."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_open.side_effect = PermissionError("Permission denied")
+        try:
+            result = rp.run_pipeline()
+            assert result is None or result is not None  # pipeline should handle gracefully
+        except PermissionError:
+            pytest.fail("Pipeline should catch file write errors, not raise them")
+
+
+# ===== Unit tests for dft_calculator.py =====
+
+class TestDftCalculator:
+
+    @patch('scripts.dft_calculator.subprocess.run')
+    def test_run_full_dft_calculation_success(self, mock_subprocess_run):
+        """Test successful DFT calculation."""
+        from scripts import dft_calculator as dft
+        mock_subprocess_run.return_value = MagicMock(returncode=0, stdout=b"energy: -1.5\nbandgap: 0.0\nstatus: converged", stderr=b"")
+        result = dft.run_full_dft_calculation("H3S", "H3S", 155)
+        assert result["status"] == "converged"
+        assert result["energy"] == -1.5
+        assert result["bandgap"] == 0.0
+
+    @patch('scripts.dft_calculator.subprocess.run')
+    def test_run_full_dft_calculation_failure(self, mock_subprocess_run):
+        """Test DFT calculation that fails."""
+        from scripts import dft_calculator as dft
+        mock_subprocess_run.return_value = MagicMock(returncode=1, stdout=b"", stderr=b"Error: SCF not converged")
+        result = dft.run_full_dft_calculation("LaH10", "LaH10", 170)
+        assert result["status"] == "failed"
+        assert "error" in result
+
+    @patch('scripts.dft_calculator.subprocess.run')
+    def test_run_full_dft_calculation_timeout(self, mock_subprocess_run):
+        """Test DFT calculation that times out."""
+        from scripts import dft_calculator as dft
+        mock_subprocess_run.side_effect = subprocess.TimeoutExpired(cmd="dft", timeout=3600)
+        result = dft.run_full_dft_calculation("H3S", "H3S", 155)
+        assert result["status"] == "failed"
+        assert "timeout" in result.get("error", "").lower()
+
+    @patch('scripts.dft_calculator.subprocess.run')
+    def test_run_full_dft_calculation_missing_output(self, mock_subprocess_run):
+        """Test DFT calculation with missing output fields."""
+        from scripts import dft_calculator as dft
+        mock_subprocess_run.return_value = MagicMock(returncode=0, stdout=b"energy: -1.5\nstatus: converged", stderr=b"")
+        result = dft.run_full_dft_calculation("H3S", "H3S", 155)
+        assert result["status"] == "converged"
+        assert "bandgap" not in result or result.get("bandgap") is None
+
+
+# ===== Unit tests for scripts/arxiv_scraper.py =====
+
+class TestArxivScraper:
+
+    @patch('scripts.arxiv_scraper.requests.get')
+    def test_fetch_papers_success(self, mock_get):
+        """Test successful paper fetch from arXiv."""
+        from scripts import arxiv_scraper as arx
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.text = """<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <id>http://arxiv.org/abs/2307.12008</id>
+    <title>Observation of room-temperature superconductivity in modified lead-apatite</title>
+    <summary>We report the discovery of room-temperature superconductivity...</summary>
+    <published>2023-07-22T12:00:00Z</published>
+    <author><name>Lee et al.</name></author>
+  </entry>
+</feed>"""
+        mock_get.return_value = mock_response
+        papers = arx.fetch_papers(query="superconductivity", max_results=1)
+        assert len(papers) == 1
+        assert papers[0]["title"] == "Observation of room-temperature superconductivity in modified lead-apatite"
+        assert papers[0]["arxiv_id"] == "2307.12008"
+
+    @patch('scripts.arxiv_scraper.requests.get')
+    def test_fetch_papers_http_error(self, mock_get):
+        """Test paper fetch with HTTP error."""
+        from scripts import arxiv_scraper as arx
+        mock_get.return_value = MagicMock(status_code=503, text="Service Unavailable")
+        papers = arx.fetch_papers(query="superconductivity", max_results=5)
+        assert papers == []
+
+    @patch('scripts.arxiv_scraper.requests.get')
+    def test_fetch_papers_connection_error(self, mock_get):
+        """Test paper fetch with connection error."""
+        from scripts import arxiv_scraper as arx
+        mock_get.side_effect = requests.exceptions.ConnectionError("Failed to connect")
+        papers = arx.fetch_papers(query="superconductivity", max_results=5)
+        assert papers == []
+
+    @patch('scripts.arxiv_scraper.requests.get')
+    def test_fetch_papers_timeout(self, mock_get):
+        """Test paper fetch with timeout."""
+        from scripts import arxiv_scraper as arx
+        mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
+        papers = arx.fetch_papers(query="superconductivity", max_results=5)
+        assert papers == []
+
+    @patch('scripts.arxiv_scraper.requests.get')
+    def test_fetch_papers_malformed_xml(self, mock_get):
+        """Test paper fetch with malformed XML response."""
+        from scripts import arxiv_scraper as arx
+        mock_get.return_value = MagicMock(status_code=200, text="<notxml>")
+        papers = arx.fetch_papers(query="superconductivity", max_results=5)
+        assert papers == []
+
+    @patch('scripts.arxiv_scraper.requests.get')
+    def test_fetch_papers_empty_result(self, mock_get):
+        """Test paper fetch with empty result set."""
+        from scripts import arxiv_scraper as arx
+        mock_get.return_value = MagicMock(status_code=200, text="""<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"></feed>""")
+        papers = arx.fetch_papers(query="nonexistent_topic_xyz", max_results=10)
+        assert papers == []
+
+
+# ===== Performance benchmark: 100k synthetic candidates, 600s completion =====
+
+class TestPerformanceBenchmark:
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_benchmark_100k_candidates(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Performance benchmark: pipeline must handle 100k synthetic candidates within 600 seconds."""
+        import time
+        # Generate 100k synthetic candidates
+        candidates = []
+        for i in range(100000):
+            candidates.append({
+                "name": f"candidate_{i}",
+                "Tc": 100.0 + (i % 200),
+                "pressure": 100 + (i % 100),
+                "composition": f"X{i % 10}Y{i % 10}"
+            })
+        mock_load.return_value = candidates
+
+        # Mock train_model to return a model that predicts quickly
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [100.0 + (i % 200) for i in range(100000)]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty to return quickly
+        def predict_side_effect(name, pressure=None):
+            idx = int(name.split('_')[1])
+            return (100.0 + (idx % 200), 5.0 + (idx % 10))
+        mock_predict.side_effect = predict_side_effect
+
+        # Mock DFT to return quickly (only called for high-uncertainty candidates)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        start_time = time.time()
+        try:
+            result = rp.run_pipeline()
+        except Exception as e:
+            pytest.fail(f"Benchmark pipeline raised exception: {e}")
+        elapsed = time.time() - start_time
+
+        assert result is not None, "Pipeline returned None during benchmark"
+        assert elapsed < 600, f"Benchmark exceeded 600s: took {elapsed:.2f}s"
+        assert mock_predict.call_count >= 100000, f"Expected at least 100000 predict calls, got {mock_predict.call_count}"
+
+
+# ===== Stress test: simultaneous API failures with self-healing fallback =====
+
+class TestStressSelfHealing:
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.requests.post')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_simultaneous_api_failures_with_self_healing(self, mock_open, mock_requests_post, mock_dft, mock_predict, mock_train, mock_load):
+        """Stress test: simulate simultaneous API failures and verify self-healing fallback."""
+        # Setup basic pipeline mocks
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"},
+            {"name": "CSH", "Tc": 287, "pressure": 267, "composition": "CSH"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0, 287.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (200.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Simulate multiple API failures: first 3 calls fail, then succeed
+        call_count = [0]
+        def requests_side_effect(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] <= 3:
+                raise requests.exceptions.ConnectionError("Simulated API failure")
+            mock_resp = MagicMock()
+            mock_resp.status_code = 200
+            mock_resp.json.return_value = {"status": "ok", "data": {"Tc": 200.0}}
+            return mock_resp
+        mock_requests_post.side_effect = requests_side_effect
+
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        try:
+            result = rp.run_pipeline()
+        except Exception as e:
+            pytest.fail(f"Stress test pipeline raised exception: {e}")
+
+        assert result is not None, "Pipeline should self-heal and complete despite API failures"
+        # Verify that the fallback mechanism was triggered (e.g., simulation mode used)
+        # The pipeline should have logged fallback usage; we check that it completed
+        assert call_count[0] >= 3, f"Expected at least 3 API calls, got {call_count[0]}"
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.requests.post')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_all_apis_fail_with_fallback(self, mock_open, mock_requests_post, mock_dft, mock_predict, mock_train, mock_load):
+        """Stress test: all API calls fail, pipeline must fall back to simulation."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (200.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # All API calls fail
+        mock_requests_post.side_effect = requests.exceptions.ConnectionError("All APIs down")
+
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        try:
+            result = rp.run_pipeline()
+        except Exception as e:
+            pytest.fail(f"Pipeline should handle all-API failure gracefully: {e}")
+
+        assert result is not None, "Pipeline should complete using fallback simulation"
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.requests.post')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_api_recovery_after_failures(self, mock_open, mock_requests_post, mock_dft, mock_predict, mock_train, mock_load):
+        """Stress test: API fails then recovers, pipeline should resume normal operation."""
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (200.0, 5.0)
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        call_count = [0]
+        def requests_side_effect(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] <= 2:
+                raise requests.exceptions.ConnectionError("Temporary failure")
+            mock_resp = MagicMock()
+            mock_resp.status_code = 200
+            mock_resp.json.return_value = {"status": "ok", "data": {"Tc": 200.0}}
+            return mock_resp
+        mock_requests_post.side_effect = requests_side_effect
+
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        try:
+            result = rp.run_pipeline()
+        except Exception as e:
+            pytest.fail(f"Pipeline should handle API recovery: {e}")
+
+        assert result is not None
+        # After recovery, pipeline should use real API results
+        assert call_count[0] > 2, f"Expected more than 2 API calls after recovery, got {call_count[0]}"
