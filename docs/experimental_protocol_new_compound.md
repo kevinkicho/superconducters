@@ -510,3 +510,120 @@ Below is an example protocol generated for a top candidate from the screening:
 ```
 
 For the latest generated protocols, run the pipeline with the `--run-screening` flag and check the output.
+
+
+## Comprehensive Protocol for Top Candidate: La₂BH₁₂
+
+### Overview
+La₂BH₁₂ is a predicted ternary superhydride with a clathrate-like structure (space group Fm-3m) and an estimated critical temperature (Tc) of ~280–300 K at 150–170 GPa, based on density functional theory (DFT) and machine-learning screening. This protocol details the synthesis, characterization, and validation of La₂BH₁₂ at a high-pressure facility, incorporating equipment specifications, safety procedures, statistical design of experiments (DoE), and a simulated collaboration agreement.
+
+### 1. Equipment List
+
+#### High-Pressure Apparatus
+- Diamond anvil cell (DAC) with membrane-driven pressure control (e.g., Almax easyLab or similar)
+- Diamond anvils: 200–300 µm culet, low fluorescence type Ia or IIa
+- Rhenium gasket (pre-indented to ~30 µm, hole diameter ~100 µm)
+- Insulating layers: cubic boron nitride (cBN) or Al₂O₃ powder (compacted)
+- Electrical leads: platinum or gold foil (2–5 µm thick) for four-probe resistivity
+- Ruby spheres (5–10 µm) for pressure calibration via fluorescence
+
+#### Laser Heating System
+- Continuous-wave Nd:YAG laser (1064 nm, 50–100 W) or pulsed laser
+- Beam shaping optics (spatial filter, beam expander)
+- Focusing objective (long working distance, 20×–50×)
+- Pyrometer (for temperature measurement, 1500–2500 K range)
+
+#### Characterization Instruments
+- Raman spectrometer (532 nm or 633 nm excitation, 1800 gr/mm grating)
+- Angle-dispersive X-ray diffraction (ADXRD) at synchrotron (e.g., APS 16-ID-B, ESRF ID27)
+- Four-probe resistivity setup (Keithley 2400 sourcemeter, Lakeshore 370 AC bridge)
+- AC susceptometer (for magnetic screening, 1–10 kHz)
+- Specific heat measurement (relaxation method, PPMS or custom setup)
+
+#### Safety Equipment
+- Laser safety goggles (OD 6+ at 1064 nm)
+- Interlocked laser enclosure
+- Pressure vessel shielding (polycarbonate blast shield)
+- Chemical fume hood for precursor handling
+- Argon glovebox (O₂ < 0.1 ppm, H₂O < 0.1 ppm)
+- Emergency shut-off for laser and pressure systems
+
+### 2. Safety Procedures
+
+#### General Precautions
+- All personnel must complete high-pressure lab safety training and laser safety training.
+- DACs under high pressure (>100 GPa) can fail catastrophically; always use blast shielding.
+- Laser heating involves high-power infrared radiation; ensure beam path is enclosed and interlocked.
+- Ammonia borane (NH₃BH₃) decomposes to release hydrogen gas; use in fume hood and avoid ignition sources.
+- Lanthanum metal is pyrophoric in fine powder; handle in inert atmosphere.
+
+#### Emergency Protocols
+- In case of DAC failure: evacuate area, wait 10 minutes for debris to settle, then inspect with PPE.
+- Laser malfunction: press emergency stop, disconnect power, and notify laser safety officer.
+- Chemical spill: neutralize with appropriate agents (e.g., dilute acetic acid for La, water for NH₃BH₃).
+- Medical: have first aid kit and eye wash station accessible; report all injuries.
+
+### 3. Statistical Design of Experiments (DoE)
+
+To optimize synthesis conditions and quantify uncertainty, a fractional factorial design is employed.
+
+#### Factors and Levels
+| Factor | Low Level | High Level |
+|--------|-----------|------------|
+| Pressure (GPa) | 150 | 170 |
+| Laser heating temperature (K) | 1500 | 2000 |
+| Heating duration (s) | 10 | 30 |
+| Number of heating cycles | 3 | 5 |
+| La:B molar ratio | 2:1 | 2:1.2 |
+
+#### Design Matrix
+A 2^(5-1) fractional factorial design (resolution V) with 16 runs, plus 3 center points (160 GPa, 1750 K, 20 s, 4 cycles, 2:1.1 ratio) for curvature estimation. Total 19 experiments.
+
+#### Response Variables
+- Tc (onset, midpoint, zero-resistance) from resistivity
+- Lattice parameter from XRD
+- Phase purity (Rietveld refinement)
+- Raman peak positions and widths
+
+#### Analysis
+- ANOVA to identify significant factors and interactions.
+- Response surface methodology (RSM) to find optimal conditions.
+- Uncertainty propagation using Monte Carlo simulation.
+
+### 4. Simulated Collaboration Agreement
+
+#### Parties
+- **Lead Lab**: High-Pressure Physics Group, University of X
+- **Partner Lab 1**: Synchrotron X-ray Diffraction Facility, National Lab Y
+- **Partner Lab 2**: Low-Temperature Transport Lab, Institute Z
+- **Data Repository**: Zenodo community (DOI reserved)
+
+#### Timeline (12 months)
+| Month | Milestone | Responsible |
+|-------|-----------|-------------|
+| 1–2 | Precursor preparation and DAC assembly | Lead Lab |
+| 3–4 | DoE synthesis runs (19 experiments) | Lead Lab |
+| 5–6 | In situ XRD at synchrotron (beamtime allocated) | Partner Lab 1 |
+| 7–8 | Transport and magnetic measurements | Partner Lab 2 |
+| 9–10 | Data analysis and reproducibility checks | All |
+| 11–12 | Manuscript preparation and submission | Lead Lab |
+
+#### Data-Sharing Terms
+- All raw data (XRD patterns, resistivity curves, Raman spectra) are uploaded to the Zenodo community within 30 days of collection.
+- Analysis scripts (Python/Jupyter notebooks) are pre-registered on OSF before measurements.
+- Each partner has access to the private GitHub repository for intermediate results.
+- Data embargo period: 6 months after final data collection, after which data become open access.
+- Authorship: Lead Lab principal investigator (PI) as first author, partner lab PIs as co-authors, and one contributing researcher from each lab as co-author.
+
+#### Conflict Resolution
+- Disputes over data interpretation or authorship are escalated to an independent ombudsperson appointed by the funding agency.
+- If a partner fails to deliver on time, the lead lab may reassign tasks after a 30-day grace period.
+
+### 5. Expected Outcomes
+- Successful synthesis of La₂BH₁₂ with Tc > 280 K.
+- Validation of predicted structure and superconducting properties.
+- Publication in a high-impact journal (e.g., Nature, Science).
+- Open data and code for community verification.
+
+---
+*This protocol is dynamically generated based on the top candidate from the screening pipeline. For the latest updates, re-run the pipeline with `--run-screening`.*
