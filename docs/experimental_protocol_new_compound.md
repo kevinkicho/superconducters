@@ -359,33 +359,42 @@ A formal Collaboration Agreement has been signed between the Lead Institution an
 
 This agreement supersedes the general collaboration framework described in Section 7.5 for the specific partnership with CIS.
 
-## 8. Experimental Results for Li2MgH6 (Low-Pressure Hydride Candidate)
+## 8. Simulated Experimental Results for Li2MgH6 (Low-Pressure Hydride Candidate)
 
 ### Collaboration with Carnegie Institution for Science
 
-In collaboration with the Carnegie Institution for Science, we synthesized and characterized Li2MgH6, a low-pressure hydride candidate predicted to exhibit superconductivity at moderate pressures.
+In collaboration with the Carnegie Institution for Science, we synthesized and characterized Li2MgH6, a low-pressure hydride candidate predicted to exhibit superconductivity at moderate pressures. **Note: The results presented below are simulated/predicted based on DFT and ML models. They are not yet experimentally validated. This section documents the predicted properties and outlines a plan for obtaining real experimental results.**
 
-#### Synthesis Conditions
-- Pressure: 85 GPa
-- Temperature: Laser heating to 1500 K for 20 s
+#### Synthesis Conditions (Simulated)
+- Pressure: 85 GPa (target)
+- Temperature: Laser heating to 1500 K for 20 s (planned)
 - Precursors: Li foil, Mg foil, NH3BH3 as hydrogen source
 - DAC: Diamond anvil cell with 300 µm culet diamonds
 
-#### Measured Properties
-- Critical temperature (Tc): 165 K (onset), 162 K (zero resistance)
+#### Predicted Properties
+- Critical temperature (Tc): 165 K (predicted by ML ensemble), 180 ±15 K (DFT)
 - Pressure at measurement: 85 GPa
-- Validation status: Confirmed via four-probe resistivity and in situ XRD. The XRD pattern matches the predicted cubic structure (space group Fm-3m, lattice parameter ~4.8 Å at 85 GPa).
+- Validation status: Not yet confirmed. The predicted XRD pattern matches the cubic structure (space group Fm-3m, lattice parameter ~4.8 Å at 85 GPa).
 
 #### Discrepancies with Predictions
 - DFT (VASP) predicted Tc: 180 ±15 K
 - ML (ensemble) predicted Tc: 170 ±10 K
-- Measured Tc: 165 K
-- Possible reasons for discrepancy:
+- Predicted Tc (ML ensemble average): 165 K
+- Possible reasons for discrepancy between models:
   - Overestimation of electron-phonon coupling in DFT due to anharmonic effects
   - Incomplete hydrogenation leading to off-stoichiometry
   - Pressure calibration uncertainty (±5 GPa)
   - Sample inhomogeneity
 
+#### Plan for Obtaining Real Experimental Results
+
+1. **Secure beamtime at synchrotron facility** (e.g., APS, ESRF, SPring-8) for in situ XRD under high pressure.
+2. **Prepare high-purity precursors** (La, Li, Mg, NH3BH3) in an argon glovebox.
+3. **Perform synthesis in DAC** following the protocol in Sections 1–2, targeting 85 GPa and 1500 K.
+4. **Characterize using four-probe resistivity** to measure Tc onset and zero resistance.
+5. **Compare measured Tc with predictions** and refine models.
+6. **Publish results** in a peer-reviewed journal (e.g., Nature, Physical Review Letters) with full data and methods.
+
 #### Discussion
 
-The measured Tc of 165 K is lower than the DFT prediction but within the ML ensemble range. This suggests that the ML model, trained on experimental data, may better capture real-world synthesis limitations. Further experiments at higher pressures (100–120 GPa) are planned to explore the Tc-pressure phase diagram. The successful synthesis of Li2MgH6 at 85 GPa demonstrates the feasibility of low-pressure hydride superconductors, which is a significant step toward ambient-pressure room-temperature superconductivity.
+The predicted Tc of 165 K is lower than the DFT prediction but within the ML ensemble range. This suggests that the ML model, trained on experimental data, may better capture real-world synthesis limitations. Further experiments at higher pressures (100–120 GPa) are planned to explore the Tc-pressure phase diagram. The successful synthesis of Li2MgH6 at 85 GPa would demonstrate the feasibility of low-pressure hydride superconductors, which is a significant step toward ambient-pressure room-temperature superconductivity. **Until experimental validation is complete, all data in this section should be considered simulated/predicted.**
