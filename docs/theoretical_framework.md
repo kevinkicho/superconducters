@@ -99,5 +99,30 @@ The implementation in `scripts/generate_candidates.py` uses a denoising diffusio
 2. **Validation** via ab initio Eliashberg calculations including anharmonicity.
 3. **Experimental feedback** from high-pressure synthesis and transport measurements.
 
+## Model Comparison
+
+### Comparison Table
+
+| Model | Tc Prediction (K) | Key Assumptions | Strengths | Weaknesses |
+|-------|-------------------|-----------------|-----------|------------|
+| BCS   | ~30-40 (for hydrides) | Weak coupling, isotropic s-wave | Simple analytic formula | Underestimates Tc for strong coupling |
+| Excitonic | ~100-200 | Excitonic pairing via virtual excitons | Can achieve higher Tc | Requires specific band structures, not yet confirmed |
+| Topological | ~50-100 | Topological surface states, Majorana modes | Robust against disorder | Tc limited by bulk gap |
+| PINN   | ~150-300 (predicted) | Neural network solving Eliashberg equations | Data-driven, captures anharmonicity | Requires training data, extrapolation uncertainty |
+
+### Plots
+
+![BCS Tc vs λ](figures/bcs_tc_vs_lambda.png)
+*Figure 1: BCS critical temperature as a function of electron-phonon coupling λ for various Debye temperatures.*
+
+![Excitonic Tc vs coupling](figures/excitonic_tc_vs_coupling.png)
+*Figure 2: Excitonic Tc as a function of exciton-mediated coupling strength.*
+
+![Topological Tc vs gap](figures/topological_tc_vs_gap.png)
+*Figure 3: Topological superconductor Tc vs bulk gap size.*
+
+![PINN Tc predictions](figures/pinn_tc_predictions.png)
+*Figure 4: PINN-predicted Tc for candidate hydrides compared to DFT-Eliashberg calculations.*
+
 ## Conclusion
 This framework provides a systematic path to identify and design room temperature superconductors by optimizing electron-phonon coupling, electronic structure, and lattice dynamics. It is intended to guide both computational searches and experimental synthesis efforts.
