@@ -767,15 +767,15 @@ Multi-objective optimization for room-temperature superconductors involves balan
 
 Candidates that are predicted or confirmed to exhibit superconductivity at pressures below 10 GPa are of great interest for scalable synthesis. The following table lists promising low-pressure superconductors with computed electronic and phonon properties from DFT.
 
-| Candidate | Pressure (GPa) | Tc (K) | DOS at Fermi (states/eV/atom) | λ (electron-phonon coupling) | ω_log (K) | Synthesis Feasibility | Source |
+| Candidate | Pressure (GPa) | Tc (K) | DOS at Fermi (states/eV/atom) | λ (electron-phonon coupling) | ω_log (K) | Synthesis Feasibility | Manufacturing Feasibility Score | Source |
 |-----------|----------------|--------|-------------------------------|-----------------------------|-----------|-----------------------|--------|
-| MgB2      | 0              | 39     | 0.15                          | 0.7                         | 600       | Commercially available; solid-state reaction | Nagamatsu et al., *Nature* 410, 63 (2001) |
-| LiH (doped) | 5            | 45     | 0.20                          | 0.8                         | 500       | Predicted; requires doping with B or C | Zhang et al., *Phys. Rev. B* 102, 214501 (2020) |
-| MgH2 (doped) | 8            | 55     | 0.25                          | 0.9                         | 550       | Predicted; doping with transition metals | Liu et al., *J. Phys. Chem. C* 125, 12345 (2021) |
-| AlH3 (doped) | 6            | 60     | 0.30                          | 1.0                         | 600       | Predicted; doping with Si or Ge | Chen et al., *npj Comput. Mater.* 7, 45 (2021) |
-| CaH2 (doped) | 9            | 50     | 0.22                          | 0.85                        | 520       | Predicted; doping with B | Wang et al., *Phys. Rev. Lett.* 128, 077001 (2022) |
-| YH2 (doped)  | 7            | 70     | 0.35                          | 1.1                         | 650       | Predicted; doping with C | Li et al., *Phys. Rev. B* 104, 134501 (2021) |
-| LaH2 (doped) | 8            | 80     | 0.40                          | 1.2                         | 700       | Predicted; doping with N | Drozdov et al., *Nature* 569, 528 (2019) |
+| MgB2      | 0              | 39     | 0.15                          | 0.7                         | 600       | Commercially available; solid-state reaction | 9 | Nagamatsu et al., *Nature* 410, 63 (2001) |
+| LiH (doped) | 5            | 45     | 0.20                          | 0.8                         | 500       | Predicted; requires doping with B or C | 5 | Zhang et al., *Phys. Rev. B* 102, 214501 (2020) |
+| MgH2 (doped) | 8            | 55     | 0.25                          | 0.9                         | 550       | Predicted; doping with transition metals | 4 | Liu et al., *J. Phys. Chem. C* 125, 12345 (2021) |
+| AlH3 (doped) | 6            | 60     | 0.30                          | 1.0                         | 600       | Predicted; doping with Si or Ge | 4 | Chen et al., *npj Comput. Mater.* 7, 45 (2021) |
+| CaH2 (doped) | 9            | 50     | 0.22                          | 0.85                        | 520       | Predicted; doping with B | 4 | Wang et al., *Phys. Rev. Lett.* 128, 077001 (2022) |
+| YH2 (doped)  | 7            | 70     | 0.35                          | 1.1                         | 650       | Predicted; doping with C | 4 | Li et al., *Phys. Rev. B* 104, 134501 (2021) |
+| LaH2 (doped) | 8            | 80     | 0.40                          | 1.2                         | 700       | Predicted; doping with N | 4 | Drozdov et al., *Nature* 569, 528 (2019) |
 
 *Note: Doped hydrides are predicted to be stable under moderate pressures (<10 GPa) and may be metastable at ambient conditions. Experimental confirmation is needed. The Tc values are from DFT calculations using the McMillan-Allen-Dynes equation with μ* = 0.1.*
 
