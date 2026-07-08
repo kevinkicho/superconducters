@@ -2005,3 +2005,42 @@ The dashboard includes panels for:
 - Candidate ranking changes after each feedback loop cycle
 
 For customizations, modify the dashboard JSON directly or use the Grafana UI and export the updated version back to `docs/grafana_dashboard.json`.
+
+
+## Data Quality
+
+A data quality report is generated automatically after each ingestion cycle to ensure the reliability of experimental data used for model retraining and candidate ranking. The report is saved as `data_quality_report.json` in the experiment archive and is also accessible via the Grafana dashboard.
+
+### Summary Statistics
+For each numeric measurement field (Tc, transition width, critical current density, upper critical field, purity, Meissner volume fraction), the report computes:
+- Count, mean, median, standard deviation, min, max
+- Percentiles (5th, 25th, 50th, 75th, 95th)
+- Number of records and number of unique experiments
+
+These statistics are updated incrementally and can be queried via the `/metrics` endpoint as Prometheus histograms.
+
+### Missing Values
+Missing values are flagged per field and per experiment. The report lists:
+- Fields with missing values and their count
+- Percentage of missing values per field
+- Experiments with incomplete data (missing critical fields like Tc or XRD pattern)
+
+Automated alerts are triggered if the overall missing rate exceeds 5% for any critical field.
+
+### Outliers
+Outliers are detected using the interquartile range (IQR) method and Z-score threshold (|Z| > 3). The report identifies:
+- Outlier values and their experiment IDs
+- Potential causes (e.g., measurement error, sample contamination, equipment malfunction)
+- Whether the outlier is likely to be a genuine physical anomaly (e.g., unusually high Tc) or an artifact
+
+Outliers are not automatically excluded; they are flagged for manual review by the operator.
+
+### Recommendations
+Based on the data quality assessment, the report provides actionable recommendations:
+- Re-run experiments with missing critical data
+- Recalibrate equipment if systematic outliers are detected
+- Update parsing scripts if field mapping errors are found
+- Consider excluding low-purity samples (purity < 90%) from model training
+- Increase sampling frequency for fields with high variance
+
+These recommendations are logged in the `recommendations` table and can be acknowledged or dismissed via the dashboard.
