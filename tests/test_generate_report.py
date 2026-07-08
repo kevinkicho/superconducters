@@ -27,3 +27,16 @@ def test_write_pdf_creates_file(tmp_path):
     write_pdf(content, str(output_path))
     assert output_path.exists()
     assert output_path.stat().st_size > 0
+
+
+def test_generate_report_empty_list():
+    """Test generate_report with empty candidate list."""
+    report = generate_report([])
+    assert isinstance(report, str)
+    assert "No candidates" in report or report == ""
+
+
+def test_write_pdf_invalid_path():
+    """Test write_pdf raises exception for invalid path."""
+    with pytest.raises(Exception):
+        write_pdf("content", "/nonexistent/dir/report.pdf")

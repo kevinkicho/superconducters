@@ -22,3 +22,23 @@ def test_fetch_materials_project_handles_empty():
 def test_fetch_icsd_handles_invalid():
     result = fetch_icsd("InvalidFormula")
     assert result == []
+
+
+def test_fetch_materials_project_network_error():
+    """Test fetch_materials_project raises exception on network error."""
+    with patch('scripts.api_client.requests.get', side_effect=Exception("Network error")):
+        with pytest.raises(Exception):
+            fetch_materials_project("H3S")
+
+
+def test_fetch_arxiv_handles_empty():
+    """Test fetch_arxiv returns empty list for empty query."""
+    result = fetch_arxiv("")
+    assert result == []
+
+
+def test_fetch_icsd_network_error():
+    """Test fetch_icsd raises exception on network error."""
+    with patch('scripts.api_client.requests.get', side_effect=Exception("Network error")):
+        with pytest.raises(Exception):
+            fetch_icsd("LaH10")

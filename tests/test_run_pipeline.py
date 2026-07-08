@@ -2104,3 +2104,53 @@ def test_api_health():
         response = client.get("/health")
         assert response.status_code == 200
         assert response.json()["status"] == "healthy"
+
+
+def test_run_pipeline_empty_data():
+    """Test run_pipeline with empty data list."""
+    with patch('scripts.run_pipeline.load_data', return_value=[]), \
+         patch('scripts.run_pipeline.train_model') as mock_train, \
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        result = rp.run_pipeline()
+        # With empty data, train_model should not be called
+        mock_train.assert_not_called()
+        mock_predict.assert_not_called()
+        mock_dft.assert_not_called()
+
+
+def test_run_pipeline_dft_failure():
+    """Test run_pipeline handles DFT calculation failure gracefully."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \
+         patch('scripts.run_pipeline.train_model') as mock_train, \
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict, \
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation', side_effect=Exception("DFT failed")) as mock_dft, \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_predict.return_value = (203.0, 5.0)
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        # Should not raise, should handle gracefully
+        result = rp.run_pipeline()
+        mock_dft.assert_called_once()
+
+
+def test_run_pipeline_prediction_failure():
+    """Test run_pipeline handles prediction failure gracefully."""
+    with patch('scripts.run_pipeline.load_data', return_value=[{"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"}]), \
+         patch('scripts.run_pipeline.train_model') as mock_train, \
+         patch('scripts.run_pipeline.predict_tc_with_uncertainty', side_effect=Exception("Prediction failed")) as mock_predict, \
+         patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft, \
+         patch('builtins.open', new_callable=MagicMock) as mock_open:
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0]
+        mock_train.return_value = mock_model
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+        with pytest.raises(Exception):
+            rp.run_pipeline()

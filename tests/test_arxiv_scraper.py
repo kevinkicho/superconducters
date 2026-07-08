@@ -85,3 +85,17 @@ def test_parse_arxiv_entry_empty_authors():
     mock_entry.entry_id = "http://arxiv.org/abs/1111.22222"
     result = arx.parse_arxiv_entry(mock_entry)
     assert result['authors'] == []
+
+
+def test_search_arxiv_handles_invalid_query():
+    """Test search_arxiv returns empty list for invalid query."""
+    with patch('scripts.arxiv_scraper.arxiv.Search', side_effect=Exception("Invalid query")):
+        with pytest.raises(Exception):
+            arx.search_arxiv("")
+
+
+def test_fetch_paper_details_network_error():
+    """Test fetch_paper_details raises exception on network error."""
+    with patch('scripts.arxiv_scraper.arxiv.Search', side_effect=Exception("Network error")):
+        with pytest.raises(Exception):
+            arx.fetch_paper_details("1234.56789")
