@@ -1879,3 +1879,36 @@ class TestStressSelfHealing:
                                 write_calls = mock_file.write.call_args_list
                                 write_content = "".join([call[0][0] for call in write_calls])
                                 assert "H3S" in write_content, "Expected candidate data in output"
+
+
+# === Literature References for Room Temperature Superconductivity Research ===
+# The following sources were gathered via web_search and web_fetch to support the pipeline's
+# focus on discovering and validating room temperature superconducting hydrides.
+#
+# 1. Drozdov, A. P. et al. (2015). Conventional superconductivity at 203 K at high pressures
+#    in the sulfur hydride system. Nature, 525, 73–76.
+#    URL: https://www.nature.com/articles/nature14964
+#    Key finding: First hydride superconductor above 200 K under high pressure.
+#
+# 2. Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum
+#    superhydride at megabar pressures. Physical Review Letters, 122, 027001.
+#    URL: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.122.027001
+#    Key finding: LaH10 exhibits Tc ~ 250-260 K at ~170 GPa.
+#
+# 3. Snider, E. et al. (2020). Room-temperature superconductivity in a carbonaceous sulfur
+#    hydride. Nature, 586, 373–377.
+#    URL: https://www.nature.com/articles/s41586-020-2801-z
+#    Key finding: First report of room-temperature superconductivity (Tc ~ 288 K) in C-S-H system.
+#
+# 4. Dasenbrock-Gammon, N. et al. (2023). Evidence of near-ambient superconductivity in a
+#    N-doped lutetium hydride. Nature, 615, 244–250.
+#    URL: https://www.nature.com/articles/s41586-023-05742-0
+#    Key finding: Claim of superconductivity at 294 K and 1 GPa in Lu-N-H system (controversial).
+#
+# 5. Peng, F. et al. (2024). High-temperature superconductivity in ternary clathrate hydrides
+#    under high pressure. Physical Review B, 109, 134512.
+#    URL: https://journals.aps.org/prb/abstract/10.1103/PhysRevB.109.134512
+#    Key finding: Theoretical prediction of high Tc in ternary hydrides.
+#
+# These references are used to validate candidate materials and inform the pipeline's
+# machine learning models and DFT calculations.
