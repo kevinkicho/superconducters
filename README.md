@@ -10,6 +10,7 @@ This repository documents a research project on room-temperature superconductivi
 - [roadmap.md](roadmap.md): Project roadmap and future milestones.
 - [proposed_chemistry_physics.md](proposed_chemistry_physics.md): Proposed chemistry and physics for discovering and manufacturing room-temperature superconducting compounds.
 - [presentation.md](presentation.md): Generated slide deck summarizing the research.
+- [technology_transfer_plan.md](docs/technology_transfer_plan.md): Technology transfer plan for commercializing room-temperature superconductors.
 
 ## Navigation
 
