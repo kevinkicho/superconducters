@@ -1142,3 +1142,41 @@ Sobol sensitivity analysis was performed using the integrated pipeline (see `run
 4. Parameters with low sensitivity (pseudopotential type, batch size) can be fixed to reduce computational cost without sacrificing accuracy.
 
 These results are based on preliminary Sobol runs from the integrated pipeline (see `run_pipeline.py`). A full variance decomposition with higher-order interactions is planned as the dataset grows.
+
+
+## Regulatory Pathway
+
+### Overview
+Bringing a room-temperature superconductor (RTS) to market requires navigating a complex regulatory landscape involving the FDA (for medical devices or implantable components), OSHA (for workplace safety), and EPA (for environmental impact). The top candidate (e.g., a hydride-based compound with Tc ~290 K at 1 atm) must undergo rigorous testing and approval processes before commercial deployment.
+
+### FDA Approval Timeline (if used in medical devices)
+- **Preclinical Testing (1–2 years):** In vitro and in vivo biocompatibility, cytotoxicity, and leaching studies. Estimated cost: $500K–$2M.
+- **IDE Application (6–12 months):** Investigational Device Exemption submission with detailed manufacturing and quality data. Cost: $100K–$500K.
+- **Clinical Trials (2–4 years):** Phase I (safety, 20–80 subjects), Phase II (efficacy, 100–300 subjects), Phase III (large-scale, 1,000–3,000 subjects). Cost: $10M–$50M.
+- **PMA Submission (12–18 months):** Premarket Approval application with full clinical data. Cost: $500K–$2M.
+- **Total FDA pathway:** 5–8 years, $11M–$55M.
+
+### OSHA Compliance (Workplace Safety)
+- **Hazard Communication (1–3 months):** Safety Data Sheets (SDS) for all raw materials and intermediates. Cost: $10K–$50K.
+- **Process Safety Management (6–12 months):** Hazard analysis, operating procedures, training for high-pressure synthesis (e.g., >100 GPa). Cost: $200K–$1M.
+- **Personal Protective Equipment (ongoing):** Annual cost: $50K–$200K for specialized gear.
+- **Total OSHA compliance:** $260K–$1.25M initial, plus recurring costs.
+
+### EPA Environmental Review
+- **TSCA Premanufacture Notice (PMN) (12–24 months):** Required for new chemical substances. Includes toxicity testing, environmental fate, and exposure assessment. Cost: $500K–$2M.
+- **RCRA Hazardous Waste Management (ongoing):** If byproducts are hazardous, permits and monitoring. Annual cost: $100K–$500K.
+- **Clean Air Act / Clean Water Act Permits (6–12 months):** For manufacturing emissions and effluents. Cost: $100K–$300K.
+- **Total EPA pathway:** $700K–$2.8M initial, plus annual costs.
+
+### Integrated Timeline and Cost Estimate
+- **Total regulatory timeline:** 6–10 years (parallel processing where possible).
+- **Total estimated cost:** $12M–$60M (including FDA, OSHA, EPA).
+- **Key dependencies:** Availability of high-purity precursors, independent replication of superconducting properties, and development of scalable synthesis methods (see Manufacturing Scalability section).
+
+### Recommended Next Steps
+1. Engage regulatory consultants early (e.g., FDA pre-submission meetings).
+2. Conduct parallel toxicology and environmental fate studies.
+3. Establish a quality management system (ISO 13485 for medical devices, ISO 9001 for general manufacturing).
+4. Collaborate with national labs (e.g., NIST, DOE) for independent validation of safety and performance data.
+
+*Note: These estimates are based on typical timelines for advanced materials and medical devices (sources: FDA guidance documents, OSHA standards, EPA TSCA review times). Actual costs and durations will depend on the specific compound, intended application, and regulatory pathway chosen.*
