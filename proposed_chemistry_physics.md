@@ -394,3 +394,75 @@ Chemical precompression refers to the use of internal chemical bonding and latti
 
 ### Summary
 Chemical precompression offers a promising pathway to lower the external pressure required for room-temperature superconductivity in hydrides. Strategies include alloying with larger anions, using ternary/quaternary systems, clathrate engineering, strain, and high-entropy approaches. Continued computational and experimental work is essential to validate these concepts and identify viable low-pressure compounds.
+
+
+## Experimental Plan for Top Candidate Materials
+
+### 1. La₃Ni₂O₇ (Bilayer Nickelate)
+
+**Synthesis Conditions:**
+- Polycrystalline samples via solid-state reaction: stoichiometric La₂O₃ and NiO mixed, pressed into pellets, sintered at 1100–1200°C in flowing O₂ for 24–48 h, with intermediate grinding.
+- Single crystals via floating-zone method: feed rod of La₃Ni₂O₇ prepared by solid-state reaction, then grown in an image furnace under 10–20 bar O₂ at ~1 mm/h.
+- High-pressure synthesis: use a multi-anvil press at 6–8 GPa and 1400–1600°C to stabilize the Ruddlesden-Popper phase with precise oxygen stoichiometry.
+
+**Characterization Methods:**
+- Powder X-ray diffraction (PXRD) with Rietveld refinement to confirm phase purity and lattice parameters.
+- Energy-dispersive X-ray spectroscopy (EDS) or inductively coupled plasma mass spectrometry (ICP-MS) for elemental composition.
+- Resistivity measurements (four-probe) from 300 K down to 2 K under applied pressure (diamond anvil cell, DAC) up to 20 GPa.
+- AC magnetic susceptibility to detect diamagnetic shielding (Meissner effect).
+- Specific heat capacity measurements to confirm bulk superconductivity (jump at Tc).
+- High-resolution transmission electron microscopy (HRTEM) to check for stacking faults or intergrowths.
+
+**Expected Tc Verification Steps:**
+1. Measure resistivity vs. temperature at ambient pressure; expect metallic behavior with possible upturn near 50 K.
+2. Apply pressure incrementally (2 GPa steps) in DAC; monitor Tc onset via resistivity drop.
+3. At ~14 GPa, observe Tc ~80 K; confirm with AC susceptibility (diamagnetic signal).
+4. Vary magnetic field to extract upper critical field Hc2(T) and estimate coherence length.
+5. Repeat on multiple samples to ensure reproducibility; report error bars.
+
+### 2. H₃S (Sulfur Hydride)
+
+**Synthesis Conditions:**
+- In situ synthesis in DAC: load elemental sulfur (99.999% purity) and molecular hydrogen (H₂) at ~1–2 GPa; laser-heat to 1500–2000 K to form H₃S.
+- Alternatively, use ammonia borane (NH₃BH₃) as a hydrogen source mixed with sulfur; laser-heat to decompose and form H₃S at ~150 GPa.
+- For larger volumes: use a Paris-Edinburgh press with boron-epoxy gaskets; load S + H₂ at 10–20 GPa and resistive heating to 1000°C.
+
+**Characterization Methods:**
+- Synchrotron X-ray diffraction (XRD) at high pressure to identify the Im-3m cubic structure (H₃S) and monitor phase transitions.
+- Raman spectroscopy to detect S–H stretching modes and confirm hydrogen incorporation.
+- Electrical transport: four-probe resistivity in DAC with microelectrodes; measure from 300 K down to 4 K.
+- Magnetic susceptibility: use a SQUID magnetometer with a DAC-compatible insert; measure Meissner signal at Tc.
+- X-ray absorption near-edge structure (XANES) to probe sulfur oxidation state and electronic structure.
+
+**Expected Tc Verification Steps:**
+1. Compress S + H₂ to 150 GPa; laser-heat to form H₃S; confirm structure by XRD.
+2. Cool to 4 K; measure resistivity; expect Tc ~203 K at 155 GPa (Drozdov et al., 2015).
+3. Apply magnetic field (up to 9 T) to confirm superconductivity via resistive transition broadening and Hc2 determination.
+4. Measure AC susceptibility to detect diamagnetic shielding; compare with resistivity Tc.
+5. Vary pressure (140–170 GPa) to map Tc vs. pressure dome; check for isotope effect (D substitution) to confirm phonon-mediated pairing.
+
+### 3. YH₁₀ (Yttrium Decahydride)
+
+**Synthesis Conditions:**
+- In situ synthesis in DAC: load yttrium foil (99.9% purity) and molecular hydrogen; compress to ~200 GPa and laser-heat to 1500–2000 K.
+- Use a hydrogen gas loader to fill the DAC with H₂ at 0.2 GPa before compression; ensure excess hydrogen to form YH₁₀.
+- Alternative: use yttrium hydride (YH₂ or YH₃) as precursor; add additional H₂ and laser-heat at 180–220 GPa.
+
+**Characterization Methods:**
+- Synchrotron XRD at high pressure to identify the sodalite-like clathrate structure (Fm-3m or I4/mmm).
+- Raman spectroscopy to detect H–H stretching modes and confirm hydrogen content.
+- Electrical transport: four-probe resistivity in DAC; measure from 300 K down to 2 K.
+- Magnetic susceptibility: SQUID with DAC insert; measure Meissner effect.
+- X-ray emission spectroscopy (XES) to probe Y 4d electronic structure and electron-phonon coupling.
+
+**Expected Tc Verification Steps:**
+1. Compress Y + H₂ to 200 GPa; laser-heat to form YH₁₀; confirm clathrate structure by XRD.
+2. Cool to 2 K; measure resistivity; expect Tc ~300 K (predicted) or at least >250 K.
+3. Apply magnetic field to confirm superconductivity; measure Hc2 and estimate gap.
+4. Measure specific heat (if possible) to confirm bulk nature.
+5. Repeat with deuterium to check isotope effect; compare with theoretical predictions.
+
+**References:**
+- La₃Ni₂O₇: Sun et al., Nature 621, 493–498 (2023). DOI: 10.1038/s41586-023-06424-7
+- H₃S: Drozdov et al., Nature 525, 73–76 (2015). DOI: 10.1038/nature14964
+- YH₁₀: Peng et al., Phys. Rev. Lett. 119, 107001 (2017). DOI: 10.1103/PhysRevLett.119.107001
