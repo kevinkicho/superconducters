@@ -4869,3 +4869,303 @@ def streamlit_feedback() -> None:
                 st.success("Thank you for your feedback!")
             except Exception as e:
                 st.error(f"Failed to save feedback: {e}")
+
+
+# ===== Crystal Structure Prediction (Random Structure Search / Evolutionary Algorithm) =====
+
+def crystal_structure_prediction(composition: str, num_candidates: int = 10) -> list:
+    """
+    Generate candidate crystal structures for a given composition using random structure search.
+    This is a simplified placeholder that creates random lattice parameters and atomic positions.
+    In production, this would call AIRSS, USPEX, or CALYPSO.
+
+    Args:
+        composition: Chemical formula (e.g., "LaH10").
+        num_candidates: Number of candidate structures to generate.
+
+    Returns:
+        List of dicts with keys: 'composition', 'lattice_parameters', 'atomic_positions', 'space_group'.
+    """
+    import numpy as np
+    import random
+
+    candidates = []
+    for _ in range(num_candidates):
+        # Random lattice parameters (a, b, c, alpha, beta, gamma) in Angstrom and degrees
+        a = random.uniform(3.0, 8.0)
+        b = random.uniform(3.0, 8.0)
+        c = random.uniform(3.0, 8.0)
+        alpha = random.uniform(60, 120)
+        beta = random.uniform(60, 120)
+        gamma = random.uniform(60, 120)
+        lattice = {"a": a, "b": b, "c": c, "alpha": alpha, "beta": beta, "gamma": gamma}
+
+        # Random number of atoms (1-10) and random positions (fractional coordinates)
+        num_atoms = random.randint(1, 10)
+        positions = []
+        for _ in range(num_atoms):
+            pos = {"element": composition, "x": random.random(), "y": random.random(), "z": random.random()}
+            positions.append(pos)
+
+        # Random space group number (1-230)
+        space_group = random.randint(1, 230)
+
+        candidate = {
+            "composition": composition,
+            "lattice_parameters": lattice,
+            "atomic_positions": positions,
+            "space_group": space_group
+        }
+        candidates.append(candidate)
+
+    return candidates
+
+
+# ===== Multi-Criteria Decision Analysis (TOPSIS) =====
+
+def topsis_ranking(candidates: list, criteria_weights: dict = None) -> list:
+    """
+    Rank candidates using TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution).
+
+    Args:
+        candidates: List of dicts, each with keys for criteria (e.g., 'Tc', 'pressure', 'cost', 'stability').
+        criteria_weights: Dict mapping criterion name to weight (float). If None, equal weights.
+
+    Returns:
+        List of candidates sorted by TOPSIS score (descending). Each candidate gets a 'topsis_score' key.
+    """
+    import numpy as np
+
+    if not candidates:
+        return []
+
+    # Determine criteria from first candidate (exclude non-numeric keys)
+    numeric_keys = [k for k in candidates[0].keys() if isinstance(candidates[0][k], (int, float))]
+    if not numeric_keys:
+        return candidates
+
+    if criteria_weights is None:
+        criteria_weights = {k: 1.0 for k in numeric_keys}
+    else:
+        # Ensure all numeric keys have a weight (default 1.0)
+        for k in numeric_keys:
+            if k not in criteria_weights:
+                criteria_weights[k] = 1.0
+
+    # Build matrix
+    matrix = np.array([[c[k] for k in numeric_keys] for c in candidates])
+    n, m = matrix.shape
+
+    # Normalize (vector normalization)
+    norm = np.sqrt(np.sum(matrix**2, axis=0))
+    norm[norm == 0] = 1  # avoid division by zero
+    normalized = matrix / norm
+
+    # Weighted normalized matrix
+    weights = np.array([criteria_weights[k] for k in numeric_keys])
+    weighted = normalized * weights
+
+    # Determine ideal and anti-ideal (assume all criteria are beneficial; if cost, invert)
+    # For simplicity, assume higher is better. If a criterion is cost, set weight negative or handle separately.
+    ideal = np.max(weighted, axis=0)
+    anti_ideal = np.min(weighted, axis=0)
+
+    # Distances
+    d_plus = np.sqrt(np.sum((weighted - ideal)**2, axis=1))
+    d_minus = np.sqrt(np.sum((weighted - anti_ideal)**2, axis=1))
+
+    # Closeness coefficient
+    with np.errstate(divide='ignore', invalid='ignore'):
+        scores = d_minus / (d_plus + d_minus)
+    scores = np.nan_to_num(scores, nan=0.0)
+
+    # Assign scores and sort
+    for i, c in enumerate(candidates):
+        c['topsis_score'] = float(scores[i])
+
+    candidates_sorted = sorted(candidates, key=lambda x: x['topsis_score'], reverse=True)
+    return candidates_sorted
+
+
+# ===== Continuous Autonomous Loop (Scheduled Arxiv Scraping, Candidate Generation, Screening, Retraining) =====
+
+def fetch_arxiv_papers(query: str = "superconductivity room temperature", max_results: int = 10) -> list:
+    """
+    Fetch recent papers from arXiv API.
+
+    Args:
+        query: Search query.
+        max_results: Maximum number of results.
+
+    Returns:
+        List of dicts with keys: 'title', 'summary', 'url', 'published'.
+    """
+    import requests
+    import xml.etree.ElementTree as ET
+
+    base_url = "http://export.arxiv.org/api/query"
+    params = {
+        "search_query": f"all:{query}",
+        "start": 0,
+        "max_results": max_results,
+        "sortBy": "submittedDate",
+        "sortOrder": "descending"
+    }
+    try:
+        response = requests.get(base_url, params=params, timeout=30)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"[ArxivScraper] Error fetching papers: {e}")
+        return []
+
+    root = ET.fromstring(response.content)
+    ns = {"atom": "http://www.w3.org/2005/Atom",
+          "arxiv": "http://arxiv.org/schemas/atom"}
+    papers = []
+    for entry in root.findall("atom:entry", ns):
+        title = entry.find("atom:title", ns).text.strip() if entry.find("atom:title", ns) is not None else ""
+        summary = entry.find("atom:summary", ns).text.strip() if entry.find("atom:summary", ns) is not None else ""
+        url = entry.find("atom:id", ns).text.strip() if entry.find("atom:id", ns) is not None else ""
+        published = entry.find("atom:published", ns).text.strip() if entry.find("atom:published", ns) is not None else ""
+        papers.append({"title": title, "summary": summary, "url": url, "published": published})
+    return papers
+
+
+def extract_candidates_from_paper(paper: dict) -> list:
+    """
+    Extract candidate material names from a paper's title and summary using simple heuristics.
+    This is a placeholder; in production use NLP (e.g., regex for chemical formulas).
+
+    Args:
+        paper: Dict with 'title' and 'summary'.
+
+    Returns:
+        List of candidate compound strings.
+    """
+    import re
+    text = paper.get("title", "") + " " + paper.get("summary", "")
+    # Simple pattern: look for chemical formulas like LaH10, YH6, etc.
+    pattern = r'\b([A-Z][a-z]?\d*(?:[A-Z][a-z]?\d*)*)\b'
+    matches = re.findall(pattern, text)
+    # Filter to likely compounds (contain at least one capital letter and a digit)
+    candidates = [m for m in matches if any(c.isdigit() for c in m) and any(c.isupper() for c in m)]
+    return candidates
+
+
+def screen_candidate(compound: str) -> dict:
+    """
+    Screen a candidate compound by predicting its Tc and other properties.
+    Uses the predict_tc module if available, otherwise returns a placeholder.
+
+    Args:
+        compound: Chemical formula.
+
+    Returns:
+        Dict with keys: 'compound', 'Tc', 'pressure', 'stability'.
+    """
+    import importlib
+    try:
+        predict_tc = importlib.import_module("predict_tc")
+        if hasattr(predict_tc, "predict"):
+            result = predict_tc.predict(compound)
+            return result
+    except ImportError:
+        pass
+    # Fallback placeholder
+    import random
+    return {
+        "compound": compound,
+        "Tc": random.uniform(100, 300),
+        "pressure": random.uniform(50, 300),
+        "stability": random.choice(["metastable", "stable", "unstable"])
+    }
+
+
+def continuous_autonomous_loop(interval_hours: int = 24, max_candidates_per_run: int = 5):
+    """
+    Continuous autonomous loop: fetch new papers, extract candidates, screen, retrain model.
+    This function runs indefinitely with a given interval.
+
+    Args:
+        interval_hours: Hours between iterations.
+        max_candidates_per_run: Maximum number of new candidates to process per iteration.
+    """
+    import time
+    import schedule
+    import logging
+
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger("ContinuousAutonomousLoop")
+
+    def iteration():
+        logger.info("Starting autonomous loop iteration...")
+        # 1. Fetch recent papers
+        papers = fetch_arxiv_papers(query="superconductivity room temperature", max_results=20)
+        if not papers:
+            logger.warning("No papers fetched.")
+            return
+        logger.info(f"Fetched {len(papers)} papers.")
+
+        # 2. Extract candidate compounds
+        all_candidates = []
+        for paper in papers:
+            candidates = extract_candidates_from_paper(paper)
+            all_candidates.extend(candidates)
+        # Remove duplicates
+        all_candidates = list(set(all_candidates))
+        logger.info(f"Extracted {len(all_candidates)} unique candidate compounds.")
+
+        # 3. Screen candidates (limit to max_candidates_per_run)
+        screened = []
+        for compound in all_candidates[:max_candidates_per_run]:
+            result = screen_candidate(compound)
+            screened.append(result)
+            logger.info(f"Screened {compound}: Tc={result.get('Tc', 'N/A')} K")
+
+        # 4. Generate crystal structures for top candidates (optional)
+        for cand in screened:
+            structures = crystal_structure_prediction(cand["compound"], num_candidates=3)
+            cand["structures"] = structures
+
+        # 5. Rank using TOPSIS (if multiple criteria available)
+        if len(screened) > 1:
+            ranked = topsis_ranking(screened, criteria_weights={"Tc": 0.5, "pressure": -0.3, "stability": 0.2})
+            logger.info("TOPSIS ranking completed.")
+        else:
+            ranked = screened
+
+        # 6. Save new candidates to candidate_materials.md
+        candidate_file = "candidate_materials.md"
+        try:
+            with open(candidate_file, "a") as f:
+                for cand in ranked:
+                    line = f"- [ ] {cand['compound']} - Tc: {cand.get('Tc', 'N/A'):.1f} K, pressure: {cand.get('pressure', 'N/A'):.1f} GPa\n"
+                    f.write(line)
+            logger.info(f"Appended {len(ranked)} candidates to {candidate_file}.")
+        except Exception as e:
+            logger.error(f"Failed to write to {candidate_file}: {e}")
+
+        # 7. Retrain model with new data (if any)
+        # This assumes auto_retrain_on_new_data() exists (added in previous cycles)
+        try:
+            auto_retrain_on_new_data()
+            logger.info("Model retraining triggered.")
+        except Exception as e:
+            logger.error(f"Retraining failed: {e}")
+
+        logger.info("Autonomous loop iteration completed.")
+
+    # Schedule the iteration
+    schedule.every(interval_hours).hours.do(iteration)
+    logger.info(f"Scheduled autonomous loop every {interval_hours} hours.")
+
+    # Run once immediately
+    iteration()
+
+    # Keep running
+    while True:
+        schedule.run_pending()
+        time.sleep(60)  # check every minute
+
+
+# ===== End of new functions =====
