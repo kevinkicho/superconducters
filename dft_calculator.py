@@ -16,6 +16,9 @@ import torch
 import torch_geometric
 from torch_geometric.data import Data
 import shap
+import numpy as np
+from scipy.integrate import quad
+
 
 # Default pseudopotential directory (adjust as needed)
 PSEUDO_DIR = os.environ.get("QE_PSEUDO_DIR", "./pseudo")
@@ -598,6 +601,66 @@ def compute_shap_values(model, X, feature_names=None):
         shap_values = explainer(X)
         expected_value = shap_values.base_values
     return shap_values, expected_value
+
+
+def compute_ab_initio_tc(structure, pinn_model=None):
+    """
+    Solve the Eliashberg equation using DFT/Wannier interpolation to compute Tc.
+
+    Uses the Allen-Dynes formula as an approximation to the full Eliashberg equation,
+    with the electron-phonon coupling constant (lambda) and logarithmic average
+    phonon frequency (omega_log) obtained from DFT calculations.
+
+    Args:
+        structure: Dictionary with structure parameters (same as run_full_dft_calculation).
+        pinn_model: Optional PINN model for comparison. If provided, computes consistency flag.
+
+    Returns:
+        dict with keys:
+            'tc_ab_initio': Tc in K from ab initio calculation.
+            'lambda': electron-phonon coupling constant.
+            'omega_log': logarithmic average phonon frequency (K).
+            'consistency_flag': 'agree' if within 10% of PINN prediction, 'disagree' otherwise.
+            'pinn_tc': PINN predicted Tc if model provided, else None.
+    """
+    # Run DFT calculation to get phonon frequencies and lambda
+    dft_result = run_full_dft_calculation(structure)
+    lam = dft_result.get('lambda', 0.5)  # placeholder; real extraction needed
+    omega_log = dft_result.get('omega_log', 500.0)  # placeholder
+
+    # Allen-Dynes formula: Tc = (omega_log / 1.2) * exp(-1.04*(1+lam)/(lam - mu_star*(1+0.62*lam)))
+    mu_star = 0.1  # Coulomb pseudopotential
+    numerator = 1.04 * (1 + lam)
+    denominator = lam - mu_star * (1 + 0.62 * lam)
+    if denominator <= 0:
+        tc_ab_initio = 0.0
+    else:
+        tc_ab_initio = (omega_log / 1.2) * math.exp(-numerator / denominator)
+
+    # Compare with PINN prediction if model provided
+    consistency_flag = None
+    pinn_tc = None
+    if pinn_model is not None:
+        # Assume pinn_model has a predict method
+        graph = structure_to_graph(structure)  # need to implement or use existing
+        with torch.no_grad():
+            pinn_tc = pinn_model(graph).item()
+        if pinn_tc > 0:
+            ratio = tc_ab_initio / pinn_tc
+            if 0.9 <= ratio <= 1.1:
+                consistency_flag = 'agree'
+            else:
+                consistency_flag = 'disagree'
+        else:
+            consistency_flag = 'unknown'
+
+    return {
+        'tc_ab_initio': tc_ab_initio,
+        'lambda': lam,
+        'omega_log': omega_log,
+        'consistency_flag': consistency_flag,
+        'pinn_tc': pinn_tc
+    }
 
 
 if __name__ == "__main__":

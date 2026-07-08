@@ -595,3 +595,20 @@ where \(\lambda\) is the electron–phonon coupling constant, \(\omega_{\log}\) 
 - How can we design materials with both strong electron–phonon coupling and high phonon frequencies without extreme pressure? This is the central challenge of RTSC research.
 
 This section synthesizes current knowledge from the literature (see references in the hydride and cuprate sections above) and provides a framework for the discovery and manufacturing of room temperature superconducting compounds.
+
+## Ab Initio Tc and Consistency with PINN Predictions
+
+| Compound | AbInitioTc (K) | ConsistencyFlag |
+|----------|----------------|-----------------|
+| H3S | TBD | TBD |
+| LaH10 | TBD | TBD |
+| YH9 | TBD | TBD |
+| C-H-S | TBD | TBD |
+| Li2MgH16 | TBD | TBD |
+| CaH6 | TBD | TBD |
+| CaYH12 | TBD | TBD |
+| YH6 | TBD | TBD |
+| LaH6 | TBD | TBD |
+| CaYH10 | TBD | TBD |
+
+*Note: Values will be populated by running `compute_ab_initio_tc()` in `dft_calculator.py`.*
