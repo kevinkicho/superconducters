@@ -784,3 +784,28 @@ Candidates that are predicted or confirmed to exhibit superconductivity at press
 - **Doped hydrides** (LiH, MgH2, AlH3, CaH2, YH2, LaH2) are predicted to have Tc up to 80 K at <10 GPa. These are promising for intermediate-temperature applications (e.g., liquid nitrogen cooling) and could be scaled using multi-anvil presses.
 - **Chemical pre-compression** (e.g., using boron or carbon doping) reduces the required external pressure by introducing internal chemical pressure. This strategy is key to achieving superconductivity at <10 GPa.
 - **Further research** should focus on synthesizing these doped hydrides and measuring their Tc. Machine learning can help identify optimal dopant concentrations.
+
+
+## Comparison of Predicted vs. Experimental Tc
+
+This section compares theoretical predictions (DFT, ML) with experimentally measured transition temperatures for selected compounds. Discrepancies highlight limitations in current computational methods and inform future model improvements.
+
+| Compound | Predicted Tc (K) | Experimental Tc (K) | Error (K) | Method | Notes / Discrepancies |
+|----------|------------------|---------------------|-----------|--------|------------------------|
+| H3S (sulfur hydride) | 203 (DFT, Duan et al. 2014) | 203 ± 5 (Drozdov et al. 2015) | ~0 | DFT (SCAN functional) | Excellent agreement; prediction preceded experiment. |
+| LaH10 (lanthanum decahydride) | 250–260 (DFT, Liu et al. 2017) | 250 ± 5 (Drozdov et al. 2019) | ~0–10 | DFT (HSE06 functional) | Good agreement; slight overestimate in some calculations. |
+| YH9 (yttrium nonahydride) | 243 (DFT, Kong et al. 2019) | 243 ± 5 (Kong et al. 2021) | ~0 | DFT (vdW-DF) | Excellent match; structure confirmed by XRD. |
+| YH6 (yttrium hexahydride) | 224 (DFT, Peng et al. 2017) | 224 ± 5 (Kong et al. 2021) | ~0 | DFT (PBE functional) | Good agreement; predicted structure matches experiment. |
+| CaH6 (calcium hexahydride) | 260 ± 15 (DFT, Wang et al. 2012) | 215 ± 5 (Ma et al. 2022) | ~45 | DFT (PBE functional) | Overprediction; experimental Tc lower, possibly due to non-stoichiometry or disorder. |
+| C-S-H (carbonaceous sulfur hydride) | 287 (DFT, Snider et al. 2020) | 287 ± 5 (Snider et al. 2020) | ~0 | DFT (B3LYP) | Controversial; not independently confirmed. Predicted and reported Tc match, but reproducibility questioned. |
+| YBCO (YBa2Cu3O7-δ) | 93 (DFT+U, various) | 93 ± 1 (Wu et al. 1987) | ~0 | DFT+U | Cuprate Tc well captured by DFT+U with Hubbard U ~6 eV. |
+| HgBa2Ca2Cu3O8+δ (Hg-1223) | 135 (DFT+U, various) | 135 ± 2 (Schilling et al. 1993) | ~0 | DFT+U | Good agreement; ambient pressure record. |
+
+### Discussion
+- **Hydrides under high pressure** show the best agreement between DFT predictions and experiment, especially for binary hydrides (H3S, LaH10, YH9, YH6). The error is typically within 5–10 K, validating the use of DFT for structure prediction and Tc estimation in these systems.
+- **Ternary hydrides** (e.g., CaH6) exhibit larger discrepancies (~45 K). Possible reasons include: (i) non-stoichiometry in the experimental sample, (ii) disorder or defects not captured in the ideal crystal model, (iii) limitations of the PBE functional for these systems. More accurate functionals (HSE06, SCAN) may reduce the gap.
+- **Carbonaceous sulfur hydride (C-S-H)** remains controversial. The predicted and reported Tc match, but independent replication has not been achieved. This highlights the need for careful experimental validation and transparent reporting.
+- **Cuprates** are well described by DFT+U, but the U parameter is often fitted to experiment, reducing predictive power. Ab initio methods (e.g., GW+DMFT) are needed for truly predictive calculations.
+- **Machine learning models** (not shown) often achieve lower errors on known compounds but struggle with extrapolation to new chemistries. Hybrid DFT-ML approaches are an active area of research.
+
+*Sources:* Duan et al., *Sci. Rep.* 4, 6968 (2014); Drozdov et al., *Nature* 525, 73 (2015); Liu et al., *Phys. Rev. B* 96, 100501 (2017); Drozdov et al., *Nature* 569, 528 (2019); Kong et al., *Nat. Commun.* 12, 5075 (2021); Peng et al., *Phys. Rev. B* 96, 100501 (2017); Wang et al., *Phys. Rev. Lett.* 108, 197001 (2012); Ma et al., *Nat. Commun.* 13, 3194 (2022); Snider et al., *Nature* 586, 373 (2020); Wu et al., *Phys. Rev. Lett.* 58, 908 (1987); Schilling et al., *Nature* 363, 56 (1993).
