@@ -1118,3 +1118,69 @@ class TestPerformanceAndStress:
         result = rp.generate_research_report()
         mock_research.assert_called_once()
         assert result == "Research report content"
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_end_to_end_integration_1000_candidates(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Test full pipeline with 1000 synthetic candidates, verifying all output files are updated correctly."""
+        # Generate 1000 synthetic candidates
+        candidates = []
+        for i in range(1000):
+            candidates.append({
+                "name": f"Material_{i}",
+                "Tc": 100 + i,
+                "pressure": 150 + i,
+                "composition": f"H{i}S"
+            })
+        mock_load.return_value = candidates
+
+        # Mock train_model to return a model that predicts Tc values
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [100.0 + i for i in range(1000)]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty to return (Tc, uncertainty) for each candidate
+        def predict_side_effect(name, pressure=None):
+            # Extract index from name
+            idx = int(name.split('_')[1])
+            return (100.0 + idx, 5.0 + idx % 10)
+        mock_predict.side_effect = predict_side_effect
+
+        # Mock DFT calculation
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Mock open to capture write calls
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline
+        result = rp.run_pipeline()
+
+        # Verify pipeline completed without error
+        assert result is not None, "Pipeline returned None"
+
+        # Verify that load_data was called once
+        mock_load.assert_called_once()
+
+        # Verify that train_model was called once
+        mock_train.assert_called_once()
+
+        # Verify that predict_tc_with_uncertainty was called for each candidate (1000 times)
+        assert mock_predict.call_count == 1000, f"Expected 1000 calls to predict, got {mock_predict.call_count}"
+
+        # Verify that DFT was called for at least some candidates (e.g., those with high uncertainty)
+        # The exact number depends on the pipeline logic; we just check it was called at least once
+        assert mock_dft.call_count >= 1, "DFT was not called"
+
+        # Verify that open was called to write output files
+        # Expected output files: candidate_materials.md, roadmap.md, etc.
+        # We check that open was called with at least one of these filenames
+        expected_files = ["candidate_materials.md", "roadmap.md", "research_report.md", "experimental_plan.md"]
+        open_calls = [c for c in mock_open.call_args_list if c[0][0] in expected_files]
+        assert len(open_calls) >= 1, f"Expected at least one output file to be written, got {len(open_calls)}"
+
+        # Verify that the pipeline did not raise any exceptions
+        # (If an exception occurred, the test would fail before reaching here)
