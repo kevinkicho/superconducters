@@ -11254,7 +11254,111 @@ def generate_funding_proposal():
         f.write(content)
     print("Funding proposal written to funding_proposal.md")
 
+
+def generate_stakeholder_newsletter():
+    """Compile content from latest press release, monthly report, and funding proposal into a simulated email and log it in docs/public_outreach_summary.md."""
+    import datetime
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    press_release = ""
+    monthly_report = ""
+    funding_proposal = ""
+    try:
+        with open('press_release.md', 'r') as f:
+            press_release = f.read()
+    except FileNotFoundError:
+        press_release = "[Press release not found]"
+    try:
+        with open('monthly_report.md', 'r') as f:
+            monthly_report = f.read()
+    except FileNotFoundError:
+        monthly_report = "[Monthly report not found]"
+    try:
+        with open('funding_proposal.md', 'r') as f:
+            funding_proposal = f.read()
+    except FileNotFoundError:
+        funding_proposal = "[Funding proposal not found]"
+    email_body = f"""Subject: Stakeholder Newsletter - {now}
+
+Dear Stakeholders,
+
+Here is the latest update from our room-temperature superconductor research pipeline.
+
+--- Press Release ---
+{press_release}
+
+--- Monthly Report ---
+{monthly_report}
+
+--- Funding Proposal ---
+{funding_proposal}
+
+Best regards,
+Superconductor Discovery Team
+"""
+    os.makedirs('docs', exist_ok=True)
+    with open('docs/public_outreach_summary.md', 'a') as f:
+        f.write(f"\n## Stakeholder Newsletter - {now}\n\n{email_body}\n")
+    print(f"[Newsletter] Stakeholder newsletter logged to docs/public_outreach_summary.md")
+
+
+def run_sobol_analysis():
+    """Perform Sobol sensitivity analysis on key parameters for Tc and cost."""
+    import numpy as np
+    from SALib.sample import saltelli
+    from SALib.analyze import sobol
+    problem = {
+        'num_vars': 5,
+        'names': ['dft_convergence', 'learning_rate', 'batch_size', 'material_cost', 'energy_cost'],
+        'bounds': [[1e-6, 1e-2], [1e-5, 1e-1], [16, 256], [10, 1000], [0.01, 0.5]]
+    }
+    param_values = saltelli.sample(problem, 1024, calc_second_order=False)
+    def evaluate_model(params):
+        dft_conv, lr, bs, mat_cost, en_cost = params
+        Tc = 300 - 100 * np.log10(dft_conv) + 50 * lr - 0.1 * bs + 0.01 * mat_cost - 10 * en_cost
+        cost = mat_cost + en_cost * 1000 + 50 * (1 - np.log10(dft_conv)/6)
+        return Tc, cost
+    Y_Tc = np.zeros(param_values.shape[0])
+    Y_cost = np.zeros(param_values.shape[0])
+    for i, params in enumerate(param_values):
+        Tc, cost = evaluate_model(params)
+        Y_Tc[i] = Tc
+        Y_cost[i] = cost
+    Si_Tc = sobol.analyze(problem, Y_Tc, calc_second_order=False, print_to_console=False)
+    Si_cost = sobol.analyze(problem, Y_cost, calc_second_order=False, print_to_console=False)
+    print("\n=== Sobol Sensitivity Analysis Results ===")
+    print("\nFor Tc (Critical Temperature):")
+    print("Parameter          First-order    Total-order")
+    for i, name in enumerate(problem['names']):
+        print(f"{name:20s} {Si_Tc['S1'][i]:.4f}        {Si_Tc['ST'][i]:.4f}")
+    print("\nFor Cost (Manufacturing):")
+    print("Parameter          First-order    Total-order")
+    for i, name in enumerate(problem['names']):
+        print(f"{name:20s} {Si_cost['S1'][i]:.4f}        {Si_cost['ST'][i]:.4f}")
+    os.makedirs('docs', exist_ok=True)
+    with open('docs/sensitivity_analysis.md', 'w') as f:
+        f.write("# Sobol Sensitivity Analysis\n\n")
+        f.write(f"*Generated on {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n\n")
+        f.write("## Parameters\n\n")
+        f.write("| Parameter | Bounds |\n")
+        f.write("|-----------|--------|\n")
+        for name, bounds in zip(problem['names'], problem['bounds']):
+            f.write(f"| {name} | {bounds} |\n")
+        f.write("\n## Results for Tc\n\n")
+        f.write("| Parameter | First-order | Total-order |\n")
+        f.write("|-----------|-------------|-------------|\n")
+        for i, name in enumerate(problem['names']):
+            f.write(f"| {name} | {Si_Tc['S1'][i]:.4f} | {Si_Tc['ST'][i]:.4f} |\n")
+        f.write("\n## Results for Cost\n\n")
+        f.write("| Parameter | First-order | Total-order |\n")
+        f.write("|-----------|-------------|-------------|\n")
+        for i, name in enumerate(problem['names']):
+            f.write(f"| {name} | {Si_cost['S1'][i]:.4f} | {Si_cost['ST'][i]:.4f} |\n")
+        f.write("\n*Note: This analysis uses a placeholder model. Replace with actual pipeline model for real results.*\n")
+    print("\n[Sobol] Sensitivity analysis results written to docs/sensitivity_analysis.md")
+
 if __name__ == "__main__":
     generate_press_release()
     generate_monthly_report()
     generate_funding_proposal()
+    generate_stakeholder_newsletter()
+    run_sobol_analysis()
