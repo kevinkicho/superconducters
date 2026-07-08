@@ -398,3 +398,16 @@ Below are relevant funding sources for room-temperature superconductivity resear
 
 ### Stakeholder Dashboard
 For a consolidated view of funding opportunities, deadlines, and project milestones, see the [Stakeholder Dashboard](docs/stakeholder_dashboard.md).
+
+
+## Grant Proposal
+
+For the full grant proposal, see [Grant Proposal](docs/grant_proposal.md).
+
+## Real-Time Monitoring Dashboard
+
+Access the real-time monitoring dashboard at [Monitoring Dashboard](docs/monitoring_dashboard.md).
+
+## New Features
+
+For instructions on new features, refer to the [New Features Guide](docs/new_features_guide.md).
