@@ -25,6 +25,9 @@ jobs:
     - name: Run tests
       run: |
         pytest tests/ -v
+    - name: Run research report test
+      run: |
+        pytest tests/test_run_pipeline.py::TestRunPipeline::test_research_report_generation -v
     - name: Run performance benchmarks
       run: |
         pytest tests/test_run_pipeline.py::TestPerformanceAndStress tests/test_run_pipeline.py::test_pipeline_scales_to_1000_candidates -v

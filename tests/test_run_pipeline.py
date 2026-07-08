@@ -1110,3 +1110,11 @@ class TestPerformanceAndStress:
         elapsed = time.perf_counter() - start
         assert elapsed < 5.0, f"Pipeline took {elapsed:.2f}s, expected <5s"
         assert result is not None
+
+    @patch('scripts.run_pipeline.generate_research_report')
+    def test_research_report_generation(self, mock_research):
+        """Test that the research report generation function is called."""
+        mock_research.return_value = "Research report content"
+        result = rp.generate_research_report()
+        mock_research.assert_called_once()
+        assert result == "Research report content"
