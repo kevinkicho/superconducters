@@ -1653,3 +1653,51 @@ graph TD
 |----------|--------------|
 | Pilot Plant Construction Plan | Site selection, reactor specifications, piping and instrumentation diagrams, safety analysis, construction timeline (12 months), budget ($50M) |
 | RFP Document | Technical requirements for 500 L high-pressure autoclaves (10 bar, 1200°C), gas purification skids, XRD/SEM QC equipment, vendor qualification criteria, proposal submission guidelines |
+
+
+## Commercial-Scale Manufacturing Process Design
+
+### Top Candidate: LaH10 (Lanthanum Decahydride)
+
+#### Process Flow Diagram (Mermaid)
+
+```mermaid
+graph TD
+    A[La metal purification] --> B[LaH2 formation]
+    B --> C[High-pressure H2 loading]
+    C --> D[Reaction vessel: 150 GPa, 1000°C]
+    D --> E[Quench to ambient]
+    E --> F[Product recovery]
+    F --> G[QC: XRD, resistivity, Tc measurement]
+    G --> H[Packaging under inert atmosphere]
+```
+
+#### Equipment List with Specifications
+
+| Equipment | Specification | Quantity | Material of Construction |
+|-----------|--------------|----------|--------------------------|
+| La purification furnace | 800°C, vacuum, 10 kg batch | 2 | Tantalum-lined |
+| Hydriding reactor | 500 L, 10 bar H2, 400°C | 2 | SS316 |
+| High-pressure autoclave | 150 GPa, 1000°C, 1 kg batch | 4 | Diamond anvil cell array (multi-anvil press) |
+| Quench system | Liquid N2, 100°C/s | 1 | SS304 |
+| Product handling glovebox | Ar atmosphere, <1 ppm O2/H2O | 2 | Stainless steel |
+| QC station | XRD, SEM, PPMS (resistivity) | 1 | Lab-grade |
+
+#### Operating Conditions
+
+- **La purification**: 800°C, 10^-6 mbar, 4 hours
+- **Hydriding**: 400°C, 8 bar H2, 6 hours
+- **High-pressure synthesis**: 150 GPa, 1000°C, 2 hours
+- **Quench**: Liquid N2, 100°C/s
+- **Product handling**: Ar glovebox, <1 ppm O2/H2O
+
+#### Cost Estimate
+
+| Item | Annual Cost (USD) |
+|------|-------------------|
+| Raw materials (La, H2) | $3,000,000 |
+| Equipment depreciation | $1,200,000 |
+| Utilities (electricity, LN2, Ar) | $900,000 |
+| Labor (15 operators, 3 engineers) | $1,800,000 |
+| Maintenance | $500,000 |
+| **Total** | **$7,400,000** |
