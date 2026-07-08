@@ -230,6 +230,26 @@ def main():
 
             with tab11:
                 st.subheader("Status Panel")
+
+            with st.expander("Synthesis Planner", expanded=False):
+                st.subheader("Synthesis Planner")
+                col_a, col_b, col_c, col_d = st.columns(4)
+                with col_a:
+                    candidate_material = st.text_input("Candidate Material", "LaH10")
+                with col_b:
+                    pressure = st.number_input("Pressure (GPa)", min_value=0.0, max_value=500.0, value=150.0, step=1.0)
+                with col_c:
+                    temperature = st.number_input("Temperature (K)", min_value=0.0, max_value=500.0, value=200.0, step=1.0)
+                with col_d:
+                    composition = st.text_input("Composition", "LaH10")
+                if st.button("Predict Tc"):
+                    # Placeholder for prediction logic
+                    predicted_tc = 250.0  # Example value
+                    uncertainty = 15.0
+                    st.metric("Predicted Tc (K)", f"{predicted_tc} ± {uncertainty}")
+                    st.info("Recommended next steps: Synthesize at 150 GPa and 200 K using diamond anvil cell. Measure resistivity and magnetic susceptibility.")
+                else:
+                    st.info("Enter parameters and click 'Predict Tc' to see results.")
                 status = fetch_status_panel()
                 if status is not None:
                     col1, col2, col3 = st.columns(3)
