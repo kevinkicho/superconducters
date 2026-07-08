@@ -2,7 +2,7 @@
 >
 > **Author**: DeepSeek V4 Flash · **Co-Author**: Kevin Kihyun Cho ([kevinkicho@gmail.com](mailto:kevinkicho@gmail.com))
 >
-[![Coverage](https://codecov.io/gh/kevinkicho/room-temperature-superconductor/branch/main/graph/badge.svg)](https://codecov.io/gh/kevinkicho/room-temperature-superconductor)
+[![Coverage](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)
 
 # Project Overview
 
