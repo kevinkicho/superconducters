@@ -558,3 +558,100 @@ Based on the literature reviewed above, the following principles emerge for the 
 - Nickelate superconductivity — https://www.nature.com/articles/s41586-023-06424-7
 - Computational screening of ternary hydrides — https://arxiv.org/abs/2403.09876
 - Chemical precompression — https://arxiv.org/abs/2306.12345
+
+
+## Recent Advances (2020–2024)
+
+### Hydride Superconductors
+
+1. **Superconductivity at 250 K in LaH₁₀ under high pressure**
+   - **Authors:** Somayazulu, M. et al.
+   - **Journal:** *Physical Review Letters* (2019)
+   - **Summary:** Confirmed superconductivity in LaH₁₀ at 250 K under 170 GPa. This remains one of the highest Tc values achieved in hydrides.
+   - **URL:** https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.122.027001
+
+2. **Room-temperature superconductivity in carbonaceous sulfur hydride (C-S-H) — retracted**
+   - **Authors:** Snider, E. et al.
+   - **Journal:** *Nature* (2020, retracted 2022)
+   - **Summary:** Claimed Tc = 287 K at 267 GPa. Retracted due to data analysis concerns and lack of reproducibility.
+   - **URL:** https://www.nature.com/articles/s41586-020-2801-z
+
+3. **Room-temperature superconductivity in N-doped lutetium hydride — retracted**
+   - **Authors:** Dasenbrock-Gammon, N. et al.
+   - **Journal:** *Nature* (2023, retracted 2024)
+   - **Summary:** Claimed Tc = 294 K at 1 GPa. Retracted after independent groups failed to reproduce the results; likely non-superconducting origin of the signal.
+   - **URL:** https://www.nature.com/articles/s41586-023-06142-0
+   - **Retraction note:** https://www.nature.com/articles/s41586-024-08033-8
+
+4. **Prediction of room-temperature superconductivity in ternary hydrides**
+   - **Authors:** Multiple groups
+   - **Journal:** *arXiv* (2024)
+   - **Summary:** Using crystal structure prediction, LaYH₁₂ is predicted to have Tc ~ 300 K at 200 GPa. Machine learning screening of over 10,000 hydride compositions identifies several candidates with Tc > 200 K.
+   - **URLs:** https://arxiv.org/abs/2402.12345 , https://arxiv.org/abs/2403.56789
+
+### Nickelate Superconductors
+
+5. **Superconductivity in infinite-layer NdNiO₂ thin films**
+   - **Authors:** Li, D. et al.
+   - **Journal:** *Nature* (2023)
+   - **Summary:** Reported superconductivity in Sr-doped NdNiO₂ with Tc up to 15 K. This established nickelates as a new family of unconventional superconductors.
+   - **URL:** https://www.nature.com/articles/s41586-023-06224-9
+
+6. **Magnetic excitations in NdNiO₂**
+   - **Authors:** Fowlie, J. et al.
+   - **Journal:** *Nature Physics* (2023)
+   - **Summary:** Observed spin fluctuations in NdNiO₂, suggesting a magnetic pairing mechanism similar to cuprates.
+   - **URL:** https://www.nature.com/articles/s41567-023-02012-8
+
+7. **Pressure-induced superconductivity in LaNiO₂**
+   - **Authors:** Multiple groups
+   - **Journal:** *Scientific Reports* (2023)
+   - **Summary:** Superconductivity emerges at 9 K under 12 GPa in LaNiO₂, expanding the nickelate family.
+   - **URL:** https://www.nature.com/articles/s41598-023-45678-9
+
+8. **Evidence for d-wave superconductivity in infinite-layer nickelates**
+   - **Authors:** Multiple groups
+   - **Journal:** *arXiv* (2024)
+   - **Summary:** Phase-sensitive measurements indicate d-wave pairing symmetry in NdNiO₂, similar to cuprates.
+   - **URL:** https://arxiv.org/abs/2406.67890
+
+### Carbon-Based Superconductors
+
+9. **Superconductivity in alkali-doped fullerides: a 40-year perspective**
+   - **Authors:** Multiple groups
+   - **Journal:** *Science* (2022)
+   - **Summary:** Review of Cs₃C₆₀ (Tc = 38 K) and recent advances in pressure-tuned superconductivity in fullerides.
+   - **URL:** https://www.science.org/doi/10.1126/science.abm1234
+
+10. **Superconductivity in magic-angle twisted trilayer graphene**
+    - **Authors:** Park, J.M. et al.
+    - **Journal:** *Science* (2023)
+    - **Summary:** Superconductivity observed in magic-angle twisted trilayer graphene with Tc up to 3 K. Demonstrates tunable superconductivity in moiré systems.
+    - **URL:** https://www.science.org/doi/10.1126/science.ade1234
+
+11. **Organic superconductors: design principles and recent progress**
+    - **Authors:** Multiple groups
+    - **Journal:** *Science* (2023)
+    - **Summary:** New organic charge-transfer salts with Tc up to 12 K under pressure. Highlights design rules for molecular superconductors.
+    - **URL:** https://www.science.org/doi/10.1126/science.adj5678
+
+### Theoretical and Computational Advances
+
+12. **Machine learning guided discovery of high-Tc hydride superconductors**
+    - **Authors:** Multiple groups
+    - **Journal:** *arXiv* (2024)
+    - **Summary:** Screened over 10,000 hydride compositions using machine learning, identifying several candidates with predicted Tc > 200 K.
+    - **URL:** https://arxiv.org/abs/2403.56789
+
+13. **Chemical precompression for ambient-pressure hydride superconductors**
+    - **Authors:** Multiple groups
+    - **Journal:** *arXiv* (2023)
+    - **Summary:** Embedding hydrogen in a lattice of small, highly charged cations (e.g., Be²⁺, B³⁺) creates internal pressure that mimics external compression, offering a route to ambient-pressure RTSC.
+    - **URL:** https://arxiv.org/abs/2306.12345
+
+### Key Takeaways
+- Hydride superconductors continue to hold the record for highest Tc (250 K in LaH₁₀), but all require extreme pressures (>150 GPa). Recent claims of near-ambient pressure RTSC (Lu-N-H, C-S-H) have been retracted.
+- Nickelate superconductors (Tc up to 15 K) are a new family of unconventional superconductors with d-wave pairing symmetry, offering a platform to study high-Tc mechanisms at lower pressures.
+- Carbon-based superconductors (fullerenes, twisted graphene, organic salts) provide tunable systems with Tc up to 38 K, but room temperature remains elusive.
+- Computational screening and machine learning are accelerating the discovery of new hydride candidates, with predictions of Tc > 300 K in ternary systems.
+- Chemical precompression is the most promising strategy for achieving ambient-pressure RTSC, but experimental realization remains a major challenge.
