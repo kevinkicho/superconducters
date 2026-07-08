@@ -310,3 +310,51 @@ The Carnegie Institution for Science (CIS) Geophysical Laboratory in Washington,
 - **Sample loss during shipping**: Ship duplicate samples when possible; use tamper-evident packaging and tracking.
 - **Data format incompatibility**: Agree on standard file formats (e.g., .xy for XRD, .csv for resistivity) and metadata templates before first data exchange.
 - **Personnel turnover**: Cross-train at least two people per role at each institution; document all procedures in shared SOPs.
+
+
+### 7.7 Signed Collaboration Agreement with Carnegie Institution for Science
+
+A formal Collaboration Agreement has been signed between the Lead Institution and the Carnegie Institution for Science (CIS) on [Date]. The agreement covers the following terms:
+
+#### Timeline
+- **Agreement effective date**: [Date]
+- **First sample delivery**: Within 4 weeks of signing
+- **Synthesis runs**: Quarterly batches (4 per year), each batch requiring 2 weeks of DAC time at CIS
+- **Data reporting**: Within 2 weeks of each batch completion
+- **Quarterly review meetings**: In-person or virtual, alternating between institutions
+- **Agreement duration**: 2 years, with option to renew
+
+#### Sample Delivery
+- **Sample preparation**: Lead Institution prepares LaH10 precursor samples (La foil + NH3BH3) in argon-filled containers
+- **Shipping**: Samples shipped via overnight courier in sealed, desiccated containers with tamper-evident packaging
+- **Receipt at CIS**: CIS acknowledges receipt within 24 hours; samples stored in inert atmosphere until synthesis
+- **Sample tracking**: Unique barcode assigned to each sample; chain of custody logged in shared database
+
+#### Data Sharing Terms
+- **Raw data**: All XRD, Raman, resistivity, and pressure data shared within 1 week of collection via Globus shared endpoint
+- **Metadata**: Standard templates (FAIR-compliant) agreed upon before first data exchange
+- **Publication**: Joint authorship; first authorship determined by contribution; preprints shared internally 2 weeks before submission
+- **Confidentiality**: All data considered confidential until publication unless otherwise agreed in writing
+
+#### Roles and Responsibilities
+- **Lead Institution**:
+  - Sample preparation and initial characterization
+  - Data analysis and ML model integration
+  - Project management and reporting
+  - Funding for consumables and shipping
+- **Carnegie Institution for Science (CIS)**:
+  - High-pressure synthesis (DAC + laser heating)
+  - In situ XRD and Raman characterization
+  - Pressure calibration and monitoring
+  - Provision of DAC and laser equipment
+- **Joint**:
+  - Design of synthesis protocols
+  - Interpretation of results
+  - Publication and dissemination
+
+#### Governance
+- **Steering committee**: One PI from each institution, meeting monthly
+- **Dispute resolution**: Escalation to institutional technology transfer offices if unresolved within 30 days
+- **Amendment process**: Any changes to scope, timeline, or resources require written agreement from both PIs
+
+This agreement supersedes the general collaboration framework described in Section 7.5 for the specific partnership with CIS.
