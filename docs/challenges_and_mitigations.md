@@ -1113,7 +1113,9 @@ A realistic timeline from lab-scale demonstration to commercial production with 
 
 ## Global Sensitivity Analysis
 
-A Sobol sensitivity analysis was performed to identify the key drivers of predicted superconducting transition temperature (Tc) and manufacturing feasibility. The analysis varied parameters across three domains: DFT calculations, ML model training, and manufacturing process conditions. Sobol first-order (S1) and total-order (ST) indices were computed using 10,000 Monte Carlo samples.
+A Sobol sensitivity analysis was performed to identify the key drivers of predicted superconducting transition temperature (Tc) and manufacturing feasibility. The analysis varied parameters across three domains: DFT calculations, ML model training, and manufacturing process conditions. Sobol first-order (S1) and total-order (ST) indic## Global Sensitivity Analysis
+
+Sobol sensitivity analysis was performed using the integrated pipeline (see `run_pipeline.py`). The following subsections detail the first-order (S1) and total-order (ST) Sobol indices for key parameters across DFT, ML, and manufacturing domains. The indices were computed using 10,000 Monte Carlo samples.
 
 ### DFT Parameters
 - **Exchange-correlation functional** (PBE vs. SCAN vs. HSE06): S1 = 0.42, ST = 0.55. The choice of functional dominates Tc predictions, especially for hydride systems where self-interaction errors affect band gap and electron-phonon coupling.

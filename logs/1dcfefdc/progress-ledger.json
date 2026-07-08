@@ -1,19 +1,9 @@
 {
   "schemaVersion": 1,
   "runId": "1dcfefdc-e3ea-453b-96a1-fd210d8daefe",
-  "updatedAt": 1783522449703,
-  "lastCycle": 72,
+  "updatedAt": 1783522573952,
+  "lastCycle": 73,
   "observations": [
-    {
-      "kind": "finding",
-      "text": "The test suite may not achieve >90% code coverage for all Python scripts. The project has many test files but no coverage report or enforcement in CI. Missing tests for scripts/generate_candidates.py, scripts/api_client.py, and scripts/generate_report.py were added in cycle 56, but coverage for other scripts (e.g., scripts/arxiv_scraper.py, scripts/query_database.py) is unverified. — Run pytest wi",
-      "cycle": 60,
-      "agentId": "agent-2",
-      "files": [
-        "tests/"
-      ],
-      "at": 1783502984451
-    },
     {
       "kind": "finding",
       "text": "README.md lacks a test coverage badge and the test suite may not achieve >90% coverage for all Python scripts. — Run pytest with coverage (e.g., `pytest --cov=scripts --cov=dft_calculator --cov=run_pipeline --cov-report=html`) and add a coverage badge (e.g., from codecov or coveralls) to README.md. Ensure all scripts in scripts/, dft_calculator.py, and run_pipeline.py have >90% line coverage. Upda",
@@ -1158,6 +1148,15 @@
         "streamlit_dashboard.py"
       ],
       "at": 1783522421341
+    },
+    {
+      "kind": "commit",
+      "text": "Add a 'Press Releases' tab in streamlit_dashboard.py that displays the latest press releases and allows users to generate new ones. Use grep to locate the existing tab definition area (e.g., st.sidebar or st.tabs) and insert the new tab with appropriate UI elements and backend logic.\n\nAlso (auditor): Add a 'Monthly Report' tab in streamlit_dashboard.py that displays the latest monthly progress rep",
+      "cycle": 73,
+      "files": [
+        "streamlit_dashboard.py"
+      ],
+      "at": 1783522545703
     }
   ]
 }
