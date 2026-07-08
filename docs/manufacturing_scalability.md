@@ -1919,3 +1919,67 @@ The pilot plant is designed for a production capacity of 100 kg/year of LaH10, s
 - Key challenges include maintaining uniform temperature and pressure across the larger volume, preventing hydrogen embrittlement of the autoclave walls, and ensuring safe handling of high-pressure hydrogen.
 - The estimated capital cost for the pilot plant is $3.2M, with annual operating costs of $1.5M (including H2, La, energy, labor, and maintenance).
 - A 100 kg/year output is sufficient for initial device prototyping and market validation. Further scale-up to 10,000 tonnes/year would require continuous-flow reactors and advanced pressure containment strategies.
+
+
+## Commercial-Scale Manufacturing Process Design
+
+### Process Flow Diagram (Mermaid)
+
+```mermaid
+flowchart TD
+    A[La Purification & Milling] --> B[H2 Compression & Purification]
+    B --> C[High-Pressure Synthesis]
+    C --> D[Quenching to 77 K]
+    D --> E[Characterization (XRD, Raman, Tc)]
+    E --> F[Packaging in Argon]
+    F --> G[Final Product LaH10]
+```
+
+### Equipment List (10,000 tonnes/year facility)
+
+| Equipment | Specification | Quantity | Unit Cost |
+|-----------|---------------|----------|-----------|
+| High-pressure autoclave | 10,000 L, 200 MPa, 800°C, Hastelloy C-276, with internal stirring and gas injection | 20 | $5,000,000 each |
+| H2 compressor | Diaphragm type, 1000 bar output, 10,000 Nm³/h flow rate, oil-free | 10 | $2,000,000 each |
+| H2 purification system | Palladium membrane, 99.9999% purity, 5,000 Nm³/h | 5 | $1,000,000 each |
+| La milling & purification | Ball mill with inert atmosphere, 500 kg batch, 99.99% purity target | 5 | $500,000 each |
+| Quench bath | Liquid nitrogen bath, 100,000 L capacity, automated immersion | 5 | $200,000 each |
+| Glove box | Inert atmosphere (Ar), <1 ppm O2/H2O, integrated with autoclave | 10 | $500,000 each |
+| XRD system | Powder X-ray diffractometer, Cu Kα, 2θ range 10-90°, with sample handler for air-sensitive materials | 5 | $300,000 each |
+| Raman spectrometer | 532 nm laser, 100-4000 cm⁻¹ range, cryostat for low-temperature measurements | 5 | $250,000 each |
+| Tc measurement setup | Four-probe resistivity, 4-300 K, with cryostat and magnet (up to 9 T) | 5 | $200,000 each |
+| Safety infrastructure | Gas detection, ventilation, blast walls, emergency shutdown, hydrogen venting system | 1 lot | $5,000,000 |
+
+### Operating Conditions
+
+- **La Purification**: Vacuum annealing at 600°C for 2 hours, argon atmosphere.
+- **H2 Compression**: 200 MPa, 99.9999% purity via Pd membrane.
+- **High-Pressure Synthesis**: 200 MPa H2, 800°C, 2 hours, constant pressure.
+- **Quenching**: Rapid cooling to 77 K in liquid nitrogen, 10°C/min cooling rate.
+- **Characterization**: XRD (Fm-3m structure confirmation), Raman (hydrogen vibrational modes), Tc measurement (four-probe resistivity, Tc > 200 K).
+- **Packaging**: Sealed in argon-filled containers, <1 ppm O2/H2O.
+
+### Cost Estimate (10,000 tonnes/year)
+
+| Category | Cost (USD) |
+|----------|------------|
+| Capital Investment | $2,000,000,000 |
+| Annual Operating Costs | $1,200,000,000 |
+| - Raw materials (La, H2) | $120,000,000 |
+| - Energy (electricity, LN2) | $720,000,000 |
+| - Labor (500 operators, engineers) | $100,000,000 |
+| - Maintenance & consumables | $200,000,000 |
+| - Safety & compliance | $60,000,000 |
+| Production Cost per kg | $120/kg |
+| Target Market Price | $200/kg |
+| Annual Revenue (at 100% capacity) | $2,000,000,000 |
+| Payback Period | ~5 years |
+
+### Scale-Up Challenges
+
+- Maintaining uniform temperature and pressure in 10,000 L autoclaves requires advanced CFD-optimized reactor design.
+- Hydrogen embrittlement of reactor walls necessitates Hastelloy C-276 or ceramic liners.
+- Continuous-flow reactors (e.g., tubular) may replace batch autoclaves for higher throughput.
+- Energy recovery from exothermic synthesis and LN2 production can reduce operating costs by 30%.
+- Safety: Hydrogen handling at 200 MPa requires blast-resistant buildings, remote operation, and redundant venting.
+- Quality control: In-line Raman and XRD for real-time product monitoring.
