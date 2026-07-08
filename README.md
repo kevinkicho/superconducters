@@ -162,3 +162,15 @@ A comprehensive business plan for the top candidate material is available in [bu
 ## Press Release
 
 A press release announcing the discovery of the top candidate material is available in [press_release.md](press_release.md).
+
+## Public Outreach
+
+A public outreach document is available in [public_outreach.md](public_outreach.md).
+
+## Executive Summary
+
+An executive summary of the project is available in [executive_summary.md](executive_summary.md). See the [slide deck](presentation.md) for a visual summary.
+
+## Final Report
+
+The final report of the project is available in [final_report.md](final_report.md).
