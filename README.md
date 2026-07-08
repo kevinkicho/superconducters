@@ -454,3 +454,19 @@ Publication-ready figures are generated automatically by the pipeline. To access
 - **Export**: Figures are saved in the `figures/` directory in PNG and PDF formats.
 
 For a complete list of available figures and customization options, see the [Figures Guide](docs/figures_guide.md).
+
+
+## Latest Pipeline Statistics
+
+This section is dynamically updated by the `update_readme_statistics()` function in `run_pipeline.py`. It will display the latest pipeline run statistics, including:
+
+- **Last Run Timestamp**: When the pipeline last executed.
+- **Total Candidates Processed**: Number of candidate materials evaluated.
+- **Top Candidates**: Highest predicted Tc values and their materials.
+- **Synthesis Success Rate**: Percentage of successful synthesis attempts.
+- **Characterization Results**: Summary of characterization outcomes.
+
+### Deployed URLs
+
+- **Streamlit Dashboard**: [Deployed URL placeholder — will be updated by `update_readme_statistics()`]
+- **REST API**: [Deployed URL placeholder — will be updated by `update_readme_statistics()`]
