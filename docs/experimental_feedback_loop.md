@@ -1510,3 +1510,22 @@ Initial validation of the simulated cloud lab against 50 historical physical exp
 - **Synthesis success rate**: The simulator correctly predicted whether a given set of parameters would yield a single-phase product in 82% of cases.
 
 These results demonstrate that the simulated cloud lab is a reliable tool for pre-screening and hypothesis generation. It is now an integral part of the autonomous discovery loop, running continuously alongside the physical cloud lab to prioritize experiments and refine synthesis protocols. Future work will focus on improving the high-Tc regime accuracy and incorporating more complex multi-step synthesis pathways.
+
+
+## Cloud Lab Integration with Fallback
+
+### Fallback Mechanism
+
+When the physical cloud lab is unavailable (e.g., scheduled maintenance, queue overflow, or cost constraints), the experimental feedback loop automatically falls back to the simulated cloud lab module. The fallback is triggered by a configurable timeout: if no physical results are ingested within a specified window (default: 24 hours), the system invokes the simulated cloud lab API to generate synthetic experimental data for the highest-priority candidates. These simulated results are ingested into the central database with a flag indicating their origin (simulated vs. physical). The ML models are then retrained on the combined dataset, ensuring that the feedback loop continues without interruption.
+
+### Comparison Report
+
+A comparison report between simulated and real results is generated automatically after each batch of physical experiments. The report is produced by `scripts/generate_comparison_report.py` and stored in `docs/comparison_reports/` with a timestamp. The report includes:
+
+- **Tc Accuracy**: Mean absolute error (MAE) and root mean square error (RMSE) between simulated and measured Tc values for all overlapping experiments.
+- **XRD Pattern Similarity**: Average Pearson correlation coefficient and structural similarity index (SSIM) between simulated and experimental XRD patterns.
+- **Synthesis Success Prediction**: Confusion matrix and F1 score for predicting single-phase vs. multi-phase outcomes.
+- **Trend Analysis**: Scatter plots and residual analysis to identify systematic biases (e.g., overestimation of Tc for certain compound families).
+- **Recommendations**: Suggested adjustments to simulation parameters (e.g., noise models, thermodynamic databases) to improve fidelity.
+
+The comparison report is reviewed weekly by the research team and used to iteratively improve the simulated cloud lab. This fallback mechanism ensures that the autonomous discovery loop remains robust and continuously operational, even when physical experiments are delayed.
