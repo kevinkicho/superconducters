@@ -1863,3 +1863,59 @@ Key results from the Monte Carlo simulation:
 - Probability of payback within 5 years: 72%
 
 The Monte Carlo analysis confirms that the manufacturing project is financially robust under a wide range of scenarios, with a high likelihood of achieving strong returns. The primary risk drivers are selling price and production cost, consistent with the deterministic sensitivity analysis.
+
+
+## Detailed Pilot Plant Simulation
+
+### Process Flow Diagram (Mermaid)
+
+The following Mermaid diagram illustrates the proposed pilot plant process for synthesizing LaH10, the top candidate for room-temperature superconductivity due to its high Tc (~250 K) and relatively well-characterized synthesis pathway.
+
+```mermaid
+graph TD
+    A[La metal ingot] --> B[La purification & milling]
+    B --> C[La powder (99.99% purity)]
+    D[H2 gas (99.9999% purity)] --> E[H2 compression & purification]
+    E --> F[High-pressure autoclave (10 L, 300 MPa)]
+    C --> F
+    F --> G[Reaction: La + 10H2 → LaH10]
+    G --> H[Quench to 77 K]
+    H --> I[Product recovery & characterization]
+    I --> J[Quality control: XRD, Raman, Tc measurement]
+    J --> K[Packaging & storage under inert atmosphere]
+    style F fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+### Equipment Specifications
+
+The pilot plant is designed for a production capacity of 100 kg/year of LaH10, sufficient for prototype device testing and small-scale applications. Key equipment specifications are listed below.
+
+| Equipment | Specification | Quantity | Estimated Cost (USD) |
+|-----------|---------------|----------|----------------------|
+| High-pressure autoclave | 10 L working volume, 300 MPa max pressure, 800°C max temperature, Inconel 718 construction, with internal stirring and gas injection port | 2 | $1,200,000 each |
+| H2 compressor | Diaphragm type, 1000 bar output, 10 Nm³/h flow rate, oil-free | 1 | $350,000 |
+| H2 purification system | Palladium membrane, 99.9999% purity, 5 Nm³/h | 1 | $180,000 |
+| La milling & purification | Ball mill with inert atmosphere, 5 kg batch, 99.99% purity target | 1 | $80,000 |
+| Quench bath | Liquid nitrogen bath, 100 L capacity, automated immersion | 1 | $25,000 |
+| Glove box | Inert atmosphere (Ar), <1 ppm O2/H2O, integrated with autoclave | 2 | $150,000 each |
+| XRD system | Powder X-ray diffractometer, Cu Kα, 2θ range 10-90°, with sample holder for air-sensitive materials | 1 | $200,000 |
+| Raman spectrometer | 532 nm laser, 100-4000 cm⁻¹ range, cryostat for low-temperature measurements | 1 | $180,000 |
+| Tc measurement setup | Four-probe resistivity, 4-300 K, with cryostat and magnet (up to 9 T) | 1 | $120,000 |
+| Safety infrastructure | Gas detection, ventilation, blast walls, emergency shutdown | 1 lot | $500,000 |
+
+### Process Description
+
+1. **La purification and milling**: Lanthanum metal (99.9% purity) is milled to fine powder (<50 μm) under argon atmosphere to prevent oxidation. The powder is further purified by vacuum annealing at 600°C for 2 hours to remove surface oxides.
+2. **H2 compression and purification**: Hydrogen gas is compressed to 200 MPa and passed through a palladium membrane to achieve 99.9999% purity. Impurities (O2, H2O, N2) are reduced to <1 ppm.
+3. **High-pressure synthesis**: The La powder is loaded into the autoclave under inert atmosphere. Hydrogen is introduced to 200 MPa, and the temperature is raised to 800°C over 30 minutes. The reaction proceeds for 2 hours under constant pressure (200 MPa). The autoclave is then cooled to room temperature at 10°C/min.
+4. **Quenching**: The product is rapidly quenched to 77 K by immersion in liquid nitrogen to stabilize the high-pressure phase.
+5. **Characterization**: The recovered LaH10 is characterized by XRD (confirming the Fm-3m structure), Raman spectroscopy (checking for hydrogen vibrational modes), and Tc measurement (four-probe resistivity, verifying Tc > 200 K).
+6. **Packaging**: The final product is sealed in argon-filled containers to prevent degradation.
+
+### Scale-Up Considerations
+
+- The pilot plant uses a 10 L autoclave, which is a 1000× scale-up from typical diamond anvil cell experiments (10⁻⁵ L).
+- Key challenges include maintaining uniform temperature and pressure across the larger volume, preventing hydrogen embrittlement of the autoclave walls, and ensuring safe handling of high-pressure hydrogen.
+- The estimated capital cost for the pilot plant is $3.2M, with annual operating costs of $1.5M (including H2, La, energy, labor, and maintenance).
+- A 100 kg/year output is sufficient for initial device prototyping and market validation. Further scale-up to 10,000 tonnes/year would require continuous-flow reactors and advanced pressure containment strategies.
