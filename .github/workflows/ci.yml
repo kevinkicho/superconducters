@@ -35,6 +35,9 @@ jobs:
     - name: Run integration tests
       run: |
         pytest tests/integration/ -v
+    - name: Run pipeline integration test (mocked APIs)
+      run: |
+        pytest tests/test_run_pipeline.py::TestRunPipeline::test_pipeline_integration_mocked_apis -v
     - name: Run end-to-end tests
       run: |
         pytest tests/e2e/ -v

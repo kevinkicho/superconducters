@@ -1768,3 +1768,76 @@ class TestStressSelfHealing:
         assert result is not None
         # After recovery, pipeline should use real API results
         assert call_count[0] > 2, f"Expected more than 2 API calls after recovery, got {call_count[0]}"
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('scripts.run_pipeline.requests.post')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_pipeline_integration_mocked_apis(self, mock_open, mock_requests_post, mock_dft, mock_predict, mock_train, mock_load):
+        """Integration test: mock all external APIs and verify output files are updated consistently."""
+        # Mock load_data to return a list of known materials
+        mock_load.return_value = [
+            {"name": "H3S", "Tc": 203, "pressure": 155, "composition": "H3S"},
+            {"name": "LaH10", "Tc": 250, "pressure": 170, "composition": "LaH10"}
+        ]
+        # Mock train_model to return a simple model
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [200.0, 250.0]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty to return (Tc, uncertainty) for each candidate
+        def mock_predict_side_effect(name, pressure=None):
+            if name == "H3S":
+                return (203.0, 5.0)
+            elif name == "LaH10":
+                return (250.0, 8.0)
+            else:
+                return (100.0, 10.0)
+        mock_predict.side_effect = mock_predict_side_effect
+
+        # Mock DFT calculation to return a dict with results
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Mock external API calls (e.g., arXiv, materials project, etc.)
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {"status": "ok", "data": {"Tc": 200.0}}
+        mock_requests_post.return_value = mock_resp
+
+        # Mock open to capture writes to output files
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline
+        result = rp.run_pipeline()
+
+        # Verify pipeline completed successfully
+        assert result is not None, "Pipeline should complete without error"
+
+        # Verify that output files were written consistently
+        # Expected output files (based on pipeline design)
+        expected_files = [
+            "candidate_materials.md",
+            "roadmap.md",
+            "literature_review.md",
+            "manufacturing_scalability.md",
+            "experimental_feedback_loop.md",
+            "research_paper.md",
+            "weekly_digest.md",
+            "output/candidates.json",
+            "output/candidates.csv"
+        ]
+        # Check that open was called for each expected file
+        open_calls = [call[0][0] for call in mock_open.call_args_list]
+        for fname in expected_files:
+            assert any(fname in str(call_arg) for call_arg in open_calls), f"Expected {fname} to be written, but it was not"
+
+        # Verify that the content written to candidate_materials.md includes expected data
+        write_calls = mock_file.write.call_args_list
+        write_content = "".join([call[0][0] for call in write_calls])
+        assert "H3S" in write_content, "Expected H3S in output"
+        assert "LaH10" in write_content, "Expected LaH10 in output"
+        assert "203.0" in write_content, "Expected Tc for H3S in output"
+        assert "250.0" in write_content, "Expected Tc for LaH10 in output"
