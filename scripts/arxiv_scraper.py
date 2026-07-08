@@ -376,6 +376,19 @@ def extract_candidates_from_paper(query: str = DEFAULT_QUERY, max_results: int =
     except IOError as e:
         print(f"Error writing to candidates file: {e}", file=sys.stderr)
 
+    # Trigger retraining of ML model
+    try:
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, os.path.join(os.path.dirname(__file__), "predict_tc.py")],
+            capture_output=True, text=True, timeout=300
+        )
+        print(f"Retraining output: {result.stdout}")
+        if result.returncode != 0:
+            print(f"Retraining error: {result.stderr}", file=sys.stderr)
+    except Exception as e:
+        print(f"Error triggering retraining: {e}", file=sys.stderr)
+
 
 if __name__ == "__main__":
     main()

@@ -83,3 +83,21 @@ To handle transient failures, the client implements exponential backoff with jit
 5. **Model Update**: The new data triggers retraining of the ML model (see `scripts/predict_tc.py`) and updates the candidate ranking.
 
 This integration automates the experimental feedback loop, reducing human latency and enabling high-throughput screening of candidate compounds.
+
+
+## Automated Trigger for Active Learning Retraining
+
+In addition to the file watcher described above, the pipeline now includes an automated trigger that detects new entries in `data/experimental_results.json` and retrains the active learning model (Bayesian optimization). This is implemented in `run_pipeline.py` via the `watch_and_retrain` function, which polls the file every 10 seconds. On detecting a modification, it:
+
+1. Runs `validate_model()` to compute MAE and R² on the updated database and logs results to `data/model_performance_log.json`.
+2. Calls `retrain_active_learning()` which loads the new experimental results and invokes the active learning loop (Bayesian optimization) to update the candidate list in `candidate_materials.md`.
+
+This ensures that the candidate ranking is continuously refined as new experimental data becomes available, closing the feedback loop without manual intervention.
+
+### Usage
+
+```bash
+python run_pipeline.py --watch
+```
+
+This will start the watcher and automatically perform validation and retraining on each change to `data/experimental_results.json`.

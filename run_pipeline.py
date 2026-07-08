@@ -8702,17 +8702,112 @@ def multi_objective_nsga2(objective_func, n_var, bounds, pop_size=50, n_gen=100)
             best = x
     return best, best_score
 
+def validate_model() -> None:
+    """Load database, run ML model on known compounds, compute MAE and R², log to model_performance_log.json."""
+    import json
+    import sys
+    import os
+    from datetime import datetime
+    from sklearn.metrics import mean_absolute_error, r2_score
+    sys.path.insert(0, os.path.dirname(__file__))
+    try:
+        from scripts.predict_tc import predict_tc
+    except ImportError:
+        print("predict_tc module not available. Skipping validation.")
+        return
+    db_path = os.path.join(os.path.dirname(__file__), "data", "superconductor_database.json")
+    try:
+        with open(db_path, "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading database: {e}")
+        return
+    y_true = []
+    y_pred = []
+    for entry in data:
+        tc = entry.get("Tc")
+        if tc is None:
+            continue
+        try:
+            pred = predict_tc(entry.get("name", ""))
+            y_true.append(tc)
+            y_pred.append(pred)
+        except Exception as e:
+            print(f"Prediction error for {entry.get('name')}: {e}")
+    if len(y_true) == 0:
+        print("No valid entries to validate.")
+        return
+    mae = mean_absolute_error(y_true, y_pred)
+    r2 = r2_score(y_true, y_pred)
+    log_path = os.path.join(os.path.dirname(__file__), "data", "model_performance_log.json")
+    try:
+        with open(log_path, "r") as f:
+            log = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        log = []
+    log.append({
+        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+        "mae": mae,
+        "r2": r2,
+        "n_samples": len(y_true),
+        "source": "validate_model"
+    })
+    with open(log_path, "w") as f:
+        json.dump(log, f, indent=2)
+    print(f"Validation complete: MAE={mae:.4f}, R²={r2:.4f}")
+
+
+def retrain_active_learning() -> None:
+    """Retrain active learning model using new experimental results and update candidate list."""
+    print("Retraining active learning model...")
+    # Load experimental results
+    exp_path = os.path.join(os.path.dirname(__file__), "data", "experimental_results.json")
+    try:
+        with open(exp_path, "r") as f:
+            exp_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading experimental results: {e}")
+        return
+    # Call active learning loop (Bayesian optimization) if available
+    if 'active_learning_loop' in globals():
+        active_learning_loop()
+    else:
+        print("active_learning_loop not defined. Skipping retraining.")
+
+
+def watch_and_retrain(watch_file: str) -> None:
+    """Watch file for changes and trigger retraining on modification."""
+    import time
+    last_mtime = os.path.getmtime(watch_file) if os.path.exists(watch_file) else 0
+    print(f"Watching {watch_file} for changes...")
+    while True:
+        time.sleep(10)
+        if os.path.exists(watch_file):
+            mtime = os.path.getmtime(watch_file)
+            if mtime != last_mtime:
+                last_mtime = mtime
+                print("Change detected. Running validation and retraining...")
+                validate_model()
+                retrain_active_learning()
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Run the superconductor discovery pipeline.")
     parser.add_argument("--watch", action="store_true", help="Enable event-driven mode watching data/experimental_results.json")
     parser.add_argument("--watch-file", type=str, default="data/experimental_results.json", help="File to watch for changes")
+    parser.add_argument("--validate", action="store_true", help="Run validation on database and log metrics")
     args, _ = parser.parse_known_args()
-    if args.watch:
-        watch_mode(args.watch_file)
+    if args.validate:
+        validate_model()
+    elif args.watch:
+        # Run validation and retraining at startup, then start watching
+        validate_model()
+        retrain_active_learning()
+        watch_and_retrain(args.watch_file)
     else:
         # Fallback to original main logic if any
         if 'run' in globals():
             run()
         else:
-            print("No run() function defined. Use --watch or define run().")
+            print("No run() function defined. Use --watch or --validate.")
