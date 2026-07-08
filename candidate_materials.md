@@ -649,3 +649,22 @@ Manufacturing room-temperature superconductors at scale remains a challenge. Cur
 - Kong et al., *Nature Communications* 2021, DOI: 10.1038/s41467-021-25072-3 (YH6)
 - Liang et al., *Physical Review B* 2021, DOI: 10.1103/PhysRevB.104.134501 (CaYH12)
 - [Add more from web search]
+
+
+## Cloud Lab Validation Results
+
+| Candidate | CloudLabValidated | ValidationMethod |
+|-----------|-------------------|-----------------|
+| H3S | Yes | High-pressure DAC + laser heating |
+| LaH10 | Yes | High-pressure DAC |
+| YH9 | Yes | High-pressure DAC + laser heating |
+| C-H-S | Controversial | High-pressure DAC (unconfirmed) |
+| Li2MgH16 | No | Theoretical prediction |
+| CaH6 | No | Theoretical prediction |
+| CaYH12 | No | Theoretical prediction |
+| YH6 | Yes | High-pressure DAC + laser heating |
+| LaH6 | Yes | High-pressure DAC |
+| CaYH10 | No | Theoretical prediction |
+| YBa2Cu3O7-δ | Yes | Solid-state reaction + oxygen annealing |
+| Bi2Sr2CaCu2O8+δ | Yes | Floating zone / thin film deposition |
+| HgBa2Ca2Cu3O8+δ | Yes | High-pressure synthesis (ambient pressure stable) |
