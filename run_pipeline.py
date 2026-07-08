@@ -51,6 +51,11 @@ import pulp
 from fastapi import WebSocket, WebSocketDisconnect
 import asyncio
 import threading
+import requests
+import schedule
+import random
+import math
+from datetime import timedelta
 
 def active_learning_loop():
     """Active learning loop: select next candidate, run DFT, update candidate list."""
@@ -6274,3 +6279,170 @@ def enforce_style_guide():
         else:
             log.write("- No style changes needed.\n")
     return changes
+
+
+# === New functions for autonomous daily loop, Materials Project screening, prior art search, Monte Carlo lifecycle simulation, and journal formatting ===
+
+def autonomous_daily_loop():
+    """Run the pipeline daily using schedule library."""
+    def job():
+        print("[DailyLoop] Running pipeline...")
+        # Call existing pipeline steps
+        from query_database import run as query_run
+        from generate_candidates import run as generate_run
+        from predict_tc import run as predict_run
+        from output_ranked import run as output_run
+        query_run()
+        generate_run()
+        predict_run()
+        output_run()
+        print("[DailyLoop] Pipeline completed.")
+    schedule.every().day.at("06:00").do(job)
+    print("[DailyLoop] Scheduler started. Will run daily at 06:00.")
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
+
+def materials_project_screening(api_key=None):
+    """Query Materials Project API for candidate superconductors.
+    Returns list of candidate materials with high predicted Tc.
+    """
+    if api_key is None:
+        api_key = os.environ.get("MATERIALS_PROJECT_API_KEY", "")
+    if not api_key:
+        print("[MaterialsProject] No API key found. Using mock data.")
+        # Return mock candidates for demonstration
+        return [
+            {"formula": "YBa2Cu3O7", "tc": 92, "band_gap": 0.0},
+            {"formula": "HgBa2Ca2Cu3O8", "tc": 135, "band_gap": 0.0},
+            {"formula": "LaH10", "tc": 250, "band_gap": 0.0}
+        ]
+    url = "https://api.materialsproject.org/v1/materials"
+    params = {
+        "api_key": api_key,
+        "criteria": {"elements": {"$in": ["H", "La", "Y", "Ba", "Cu", "O"]}},
+        "properties": ["formula", "band_gap", "tc"]
+    }
+    try:
+        resp = requests.get(url, params=params, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        candidates = []
+        for mat in data.get("data", []):
+            if mat.get("tc", 0) > 0:
+                candidates.append(mat)
+        candidates.sort(key=lambda x: x.get("tc", 0), reverse=True)
+        return candidates[:10]
+    except Exception as e:
+        print(f"[MaterialsProject] API error: {e}. Using fallback.")
+        return []
+
+def prior_art_search(query="room temperature superconductor", max_results=10):
+    """Search arXiv for recent papers on room-temperature superconductors.
+    Returns list of paper metadata.
+    """
+    url = "http://export.arxiv.org/api/query"
+    params = {
+        "search_query": f"all:{query}",
+        "start": 0,
+        "max_results": max_results,
+        "sortBy": "submittedDate",
+        "sortOrder": "descending"
+    }
+    try:
+        resp = requests.get(url, params=params, timeout=30)
+        resp.raise_for_status()
+        # Parse XML response
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(resp.content)
+        ns = {"atom": "http://www.w3.org/2005/Atom"}
+        papers = []
+        for entry in root.findall("atom:entry", ns):
+            title = entry.find("atom:title", ns).text.strip()
+            summary = entry.find("atom:summary", ns).text.strip()
+            authors = [a.find("atom:name", ns).text for a in entry.findall("atom:author", ns)]
+            link = entry.find("atom:id", ns).text
+            papers.append({
+                "title": title,
+                "summary": summary[:200],
+                "authors": authors,
+                "link": link
+            })
+        return papers
+    except Exception as e:
+        print(f"[PriorArt] arXiv query failed: {e}")
+        return []
+
+def monte_carlo_lifecycle_simulation(num_simulations=1000, steps_per_sim=100):
+    """Monte Carlo simulation of materials discovery lifecycle.
+    Models the probability of discovering a room-temperature superconductor over time.
+    Returns statistics (mean, std, percentiles) of discovery time.
+    """
+    discovery_times = []
+    for _ in range(num_simulations):
+        time_elapsed = 0
+        discovered = False
+        for step in range(steps_per_sim):
+            # Probability of discovery per step (tunable)
+            p_discovery = 0.001 * (1 + 0.01 * step)  # increasing probability
+            if random.random() < p_discovery:
+                discovered = True
+                break
+            time_elapsed += 1
+        if discovered:
+            discovery_times.append(time_elapsed)
+        else:
+            discovery_times.append(steps_per_sim)  # censored
+    if not discovery_times:
+        return {}
+    mean_time = sum(discovery_times) / len(discovery_times)
+    std_time = math.sqrt(sum((t - mean_time)**2 for t in discovery_times) / len(discovery_times))
+    sorted_times = sorted(discovery_times)
+    p25 = sorted_times[int(len(sorted_times)*0.25)]
+    p50 = sorted_times[int(len(sorted_times)*0.5)]
+    p75 = sorted_times[int(len(sorted_times)*0.75)]
+    return {
+        "mean": mean_time,
+        "std": std_time,
+        "p25": p25,
+        "p50": p50,
+        "p75": p75,
+        "num_simulations": num_simulations
+    }
+
+def journal_formatting(candidates, output_format="latex"):
+    """Format candidate materials into a journal-ready table.
+    Supports LaTeX and Markdown output.
+    """
+    if output_format == "latex":
+        lines = [
+            "\\begin{table}[h]",
+            "\\centering",
+            "\\caption{Top candidate room-temperature superconductors from pipeline.}",
+            "\\begin{tabular}{lcc}",
+            "\\hline",
+            "Compound & Predicted Tc (K) & Band Gap (eV)\\",
+            "\\hline"
+        ]
+        for c in candidates:
+            formula = c.get("formula", "Unknown")
+            tc = c.get("tc", 0)
+            bg = c.get("band_gap", "N/A")
+            lines.append(f"{formula} & {tc} & {bg} \\\\")
+        lines.append("\\hline")
+        lines.append("\\end{tabular}")
+        lines.append("\\end{table}")
+        return "\n".join(lines)
+    elif output_format == "markdown":
+        lines = [
+            "| Compound | Predicted Tc (K) | Band Gap (eV) |",
+            "|----------|------------------|---------------|"
+        ]
+        for c in candidates:
+            formula = c.get("formula", "Unknown")
+            tc = c.get("tc", 0)
+            bg = c.get("band_gap", "N/A")
+            lines.append(f"| {formula} | {tc} | {bg} |")
+        return "\n".join(lines)
+    else:
+        return "Unsupported format."
