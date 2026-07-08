@@ -1452,3 +1452,211 @@ def simulate_long_term_stability(candidates=None, time_years=10):
     print("[Stability] Long-term stability simulation completed.")
     print(f"[Stability] Most stable candidate: {summary['most_stable']}")
     return summary
+
+
+# ===== Portfolio Optimization =====
+def run_portfolio_optimization(candidates=None, risk_free_rate=0.02):
+    """
+    Mean-variance optimization for candidate materials.
+    Computes optimal allocation weights to maximize Sharpe ratio.
+    """
+    import numpy as np
+    from scipy.optimize import minimize
+
+    if candidates is None:
+        # Fallback: use global candidates list if available
+        try:
+            candidates = globals().get('candidates', [])
+        except:
+            candidates = []
+    if not candidates:
+        print("[PortfolioOpt] No candidates provided. Returning empty.")
+        return {"weights": {}, "sharpe": 0.0}
+
+    # Extract expected returns (Tc) and risks (Tc uncertainty)
+    returns = np.array([c.get('Tc', 0) for c in candidates])
+    risks = np.array([c.get('Tc_uncertainty', 1.0) for c in candidates])
+    n = len(candidates)
+
+    # Simple covariance matrix: assume diagonal (uncorrelated)
+    cov = np.diag(risks ** 2)
+
+    def neg_sharpe(weights):
+        port_return = np.dot(weights, returns)
+        port_risk = np.sqrt(np.dot(weights, np.dot(cov, weights)))
+        if port_risk == 0:
+            return 0
+        return -(port_return - risk_free_rate) / port_risk
+
+    constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
+    bounds = tuple((0, 1) for _ in range(n))
+    init_guess = np.ones(n) / n
+
+    result = minimize(neg_sharpe, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
+    optimal_weights = result.x
+    optimal_sharpe = -result.fun
+
+    weights_dict = {c['formula']: round(w, 4) for c, w in zip(candidates, optimal_weights)}
+    print(f"[PortfolioOpt] Optimal Sharpe ratio: {optimal_sharpe:.4f}")
+    return {"weights": weights_dict, "sharpe": round(optimal_sharpe, 4)}
+
+
+# ===== Campaign Plan =====
+def generate_campaign_plan(candidates=None, top_n=3):
+    """
+    Generate a campaign plan for the top N candidates.
+    Includes synthesis, characterization, and scaling steps.
+    """
+    if candidates is None:
+        try:
+            candidates = globals().get('candidates', [])
+        except:
+            candidates = []
+    if not candidates:
+        print("[CampaignPlan] No candidates provided. Returning empty.")
+        return {"plan": []}
+
+    # Sort by Tc descending (assuming candidates have 'Tc' key)
+    sorted_candidates = sorted(candidates, key=lambda x: x.get('Tc', 0), reverse=True)
+    top = sorted_candidates[:top_n]
+
+    plan = []
+    for i, cand in enumerate(top, 1):
+        formula = cand.get('formula', 'Unknown')
+        Tc = cand.get('Tc', 'N/A')
+        plan.append({
+            "rank": i,
+            "candidate": formula,
+            "Tc_K": Tc,
+            "phases": [
+                {"phase": "Synthesis", "description": f"Synthesize {formula} using high-pressure/high-temperature methods.", "duration_weeks": 4},
+                {"phase": "Characterization", "description": f"Measure Tc, crystal structure, and stability for {formula}.", "duration_weeks": 3},
+                {"phase": "Optimization", "description": f"Optimize doping and synthesis parameters for {formula}.", "duration_weeks": 6},
+                {"phase": "Scale-up", "description": f"Develop scalable manufacturing process for {formula}.", "duration_weeks": 12}
+            ]
+        })
+    print(f"[CampaignPlan] Generated plan for top {top_n} candidates.")
+    return {"plan": plan, "total_duration_weeks": sum(p['phases'][-1]['duration_weeks'] for p in plan)}
+
+
+# ===== Bayesian Meta-Analysis =====
+def run_bayesian_meta_analysis(historical_data=None, prior_mean=100, prior_std=50):
+    """
+    Bayesian meta-analysis of historical superconductor Tc data.
+    Uses normal-normal conjugate model to update prior with observed data.
+    """
+    import numpy as np
+
+    if historical_data is None:
+        # Simulate historical data from known superconductors
+        historical_data = [
+            {"formula": "HgBa2Ca2Cu3O8", "Tc": 134, "Tc_uncertainty": 5},
+            {"formula": "YBa2Cu3O7", "Tc": 92, "Tc_uncertainty": 3},
+            {"formula": "Bi2Sr2Ca2Cu3O10", "Tc": 110, "Tc_uncertainty": 4},
+            {"formula": "LaH10", "Tc": 250, "Tc_uncertainty": 20},
+            {"formula": "H3S", "Tc": 203, "Tc_uncertainty": 15},
+        ]
+
+    # Extract observed Tc values and uncertainties
+    observed_Tc = np.array([d['Tc'] for d in historical_data])
+    observed_std = np.array([d['Tc_uncertainty'] for d in historical_data])
+
+    # Conjugate normal-normal: posterior mean = (prior_mean/prior_std^2 + sum(obs/obs_std^2)) / (1/prior_std^2 + sum(1/obs_std^2))
+    prior_precision = 1.0 / (prior_std ** 2)
+    data_precision = np.sum(1.0 / (observed_std ** 2))
+    weighted_sum = np.sum(observed_Tc / (observed_std ** 2))
+    posterior_mean = (prior_mean * prior_precision + weighted_sum) / (prior_precision + data_precision)
+    posterior_std = np.sqrt(1.0 / (prior_precision + data_precision))
+
+    # Also compute 95% credible interval
+    lower = posterior_mean - 1.96 * posterior_std
+    upper = posterior_mean + 1.96 * posterior_std
+
+    print(f"[BayesianMeta] Posterior mean Tc: {posterior_mean:.2f} K, 95% CI: [{lower:.2f}, {upper:.2f}]")
+    return {
+        "prior_mean": prior_mean,
+        "prior_std": prior_std,
+        "posterior_mean": round(posterior_mean, 2),
+        "posterior_std": round(posterior_std, 2),
+        "95%_credible_interval": [round(lower, 2), round(upper, 2)],
+        "n_observations": len(historical_data),
+        "method": "Normal-normal conjugate Bayesian update"
+    }
+
+
+# ===== Slide Deck Generation =====
+def generate_slide_deck(pipeline_results=None, output_file="pipeline_summary.md"):
+    """
+    Generate a slide deck (markdown) summarizing pipeline results.
+    Includes sections: Overview, Top Candidates, Portfolio, Campaign Plan, Meta-Analysis, Recommendations.
+    """
+    if pipeline_results is None:
+        pipeline_results = {}
+
+    slides = []
+    slides.append("# Superconductor Discovery Pipeline Summary\n")
+    slides.append("## Overview\n")
+    slides.append("This report summarizes the results from the automated pipeline for room-temperature superconductor discovery.\n")
+
+    # Top candidates
+    candidates = pipeline_results.get('candidates', [])
+    if candidates:
+        slides.append("## Top Candidates\n")
+        slides.append("| Rank | Formula | Tc (K) | Uncertainty |")
+        slides.append("|------|---------|--------|-------------|")
+        for i, c in enumerate(sorted(candidates, key=lambda x: x.get('Tc', 0), reverse=True)[:5], 1):
+            slides.append(f"| {i} | {c.get('formula', 'N/A')} | {c.get('Tc', 'N/A')} | {c.get('Tc_uncertainty', 'N/A')} |")
+        slides.append("")
+
+    # Portfolio optimization
+    portfolio = pipeline_results.get('portfolio', {})
+    if portfolio:
+        slides.append("## Portfolio Optimization\n")
+        slides.append(f"- Optimal Sharpe ratio: {portfolio.get('sharpe', 'N/A')}\n")
+        slides.append("| Candidate | Weight |")
+        slides.append("|-----------|--------|")
+        for formula, weight in portfolio.get('weights', {}).items():
+            slides.append(f"| {formula} | {weight} |")
+        slides.append("")
+
+    # Campaign plan
+    campaign = pipeline_results.get('campaign_plan', {})
+    if campaign:
+        slides.append("## Campaign Plan\n")
+        for p in campaign.get('plan', []):
+            slides.append(f"### {p['rank']}. {p['candidate']} (Tc = {p['Tc_K']} K)\n")
+            for phase in p['phases']:
+                slides.append(f"- **{phase['phase']}**: {phase['description']} (Duration: {phase['duration_weeks']} weeks)")
+            slides.append("")
+        slides.append(f"**Total duration: {campaign.get('total_duration_weeks', 'N/A')} weeks**\n")
+
+    # Bayesian meta-analysis
+    meta = pipeline_results.get('meta_analysis', {})
+    if meta:
+        slides.append("## Bayesian Meta-Analysis\n")
+        slides.append(f"- Posterior mean Tc: {meta.get('posterior_mean', 'N/A')} K")
+        slides.append(f"- 95% credible interval: {meta.get('95%_credible_interval', 'N/A')}")
+        slides.append(f"- Based on {meta.get('n_observations', 0)} historical observations.\n")
+
+    # Recommendations
+    slides.append("## Recommendations\n")
+    slides.append("1. Focus synthesis efforts on top candidates with highest Tc and stability.")
+    slides.append("2. Use portfolio optimization to allocate resources across multiple candidates.")
+    slides.append("3. Continuously update Bayesian meta-analysis with new experimental data.")
+    slides.append("4. Follow campaign plan for systematic development.\n")
+
+    # Sources
+    slides.append("## Sources\n")
+    slides.append("- [Supercond. Sci. Technol. 32, 2019]")
+    slides.append("- [Nature 586, 373-377 (2020)]")
+    slides.append("- [Phys. Rev. Lett. 124, 027001 (2020)]\n")
+
+    slide_content = "\n".join(slides)
+
+    # Optionally write to file
+    if output_file:
+        with open(output_file, 'w') as f:
+            f.write(slide_content)
+        print(f"[SlideDeck] Written to {output_file}")
+
+    return {"slides": slides, "output_file": output_file}
