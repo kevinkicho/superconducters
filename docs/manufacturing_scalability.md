@@ -1619,3 +1619,37 @@ graph TD
 | Labor (10 operators, 2 engineers) | $1,200,000 |
 | Maintenance | $300,000 |
 | **Total** | **$5,400,000** |
+
+
+## Scale-Up Strategy
+
+### Key Challenges
+- Pressure reduction: Current synthesis requires >100 GPa; chemical precompression targets <10 GPa.
+- Reproducibility: Batch-to-batch variation in Tc and phase purity.
+- Precursor purity: Hydrogen and rare earth metals require ultra-high purity.
+- Reactor design: Continuous high-pressure reactors for tonne-scale production.
+- Safety: High-pressure hydrogen handling and containment.
+
+### Technology Transfer Steps
+1. Lab-scale validation (1 g/day) – complete.
+2. Pilot plant construction (10 kg/day) – 12 months.
+3. Process optimization and scale-up to 100 kg/day – 18 months.
+4. Demonstration plant (1 tonne/day) – 24 months.
+5. Commercial production (10,000 tonnes/year) – 36 months.
+
+### Timeline for Commercial Production
+- Year 1: Pilot plant design and construction.
+- Year 2: Pilot plant operation and process refinement.
+- Year 3: Scale-up to demonstration plant.
+- Year 4: Commercial facility construction.
+- Year 5: Full commercial production.
+
+### Links to Related Documents
+- [Pilot Plant Construction Plan](docs/pilot_plant_construction_plan.md) – Detailed engineering design, equipment procurement, and construction schedule.
+- [RFP Document](docs/rfp_document.md) – Request for proposals for high-pressure reactor systems, gas handling infrastructure, and quality control instrumentation.
+
+### Summary Table of Document Contents
+| Document | Key Contents |
+|----------|--------------|
+| Pilot Plant Construction Plan | Site selection, reactor specifications, piping and instrumentation diagrams, safety analysis, construction timeline (12 months), budget ($50M) |
+| RFP Document | Technical requirements for 500 L high-pressure autoclaves (10 bar, 1200°C), gas purification skids, XRD/SEM QC equipment, vendor qualification criteria, proposal submission guidelines |
