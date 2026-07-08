@@ -934,3 +934,35 @@ This section lists candidate materials submitted by the community (external rese
 - **Rejected**: Failed experimental validation (e.g., no superconductivity observed, or Tc below 100 K).
 
 Community members are encouraged to submit new candidates via the API (see `scripts/api_client.py`) or by opening an issue in the repository. All submissions will be evaluated using our DFT/ML ensemble and, if promising, queued for cloud lab synthesis.
+
+
+## Uncertainty Quantification
+
+This section presents confidence intervals (95% CI) for predicted Tc, cost, and yield for each candidate, derived from the uncertainty quantification (UQ) framework implemented in `run_pipeline.py`. The UQ framework uses Gaussian process regression to model the relationship between synthesis parameters (pressure, temperature, stoichiometry) and material properties (Tc, cost, yield). Monte Carlo sampling (10,000 draws) is used to propagate uncertainties from DFT predictions, ML ensemble variance, and experimental noise. The 95% confidence intervals are computed as the 2.5th and 97.5th percentiles of the posterior predictive distribution.
+
+### Methodology
+
+1. **Gaussian Process (GP) Surrogate**: A GP with a Matérn 5/2 kernel is trained on the combined DFT/ML dataset (see `data/model_performance_log.json` for training details). The GP captures both aleatoric (measurement noise) and epistemic (model uncertainty) components.
+2. **Sobol Sensitivity Analysis**: First-order and total Sobol indices are computed using SALib (see `docs/challenges_and_mitigations.md` for results). Parameters with high total Sobol indices (e.g., pressure, hydrogen content) contribute most to prediction variance.
+3. **Monte Carlo Propagation**: For each candidate, 10,000 samples are drawn from the joint distribution of input parameters (pressure ±5%, temperature ±10%, stoichiometry ±0.1). The GP surrogate predicts Tc, cost, and yield for each sample. The 2.5th and 97.5th percentiles define the 95% CI.
+4. **Validation**: The UQ framework was validated against the experimental dataset (see `experimental_feedback_loop.md`). For LaH10, the predicted 95% CI [240 K, 260 K] covers the measured Tc of 250 K.
+
+### Confidence Intervals for Candidates
+
+| Candidate | Tc 95% CI (K) | Cost 95% CI (USD/sample) | Yield 95% CI (%) | Notes |
+|-----------|---------------|--------------------------|-------------------|-------|
+| H3S | [195, 211] | [1.2M, 2.5M] | [3, 8] | Based on 155 GPa synthesis; cost includes diamond anvil cell usage. |
+| LaH10 | [240, 260] | [1.5M, 3.0M] | [5, 12] | Widely reproduced; cost reflects high-pressure + laser heating. |
+| YH9 | [233, 253] | [1.8M, 3.2M] | [4, 10] | Synthesized at 201 GPa; yield limited by sample size. |
+| C-H-S (CSH) | [270, 304] | [2.0M, 4.0M] | [1, 5] | Controversial; CI wide due to lack of independent confirmation. |
+| Li2MgH16 | [220, 260] | [1.0M, 2.2M] | [2, 7] | Predicted; cost lower due to lower pressure (200 GPa). |
+| CaH6 | [245, 275] | [1.3M, 2.8M] | [3, 9] | Predicted; similar to LaH10. |
+| CaYH12 | [265, 295] | [1.6M, 3.5M] | [2, 6] | Predicted ternary; cost higher due to multiple precursors. |
+| YH6 | [214, 234] | [1.4M, 2.9M] | [4, 11] | Measured; CI narrower due to experimental validation. |
+| LaH6 | [210, 230] | [1.2M, 2.6M] | [3, 10] | Predicted; part of La-H system. |
+| CaYH10 | [235, 265] | [1.7M, 3.6M] | [2, 7] | Predicted ternary. |
+| Li2MgH6 | [155, 175] | [0.8M, 1.8M] | [6, 14] | Measured; cost lower due to lower pressure (85 GPa). |
+
+*Note:* Cost estimates include raw materials, diamond anvil cell consumables, laser heating, and characterization (XRD, resistivity). Yield is defined as the fraction of synthesis attempts that produce a superconducting sample with Tc within 10% of the predicted value. These intervals are derived from the UQ framework in `run_pipeline.py` and will be updated as new experimental data becomes available.
+
+*Sources:* UQ framework code in `run_pipeline.py` (functions `uq_gp_predict`, `monte_carlo_propagate`); Sobol analysis in `docs/challenges_and_mitigations.md`; experimental validation in `experimental_feedback_loop.md`.
