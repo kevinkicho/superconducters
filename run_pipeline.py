@@ -31,7 +31,7 @@ import stable_baselines3 as sb3
 from stable_baselines3.common.envs import DummyVecEnv
 from gym import Env, spaces
 from fastapi import FastAPI, HTTPException, Depends
-from fastapi.security import APIKeyHeader
+from fastapi.security import APIKeyHeader, OAuth2PasswordBearer
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -43,6 +43,9 @@ import hashlib
 import hmac
 import os
 from datetime import datetime
+from cryptography.fernet import Fernet
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from starlette.responses import Response
 
 def active_learning_loop():
     """Active learning loop: select next candidate, run DFT, update candidate list."""
@@ -5247,3 +5250,35 @@ class ModelVersionManager:
         shutil.copy2(backup_path, entry["model_path"])
         print(f"[ModelVersionManager] Rolled back to version {version_id} (restored {backup_path} to {entry['model_path']}).")
         return True
+
+# ===== OAuth2 Authentication =====
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    # Placeholder: in production, validate token against an OAuth2 provider
+    # For now, accept any token (demo purposes)
+    return {"username": "demo_user"}
+
+# ===== Encryption Functions =====
+def generate_encryption_key() -> bytes:
+    """Generate a Fernet key for symmetric encryption."""
+    return Fernet.generate_key()
+
+def encrypt_data(data: str, key: bytes) -> str:
+    """Encrypt a string using Fernet symmetric encryption."""
+    f = Fernet(key)
+    return f.encrypt(data.encode()).decode()
+
+def decrypt_data(encrypted_data: str, key: bytes) -> str:
+    """Decrypt a Fernet-encrypted string."""
+    f = Fernet(key)
+    return f.decrypt(encrypted_data.encode()).decode()
+
+# ===== Prometheus Metrics =====
+REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint'])
+REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request latency', ['method', 'endpoint'])
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint."""
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
