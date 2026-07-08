@@ -224,3 +224,14 @@ print(f"Tc: {final['tc']} K")
 ```
 
 The client automatically updates `data/experimental_results.json` and `candidate_materials.md` with new experimental data. For full API documentation, see [Emerald Cloud Lab API Reference](https://docs.emeraldcloudlab.com/api).
+
+
+## Cloud Lab Submissions
+
+This section logs all submissions to the cloud lab for synthesis and characterization experiments. Each entry includes the candidate ID, submission timestamp, request ID, and the retrieved results (Tc, pressure, validation status). The log is automatically updated by `run_pipeline.py` after each cloud lab experiment completes.
+
+| Candidate ID | Timestamp | Request ID | Tc (K) | Pressure (GPa) | Validation Status |
+|--------------|-----------|------------|--------|----------------|-------------------|
+| —           | —         | —          | —      | —              | —                 |
+
+*Note: New rows are appended by the pipeline upon retrieval of results from the cloud lab API.*
