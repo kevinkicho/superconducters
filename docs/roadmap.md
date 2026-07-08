@@ -565,3 +565,94 @@ The critical path runs through: Pilot plant design → construction → process 
 
 ### Conclusion
 This 5-year extension provides a realistic pathway to TRL 7 by 2030, with clear milestones, decision gates, risk mitigation, and resource requirements. Success depends on sustained funding, strong partnerships, and rigorous technical execution.
+
+
+## 10-Year Comprehensive Plan (Years 1–10)
+
+This section extends the previous 5-year plan into a full 10-year roadmap, adding regulatory approval, safety certification, market entry, and scaling phases. It integrates decision gates, resource estimates, and risk mitigation strategies derived from the risk register.
+
+### Phase 1: R&D (Years 1–3)
+- **Activities:** Theoretical screening (DFT + ML), candidate synthesis (milligram scale), characterization (Tc, Jc, Hc2), iterative optimization.
+- **Decision Gate (Year 3):** TRL 4 – validated lab-scale demonstration of at least one candidate with Tc > 300 K at ambient pressure (or with a clear path to ambient stabilization). If not achieved, pivot to next candidate class.
+- **Resource Estimates:**
+  - Personnel: 5 FTE (2 theorists, 2 experimentalists, 1 data scientist)
+  - Equipment: $2M (DAC, PPMS, XRD, glovebox)
+  - Consumables: $300K/year
+  - Total: ~$4.5M over 3 years
+- **Risk Mitigation:**
+  - Maintain a pipeline of at least 10 candidate materials to avoid single-point failure.
+  - Use active learning to prioritize experiments and reduce wasted synthesis.
+  - Cross-validate predictions with multiple DFT functionals and ML models.
+
+### Phase 2: Pilot Plant Construction (Years 3–5)
+- **Activities:** Design and build a pilot-scale synthesis facility (e.g., multi-anvil press, CVD reactor, or sol-gel line). Process validation runs, short sample fabrication, long-length wire/tape development.
+- **Decision Gate (Year 5):** TRL 7 – system prototype demonstrated in operational environment (pilot plant producing consistent batches with Tc > 300 K, Jc > 10⁵ A/cm² at 77 K). MRL 6 – manufacturing process capability demonstrated in a relevant environment.
+- **Resource Estimates:**
+  - Personnel: 12 FTE (process engineers, technicians, quality control)
+  - Capital: $8M (pilot plant construction, equipment)
+  - Operating: $2M/year
+  - Total: ~$14M over 2 years
+- **Risk Mitigation:**
+  - Modular plant design to allow parallel processing of multiple candidates.
+  - Establish quality control protocols early (batch-to-batch consistency).
+  - Secure supply chain for critical precursors (rare earths, high-purity gases).
+
+### Phase 3: Regulatory Approval & Safety Certification (Years 5–7)
+- **Activities:** Engage with regulatory bodies (e.g., DOE, EPA, OSHA, international standards committees). Conduct safety testing (thermal runaway, toxicity, mechanical failure modes). Prepare and submit safety data sheets, environmental impact assessments, and certification dossiers.
+- **Decision Gate (Year 7):** Regulatory approval obtained for at least one product form (e.g., wire, tape, bulk magnet). Safety certification (e.g., UL, IEC) completed. MRL 8 – manufacturing process proven and ready for low-rate initial production.
+- **Resource Estimates:**
+  - Personnel: 3 FTE (regulatory affairs, safety engineers, legal)
+  - Testing & certification: $1.5M
+  - Legal & consulting: $500K
+  - Total: ~$3M over 2 years
+- **Risk Mitigation:**
+  - Begin regulatory engagement early (Year 4) to understand requirements.
+  - Use existing frameworks (e.g., for high-temperature superconductors) as templates.
+  - Maintain a risk register with specific regulatory risks and mitigation owners.
+
+### Phase 4: Market Entry & Scaling (Years 7–10)
+- **Activities:** Commercial product launch (e.g., superconducting cables, fault current limiters, MRI magnets). Establish manufacturing partnerships, scale production to >100 kg/year, develop sales channels, and achieve positive unit economics.
+- **Decision Gate (Year 10):** TRL 9 – actual system proven through successful mission operations (commercial sales). MRL 10 – full-rate production demonstrated. Revenue > $50M/year, gross margin > 40%.
+- **Resource Estimates:**
+  - Personnel: 20 FTE (manufacturing, sales, support)
+  - Capital: $20M (production line expansion)
+  - Marketing & sales: $3M/year
+  - Total: ~$35M over 3 years
+- **Risk Mitigation:**
+  - Secure offtake agreements with early adopters (utilities, medical device manufacturers).
+  - Diversify product forms to address multiple markets (power, medical, defense).
+  - Invest in continuous improvement (Six Sigma, lean manufacturing).
+
+### Summary of Decision Gates
+
+| Gate | Year | Criteria | TRL | MRL |
+|------|------|----------|-----|-----|
+| G1   | 3    | Lab-scale Tc > 300 K, ambient pressure (or clear path) | 4   | 3   |
+| G2   | 5    | Pilot plant consistent batches, Jc > 10⁵ A/cm² at 77 K | 7   | 6   |
+| G3   | 7    | Regulatory approval, safety certification | 8   | 8   |
+| G4   | 10   | Commercial sales > $50M/year, gross margin > 40% | 9   | 10  |
+
+### Resource Summary (10-Year Total)
+
+| Category | Amount |
+|----------|--------|
+| Personnel | $12M |
+| Capital Equipment | $30M |
+| Consumables & Operating | $8M |
+| Regulatory & Certification | $3M |
+| Marketing & Sales | $9M |
+| **Total** | **$62M** |
+
+### Risk Mitigation Strategies (from Risk Register)
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| No candidate achieves Tc > 300 K at ambient pressure | Medium | High | Maintain diverse candidate pipeline; invest in high-pressure discovery as fallback; explore alternative mechanisms (excitonic, plasmonic) |
+| Pilot plant scale-up fails to reproduce lab results | Medium | High | Use design of experiments (DoE) to identify critical parameters; implement statistical process control (SPC) |
+| Regulatory approval delayed | Medium | Medium | Engage regulators early; hire experienced regulatory affairs staff; prepare parallel submissions in multiple jurisdictions |
+| Market adoption slower than expected | Medium | Medium | Target niche high-value applications first (e.g., medical MRI, defense); offer performance guarantees |
+| Supply chain disruption (rare earths, H₂) | Low | High | Develop recycling processes; explore alternative compositions with abundant elements (e.g., Fe-based) |
+| Intellectual property challenges | Medium | Medium | File broad patents early; maintain trade secrets for key process parameters; monitor competitor patents |
+
+### Conclusion
+This 10-year plan provides a structured pathway from fundamental research to commercial deployment of room-temperature superconductors. Each phase has clear decision gates, resource requirements, and risk mitigation strategies. Success requires sustained funding ($62M total), a strong interdisciplinary team, and proactive engagement with regulators and industry partners.
