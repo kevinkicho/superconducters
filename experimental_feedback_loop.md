@@ -350,3 +350,62 @@ updated = ensemble_kalman_filter(observations, predictions)
 ### Integration with Experimental Feedback Loop
 
 The synchrotron data assimilation process is tightly integrated into the experimental feedback loop. After the ensemble Kalman filter updates the digital twin and ML model predictions, the revised candidate rankings are automatically recomputed. If the predicted Tc of any candidate changes by more than a threshold (e.g., 5 K), a new synthesis and characterization experiment is automatically submitted via the cloud lab API (see [Cloud Lab API Integration](#cloud-lab-api-integration)). This closed-loop cycle ensures that experimental results from the synchrotron directly influence the next iteration of candidate selection and experiment design. The assimilation metrics (RMSE before/after, Kalman gain norm) are logged to `data/model_performance_log.json` and can be monitored via the dashboard.
+
+
+## Emerald Cloud Lab Integration Details
+
+### Authentication
+The cloud lab API uses bearer token authentication. Set the environment variable `CLOUD_LAB_API_KEY` to your API key. The token is passed in the `Authorization` header as `Bearer <token>`.
+
+### API Endpoint
+Base URL: `https://api.emeraldcloudlab.com/v1`
+- Submit synthesis experiment: `POST /experiments/synthesis`
+- Submit characterization experiment: `POST /experiments/characterization`
+- Fetch results: `GET /experiments/{experiment_id}/results`
+
+### Retry Logic
+The pipeline retries failed requests up to 3 times with exponential backoff (base delay 1 second, multiplier 2). After 3 consecutive failures, the autonomous loop pauses and logs an alert. Manual intervention is required to resume.
+
+### Example Requests
+
+#### Python Example
+```python
+import os
+import requests
+
+API_KEY = os.environ["CLOUD_LAB_API_KEY"]
+BASE_URL = "https://api.emeraldcloudlab.com/v1"
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+# Submit a synthesis experiment
+synthesis_payload = {
+    "material": "YBa2Cu3O7",
+    "method": "solid-state reaction",
+    "parameters": {
+        "temperature": 950,
+        "pressure": 1,
+        "atmosphere": "O2"
+    }
+}
+response = requests.post(f"{BASE_URL}/experiments/synthesis", json=synthesis_payload, headers=headers)
+experiment_id = response.json()["experiment_id"]
+
+# Fetch results
+results = requests.get(f"{BASE_URL}/experiments/{experiment_id}/results", headers=headers)
+print(results.json())
+```
+
+#### cURL Example
+```bash
+curl -X POST https://api.emeraldcloudlab.com/v1/experiments/synthesis \
+  -H "Authorization: Bearer $CLOUD_LAB_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"material":"YBa2Cu3O7","method":"solid-state reaction","parameters":{"temperature":950,"pressure":1,"atmosphere":"O2"}}'
+```
+
+### Integration with Candidate Materials
+Experimental results from the cloud lab are automatically logged to `candidate_materials.md` with updated Tc, synthesis conditions, and characterization data. The pipeline updates the candidate ranking based on these results.
