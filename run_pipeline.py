@@ -11672,5 +11672,41 @@ def integrate_arxiv_and_dft() -> None:
 
 
 if __name__ == '__main__':
-    # Run the arxiv integration as part of the pipeline
-    integrate_arxiv_and_dft()
+    # Orchestrate the full discovery pipeline
+    import generate_candidates
+    import predict_tc
+    import json
+    import os
+
+    # Load data (e.g., from database or file)
+    data = {}
+    # Attempt to load from known data file
+    data_file = 'data/known_superconductors.json'
+    if os.path.exists(data_file):
+        with open(data_file, 'r') as f:
+            data = json.load(f)
+        print(f"[Pipeline] Loaded data from {data_file}")
+    else:
+        print("[Pipeline] No data file found; using empty data.")
+
+    # Generate candidates
+    print("[Pipeline] Generating candidates...")
+    candidates = generate_candidates.run(data)
+    print(f"[Pipeline] Generated {len(candidates)} candidates.")
+
+    # Predict Tc for each candidate
+    print("[Pipeline] Predicting Tc...")
+    predictions = predict_tc.run(candidates)
+    print(f"[Pipeline] Got {len(predictions)} predictions.")
+
+    # Score candidates (e.g., by Tc value)
+    scored = []
+    for cand, tc in zip(candidates, predictions):
+        score = tc  # simple scoring by Tc
+        scored.append({"candidate": cand, "tc": tc, "score": score})
+
+    # Output results
+    os.makedirs('data', exist_ok=True)
+    with open('data/experimental_results.json', 'w') as f:
+        json.dump(scored, f, indent=2)
+    print("[Pipeline] Pipeline complete. Results written to data/experimental_results.json")
