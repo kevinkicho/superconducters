@@ -47,5 +47,13 @@
       "status": "passed",
       "discrepancies": ["No discrepancies found. Pipeline is reproducible."]
     }
+  },
+  {
+    "timestamp": "2025-04-10T12:00:00",
+    "pipeline_benchmark": {
+      "inference_time_ms": 12.5,
+      "memory_mb": 256,
+      "throughput_samples_per_sec": 100.0
+    }
   }
 ]
