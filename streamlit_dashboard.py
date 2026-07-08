@@ -10,6 +10,45 @@ import plotly.graph_objects as go
 from typing import Optional, Dict, Any
 from run_pipeline import live_external_validation, what_if_analysis
 
+# Mobile-responsive CSS (screens <768px)
+st.markdown("""
+<style>
+@media (max-width: 768px) {
+    .main .block-container {
+        padding: 1rem 0.5rem !important;
+    }
+    .stApp header {
+        font-size: 1.2rem !important;
+    }
+    .stButton button {
+        width: 100% !important;
+        font-size: 1rem !important;
+    }
+    .stTextInput input, .stNumberInput input, .stSelectbox select, .stTextArea textarea {
+        font-size: 1rem !important;
+    }
+    .stDataFrame {
+        font-size: 0.8rem !important;
+    }
+    .stPlotlyChart {
+        width: 100% !important;
+    }
+    .stColumns {
+        flex-direction: column !important;
+    }
+    .stColumn {
+        width: 100% !important;
+    }
+    h1, h2, h3 {
+        font-size: 1.5rem !important;
+    }
+    .stSidebar {
+        width: 100% !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
 class WebSocketServer:
     """Simple WebSocket server for real-time collaboration."""
     def __init__(self, host='localhost', port=8765):
