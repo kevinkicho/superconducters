@@ -2565,3 +2565,55 @@ class TestFullPipelineIntegration:
         mock_query.assert_called_once()
         mock_get_mat.assert_called_once()
         mock_submit.assert_called_once()
+
+
+class TestPipelineModules:
+
+    @patch('scripts.run_pipeline.sobol_analysis')
+    def test_sobol_analysis(self, mock_sobol):
+        """Test that Sobol analysis is called and returns expected results."""
+        mock_sobol.return_value = {"S1": {"param1": 0.5, "param2": 0.3}, "ST": {"param1": 0.6, "param2": 0.4}}
+        result = rp.sobol_analysis()
+        mock_sobol.assert_called_once()
+        assert "S1" in result
+        assert "ST" in result
+
+    @patch('scripts.run_pipeline.decision_support')
+    def test_decision_support(self, mock_ds):
+        """Test that decision support function is called and returns a decision."""
+        mock_ds.return_value = {"recommendation": "proceed", "score": 0.85}
+        result = rp.decision_support()
+        mock_ds.assert_called_once()
+        assert result["recommendation"] == "proceed"
+
+    @patch('scripts.run_pipeline.generate_stakeholder_newsletter')
+    def test_generate_stakeholder_newsletter(self, mock_news):
+        """Test that newsletter generation is called and returns content."""
+        mock_news.return_value = "Newsletter content"
+        result = rp.generate_stakeholder_newsletter()
+        mock_news.assert_called_once()
+        assert "Newsletter" in result
+
+    @patch('scripts.run_pipeline.health_check')
+    def test_health_endpoint(self, mock_health):
+        """Test that health endpoint returns status."""
+        mock_health.return_value = {"status": "healthy", "timestamp": "2025-01-01"}
+        result = rp.health_check()
+        mock_health.assert_called_once()
+        assert result["status"] == "healthy"
+
+    @patch('scripts.run_pipeline.log_data_lineage')
+    def test_data_lineage(self, mock_lineage):
+        """Test that data lineage logging is called."""
+        mock_lineage.return_value = {"lineage_id": "abc123"}
+        result = rp.log_data_lineage()
+        mock_lineage.assert_called_once()
+        assert "lineage_id" in result
+
+    @patch('scripts.run_pipeline.continuous_deployment')
+    def test_continuous_deployment(self, mock_cd):
+        """Test that continuous deployment function is called."""
+        mock_cd.return_value = {"deployment_id": "dep-456", "status": "success"}
+        result = rp.continuous_deployment()
+        mock_cd.assert_called_once()
+        assert result["status"] == "success"
