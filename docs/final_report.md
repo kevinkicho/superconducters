@@ -44,3 +44,10 @@ This report synthesizes all project outcomes: experimental validation of superco
 
 ## 7. Conclusion
 The project has successfully demonstrated an integrated pipeline for discovery and validation of room-temperature superconductors. Experimental results, ML model performance, and manufacturing analysis provide a solid foundation for next-phase scale-up and commercialization.
+
+
+## 8. Generated PDF Report
+
+A comprehensive PDF version of this report is available: [Download PDF](docs/final_report.pdf)
+
+**Summary**: This report covers experimental validation, ML model performance, manufacturing scalability, technology readiness, and a roadmap to commercialization. The PDF includes full data tables, figures, and references.
