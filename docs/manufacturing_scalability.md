@@ -3097,3 +3097,27 @@ The simulation confirms that scaling from diamond anvil cell (DAC) to industrial
 - Experimental data for H3S: Drozdov et al., Nature 525, 73 (2015)
 - Experimental data for LaH10: Drozdov et al., Nature 569, 528 (2019)
 - Cost and supply chain analysis: Sections above and `docs/technology_transfer_plan.md`
+
+
+## 3D Model Description
+
+An interactive 3D model of the manufacturing plant has been integrated into the Streamlit dashboard under the "Plant Layout" tab. The model is built using Three.js and provides a bird's-eye view of the factory floor, including:
+- High-pressure autoclave array (100 units)
+- Hydrogen electrolysis unit
+- Raw material storage silos
+- Quality control lab
+- Heat recovery system
+- Control room
+
+Users can rotate, zoom, and pan the 3D scene to explore the layout. The model is color-coded by component type and includes tooltips with key specifications (e.g., autoclave volume, energy consumption). The 3D model is rendered client-side using WebGL and is accessible from modern browsers. For VR walkthroughs, a separate "VR Tour" tab using WebXR is available for immersive exploration.
+
+### Technical Implementation
+- **Library**: Three.js (r128) via CDN
+- **Integration**: Embedded in Streamlit using `st.components.v1.html` with a custom HTML/JS wrapper
+- **Data Sources**: Plant layout coordinates from the digital twin simulation (`scripts/digital_twin.py`)
+- **Performance**: Optimized for 60 FPS on desktop; mobile fallback uses simplified geometry
+
+### Future Enhancements
+- Add real-time data overlays (e.g., autoclave temperature, pressure)
+- Enable click-to-detail drill-down on components
+- Integrate with the digital twin for live status updates

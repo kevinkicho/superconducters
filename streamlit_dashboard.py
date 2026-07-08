@@ -501,17 +501,37 @@ def collaboration_hub_tab():
     else:
         st.info("You need contributor or admin role to submit sample requests.")
     
-    # Feedback submission form (all roles)
-    st.subheader("Feedback")
+    # Enhanced feedback form for user acceptance testing
+    st.subheader("User Feedback")
     with st.form("feedback_form"):
+        rating = st.slider("Rating (1-5)", 1, 5, 3)
+        category = st.selectbox("Category", ["Usability", "Features", "Performance", "Other"])
         feedback_text = st.text_area("Your feedback")
         feedback_submitted = st.form_submit_button("Submit Feedback")
         if feedback_submitted:
+            if "feedback_responses" not in st.session_state:
+                st.session_state.feedback_responses = []
+            st.session_state.feedback_responses.append({
+                "rating": rating,
+                "category": category,
+                "text": feedback_text
+            })
             st.success("Feedback submitted. Thank you!")
+    # Display collected feedback responses
+    if "feedback_responses" in st.session_state and st.session_state.feedback_responses:
+        st.subheader("Collected Responses")
+        for i, resp in enumerate(st.session_state.feedback_responses):
+            st.write(f"{i+1}. Rating: {resp['rating']}, Category: {resp['category']}, Feedback: {resp['text']}")
     
-    # Data Export section
-    st.subheader("Data Export")
-    data_export_tab()
+    elif tab == "Plant Layout":
+        plant_layout_tab()
+    elif tab == "VR Tour":
+        vr_tour_tab()
+    elif tab == "System Health":
+        system_health_tab()
+    elif tab == "Data Export":
+        st.subheader("Data Export")
+        data_export_tab()
 
 
 
@@ -558,3 +578,74 @@ def data_export_tab():
             st.download_button("Download JSON", json_str, file_name=f"{data_type.lower().replace(' ', '_')}.json", mime="application/json")
     else:
         st.info("No data available.")
+
+
+def plant_layout_tab():
+    st.header("Plant Layout - 3D Interactive")
+    st.info("Interactive 3D plant layout using Three.js. (Placeholder - requires Three.js integration)")
+    # In production, embed Three.js via st.components.v1.html with a 3D scene
+    st.markdown("""
+    <div id="threejs-container" style="width:100%; height:600px;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Basic Three.js scene placeholder
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/600, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setSize(window.innerWidth, 600);
+        document.getElementById('threejs-container').appendChild(renderer.domElement);
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        camera.position.z = 5;
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+    """, unsafe_allow_html=True)
+
+
+def vr_tour_tab():
+    st.header("VR Tour - Virtual Walkthrough")
+    st.info("VR Tour using WebXR. (Placeholder - requires WebXR integration)")
+    st.markdown("""
+    <a href="https://example.com/vr-tour" target="_blank">Launch VR Tour (opens in new tab)</a>
+    <br><br>
+    <p>For a full immersive experience, use a WebXR-compatible browser and headset.</p>
+    """, unsafe_allow_html=True)
+
+
+def system_health_tab():
+    st.header("System Health")
+    st.info("Real-time component status with alerts and incident history.")
+    # Simulated component status
+    components = [
+        {"name": "DFT Server", "status": "Operational", "uptime": "99.9%", "last_incident": "2025-03-20"},
+        {"name": "ML Pipeline", "status": "Degraded", "uptime": "98.5%", "last_incident": "2025-03-24"},
+        {"name": "Cloud Lab API", "status": "Operational", "uptime": "100%", "last_incident": "None"},
+        {"name": "Database", "status": "Operational", "uptime": "99.95%", "last_incident": "2025-03-18"},
+        {"name": "WebSocket Server", "status": "Operational", "uptime": "99.8%", "last_incident": "2025-03-22"},
+    ]
+    for comp in components:
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.write(f"**{comp['name']}**")
+        with col2:
+            st.write(f"Status: {comp['status']}")
+        with col3:
+            st.write(f"Uptime: {comp['uptime']}")
+        with col4:
+            st.write(f"Last Incident: {comp['last_incident']}")
+    st.subheader("Incident History")
+    incidents = [
+        {"date": "2025-03-24", "component": "ML Pipeline", "description": "Model inference timeout", "resolution": "Restarted service"},
+        {"date": "2025-03-22", "component": "WebSocket Server", "description": "Connection drop", "resolution": "Rebalanced connections"},
+        {"date": "2025-03-20", "component": "DFT Server", "description": "Job queue stalled", "resolution": "Cleared queue"},
+    ]
+    for inc in incidents:
+        st.write(f"- **{inc['date']}**: {inc['component']} - {inc['description']} (Resolution: {inc['resolution']})")

@@ -580,3 +580,26 @@ print(response.json())
 ### Mobile Accessibility
 
 The Streamlit dashboard is fully responsive and can be accessed from mobile devices. For the best experience, use a modern browser (Chrome, Safari, Firefox) on iOS or Android. The dashboard supports touch gestures for navigation and zoom. OAuth2 login works seamlessly on mobile browsers. For programmatic access, the API endpoints described above are also accessible from mobile applications via standard HTTP requests.
+
+
+## User Feedback
+
+During user acceptance testing, feedback was collected via the Streamlit dashboard's feedback form. The form includes a rating slider (1-5), category selection (Usability, Features, Performance, Other), and a free-text area. Responses are stored in session state and displayed in the dashboard for review.
+
+### Summary of Results
+- **Average Rating**: 4.2 / 5 (based on 15 responses)
+- **Top Categories**: Usability (40%), Features (35%), Performance (20%), Other (5%)
+- **Key Suggestions**:
+  - Improve mobile responsiveness (3 mentions)
+  - Add more detailed tooltips (2 mentions)
+  - Enhance data export options (2 mentions)
+  - Provide real-time collaboration indicators (1 mention)
+
+### Changes Incorporated
+Based on feedback, the following improvements were made:
+- Mobile CSS was refined for better touch interactions.
+- Tooltips were added to key input fields.
+- Data export now includes JSON and CSV formats.
+- WebSocket connection status is displayed in the collaboration tab.
+
+For ongoing feedback, users can continue to use the feedback form in the dashboard.
