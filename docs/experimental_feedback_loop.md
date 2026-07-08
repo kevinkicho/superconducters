@@ -1274,3 +1274,32 @@ This section outlines the timeline, resource allocation, and contingency plans f
 - **Tertiary**: Publication of negative results and updated ML model with improved predictive accuracy (RMSE < 15 K).
 
 This campaign plan is reviewed monthly at the experimental feedback loop meeting. Adjustments to timeline and resource allocation are documented in the meeting minutes and reflected in the central database.
+
+
+## Online Learning and Drift Detection
+
+### Drift Monitoring
+
+To maintain predictive accuracy over time, the ML models (GNN, PINN, and ensemble) are continuously monitored for concept drift. Drift is quantified by tracking the rolling mean absolute error (MAE) between predicted Tc and experimentally measured Tc over a sliding window of the most recent 50 experiments. A significant increase in MAE (e.g., > 2× the baseline MAE from the held-out test set) signals that the model's predictions are diverging from reality, possibly due to changes in the experimental space or unmodeled physics.
+
+### Retraining Triggers
+
+Automatic retraining is triggered under any of the following conditions:
+
+1. **Drift threshold exceeded**: Rolling MAE exceeds 2× baseline MAE for three consecutive windows.
+2. **New data batch**: Every 100 new experimental records are ingested (cumulative count since last retraining).
+3. **Scheduled periodic retraining**: Every 30 days, regardless of drift metrics, to incorporate the latest data and re-optimize hyperparameters.
+4. **Manual override**: A researcher can flag a retraining via the dashboard or API when unexpected results are observed.
+
+### Retraining Workflow
+
+When a retraining trigger fires, the following automated workflow executes:
+
+1. **Data extraction**: All experimental records (including newly ingested data) are fetched from the central database, filtered for quality (e.g., exclude flagged records).
+2. **Feature engineering**: The same feature pipeline used during initial training is applied (compositional encoding, structural descriptors, synthesis parameters).
+3. **Model retraining**: The GNN and PINN models are retrained from their current weights (warm-start) using the full historical dataset plus new data. Hyperparameters are re-optimized via Bayesian optimization on a validation split (80/20).
+4. **Benchmarking**: The retrained models are evaluated against the held-out test set (see [Model Benchmarking](#model-benchmarking) section). If performance degrades compared to the previous version, the old model is retained and an alert is sent to the ML team.
+5. **Deployment**: The new model version is deployed to the prediction API, and the model version ID is recorded in the database alongside each subsequent prediction.
+6. **Logging**: All retraining events, drift metrics, and model version changes are logged to a dedicated `model_retraining_log` table for audit and analysis.
+
+This online learning loop ensures that the computational predictions remain aligned with experimental reality, accelerating the discovery of room-temperature superconductors by adapting to new evidence in near real-time.
