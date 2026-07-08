@@ -238,3 +238,22 @@
 - Critical current density > 10⁵ A/cm² at operating temperature.
 - Inline QC detects > 95% of defects.
 - Cost per meter < $500 (target for future scale-up).
+
+
+## Technology Roadmap
+
+### Integration of Pipeline Results with Market Trends
+The iterative discovery pipeline (Phases 1–4) generates a stream of candidate materials, characterization data, and process optimizations. These results must be continuously mapped to market demands (e.g., high-current cables for fusion, MRI magnets, quantum computing) and regulatory landscapes (e.g., EU REACH, RoHS, conflict mineral regulations). Competitor activities—such as advances by the University of Tokyo, Stanford, and companies like AMSC and SuperOx—inform our prioritization of materials and manufacturing routes.
+
+### Timeline and Key Decision Points
+
+| Timeframe | Milestone | Decision Point | Market/Regulatory Trigger |
+|-----------|-----------|----------------|---------------------------|
+| Year 0–2 | Phase 1: Discovery & Validation | Select top 3 candidates for optimization | Regulatory review of rare earth usage; competitor patent filings |
+| Year 2–5 | Phase 2: Optimization & Understanding | Downselect to 1–2 materials for scale-up | Market demand for >10⁵ A/cm² wires; REACH compliance for new compounds |
+| Year 5–10 | Phase 3: Prototyping & Integration | Commit to pilot line design | Competitor pilot announcements; regulatory approval for new materials |
+| Year 10+ | Phase 4: Manufacturing Scalability | Full-scale production go/no-go | Cost target <$100/m; ASTM standards adoption; market size validation |
+
+### Regulatory and Competitor Monitoring
+- Establish a quarterly review of regulatory changes (e.g., EU Critical Raw Materials Act, US CHIPS Act) and competitor publications/patents.
+- Key decision points: (1) If a competitor achieves Tc > 300 K at ambient pressure, accelerate Phase 3 timeline. (2) If new regulations restrict key elements (e.g., yttrium, barium), pivot to alternative compositions.
