@@ -1,8 +1,15 @@
 # Grant Proposal: Discovery and Manufacturing of Room-Temperature Superconducting Compounds
 
-## Executive Summary
+## Project Summary
 
-This proposal outlines a comprehensive research program to discover and develop room-temperature superconducting materials through a combination of advanced computational screening, high-pressure synthesis, and scalable manufacturing techniques. Building on recent breakthroughs in hydride superconductors (e.g., H3S with Tc ~203 K under 155 GPa, LaH10 with Tc ~250 K under 170 GPa), we aim to identify and stabilize compounds that exhibit superconductivity at ambient pressure and temperature. The project integrates density functional theory (DFT) and machine learning (ML) for candidate prediction, diamond anvil cell (DAC) and laser-heated synthesis for validation, and chemical doping/interface engineering for pressure reduction. A pilot manufacturing line will be designed to produce gram-scale quantities of the most promising candidates. The expected outcomes include a validated room-temperature superconductor, a patent portfolio, and a scalable production process.
+### Intellectual Merit
+This research will advance the fundamental understanding of high-temperature superconductivity in hydrogen-rich compounds, leveraging computational and experimental methods to discover new materials. The integration of machine learning with high-throughput DFT will accelerate the discovery process and provide insights into the mechanisms of electron-phonon coupling.
+
+### Broader Impacts
+The successful development of a room-temperature superconductor will revolutionize energy transmission, computing, and transportation. The project will train a diverse workforce in advanced materials science and provide open-source datasets and models to the research community.
+
+### Top Candidates
+{{ top_candidates }}
 
 ## Technical Approach
 
@@ -37,24 +44,11 @@ Our approach will focus on ternary and quaternary hydrides (e.g., Li-Mg-H, C-S-H
 
 ## Budget
 
-| Category | Year 1 | Year 2 | Year 3 | Total |
-|----------|--------|--------|--------|-------|
-| Personnel (2 postdocs, 3 grad students, 1 technician) | $350,000 | $360,000 | $370,000 | $1,080,000 |
-| Equipment (DACs, laser system, SQUID, PLD system) | $500,000 | $100,000 | $50,000 | $650,000 |
-| Computing (HPC cluster time, cloud credits) | $100,000 | $100,000 | $100,000 | $300,000 |
-| Materials (gases, metals, diamonds, substrates) | $50,000 | $60,000 | $70,000 | $180,000 |
-| Travel and dissemination | $20,000 | $20,000 | $20,000 | $60,000 |
-| Indirect costs (50% of direct) | $510,000 | $320,000 | $305,000 | $1,135,000 |
-| **Total** | **$1,530,000** | **$960,000** | **$915,000** | **$3,405,000** |
+{{ budget_table }}
 
 ## Timeline
 
-- **Months 1–6**: Computational screening of binary and ternary hydrides; setup of DAC synthesis lab.
-- **Months 7–12**: Synthesis and characterization of top 20 candidates; ML model refinement.
-- **Months 13–18**: Identification of promising room-temperature candidates; begin doping studies.
-- **Months 19–24**: Scale-up of best candidate to multi-anvil press; thin-film stabilization.
-- **Months 25–30**: Pilot manufacturing line design and construction; patent filing.
-- **Months 31–36**: Production of gram-scale samples; technology transfer and industry partnerships.
+{{ timeline }}
 
 ## References
 
