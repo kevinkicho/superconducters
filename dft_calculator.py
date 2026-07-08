@@ -11,6 +11,7 @@ import subprocess
 import re
 import json
 from typing import Dict, List, Optional, Tuple
+from sklearn.ensemble import RandomForestRegressor
 
 # Default pseudopotential directory (adjust as needed)
 PSEUDO_DIR = os.environ.get("QE_PSEUDO_DIR", "./pseudo")
@@ -355,6 +356,30 @@ def compute_tc_mcmillan_allen_dynes(lambda_val, omega_log, mu_star=0.1):
     exponent = numerator / denominator
     tc = (omega_log / 1.2) * math.exp(exponent)
     return tc
+
+
+class MLTcPredictor:
+    """Machine learning predictor for Tc using random forest."""
+    def __init__(self, database_path="data/superconductor_database.json"):
+        import json
+        import os
+        from sklearn.ensemble import RandomForestRegressor
+        # Load database
+        with open(database_path, "r") as f:
+            data = json.load(f)
+        # Extract features and target
+        self.features = []
+        self.targets = []
+        for entry in data:
+            if "lambda" in entry and "omega_log" in entry and "mu_star" in entry and "Tc" in entry:
+                self.features.append([entry["lambda"], entry["omega_log"], entry["mu_star"]])
+                self.targets.append(entry["Tc"])
+        # Train random forest
+        self.model = RandomForestRegressor(n_estimators=100, random_state=42)
+        self.model.fit(self.features, self.targets)
+    def predict_tc_ml(self, lambda_val, omega_log, mu_star=0.1):
+        """Predict Tc using trained random forest model."""
+        return self.model.predict([[lambda_val, omega_log, mu_star]])[0]
 
 
 if __name__ == "__main__":
