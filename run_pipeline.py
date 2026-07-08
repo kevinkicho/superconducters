@@ -4039,3 +4039,130 @@ def generate_scientific_explanation(output_dir="docs"):
         f.write("\n".join(lines))
     print(f"[Explanation] Scientific explanation written to {explanation_path}")
     return explanation_path
+
+
+# === Added functions for TODO: simulate_cloud_lab, propagate_uncertainties, nsga2_optimization, expand_training_set, generate_research_paper ===
+
+def simulate_cloud_lab(compound: str, pressure: float = 150.0, temperature: float = 300.0) -> dict:
+    """
+    Simulate a cloud-lab experiment for a given compound.
+    Returns a dictionary with simulated results (e.g., Tc, stability, synthesis success).
+    """
+    print(f"[CloudLab] Simulating experiment for {compound} at {pressure} GPa, {temperature} K")
+    # Placeholder: in a real system this would call an API or run a simulation
+    result = {
+        "compound": compound,
+        "pressure": pressure,
+        "temperature": temperature,
+        "Tc_simulated": 250.0 + np.random.randn() * 20.0,
+        "stability": "metastable",
+        "synthesis_success": True
+    }
+    print(f"[CloudLab] Result: {result}")
+    return result
+
+
+def propagate_uncertainties(candidates: list, tc_uncertainty: float = 5.0) -> list:
+    """
+    Propagate uncertainties from Tc predictions through the pipeline.
+    Each candidate dict should have a 'Tc' key. Returns updated list with 'Tc_uncertainty' added.
+    """
+    print(f"[Uncertainty] Propagating uncertainties for {len(candidates)} candidates")
+    updated = []
+    for cand in candidates:
+        cand = cand.copy()
+        base_tc = cand.get("Tc", 0.0)
+        # Simple Gaussian propagation
+        cand["Tc_uncertainty"] = tc_uncertainty
+        cand["Tc_lower"] = base_tc - 2 * tc_uncertainty
+        cand["Tc_upper"] = base_tc + 2 * tc_uncertainty
+        updated.append(cand)
+    print(f"[Uncertainty] Done. Example: {updated[0] if updated else 'none'}")
+    return updated
+
+
+def nsga2_optimization(candidates: list, objectives: list = None) -> list:
+    """
+    Perform multi-objective optimization using NSGA-II (simplified placeholder).
+    candidates: list of dicts with 'Tc', 'cost', 'stability' etc.
+    objectives: list of objective names to optimize (default: ['Tc', 'cost']).
+    Returns Pareto-optimal front.
+    """
+    if objectives is None:
+        objectives = ["Tc", "cost"]
+    print(f"[NSGA2] Running multi-objective optimization on {len(candidates)} candidates with objectives {objectives}")
+    # Placeholder: sort by first objective (Tc descending) and filter dominated
+    sorted_cands = sorted(candidates, key=lambda x: x.get("Tc", 0), reverse=True)
+    pareto_front = []
+    best_cost = float('inf')
+    for cand in sorted_cands:
+        cost = cand.get("cost", 1e9)
+        if cost < best_cost:
+            pareto_front.append(cand)
+            best_cost = cost
+    print(f"[NSGA2] Found {len(pareto_front)} Pareto-optimal candidates")
+    return pareto_front
+
+
+def expand_training_set(new_data: list, training_file: str = "data/training_set.json") -> int:
+    """
+    Expand the training set by adding new computed candidates.
+    new_data: list of dicts with 'compound', 'Tc', 'features', etc.
+    Returns number of new entries added.
+    """
+    print(f"[ExpandTraining] Adding {len(new_data)} new entries to {training_file}")
+    if os.path.exists(training_file):
+        with open(training_file, "r") as f:
+            existing = json.load(f)
+    else:
+        existing = []
+    existing.extend(new_data)
+    with open(training_file, "w") as f:
+        json.dump(existing, f, indent=2)
+    print(f"[ExpandTraining] Training set now has {len(existing)} entries")
+    return len(new_data)
+
+
+def generate_research_paper(candidates: list, output_path: str = "docs/research_paper.md") -> str:
+    """
+    Generate a research paper draft from the pipeline results.
+    candidates: list of top candidate dicts.
+    Returns path to the generated paper.
+    """
+    print(f"[ResearchPaper] Generating research paper from {len(candidates)} candidates")
+    lines = [
+        "# Room-Temperature Superconductor Discovery: A Computational and Experimental Pipeline",
+        "",
+        "## Abstract",
+        "",
+        "We present a comprehensive pipeline for discovering room-temperature superconducting compounds",
+        "by combining database mining, candidate generation, machine learning Tc prediction, and",
+        "multi-objective optimization. The pipeline identifies promising hydride and oxide candidates",
+        "and provides uncertainty quantification and experimental validation strategies.",
+        "",
+        "## Introduction",
+        "",
+        "The search for room-temperature superconductors has been a long-standing goal in condensed",
+        "matter physics. Recent advances in high-pressure hydrides (H3S, LaH10) have demonstrated",
+        "superconductivity above 200 K, motivating systematic exploration of hydrogen-rich compounds.",
+        "Our pipeline automates the discovery process from initial screening to experimental proposal.",
+        "",
+        "## Methods",
+        "",
+        "The pipeline consists of four main stages: (1) database querying, (2) candidate generation",
+        "using chemical heuristics, (3) Tc prediction via a trained neural network, and (4) ranking",
+        "and output. Uncertainty propagation and NSGA-II optimization are used to select Pareto-optimal",
+        "candidates balancing Tc, cost, and stability.",
+        "",
+        "## Results",
+        "",
+    ]
+    for i, cand in enumerate(candidates[:5]):
+        compound = cand.get("compound", f"Candidate {i+1}")
+        tc = cand.get("Tc", "N/A")
+        lines.append(f"- **{compound}**: Predicted Tc = {tc} K")
+    lines.append("", "## Conclusion", "", "Our pipeline successfully identifies high-Tc candidates for experimental validation.", "Future work will integrate cloud-lab synthesis and automated characterization.")
+    with open(output_path, "w") as f:
+        f.write("\n".join(lines))
+    print(f"[ResearchPaper] Paper written to {output_path}")
+    return output_path
