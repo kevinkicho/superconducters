@@ -1984,3 +1984,24 @@ alerts:
 - **Viewing Dashboard**: Access Grafana at `https://grafana.example.com/d/experimental-feedback-loop`.
 - **Acknowledging Alerts**: Operators can acknowledge alerts via Slack commands or the Alertmanager UI.
 - **Customizing Alerts**: Modify thresholds in `config/alerts.yaml` and reload the Alertmanager configuration.
+
+## Prometheus Metrics Endpoint and Grafana Dashboard Setup
+
+### Prometheus Metrics Endpoint
+The pipeline exposes a Prometheus metrics endpoint at `/metrics` via the `metrics_exporter.py` module. This endpoint provides real-time metrics on experiment success rate, ingestion latency, model retraining duration, circuit breaker state, and feedback loop cycle time. The metrics are scraped by a Prometheus server configured in `config/prometheus.yaml`.
+
+### Grafana Dashboard Setup
+A pre-configured Grafana dashboard is available at `docs/grafana_dashboard.json`. To import the dashboard:
+1. Open Grafana and navigate to **Dashboards > Import**.
+2. Upload the `docs/grafana_dashboard.json` file or paste its contents.
+3. Select the Prometheus data source (configured as `Prometheus` in the dashboard variables).
+4. Click **Import** to create the dashboard.
+
+The dashboard includes panels for:
+- Experiment throughput and success rate over time
+- Ingestion latency percentiles (p50, p95, p99)
+- Model retraining duration and failure count
+- Circuit breaker state (open/closed)
+- Candidate ranking changes after each feedback loop cycle
+
+For customizations, modify the dashboard JSON directly or use the Grafana UI and export the updated version back to `docs/grafana_dashboard.json`.
