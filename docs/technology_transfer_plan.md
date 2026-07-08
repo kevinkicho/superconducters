@@ -366,3 +366,42 @@ Li₂MgH₆ offers a viable path to commercial room-temperature superconductivit
 - Parallel filing in multiple jurisdictions to reduce time-to-market.
 - Maintain a regulatory dossier with all test data, safety data sheets (SDS), and manufacturing process descriptions.
 - Establish a quality management system (ISO 9001 / ISO 13485) to streamline approvals.
+
+
+## 8. Business Plan
+
+### 8.1 Market Size
+
+The global superconductor market was valued at approximately $6.2 billion in 2023 and is projected to reach $10.8 billion by 2030 (CAGR 8.3%). Room-temperature superconductors (RTSCs) are expected to unlock entirely new markets, including lossless power transmission (estimated $50B+ TAM), magnetic levitation transportation ($15B), and next-generation medical imaging ($8B). The top candidate, Li₂MgH₆, targets the power transmission segment initially, with a serviceable addressable market (SAM) of $12B by 2028.
+
+### 8.2 Revenue Projections
+
+| Year | Revenue (USD) | Source |
+|------|---------------|--------|
+| 2026 | $0 (R&D phase) | Licensing fees from pilot partners |
+| 2027 | $5M | Non-exclusive research licenses |
+| 2028 | $20M | First commercial sales (cable demo) |
+| 2029 | $80M | Scale-up to pilot manufacturing |
+| 2030 | $250M | Full-scale production (MRL 8) |
+| 2031 | $500M | Market expansion (grid, maglev) |
+
+Revenue model: 60% product sales, 30% licensing royalties, 10% government grants/contracts.
+
+### 8.3 Break-Even Analysis
+
+- **Fixed Costs**: $120M (pilot plant $80M, regulatory $16M, IP $10M, overhead $14M)
+- **Variable Costs per kg**: $150 (raw materials $50, energy $40, labor $30, quality control $30)
+- **Selling Price per kg**: $500 (premium for first-mover advantage)
+- **Break-Even Volume**: 400,000 kg (≈ $200M revenue)
+- **Break-Even Timeline**: 3.5 years from first commercial sale (2028–2031)
+- **Payback Period**: 5 years from initial investment (2026–2031)
+
+### 8.4 Go-to-Market Strategy
+
+1. **Phase 1 (2026–2027)**: Partner with national labs (DOE) and utility consortia for pilot cable demonstrations. Secure $50M in DOE ARPA-E and SBIR grants. Publish results in high-impact journals to build credibility.
+2. **Phase 2 (2028–2029)**: Establish a joint venture with a major cable manufacturer (e.g., Nexans, Prysmian) to produce Li₂MgH₆-based cables. Target 10 km of demonstration line in partnership with a utility (e.g., Con Edison).
+3. **Phase 3 (2030+)**: Scale manufacturing to 1,000 tonnes/year. Expand into maglev (Japan, China) and medical MRI (GE, Siemens). Offer non-exclusive licenses to electronics manufacturers for quantum computing components.
+
+**Key Metrics**: Customer acquisition cost (CAC) $50k per utility partner; lifetime value (LTV) $5M; LTV/CAC ratio 100:1. Sales team of 10 engineers with deep technical expertise.
+
+**Competitive Advantage**: First-mover with patented composition, scalable high-pressure synthesis process, and established regulatory pathway. Barriers to entry include IP portfolio, manufacturing know-how, and long-term reliability data.
