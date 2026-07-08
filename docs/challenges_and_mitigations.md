@@ -941,3 +941,33 @@ The analysis will be conducted on the surrogate model (Gaussian process with lin
 - Update recommendations based on actual computed sensitivity indices.
 
 This section will be updated with actual results once the analysis is complete.
+
+## Security Risk Assessment
+
+### Dependency Vulnerabilities
+The project relies on a growing set of Python packages (e.g., numpy, scipy, scikit-learn, torch, requests, etc.) that may contain known vulnerabilities. Regular scanning with `pip-audit` (or `safety`) is essential to identify and remediate vulnerable dependencies. Mitigation strategies include:
+- Running `pip-audit` in CI (as part of the security job) to fail on high-severity vulnerabilities.
+- Using a lockfile (e.g., `requirements.txt` with pinned versions) to ensure reproducible builds.
+- Subscribing to security advisories (e.g., GitHub Dependabot alerts) for automated notifications.
+- Periodically updating dependencies and testing for regressions.
+
+### Code Injection Risks
+The pipeline executes user-provided or scraped data (e.g., from arXiv) and may be vulnerable to injection attacks if inputs are not sanitized. Specific risks include:
+- **Shell injection**: Any use of `subprocess` with `shell=True` or unsanitized command strings could allow arbitrary command execution. All subprocess calls should use `shell=False` and pass arguments as lists.
+- **Code injection via `eval`/`exec`**: The codebase should avoid `eval()` and `exec()` on untrusted input. If dynamic evaluation is necessary, use safer alternatives like `ast.literal_eval`.
+- **YAML/JSON deserialization**: Loading untrusted YAML with `yaml.load()` (without `Loader=yaml.SafeLoader`) can lead to arbitrary code execution. Always use `yaml.safe_load()`.
+- **SQL injection**: If the project uses a database, parameterized queries must be used.
+
+Mitigation strategies:
+- Code review and static analysis (Bandit) to detect dangerous patterns.
+- Input validation and sanitization for all external data sources.
+- Use of least-privilege principles (e.g., running pipeline in a sandboxed environment).
+
+### Mitigation Strategies
+- **Static Application Security Testing (SAST)**: Integrate Bandit into CI to automatically flag potential security issues (e.g., hardcoded passwords, insecure function calls). High-severity findings must be fixed before merging.
+- **Dependency Scanning**: Use `pip-audit` or Snyk to scan for known vulnerabilities in dependencies. Fail the build on high-severity findings.
+- **Secrets Management**: All secrets (API keys, tokens) are stored as GitHub Secrets and never hardcoded. The CI workflow uses `${{ secrets.* }}` syntax.
+- **Regular Audits**: Schedule periodic security reviews and penetration testing as the project matures.
+- **Documentation**: Maintain a security policy and incident response plan.
+
+This section will be updated as new risks are identified and mitigations are implemented.
