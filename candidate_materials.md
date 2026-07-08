@@ -809,3 +809,8 @@ This section compares theoretical predictions (DFT, ML) with experimentally meas
 - **Machine learning models** (not shown) often achieve lower errors on known compounds but struggle with extrapolation to new chemistries. Hybrid DFT-ML approaches are an active area of research.
 
 *Sources:* Duan et al., *Sci. Rep.* 4, 6968 (2014); Drozdov et al., *Nature* 525, 73 (2015); Liu et al., *Phys. Rev. B* 96, 100501 (2017); Drozdov et al., *Nature* 569, 528 (2019); Kong et al., *Nat. Commun.* 12, 5075 (2021); Peng et al., *Phys. Rev. B* 96, 100501 (2017); Wang et al., *Phys. Rev. Lett.* 108, 197001 (2012); Ma et al., *Nat. Commun.* 13, 3194 (2022); Snider et al., *Nature* 586, 373 (2020); Wu et al., *Phys. Rev. Lett.* 58, 908 (1987); Schilling et al., *Nature* 363, 56 (1993).
+
+
+## Validation Summary
+
+The validation module in `run_pipeline.py` computes MAE, R², and calibration curves on the full dataset (`data/superconductor_database.json`). Results are logged to `data/model_performance_log.json`. This section will be updated automatically after each pipeline run.

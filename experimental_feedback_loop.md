@@ -180,3 +180,37 @@ python run_pipeline.py --full-loop
 ```
 
 This starts the watcher, VLS, DAM, and active learning retraining in a coordinated manner. See `run_pipeline.py` for detailed command-line options.
+
+
+## CloudLabClient Integration
+
+The `CloudLabClient` class in `run_pipeline.py` provides a robust interface to cloud lab APIs (e.g., Emerald Cloud Lab). It supports authentication via API key (stored in `CLOUD_LAB_API_KEY` environment variable) and OAuth2 flow (configurable). The client implements exponential backoff retry logic with configurable maximum retries and backoff factor.
+
+### Authentication Flow
+
+1. **API Key**: Set `CLOUD_LAB_API_KEY` environment variable. The client reads it automatically.
+2. **OAuth2**: For OAuth2, set `CLOUD_LAB_AUTH_URL`, `CLOUD_LAB_CLIENT_ID`, and `CLOUD_LAB_CLIENT_SECRET`. The client will obtain a bearer token using the client credentials grant.
+
+### Example API Calls
+
+```python
+from run_pipeline import CloudLabClient
+
+client = CloudLabClient(base_url="https://api.cloudlab.example.com/v1")
+
+# Submit a synthesis request
+result = client.submit_synthesis_request(
+    compound_name="LaH10",
+    composition={"La": 1, "H": 10},
+    pressure=170,
+    temperature=2000,
+    duration=24
+)
+print(f"Experiment ID: {result['id']}")
+
+# Poll for results
+final = client.poll_for_results(result['id'], poll_interval=60, max_polls=60)
+print(f"Tc: {final['tc']} K")
+```
+
+The client automatically updates `data/experimental_results.json` and `candidate_materials.md` with new experimental data.

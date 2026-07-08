@@ -8982,28 +8982,77 @@ def comprehensive_validation():
     """Compare predicted vs experimental Tc for 50+ compounds, compute MAE, R², calibration curves."""
     print("Running comprehensive validation...")
     # Load experimental data (simulated)
-    # In real use, load from database or file
-    np.random.seed(42)
-    n_compounds = 50
-    experimental_tc = np.random.uniform(50, 300, n_compounds)
-    predicted_tc = experimental_tc + np.random.normal(0, 20, n_compounds)  # simulated predictions
+    # Load full dataset from data/superconductor_database.json
+    db_path = "data/superconductor_database.json"
+    if not os.path.exists(db_path):
+        print(f"Database file {db_path} not found. Skipping full validation.")
+        return
+    with open(db_path, "r") as f:
+        database = json.load(f)
+    # Extract experimental and predicted Tc values
+    experimental_tc = []
+    predicted_tc = []
+    for entry in database:
+        if "tc_experimental" in entry and "tc_predicted" in entry:
+            experimental_tc.append(entry["tc_experimental"])
+            predicted_tc.append(entry["tc_predicted"])
+    if len(experimental_tc) == 0:
+        print("No valid entries with both experimental and predicted Tc found.")
+        return
+    experimental_tc = np.array(experimental_tc)
+    predicted_tc = np.array(predicted_tc)
     # Compute metrics
     mae = mean_absolute_error(experimental_tc, predicted_tc)
     r2 = r2_score(experimental_tc, predicted_tc)
-    print(f"MAE: {mae:.2f} K")
-    print(f"R²: {r2:.3f}")
+    print(f"Full dataset validation: MAE = {mae:.2f} K, R² = {r2:.3f}")
     # Calibration curve (reliability diagram)
-    # Bin predictions by confidence intervals
     from sklearn.calibration import calibration_curve
-    # For calibration, we need predicted probabilities, but here we have regression.
-    # We'll compute calibration of uncertainty estimates if available.
-    # For simplicity, we'll just print a note.
-    print("Calibration curves require uncertainty estimates. Ensure model provides std.")
-    # Save results
-    results = {"mae": mae, "r2": r2}
-    with open("validation_results.json", "w") as f:
-        json.dump(results, f)
-    print("Validation results saved to validation_results.json")
+    # For regression, we need uncertainty estimates. If the database includes predicted_std, use it.
+    # Otherwise, we'll compute a simple binned calibration based on prediction intervals.
+    n_bins = 10
+    bin_edges = np.percentile(predicted_tc, np.linspace(0, 100, n_bins+1))
+    bin_indices = np.digitize(predicted_tc, bin_edges) - 1
+    bin_indices = np.clip(bin_indices, 0, n_bins-1)
+    bin_counts = np.bincount(bin_indices, minlength=n_bins)
+    bin_actual = np.bincount(bin_indices, weights=experimental_tc, minlength=n_bins)
+    bin_predicted = np.bincount(bin_indices, weights=predicted_tc, minlength=n_bins)
+    bin_actual_mean = np.divide(bin_actual, bin_counts, where=bin_counts>0)
+    bin_predicted_mean = np.divide(bin_predicted, bin_counts, where=bin_counts>0)
+    # Log comprehensive metrics
+    metrics = {
+        "mae": mae,
+        "r2": r2,
+        "n_compounds": len(experimental_tc),
+        "calibration_bins": {
+            "bin_edges": bin_edges.tolist(),
+            "bin_actual_mean": bin_actual_mean.tolist(),
+            "bin_predicted_mean": bin_predicted_mean.tolist(),
+            "bin_counts": bin_counts.tolist()
+        },
+        "timestamp": datetime.now().isoformat()
+    }
+    # Append to model_performance_log.json
+    log_path = "data/model_performance_log.json"
+    if os.path.exists(log_path):
+        with open(log_path, "r") as f:
+            log = json.load(f)
+    else:
+        log = []
+    log.append(metrics)
+    with open(log_path, "w") as f:
+        json.dump(log, f, indent=2)
+    print(f"Validation metrics appended to {log_path}")
+    # Update candidate_materials.md with validation summary
+    candidate_file = "candidate_materials.md"
+    if os.path.exists(candidate_file):
+        with open(candidate_file, "r") as f:
+            content = f.read()
+        # Check if validation summary already exists
+        if "## Validation Summary" not in content:
+            summary = f"\n## Validation Summary\n- **Dataset size**: {len(experimental_tc)} compounds\n- **MAE**: {mae:.2f} K\n- **R²**: {r2:.3f}\n- **Calibration**: Binned calibration computed (see model_performance_log.json for details).\n- **Timestamp**: {datetime.now().isoformat()}\n"
+            with open(candidate_file, "a") as f:
+                f.write(summary)
+            print("Validation summary appended to candidate_materials.md")
 
 # ===== Real-time data assimilation loop =====
 def data_assimilation_loop(interval=3600):
@@ -9051,3 +9100,171 @@ def data_assimilation_loop(interval=3600):
                 await trigger_active_learning()
             await asyncio.sleep(interval)
     asyncio.run(loop())
+
+
+# ===== CloudLabClient =====
+class CloudLabClient:
+    """Client for interacting with a cloud lab API (e.g., Emerald Cloud Lab)."""
+    def __init__(self, api_key=None, base_url="https://api.cloudlab.example.com/v1", max_retries=5, backoff_factor=1.5):
+        self.api_key = api_key or os.environ.get("CLOUD_LAB_API_KEY")
+        if not self.api_key:
+            raise ValueError("API key must be provided or set in CLOUD_LAB_API_KEY environment variable")
+        self.base_url = base_url.rstrip("/")
+        self.max_retries = max_retries
+        self.backoff_factor = backoff_factor
+        self.session = requests.Session()
+        self.session.headers.update({"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"})
+
+    def _request_with_retry(self, method, endpoint, **kwargs):
+        url = f"{self.base_url}/{endpoint.lstrip('/')}"
+        for attempt in range(self.max_retries):
+            try:
+                response = self.session.request(method, url, **kwargs)
+                response.raise_for_status()
+                return response.json()
+            except requests.exceptions.RequestException as e:
+                if attempt == self.max_retries - 1:
+                    raise
+                wait = self.backoff_factor ** attempt
+                time.sleep(wait)
+        return None
+
+    def submit_synthesis_request(self, compound_name, composition, pressure, temperature, duration):
+        """Submit a synthesis request to the cloud lab."""
+        payload = {
+            "compound": compound_name,
+            "composition": composition,
+            "pressure_gpa": pressure,
+            "temperature_k": temperature,
+            "duration_hours": duration
+        }
+        result = self._request_with_retry("POST", "experiments", json=payload)
+        if result:
+            # Update experimental_results.json
+            exp_file = "data/experimental_results.json"
+            if os.path.exists(exp_file):
+                with open(exp_file, "r") as f:
+                    experiments = json.load(f)
+            else:
+                experiments = []
+            experiments.append(result)
+            with open(exp_file, "w") as f:
+                json.dump(experiments, f, indent=2)
+            # Update candidate_materials.md with new experiment
+            self._update_candidate_materials(result)
+        return result
+
+    def poll_for_results(self, experiment_id, poll_interval=60, max_polls=60):
+        """Poll for experiment results until completion or timeout."""
+        for _ in range(max_polls):
+            result = self._request_with_retry("GET", f"experiments/{experiment_id}")
+            if result and result.get("status") == "completed":
+                # Update experimental_results.json
+                exp_file = "data/experimental_results.json"
+                if os.path.exists(exp_file):
+                    with open(exp_file, "r") as f:
+                        experiments = json.load(f)
+                else:
+                    experiments = []
+                # Update or append
+                for i, exp in enumerate(experiments):
+                    if exp.get("id") == experiment_id:
+                        experiments[i] = result
+                        break
+                else:
+                    experiments.append(result)
+                with open(exp_file, "w") as f:
+                    json.dump(experiments, f, indent=2)
+                # Update candidate_materials.md
+                self._update_candidate_materials(result)
+                return result
+            time.sleep(poll_interval)
+        raise TimeoutError(f"Experiment {experiment_id} did not complete within {max_polls * poll_interval} seconds")
+
+    def _update_candidate_materials(self, result):
+        """Update candidate_materials.md with experimental results."""
+        candidate_file = "candidate_materials.md"
+        if not os.path.exists(candidate_file):
+            return
+        with open(candidate_file, "r") as f:
+            content = f.read()
+        # Append a new entry
+        new_entry = f"\n### {result.get('compound', 'Unknown')} (Experimental)\n- **Tc**: {result.get('tc', 'N/A')} K\n- **Pressure**: {result.get('pressure_gpa', 'N/A')} GPa\n- **Synthesis method**: {result.get('method', 'Cloud lab')}\n- **Date**: {result.get('date', 'N/A')}\n- **Source**: Cloud lab experiment {result.get('id', 'N/A')}\n"
+        with open(candidate_file, "a") as f:
+            f.write(new_entry)
+
+
+# ===== CrystalStructurePredictor =====
+class CrystalStructurePredictor:
+    """Interface with USPEX or CALYPSO for crystal structure prediction."""
+    def __init__(self, tool="uspex", executable=None, work_dir="crystal_predictions"):
+        self.tool = tool.lower()
+        self.executable = executable or ( "uspex" if self.tool == "uspex" else "calypso" )
+        self.work_dir = work_dir
+        os.makedirs(self.work_dir, exist_ok=True)
+
+    def search_hydride_candidates(self, elements, pressure_range=(0, 10), max_candidates=5):
+        """Run structure prediction for hydride candidates under low pressure (<10 GPa)."""
+        # Build input files
+        input_dir = os.path.join(self.work_dir, f"search_{'_'.join(elements)}")
+        os.makedirs(input_dir, exist_ok=True)
+        # Write input file for the tool (placeholder - actual input depends on tool)
+        # For USPEX: write INPUT.txt, etc.
+        # For CALYPSO: write input.dat
+        # Then run subprocess
+        try:
+            result = subprocess.run(
+                [self.executable],
+                cwd=input_dir,
+                capture_output=True,
+                text=True,
+                timeout=3600
+            )
+            if result.returncode != 0:
+                raise RuntimeError(f"{self.tool} failed: {result.stderr}")
+            # Parse output to extract candidates
+            candidates = self._parse_output(result.stdout)
+            if len(candidates) < 3:
+                raise ValueError(f"Only {len(candidates)} candidates found, need at least 3")
+            # Update candidate_materials.md
+            self._update_candidate_materials(candidates)
+            return candidates
+        except FileNotFoundError:
+            raise RuntimeError(f"{self.tool} executable not found: {self.executable}")
+
+    def _parse_output(self, output):
+        """Parse tool output to extract candidate structures, formation energies, Tc."""
+        # Implement parsing logic based on tool output format
+        # For USPEX: look for lines like "Best structure: ..."
+        # For CALYPSO: look for "Structure #" lines
+        # This is a generic placeholder; subclass or provide custom parser for specific tool.
+        candidates = []
+        lines = output.split('\n')
+        for line in lines:
+            if 'structure' in line.lower() and 'energy' in line.lower():
+                # Attempt to extract fields
+                parts = line.split()
+                if len(parts) >= 4:
+                    candidates.append({
+                        'formula': parts[0],
+                        'structure': parts[1],
+                        'formation_energy': float(parts[2]),
+                        'estimated_tc': float(parts[3]),
+                        'pressure': float(parts[4]) if len(parts) > 4 else 0.0
+                    })
+        if len(candidates) < 3:
+            raise ValueError(f"Parsed only {len(candidates)} candidates; check tool output format.")
+        return candidates
+
+    def _update_candidate_materials(self, candidates):
+        """Append predicted candidates to candidate_materials.md."""
+        candidate_file = "candidate_materials.md"
+        if not os.path.exists(candidate_file):
+            return
+        with open(candidate_file, "r") as f:
+            content = f.read()
+        new_section = "\n## Predicted Hydride Candidates (CrystalStructurePredictor)\n"
+        for c in candidates:
+            new_section += f"- **{c['formula']}**: Structure {c['structure']}, Formation energy {c['formation_energy']} eV/atom, Estimated Tc {c['estimated_tc']} K at {c['pressure']} GPa.\n"
+        with open(candidate_file, "a") as f:
+            f.write(new_section)
