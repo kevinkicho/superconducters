@@ -384,3 +384,36 @@ All risks are reviewed quarterly by the risk management committee. Mitigation ow
 
 ### Status
 All items are tracked in the project management system. Regular reviews ensure progress toward production readiness.
+
+
+## Pipeline FMEA
+
+### Stage 1: Candidate Generation (Computational Screening)
+| Failure Mode | Effect | S | O | D | RPN | Recommended Action |
+|--------------|--------|---|---|---|-----|-------------------|
+| Inaccurate DFT predictions | Missed high-Tc candidates | 8 | 4 | 3 | 96 | Validate with multiple exchange-correlation functionals; cross-check with experimental database |
+| Overfitting in ML models | False positives | 7 | 5 | 4 | 140 | Use ensemble methods; incorporate uncertainty quantification; regular retraining with new data |
+
+### Stage 2: Synthesis (High-Pressure / CVD)
+| Failure Mode | Effect | S | O | D | RPN | Recommended Action |
+|--------------|--------|---|---|---|-----|-------------------|
+| Pressure cell failure | Sample loss, equipment damage | 9 | 3 | 2 | 54 | Redundant pressure seals; real-time monitoring; automated pressure release |
+| Impurity incorporation | Suppressed Tc | 8 | 6 | 5 | 240 | Ultra-high purity precursors; in-situ purification; post-synthesis annealing |
+
+### Stage 3: Characterization
+| Failure Mode | Effect | S | O | D | RPN | Recommended Action |
+|--------------|--------|---|---|---|-----|-------------------|
+| Contact resistance artifacts | False zero-resistance signal | 9 | 4 | 6 | 216 | Four-probe measurements; verify with magnetic susceptibility; independent replication |
+| Magnetic background noise | Masked Meissner effect | 7 | 5 | 4 | 140 | Shielded environment; background subtraction; use SQUID with gradiometer |
+
+### Stage 4: Data Analysis & Reporting
+| Failure Mode | Effect | S | O | D | RPN | Recommended Action |
+|--------------|--------|---|---|---|-----|-------------------|
+| P-hacking / selective reporting | Irreproducible claims | 10 | 3 | 7 | 210 | Pre-register analysis plan; open data; independent verification |
+| Software bugs in analysis pipeline | Incorrect Tc extraction | 6 | 4 | 5 | 120 | Code review; unit tests; version control; automated validation |
+
+### Stage 5: Scale-up & Manufacturing
+| Failure Mode | Effect | S | O | D | RPN | Recommended Action |
+|--------------|--------|---|---|---|-----|-------------------|
+| Batch-to-batch variability | Inconsistent product quality | 8 | 5 | 4 | 160 | Statistical process control; in-line monitoring; feedback loop to synthesis |
+| Cost overruns | Project termination | 7 | 4 | 3 | 84 | Phased investment; contingency budget; regular cost reviews |
