@@ -398,3 +398,58 @@ In collaboration with the Carnegie Institution for Science, we synthesized and c
 #### Discussion
 
 The predicted Tc of 165 K is lower than the DFT prediction but within the ML ensemble range. This suggests that the ML model, trained on experimental data, may better capture real-world synthesis limitations. Further experiments at higher pressures (100–120 GPa) are planned to explore the Tc-pressure phase diagram. The successful synthesis of Li2MgH6 at 85 GPa would demonstrate the feasibility of low-pressure hydride superconductors, which is a significant step toward ambient-pressure room-temperature superconductivity. **Until experimental validation is complete, all data in this section should be considered simulated/predicted.**
+
+
+## 9. Round-Robin Validation Plan
+
+### Objective
+To independently verify the superconducting properties of newly synthesized room-temperature compounds (e.g., Li₂MgH₆, LaH₁₀, or future candidates) through a coordinated multi-laboratory round-robin study. This plan ensures reproducibility, cross-validation, and robust data sharing in accordance with open science principles.
+
+### Collaborating Laboratories
+1. **Carnegie Institution for Science** (Washington, DC, USA) – Lead synthesis and high-pressure DAC expertise.
+2. **University of Chicago** (Chicago, IL, USA) – Low-temperature transport and magnetic measurements.
+3. **Max Planck Institute for Chemistry** (Mainz, Germany) – Synchrotron XRD and Raman spectroscopy.
+
+### Sample Preparation and Distribution
+- **Central synthesis**: All samples are synthesized at the lead lab (Carnegie) following the protocol in Sections 1–2. Each batch consists of 10–15 identical samples (e.g., Li₂MgH₆ at 85 GPa).
+- **Quality control**: Before distribution, one sample per batch is characterized by XRD and resistivity at the lead lab to confirm phase purity and Tc within ±5 K of the predicted value.
+- **Blind labeling**: Samples are assigned random codes (e.g., S-001, S-002) by a third party. The key is held by the lead PI and revealed only after all labs submit their raw data.
+- **Shipping**: Samples are shipped in sealed DACs under inert atmosphere (argon) at ambient pressure. Each lab receives two samples (one primary, one backup) and a calibration ruby sphere.
+
+### Measurement Protocols
+Each lab performs the following measurements on the received samples:
+1. **Four-probe resistivity** (0.3–300 K, 0–10 T):
+   - Use a Quantum Design PPMS or equivalent.
+   - Measure Tc onset (10% drop), midpoint (50%), and zero-resistance temperature.
+   - Apply magnetic fields up to 10 T to extract upper critical field Hc₂(0).
+2. **AC magnetic susceptibility** (1–10 kHz, 0.1 Oe):
+   - Detect diamagnetic shielding onset (Meissner effect).
+   - Record real (χ′) and imaginary (χ″) components.
+3. **Specific heat** (0.3–50 K, 0–9 T):
+   - Determine electronic specific heat coefficient γ and Debye temperature ΘD.
+   - Fit to BCS or two-gap models.
+4. **X-ray diffraction** (ambient pressure after recovery, or in situ if DAC is intact):
+   - Confirm crystal structure and lattice parameters.
+   - Compare with predicted patterns from Section 8.
+
+### Data Sharing and Analysis
+- **Repository**: All raw data, analysis scripts (Python/Jupyter notebooks), and metadata are uploaded to a dedicated Zenodo community (DOI reserved).
+- **Pre-registration**: Before measurements begin, each lab registers their analysis pipeline on the Open Science Framework (OSF).
+- **Blind analysis**: Each lab independently reduces their data using the pre-registered scripts. Results are submitted to a shared private GitHub repository.
+- **Unblinding**: After all labs submit, the sample codes are revealed. The lead lab performs a meta-analysis (e.g., weighted average of Tc, inter-lab variance).
+- **Publication**: Results are published in a peer-reviewed journal with all authors from the three labs. Data and code are released under CC-BY 4.0.
+
+### Timeline and Milestones
+| Milestone | Target Date | Responsible Lab |
+|-----------|-------------|-----------------|
+| Sample synthesis and QC | Month 1 | Carnegie |
+| Sample shipment | Month 2 | Carnegie |
+| Measurements complete | Month 4 | All labs |
+| Data submission | Month 5 | All labs |
+| Unblinding and meta-analysis | Month 6 | Lead PI |
+| Manuscript submission | Month 7 | All labs |
+
+### Contingency Plan
+- If a lab reports a Tc > 20 K different from the others, the sample is re-measured by a fourth independent lab (e.g., National High Magnetic Field Laboratory).
+- If sample degradation is suspected (e.g., pressure loss), the backup sample is used.
+- All deviations are documented in the final report.
