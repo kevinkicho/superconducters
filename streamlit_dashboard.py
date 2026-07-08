@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import time
 from typing import Optional, Dict, Any
+from run_pipeline import live_external_validation, what_if_analysis
 
 # Cloud Lab API configuration
 API_BASE_URL = st.secrets.get("CLOUD_LAB_API_URL", "http://localhost:8000/api/v1")
@@ -103,12 +104,14 @@ def main():
     auto_refresh = st.sidebar.checkbox("Enable auto-refresh", value=True)
 
     # Create tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "Pipeline Status",
         "Top Candidates",
         "Experimental Results",
         "Manufacturing Progress",
-        "Experiment Status"
+        "Experiment Status",
+        "Live Monitoring",
+        "What-If Analysis"
     ])
 
     placeholder = st.empty()
@@ -158,6 +161,32 @@ def main():
                     st.dataframe(df[required_cols], use_container_width=True)
                 else:
                     st.info("No experiment data available.")
+
+            with tab6:
+                st.subheader("Live Monitoring")
+                validation_data = live_external_validation()
+                if validation_data is not None:
+                    if isinstance(validation_data, pd.DataFrame):
+                        st.dataframe(validation_data, use_container_width=True)
+                    else:
+                        st.json(validation_data)
+                else:
+                    st.info("No live validation data available.")
+
+            with tab7:
+                st.subheader("What-If Analysis")
+                temperature = st.slider("Temperature (K)", min_value=0, max_value=500, value=300, step=1)
+                pressure = st.slider("Pressure (GPa)", min_value=0.0, max_value=100.0, value=1.0, step=0.1)
+                doping = st.slider("Doping Level (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
+                if st.button("Run What-If"):
+                    result = what_if_analysis(temperature=temperature, pressure=pressure, doping=doping)
+                    if result is not None:
+                        if isinstance(result, pd.DataFrame):
+                            st.dataframe(result, use_container_width=True)
+                        else:
+                            st.json(result)
+                    else:
+                        st.error("What-if analysis failed.")
 
             if st.button("Refresh Now"):
                 st.rerun()
