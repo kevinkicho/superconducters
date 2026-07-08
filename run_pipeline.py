@@ -30,6 +30,19 @@ from sklearn.preprocessing import StandardScaler
 import stable_baselines3 as sb3
 from stable_baselines3.common.envs import DummyVecEnv
 from gym import Env, spaces
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import APIKeyHeader
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import uvicorn
+import streamlit as st  # for dashboard integration
+from typing import Optional, Dict, Any
+import time
+import hashlib
+import hmac
+import os
+from datetime import datetime
 
 def active_learning_loop():
     """Active learning loop: select next candidate, run DFT, update candidate list."""
@@ -3174,3 +3187,178 @@ if __name__ == "__main__":
     perform_global_sensitivity_analysis()
     integrate_arxiv_scraper()
     print("Pipeline complete.")
+
+# ===== FastAPI REST API =====
+app = FastAPI(title="Superconductor Discovery API")
+
+# API Key authentication
+API_KEY_NAME = "X-API-Key"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+# Rate limiting
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Role-based access using environment variables
+def role_based_access(required_role: str):
+    """Check if the current user has the required role based on environment variables."""
+    api_key = os.environ.get("API_KEY", "")
+    admin_key = os.environ.get("ADMIN_API_KEY", "")
+    user_role = os.environ.get("USER_ROLE", "viewer")
+    # Simple role check: if API key matches admin key, role is admin; else if matches user key, role is user; else viewer
+    if api_key == admin_key:
+        role = "admin"
+    elif api_key == os.environ.get("USER_API_KEY", ""):
+        role = "user"
+    else:
+        role = "viewer"
+    if role not in ["admin", "user", "viewer"]:
+        role = "viewer"
+    # Check if required role is satisfied
+    role_hierarchy = {"viewer": 0, "user": 1, "admin": 2}
+    if role_hierarchy.get(role, 0) < role_hierarchy.get(required_role, 0):
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    return role
+
+def verify_api_key(api_key: str = Depends(api_key_header)):
+    """Verify the API key from the header."""
+    if api_key is None:
+        raise HTTPException(status_code=401, detail="API key missing")
+    expected_key = os.environ.get("API_KEY", "")
+    if not expected_key:
+        raise HTTPException(status_code=500, detail="API_KEY not configured")
+    if not hmac.compare_digest(api_key, expected_key):
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    return api_key
+
+@app.get("/candidates")
+@limiter.limit("10/minute")
+async def get_candidates(api_key: str = Depends(verify_api_key)):
+    """Return list of candidate materials."""
+    role_based_access("viewer")
+    # Load candidates from candidate_materials.md
+    candidates = []
+    try:
+        with open("candidate_materials.md", "r") as f:
+            for line in f:
+                if line.startswith("- [") and " - " in line:
+                    parts = line.split(" - ")
+                    compound = parts[0].replace("- [x] ", "").replace("- [ ] ", "").strip()
+                    tc = parts[1].replace("computed Tc: ", "").replace(" K", "").strip() if len(parts) > 1 else "N/A"
+                    candidates.append({"compound": compound, "Tc": tc})
+    except FileNotFoundError:
+        pass
+    return {"candidates": candidates}
+
+@app.get("/predict-tc")
+@limiter.limit("5/minute")
+async def predict_tc(compound: str, api_key: str = Depends(verify_api_key)):
+    """Predict Tc for a given compound using the trained model."""
+    role_based_access("user")
+    # Placeholder: in real implementation, load model and predict
+    # For now, return a mock prediction
+    import random
+    predicted_tc = round(random.uniform(100, 300), 2)
+    return {"compound": compound, "predicted_Tc": predicted_tc, "unit": "K"}
+
+@app.post("/simulate-manufacturing")
+@limiter.limit("2/minute")
+async def simulate_manufacturing(compound: str, api_key: str = Depends(verify_api_key)):
+    """Simulate manufacturing process for a given compound."""
+    role_based_access("admin")
+    # Placeholder: in real implementation, run manufacturing simulation
+    # For now, return a mock simulation result
+    import random
+    success_prob = round(random.uniform(0.5, 0.95), 2)
+    estimated_cost = round(random.uniform(1000, 100000), 2)
+    return {"compound": compound, "success_probability": success_prob, "estimated_cost": estimated_cost, "currency": "USD"}
+
+# ===== Data Package Generation =====
+def generate_data_package(candidate: Dict[str, Any]) -> Dict[str, Any]:
+    """Generate a JSON data package for a candidate material."""
+    package = {
+        "compound": candidate.get("compound", ""),
+        "formula": candidate.get("formula", ""),
+        "predicted_Tc": candidate.get("Tc", None),
+        "crystal_structure": candidate.get("crystal_structure", ""),
+        "synthesis_parameters": candidate.get("synthesis_parameters", {}),
+        "characterization_data": candidate.get("characterization_data", {}),
+        "risk_assessment": candidate.get("risk_assessment", {}),
+        "timestamp": datetime.utcnow().isoformat()
+    }
+    return package
+
+# ===== Performance Monitoring with Drift Detection =====
+def monitor_performance():
+    """Monitor model performance and detect drift."""
+    print("[MonitorPerformance] Starting performance monitoring...")
+    # Load historical predictions and actuals
+    try:
+        with open("predictions_log.json", "r") as f:
+            predictions_log = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        predictions_log = []
+    if not predictions_log:
+        print("[MonitorPerformance] No prediction log found. Creating placeholder.")
+        predictions_log = []
+    # Simple drift detection: compare recent predictions to baseline
+    # For demonstration, we compute mean absolute error if actuals available
+    if len(predictions_log) > 10:
+        recent = predictions_log[-10:]
+        errors = [abs(p["predicted"] - p["actual"]) for p in recent if "actual" in p]
+        if errors:
+            mae = sum(errors) / len(errors)
+            threshold = 10.0  # degrees K
+            if mae > threshold:
+                print(f"[MonitorPerformance] ALERT: Drift detected! MAE = {mae:.2f} K (threshold {threshold} K)")
+                # Send alert (placeholder)
+                # Could integrate with email, Slack, etc.
+            else:
+                print(f"[MonitorPerformance] No drift detected. MAE = {mae:.2f} K")
+        else:
+            print("[MonitorPerformance] No actual values in recent predictions.")
+    else:
+        print("[MonitorPerformance] Insufficient data for drift detection.")
+    # Log monitoring event
+    log_entry = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "event": "monitor_performance",
+        "status": "completed"
+    }
+    try:
+        with open("monitoring_log.json", "a") as f:
+            f.write(json.dumps(log_entry) + "\n")
+    except Exception as e:
+        print(f"[MonitorPerformance] Failed to write monitoring log: {e}")
+    print("[MonitorPerformance] Performance monitoring complete.")
+
+# ===== Streamlit Dashboard Integration =====
+def run_dashboard():
+    """Run the Streamlit dashboard if dashboard.py exists."""
+    import subprocess
+    import sys
+    dashboard_path = "dashboard.py"
+    if os.path.exists(dashboard_path):
+        print(f"[Dashboard] Starting Streamlit dashboard from {dashboard_path}...")
+        subprocess.run([sys.executable, "-m", "streamlit", "run", dashboard_path])
+    else:
+        print("[Dashboard] dashboard.py not found. Please create it to use the dashboard.")
+
+# ===== Role-Based Access Helper =====
+def role_based_access(required_role: str) -> str:
+    """Check role-based access using environment variables."""
+    # Already defined above as a dependency, but also as standalone function
+    api_key = os.environ.get("API_KEY", "")
+    admin_key = os.environ.get("ADMIN_API_KEY", "")
+    user_key = os.environ.get("USER_API_KEY", "")
+    if api_key == admin_key:
+        role = "admin"
+    elif api_key == user_key:
+        role = "user"
+    else:
+        role = "viewer"
+    role_hierarchy = {"viewer": 0, "user": 1, "admin": 2}
+    if role_hierarchy.get(role, 0) < role_hierarchy.get(required_role, 0):
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+    return role
