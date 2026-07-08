@@ -253,3 +253,60 @@ Optimize synthesis conditions (pressure, temperature, doping) to maximize Tc and
 6. **Preventive action**: Update SOP, retrain staff, or modify equipment maintenance schedule to prevent recurrence.
 7. **Review**: NC reports reviewed weekly by QA/QC team; trends reported monthly to project lead. Escalate to management if same NC repeats >3 times in a quarter.
 8. **Records**: All NC reports archived in a searchable database (e.g., SQLite) for at least 5 years.
+
+## 7. Collaboration Plan with High-Pressure Synthesis Facility
+
+### 7.1 Partner Facility: Carnegie Institution for Science (CIS) – Geophysical Laboratory
+
+The Carnegie Institution for Science (CIS) Geophysical Laboratory in Washington, D.C., operates a world-class high-pressure synthesis facility equipped with multiple diamond anvil cells (DACs), laser heating systems, and in situ synchrotron X-ray diffraction capabilities. This collaboration will leverage CIS’s expertise in superhydride synthesis and characterization to accelerate the discovery and optimization of room-temperature superconducting compounds.
+
+### 7.2 Roles and Responsibilities
+
+| Role | Institution | Responsibilities |
+|------|-------------|------------------|
+| Principal Investigator (PI) | Lead Institution | Overall project oversight, resource allocation, final decision-making on go/no-go milestones. |
+| Synthesis Lead | CIS | Design and execute high-pressure synthesis runs; maintain DACs and laser heating systems; document synthesis parameters. |
+| Characterization Lead | Lead Institution | Perform XRD, resistivity, Raman, and magnetic susceptibility measurements; analyze data; report Tc and phase purity. |
+| Data Manager | Lead Institution | Curate raw and processed data; maintain shared repository (e.g., Zenodo or institutional server); ensure FAIR data principles. |
+| Safety Officer | Both | Monitor compliance with high-pressure and hydrogen safety protocols; conduct regular safety audits. |
+| Quality Assurance (QA) | Lead Institution | Oversee QA/QC procedures (Section 6); review non-conformance reports; approve sample batches for further study. |
+
+### 7.3 Sample Delivery and Characterization Timeline
+
+| Step | Description | Responsible Party | Target Duration |
+|------|-------------|-------------------|-----------------|
+| 1. Sample synthesis | Prepare LaH₁₀ or new compound at CIS | CIS Synthesis Lead | 1 week per batch |
+| 2. Pressure release and recovery | Slowly decompress DAC; recover sample in inert atmosphere | CIS Synthesis Lead | 1 day |
+| 3. Sample shipment | Ship sample in sealed container with desiccant and inert gas | CIS (shipping) | 2–3 days |
+| 4. Receipt and inspection | Verify sample integrity; log into inventory | Lead Institution | 1 day |
+| 5. Initial characterization | XRD phase identification, Raman spectroscopy | Lead Institution Characterization Lead | 3 days |
+| 6. Transport property measurement | Four-probe resistivity, Tc determination | Lead Institution Characterization Lead | 2 days |
+| 7. Data analysis and reporting | Process data; compare with acceptance criteria (Section 6.2) | Lead Institution Data Manager | 2 days |
+| 8. Feedback to CIS | Share results; discuss next synthesis parameters | Both PIs | 1 day |
+
+**Total turnaround per batch:** ~2 weeks from synthesis start to feedback.
+
+### 7.4 Data Sharing and Intellectual Property
+
+- **Data repository**: All raw and processed data will be uploaded to a shared cloud storage (e.g., Globus or institutional Nextcloud) within 1 week of collection. Metadata will follow the FAIR principles (Findable, Accessible, Interoperable, Reusable).
+- **Publication policy**: Joint publications will be authored by both institutions, with first authorship determined by contribution. Preprints will be shared internally before submission.
+- **Intellectual property**: Background IP remains with the originating institution. Foreground IP (new compounds, methods) will be jointly owned, with a separate agreement governing licensing and commercialization (see Technology Transfer Plan).
+- **Confidentiality**: All data shared under this collaboration is considered confidential until publication, unless otherwise agreed in writing.
+
+### 7.5 Collaboration Agreement and Governance
+
+- A formal Collaboration Agreement will be signed by both institutions before the first sample exchange. The agreement will cover:
+  - Scope of work and milestones
+  - Resource commitments (personnel, equipment, consumables)
+  - Data sharing and publication rights
+  - IP ownership and licensing terms
+  - Dispute resolution mechanism
+- Monthly video conferences will be held to review progress, discuss challenges, and adjust priorities. Quarterly in-person meetings (alternating between institutions) are recommended.
+- A shared project management tool (e.g., Asana or Trello) will track tasks, deadlines, and action items.
+
+### 7.6 Risk Mitigation for Collaboration
+
+- **Scheduling conflicts**: Reserve DAC time at CIS at least 4 weeks in advance; maintain a buffer of 2 extra synthesis slots per quarter.
+- **Sample loss during shipping**: Ship duplicate samples when possible; use tamper-evident packaging and tracking.
+- **Data format incompatibility**: Agree on standard file formats (e.g., .xy for XRD, .csv for resistivity) and metadata templates before first data exchange.
+- **Personnel turnover**: Cross-train at least two people per role at each institution; document all procedures in shared SOPs.
