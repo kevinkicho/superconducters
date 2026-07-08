@@ -5941,3 +5941,123 @@ def real_time_collaboration():
             connected.discard(websocket)
     print("[Collab] Starting real-time collaboration WebSocket server on port 8504...")
     uvicorn.run(app, host="0.0.0.0", port=8504)
+
+def run_cloud_lab_experiment(compound, api_key=None, endpoint=None):
+    """Run real cloud lab experiment via HTTP with retry and fallback to simulation."""
+    import requests
+    import time
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
+    if api_key is None:
+        api_key = os.environ.get("CLOUD_LAB_API_KEY", "")
+    if endpoint is None:
+        endpoint = os.environ.get("CLOUD_LAB_ENDPOINT", "https://api.cloudlab.example.com/experiment")
+    session = requests.Session()
+    retries = Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
+    adapter = HTTPAdapter(max_retries=retries)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+    payload = {"compound": compound}
+    try:
+        resp = session.post(endpoint, json=payload, headers=headers, timeout=30)
+        resp.raise_for_status()
+        result = resp.json()
+        print(f"[CloudLab] Experiment for {compound} completed: Tc={result.get('tc')}")
+        return result
+    except Exception as e:
+        print(f"[CloudLab] HTTP request failed: {e}. Falling back to simulation.")
+        # Fallback simulation
+        import random
+        simulated_tc = random.uniform(0, 150)
+        print(f"[CloudLab] Simulated Tc for {compound}: {simulated_tc:.2f} K")
+        return {"tc": simulated_tc, "resistivity": [], "fallback": true}
+def analyze_experimental_data(csv_path):
+    """Parse resistivity/temperature CSV and extract Tc."""
+    import csv
+    import numpy as np
+    temperatures = []
+    resistivities = []
+    with open(csv_path, 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader, None)
+        for row in reader:
+            if len(row) >= 2:
+                try:
+                    t = float(row[0])
+                    r = float(row[1])
+                    temperatures.append(t)
+                    resistivities.append(r)
+                except ValueError:
+                    continue
+    if len(temperatures) < 2:
+        print(f"[ExpData] Not enough data points in {csv_path}")
+        return None
+    # Find Tc as temperature where resistivity drops sharply (e.g., derivative minimum)
+    temps = np.array(temperatures)
+    res = np.array(resistivities)
+    deriv = np.gradient(res, temps)
+    # Tc is temperature where derivative is most negative (steepest drop)
+    idx = np.argmin(deriv)
+    tc = temps[idx]
+    print(f"[ExpData] Extracted Tc = {tc:.2f} K from {csv_path}")
+    return {"tc": tc, "temperatures": temperatures, "resistivities": resistivities}
+def log_model_performance(rmse, r2, timestamp=None):
+    """Log model performance to file with timestamp."""
+    if timestamp is None:
+        timestamp = datetime.now()
+    with open("model_performance.log", "a") as f:
+        f.write(f"{timestamp.isoformat()}, RMSE={rmse:.4f}, R2={r2:.4f}\n")
+def generate_grant_proposal(candidates, performance, budget=100000):
+    """Generate grant proposal markdown using dynamic pipeline outputs."""
+    lines = []
+    lines.append("# Grant Proposal: Room-Temperature Superconductor Discovery\n")
+    lines.append("## Executive Summary\n")
+    lines.append(f"This proposal seeks ${budget:,} to advance the discovery of room-temperature superconductors. ")
+    lines.append(f"Our pipeline has identified {len(candidates)} candidate compounds with predicted Tc values. ")
+    lines.append(f"The best candidate has a predicted Tc of {max(c['tc'] for c in candidates):.2f} K.\n")
+    lines.append("## Technical Approach\n")
+    lines.append("We will synthesize and test the top candidates using our cloud lab infrastructure. ")
+    lines.append("Experimental data will be analyzed to refine models.\n")
+    lines.append("## Budget\n")
+    lines.append(f"- Personnel: ${budget*0.5:,.0f}\n")
+    lines.append(f"- Equipment: ${budget*0.3:,.0f}\n")
+    lines.append(f"- Materials: ${budget*0.2:,.0f}\n")
+    lines.append("## Timeline\n")
+    lines.append("- Month 1-3: Synthesis and testing of top 10 candidates\n")
+    lines.append("- Month 4-6: Data analysis and model refinement\n")
+    lines.append("- Month 7-9: Scale-up and validation\n")
+    lines.append("- Month 10-12: Publication and outreach\n")
+    lines.append("## References\n")
+    lines.append("1. Pipeline performance: RMSE={:.4f}, R²={:.4f}\n".format(performance.get('rmse',0), performance.get('r2',0)))
+    return "\n".join(lines)
+def generate_figures(data, output_format="pdf"):
+    """Generate publication figures in PDF format."""
+    import matplotlib.pyplot as plt
+    # Example: Tc vs pressure
+    if 'pressure' in data and 'tc' in data:
+        plt.figure()
+        plt.plot(data['pressure'], data['tc'], 'o-')
+        plt.xlabel('Pressure (GPa)')
+        plt.ylabel('Tc (K)')
+        plt.title('Critical Temperature vs Pressure')
+        plt.savefig(f"tc_vs_pressure.{output_format}", format=output_format)
+        print(f"[Figures] Saved tc_vs_pressure.{output_format}")
+    # Pareto front
+    if 'pareto' in data:
+        plt.figure()
+        plt.scatter(data['pareto']['x'], data['pareto']['y'])
+        plt.xlabel('Cost')
+        plt.ylabel('Tc')
+        plt.title('Pareto Front')
+        plt.savefig(f"pareto_front.{output_format}", format=output_format)
+        print(f"[Figures] Saved pareto_front.{output_format}")
+    # Uncertainty distribution
+    if 'uncertainties' in data:
+        plt.figure()
+        plt.hist(data['uncertainties'], bins=20)
+        plt.xlabel('Uncertainty (K)')
+        plt.ylabel('Frequency')
+        plt.title('Prediction Uncertainty Distribution')
+        plt.savefig(f"uncertainty_dist.{output_format}", format=output_format)
+        print(f"[Figures] Saved uncertainty_dist.{output_format}")
