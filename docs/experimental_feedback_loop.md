@@ -1746,3 +1746,19 @@ To move from high-pressure laboratory synthesis to practical manufacturing, the 
 ---
 
 *All model cards follow Google’s Model Card template (Mitchell et al., 2019). Performance metrics are based on internal validation sets and may change as new experimental data is ingested through the feedback loop.*
+
+## Reproducibility Test
+
+### Overview
+This section documents the reproducibility test for the pipeline. The test ensures that the pipeline produces consistent results when run multiple times with the same inputs.
+
+### Test Procedure
+1. Run the pipeline with a fixed set of input parameters.
+2. Compare the outputs (candidate rankings, Tc predictions, etc.) across runs.
+3. Calculate metrics such as mean absolute difference in Tc predictions, Jaccard similarity of top candidates, etc.
+
+### Results
+- (to be filled after test execution)
+
+### Conclusion
+- (to be filled)
