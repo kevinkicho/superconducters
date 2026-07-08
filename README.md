@@ -529,3 +529,33 @@ Based on extensive literature review and online research, the following chemistr
 - Zurek & Bi, *J. Chem. Phys.* 150, 050901 (2019) — Review of high-pressure hydride superconductors.
 
 This section summarizes the current understanding and ongoing research directions. The project will continue to monitor new experimental results and update this document accordingly.
+
+## Admin Dashboard Access
+
+The admin dashboard provides real-time monitoring of pipeline status, experimental results, and manufacturing progress. Access it at [dashboard URL] (e.g., https://your-dashboard.herokuapp.com). Credentials are managed via the project's identity provider. Contact the project administrator for access.
+
+## Weekly Newsletter Subscription
+
+Subscribe to the weekly newsletter to receive updates on new research findings, pipeline runs, and project milestones. To subscribe, send an email to [newsletter@example.com] with subject "Subscribe" or visit [newsletter signup page]. The newsletter is sent every Monday.
+
+## Data Export Formats and Usage
+
+The pipeline generates data in multiple formats for external analysis:
+
+- **CSV**: Tabular data (e.g., candidate materials, experimental results) exported as comma-separated values. Use for spreadsheet analysis or import into data science tools.
+- **JSON**: Structured data for programmatic consumption. Each export contains metadata and records.
+- **Parquet**: Columnar storage format for large datasets, optimized for performance with pandas and Spark.
+- **Excel (.xlsx)**: Human-readable spreadsheets with multiple sheets for different data categories.
+
+To export data, run the pipeline with the `--export-format` flag (e.g., `python run_pipeline.py --export-format csv`). Exported files are saved to the `exports/` directory.
+
+## Slack Alert Configuration
+
+Slack alerts notify the team of critical events: pipeline failures, new high-Tc candidate discoveries, and experimental validation results. To configure:
+
+1. Create a Slack app with Incoming Webhook in your workspace.
+2. Copy the webhook URL.
+3. Set the environment variable `SLACK_WEBHOOK_URL` in your deployment environment.
+4. Optionally, set `SLACK_CHANNEL` to override the default channel (default: #alerts).
+
+The pipeline will send alerts automatically on completion of each run. Test the configuration by running `python run_pipeline.py --test-slack`.
