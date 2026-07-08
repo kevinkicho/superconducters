@@ -28,6 +28,7 @@ from torch_geometric.nn import GCNConv, global_mean_pool
 from torch_geometric.data import Data, DataLoader
 from pymatgen.core import Structure
 from pymatgen.analysis.local_env import VoronoiNN
+import datetime
 
 # Standard valence electron counts for common elements
 VALENCE: Dict[str, int] = {
@@ -1554,10 +1555,26 @@ def predict_tc():
 
 
 def train_model():
-    """Load database, extract features, train RandomForest model, save."""
+    """Load database, extract features, train RandomForest model, save, and log performance."""
     db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
     with open(db_path, 'r') as f:
         data = json.load(f)
+    
+    # Load DFT-derived features from dft_calculator.py output
+    dft_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'experimental_results.json')
+    dft_features = {}
+    try:
+        with open(dft_path, 'r') as f:
+            dft_data = json.load(f)
+        for entry in dft_data:
+            formula = entry.get('formula', '')
+            if formula:
+                dft_features[formula] = {
+                    'dos_fermi': entry.get('dos_fermi', 0.0),
+                    'avg_phonon_freq': entry.get('avg_phonon_freq', 0.0)
+                }
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("Warning: DFT features file not found or invalid. Proceeding without DFT features.")
     
     # Extract features and target
     X = []
@@ -1584,7 +1601,11 @@ def train_model():
         avg_mass = sum(ATOMIC_MASS.get(e, 50) * c for e, c in elements.items()) / total_atoms
         # Also include number of elements and total atoms
         num_elements = len(elements)
-        X.append([avg_valence, avg_debye, avg_mass, num_elements, total_atoms])
+        # Add DFT features if available
+        dft = dft_features.get(formula, {})
+        dos_fermi = dft.get('dos_fermi', 0.0)
+        avg_phonon_freq = dft.get('avg_phonon_freq', 0.0)
+        X.append([avg_valence, avg_debye, avg_mass, num_elements, total_atoms, dos_fermi, avg_phonon_freq])
         y.append(tc)
     
     X = np.array(X)
@@ -1601,10 +1622,36 @@ def train_model():
     joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
     
-    # Optionally evaluate
-    from sklearn.model_selection import cross_val_score
-    scores = cross_val_score(model, X, y, cv=min(5, len(X)), scoring='r2')
-    print(f"Cross-validation R2: {scores.mean():.3f} +/- {scores.std():.3f}")
+    # Evaluate and log performance
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    model_test = RandomForestRegressor(n_estimators=100, random_state=42)
+    model_test.fit(X_train, y_train)
+    y_pred = model_test.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    print(f"Test R2: {r2:.3f}, RMSE: {rmse:.3f} K")
+    
+    # Log performance to data/model_performance_log.json
+    log_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'model_performance_log.json')
+    log_entry = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "model": "RandomForestRegressor",
+        "features": ["avg_valence", "avg_debye", "avg_mass", "num_elements", "total_atoms", "dos_fermi", "avg_phonon_freq"],
+        "test_r2": r2,
+        "test_rmse": rmse,
+        "n_samples": len(y)
+    }
+    try:
+        with open(log_path, 'r') as f:
+            log_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        log_data = []
+    log_data.append(log_entry)
+    with open(log_path, 'w') as f:
+        json.dump(log_data, f, indent=2)
+    print(f"Performance logged to {log_path}")
+    
     return model
 
 if __name__ == '__main__':
