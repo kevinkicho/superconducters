@@ -1,0 +1,64 @@
+import pytest
+import torch
+import torch.nn as nn
+from torch_geometric.data import Data
+from dft_calculator import fine_tune_pinn_on_real_data, get_device
+
+
+class SimpleModel(nn.Module):
+    """Minimal model that processes a graph's node features to predict Tc."""
+    def __init__(self, in_dim=10, hidden=16):
+        super().__init__()
+        self.lin1 = nn.Linear(in_dim, hidden)
+        self.lin2 = nn.Linear(hidden, 1)
+
+    def forward(self, data):
+        x = data.x
+        x = torch.relu(self.lin1(x))
+        return self.lin2(x).squeeze()
+
+
+def test_fine_tune_pinn_on_real_data():
+    """Validate that fine-tuning reduces RMSE on synthetic real data."""
+    device = get_device()
+    model = SimpleModel().to(device)
+
+    # Create 5 synthetic graphs with random node features and target Tc values
+    real_data = []
+    for _ in range(5):
+        x = torch.randn(1, 10)
+        edge_index = torch.tensor([[0], [0]], dtype=torch.long)  # self-loop
+        graph = Data(x=x, edge_index=edge_index)
+        tc = torch.randn(1).item() * 10 + 100
+        real_data.append((graph, tc))
+
+    # Compute initial RMSE
+    model.eval()
+    initial_losses = []
+    for graph, tc in real_data:
+        graph = graph.to(device)
+        pred = model(graph).squeeze()
+        loss = nn.MSELoss()(pred, torch.tensor(tc, device=device))
+        initial_losses.append(loss.item())
+    initial_rmse = (sum(initial_losses) / len(initial_losses)) ** 0.5
+
+    # Fine-tune
+    model = fine_tune_pinn_on_real_data(model, real_data, epochs=10, lr=1e-3, device=device)
+
+    # Compute final RMSE
+    model.eval()
+    final_losses = []
+    for graph, tc in real_data:
+        graph = graph.to(device)
+        pred = model(graph).squeeze()
+        loss = nn.MSELoss()(pred, torch.tensor(tc, device=device))
+        final_losses.append(loss.item())
+    final_rmse = (sum(final_losses) / len(final_losses)) ** 0.5
+
+    # Assert RMSE decreased significantly
+    assert final_rmse < initial_rmse, (
+        f"RMSE did not decrease: initial {initial_rmse:.4f}, final {final_rmse:.4f}"
+    )
+    assert final_rmse < 0.5 * initial_rmse, (
+        f"RMSE reduction insufficient: {final_rmse / initial_rmse:.2%} of initial"
+    )
