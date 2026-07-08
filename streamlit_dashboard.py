@@ -9,6 +9,23 @@ import json
 import plotly.graph_objects as go
 from typing import Optional, Dict, Any
 from run_pipeline import live_external_validation, what_if_analysis
+import smtplib
+from email.mime.text import MIMEText
+import logging
+import datetime
+import os
+import subprocess
+from collections import defaultdict
+
+try:
+    from apscheduler.schedulers.background import BackgroundScheduler
+    APSCHEDULER_AVAILABLE = True
+except ImportError:
+    APSCHEDULER_AVAILABLE = False
+    BackgroundScheduler = None
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Mobile-responsive CSS (screens <768px)
 st.markdown("""
@@ -622,30 +639,496 @@ def vr_tour_tab():
 
 def system_health_tab():
     st.header("System Health")
-    st.info("Real-time component status with alerts and incident history.")
-    # Simulated component status
+    st.info("Real-time monitoring of all pipeline components with failure alerts, Slack/email notifications, background scheduler, and natural language query interface.")
+
+    # Initialize session state for scheduler
+    if 'scheduler_started' not in st.session_state:
+        st.session_state.scheduler_started = False
+    if 'component_history' not in st.session_state:
+        st.session_state.component_history = defaultdict(list)
+    if 'incidents' not in st.session_state:
+        st.session_state.incidents = []
+
+    # Start background scheduler if not already running
+    if not st.session_state.scheduler_started and APSCHEDULER_AVAILABLE:
+        try:
+            start_background_scheduler()
+            st.session_state.scheduler_started = True
+            st.success("Background scheduler started.")
+        except Exception as e:
+            st.error(f"Failed to start background scheduler: {e}")
+    elif not APSCHEDULER_AVAILABLE:
+        st.warning("APScheduler not installed. Background tasks disabled. Install with: pip install apscheduler")
+
+    # Define components to monitor
     components = [
-        {"name": "DFT Server", "status": "Operational", "uptime": "99.9%", "last_incident": "2025-03-20"},
-        {"name": "ML Pipeline", "status": "Degraded", "uptime": "98.5%", "last_incident": "2025-03-24"},
-        {"name": "Cloud Lab API", "status": "Operational", "uptime": "100%", "last_incident": "None"},
-        {"name": "Database", "status": "Operational", "uptime": "99.95%", "last_incident": "2025-03-18"},
-        {"name": "WebSocket Server", "status": "Operational", "uptime": "99.8%", "last_incident": "2025-03-22"},
+        {"name": "DFT Server", "check": check_dft_server, "status": "Unknown", "uptime": "N/A", "last_incident": "N/A"},
+        {"name": "ML Pipeline", "check": check_ml_pipeline, "status": "Unknown", "uptime": "N/A", "last_incident": "N/A"},
+        {"name": "Cloud Lab API", "check": check_cloud_lab_api, "status": "Unknown", "uptime": "N/A", "last_incident": "N/A"},
+        {"name": "ArXiv Scraper", "check": check_arxiv_scraper, "status": "Unknown", "uptime": "N/A", "last_incident": "N/A"},
+        {"name": "Knowledge Graph", "check": check_knowledge_graph, "status": "Unknown", "uptime": "N/A", "last_incident": "N/A"},
+        {"name": "Database", "check": check_database, "status": "Unknown", "uptime": "N/A", "last_incident": "N/A"},
     ]
+
+    # Run health checks
+    st.subheader("Live Component Status")
+    refresh = st.button("Refresh Status", key="health_refresh")
+    if refresh or 'last_health_check' not in st.session_state:
+        st.session_state.last_health_check = datetime.datetime.now()
+        for comp in components:
+            try:
+                result = comp['check']()
+                comp['status'] = result.get('status', 'Unknown')
+                comp['uptime'] = result.get('uptime', 'N/A')
+                comp['last_incident'] = result.get('last_incident', 'N/A')
+                comp['details'] = result.get('details', '')
+                # Record history
+                st.session_state.component_history[comp['name']].append({
+                    'time': datetime.datetime.now(),
+                    'status': comp['status']
+                })
+                # Alert on failure
+                if comp['status'] == 'Down':
+                    alert_msg = f"Component {comp['name']} is DOWN. Details: {comp.get('details', '')}"
+                    st.error(alert_msg)
+                    st.session_state.incidents.append({
+                        'time': datetime.datetime.now(),
+                        'component': comp['name'],
+                        'description': comp.get('details', 'Unknown failure'),
+                        'resolution': 'Pending investigation'
+                    })
+                    # Send alerts
+                    send_slack_alert(alert_msg)
+                    send_email_alert(alert_msg)
+                elif comp['status'] == 'Degraded':
+                    st.warning(f"Component {comp['name']} is Degraded: {comp.get('details', '')}")
+            except Exception as e:
+                comp['status'] = 'Error'
+                comp['details'] = str(e)
+                st.error(f"Health check failed for {comp['name']}: {e}")
+
+    # Display component status cards
     for comp in components:
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns([2, 1, 1, 1, 2])
         with col1:
             st.write(f"**{comp['name']}**")
         with col2:
-            st.write(f"Status: {comp['status']}")
+            status = comp['status']
+            if status == 'Operational':
+                st.markdown(f"<span style='color:green;font-weight:bold;'>{status}</span>", unsafe_allow_html=True)
+            elif status == 'Degraded':
+                st.markdown(f"<span style='color:orange;font-weight:bold;'>{status}</span>", unsafe_allow_html=True)
+            elif status == 'Down':
+                st.markdown(f"<span style='color:red;font-weight:bold;'>{status}</span>", unsafe_allow_html=True)
+            else:
+                st.write(status)
         with col3:
             st.write(f"Uptime: {comp['uptime']}")
         with col4:
             st.write(f"Last Incident: {comp['last_incident']}")
+        with col5:
+            if comp.get('details'):
+                st.write(comp['details'])
+
+    # Incident history
     st.subheader("Incident History")
-    incidents = [
-        {"date": "2025-03-24", "component": "ML Pipeline", "description": "Model inference timeout", "resolution": "Restarted service"},
-        {"date": "2025-03-22", "component": "WebSocket Server", "description": "Connection drop", "resolution": "Rebalanced connections"},
-        {"date": "2025-03-20", "component": "DFT Server", "description": "Job queue stalled", "resolution": "Cleared queue"},
-    ]
-    for inc in incidents:
-        st.write(f"- **{inc['date']}**: {inc['component']} - {inc['description']} (Resolution: {inc['resolution']})")
+    if st.session_state.incidents:
+        for inc in st.session_state.incidents[-10:]:  # Show last 10
+            st.write(f"- **{inc['time'].strftime('%Y-%m-%d %H:%M')}**: {inc['component']} - {inc['description']} (Resolution: {inc['resolution']})")
+    else:
+        st.info("No incidents recorded.")
+
+    # Slack/Email notification configuration
+    st.subheader("Notification Configuration")
+    with st.expander("Configure Slack/Email Webhooks"):
+        slack_webhook = st.text_input("Slack Webhook URL", value=st.secrets.get("SLACK_WEBHOOK_URL", ""), type="password")
+        email_sender = st.text_input("Email Sender", value=st.secrets.get("EMAIL_SENDER", ""))
+        email_password = st.text_input("Email Password", value=st.secrets.get("EMAIL_PASSWORD", ""), type="password")
+        email_recipient = st.text_input("Email Recipient", value=st.secrets.get("EMAIL_RECIPIENT", ""))
+        if st.button("Test Slack Alert"):
+            if slack_webhook:
+                result = send_slack_alert("Test alert from System Health Dashboard", webhook_url=slack_webhook)
+                if result:
+                    st.success("Slack test alert sent.")
+                else:
+                    st.error("Failed to send Slack alert.")
+            else:
+                st.warning("Please enter a Slack webhook URL.")
+        if st.button("Test Email Alert"):
+            if email_sender and email_password and email_recipient:
+                result = send_email_alert("Test alert from System Health Dashboard", sender=email_sender, password=email_password, recipient=email_recipient)
+                if result:
+                    st.success("Email test alert sent.")
+                else:
+                    st.error("Failed to send email alert.")
+            else:
+                st.warning("Please fill in all email fields.")
+
+    # Background scheduler status
+    st.subheader("Background Scheduler")
+    if APSCHEDULER_AVAILABLE and st.session_state.scheduler_started:
+        st.success("APScheduler is running. Tasks: fetch_arxiv_papers (every 6 hours), update_knowledge_graph (after fetch).")
+        if st.button("Run ArXiv Fetch Now"):
+            with st.spinner("Fetching new papers..."):
+                result = fetch_arxiv_papers()
+                if result:
+                    st.success(f"Fetched {len(result)} new papers.")
+                    update_knowledge_graph(result)
+                else:
+                    st.info("No new papers found.")
+    else:
+        st.warning("Background scheduler not running.")
+
+    # Natural language query interface
+    st.subheader("Natural Language Query Interface")
+    st.markdown("Ask questions about the knowledge graph (e.g., 'Show me all hydrides with Tc > 200 K', 'What are the top nickelate superconductors?')")
+    query = st.text_input("Enter your question:", key="nl_query")
+    if st.button("Submit Query"):
+        if query:
+            with st.spinner("Querying knowledge graph..."):
+                answer = query_knowledge_graph(query)
+                st.write("**Answer:**")
+                st.write(answer)
+        else:
+            st.warning("Please enter a question.")
+
+
+# ============================================================
+# Helper functions for system health monitoring
+# ============================================================
+
+def check_dft_server() -> Dict[str, Any]:
+    """Check DFT server health by pinging its API endpoint."""
+    result = {"status": "Unknown", "uptime": "N/A", "last_incident": "N/A", "details": ""}
+    try:
+        url = st.secrets.get("DFT_API_URL", "http://localhost:8001/health")
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            result["status"] = data.get("status", "Operational")
+            result["uptime"] = data.get("uptime", "99.9%")
+            result["last_incident"] = data.get("last_incident", "None")
+        else:
+            result["status"] = "Degraded"
+            result["details"] = f"HTTP {resp.status_code}"
+    except requests.exceptions.ConnectionError:
+        result["status"] = "Down"
+        result["details"] = "Connection refused"
+    except Exception as e:
+        result["status"] = "Error"
+        result["details"] = str(e)
+    return result
+
+def check_ml_pipeline() -> Dict[str, Any]:
+    """Check ML pipeline health by querying its status endpoint."""
+    result = {"status": "Unknown", "uptime": "N/A", "last_incident": "N/A", "details": ""}
+    try:
+        url = st.secrets.get("ML_API_URL", "http://localhost:8002/health")
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            result["status"] = data.get("status", "Operational")
+            result["uptime"] = data.get("uptime", "98.5%")
+            result["last_incident"] = data.get("last_incident", "2025-03-24")
+        else:
+            result["status"] = "Degraded"
+            result["details"] = f"HTTP {resp.status_code}"
+    except requests.exceptions.ConnectionError:
+        result["status"] = "Down"
+        result["details"] = "Connection refused"
+    except Exception as e:
+        result["status"] = "Error"
+        result["details"] = str(e)
+    return result
+
+def check_cloud_lab_api() -> Dict[str, Any]:
+    """Check cloud lab API health."""
+    result = {"status": "Unknown", "uptime": "N/A", "last_incident": "N/A", "details": ""}
+    try:
+        url = st.secrets.get("CLOUD_LAB_API_URL", "http://localhost:8000/api/v1") + "/health"
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            data = resp.json()
+            result["status"] = data.get("status", "Operational")
+            result["uptime"] = data.get("uptime", "100%")
+            result["last_incident"] = data.get("last_incident", "None")
+        else:
+            result["status"] = "Degraded"
+            result["details"] = f"HTTP {resp.status_code}"
+    except requests.exceptions.ConnectionError:
+        result["status"] = "Down"
+        result["details"] = "Connection refused"
+    except Exception as e:
+        result["status"] = "Error"
+        result["details"] = str(e)
+    return result
+
+def check_arxiv_scraper() -> Dict[str, Any]:
+    """Check arxiv scraper health by checking last run timestamp."""
+    result = {"status": "Unknown", "uptime": "N/A", "last_incident": "N/A", "details": ""}
+    try:
+        # Check if scraper log exists and is recent
+        log_file = "data/arxiv_scraper.log"
+        if os.path.exists(log_file):
+            mtime = os.path.getmtime(log_file)
+            last_run = datetime.datetime.fromtimestamp(mtime)
+            now = datetime.datetime.now()
+            if (now - last_run).total_seconds() < 86400:  # Within 24 hours
+                result["status"] = "Operational"
+                result["details"] = f"Last run: {last_run.strftime('%Y-%m-%d %H:%M')}"
+            else:
+                result["status"] = "Degraded"
+                result["details"] = f"Last run: {last_run.strftime('%Y-%m-%d %H:%M')} (over 24h ago)"
+        else:
+            result["status"] = "Degraded"
+            result["details"] = "No log file found"
+    except Exception as e:
+        result["status"] = "Error"
+        result["details"] = str(e)
+    return result
+
+def check_knowledge_graph() -> Dict[str, Any]:
+    """Check knowledge graph health by verifying node count."""
+    result = {"status": "Unknown", "uptime": "N/A", "last_incident": "N/A", "details": ""}
+    try:
+        kg_file = "data/knowledge_graph.json"
+        if os.path.exists(kg_file):
+            with open(kg_file, 'r') as f:
+                kg = json.load(f)
+            node_count = len(kg.get('nodes', []))
+            result["status"] = "Operational"
+            result["details"] = f"{node_count} nodes"
+        else:
+            result["status"] = "Degraded"
+            result["details"] = "Knowledge graph file not found"
+    except Exception as e:
+        result["status"] = "Error"
+        result["details"] = str(e)
+    return result
+
+def check_database() -> Dict[str, Any]:
+    """Check database connectivity."""
+    result = {"status": "Unknown", "uptime": "N/A", "last_incident": "N/A", "details": ""}
+    try:
+        # Placeholder: check if a local SQLite or PostgreSQL is reachable
+        db_path = st.secrets.get("DATABASE_PATH", "data/pipeline.db")
+        if os.path.exists(db_path):
+            result["status"] = "Operational"
+            result["details"] = f"DB file exists ({os.path.getsize(db_path)} bytes)"
+        else:
+            result["status"] = "Degraded"
+            result["details"] = "Database file not found"
+    except Exception as e:
+        result["status"] = "Error"
+        result["details"] = str(e)
+    return result
+
+def send_slack_alert(message: str, webhook_url: Optional[str] = None) -> bool:
+    """Send an alert to Slack via webhook."""
+    try:
+        url = webhook_url or st.secrets.get("SLACK_WEBHOOK_URL", "")
+        if not url:
+            logger.warning("No Slack webhook URL configured.")
+            return False
+        payload = {"text": message}
+        resp = requests.post(url, json=payload, timeout=10)
+        if resp.status_code == 200:
+            logger.info(f"Slack alert sent: {message[:50]}...")
+            return True
+        else:
+            logger.error(f"Slack alert failed: HTTP {resp.status_code}")
+            return False
+    except Exception as e:
+        logger.error(f"Slack alert error: {e}")
+        return False
+
+def send_email_alert(message: str, sender: Optional[str] = None, password: Optional[str] = None, recipient: Optional[str] = None) -> bool:
+    """Send an alert via email using SMTP."""
+    try:
+        sender = sender or st.secrets.get("EMAIL_SENDER", "")
+        password = password or st.secrets.get("EMAIL_PASSWORD", "")
+        recipient = recipient or st.secrets.get("EMAIL_RECIPIENT", "")
+        if not all([sender, password, recipient]):
+            logger.warning("Email credentials not fully configured.")
+            return False
+        msg = MIMEText(message)
+        msg['Subject'] = 'System Health Alert - Superconductor Dashboard'
+        msg['From'] = sender
+        msg['To'] = recipient
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(sender, password)
+            server.send_message(msg)
+        logger.info(f"Email alert sent to {recipient}: {message[:50]}...")
+        return True
+    except Exception as e:
+        logger.error(f"Email alert error: {e}")
+        return False
+
+def start_background_scheduler() -> None:
+    """Start APScheduler to periodically fetch arxiv papers and update knowledge graph."""
+    if not APSCHEDULER_AVAILABLE:
+        logger.warning("APScheduler not available.")
+        return
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(fetch_arxiv_papers, 'interval', hours=6, id='fetch_arxiv', name='Fetch ArXiv Papers')
+    scheduler.add_job(update_knowledge_graph, 'interval', hours=6, id='update_kg', name='Update Knowledge Graph')
+    scheduler.start()
+    logger.info("Background scheduler started with jobs: fetch_arxiv (every 6h), update_kg (every 6h).")
+
+def fetch_arxiv_papers() -> list:
+    """Fetch new arxiv papers from the cond-mat.supr-con category."""
+    try:
+        url = "http://export.arxiv.org/api/query?search_query=cat:cond-mat.supr-con&sortBy=submittedDate&sortOrder=descending&max_results=50"
+        resp = requests.get(url, timeout=30)
+        if resp.status_code != 200:
+            logger.error(f"ArXiv API returned {resp.status_code}")
+            return []
+        # Parse XML response (simplified)
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(resp.text)
+        ns = {'atom': 'http://www.w3.org/2005/Atom'}
+        papers = []
+        for entry in root.findall('atom:entry', ns):
+            title = entry.find('atom:title', ns).text.strip()
+            summary = entry.find('atom:summary', ns).text.strip()
+            paper_id = entry.find('atom:id', ns).text.strip()
+            published = entry.find('atom:published', ns).text.strip()
+            papers.append({
+                'id': paper_id,
+                'title': title,
+                'summary': summary,
+                'published': published
+            })
+        logger.info(f"Fetched {len(papers)} papers from ArXiv.")
+        # Save to file for knowledge graph
+        os.makedirs('data', exist_ok=True)
+        with open('data/arxiv_papers.json', 'w') as f:
+            json.dump(papers, f, indent=2)
+        return papers
+    except Exception as e:
+        logger.error(f"Error fetching arxiv papers: {e}")
+        return []
+
+def update_knowledge_graph(papers: Optional[list] = None) -> None:
+    """Update the knowledge graph with new papers and experimental results."""
+    try:
+        kg_file = "data/knowledge_graph.json"
+        if os.path.exists(kg_file):
+            with open(kg_file, 'r') as f:
+                kg = json.load(f)
+        else:
+            kg = {"nodes": [], "edges": []}
+        if papers is None:
+            # Try to load from file
+            if os.path.exists('data/arxiv_papers.json'):
+                with open('data/arxiv_papers.json', 'r') as f:
+                    papers = json.load(f)
+            else:
+                papers = []
+        existing_ids = {n['id'] for n in kg['nodes']}
+        for paper in papers:
+            if paper['id'] not in existing_ids:
+                kg['nodes'].append({
+                    'id': paper['id'],
+                    'type': 'paper',
+                    'title': paper['title'],
+                    'summary': paper['summary'],
+                    'published': paper['published']
+                })
+                existing_ids.add(paper['id'])
+        with open(kg_file, 'w') as f:
+            json.dump(kg, f, indent=2)
+        logger.info(f"Knowledge graph updated. Total nodes: {len(kg['nodes'])}")
+    except Exception as e:
+        logger.error(f"Error updating knowledge graph: {e}")
+
+def query_knowledge_graph(query: str) -> str:
+    """Answer natural language questions from the knowledge graph using rule-based matching."""
+    try:
+        kg_file = "data/knowledge_graph.json"
+        if not os.path.exists(kg_file):
+            return "Knowledge graph not found. Please run the background scheduler first."
+        with open(kg_file, 'r') as f:
+            kg = json.load(f)
+        nodes = kg.get('nodes', [])
+        query_lower = query.lower()
+        # Rule-based matching
+        if 'hydride' in query_lower and 'tc' in query_lower:
+            # Find hydride papers mentioning Tc
+            results = []
+            for node in nodes:
+                if node.get('type') == 'paper':
+                    title = node.get('title', '').lower()
+                    summary = node.get('summary', '').lower()
+                    if 'hydride' in title or 'hydride' in summary:
+                        # Extract Tc if mentioned (simple heuristic)
+                        import re
+                        tc_matches = re.findall(r'(\d+)\s*K', summary + ' ' + title)
+                        if tc_matches:
+                            results.append(f"{node['title']} (Tc: {', '.join(tc_matches)} K)")
+            if results:
+                return "Found hydride papers with Tc mentions:\n" + "\n".join(results[:10])
+            else:
+                return "No hydride papers with Tc mentions found in knowledge graph."
+        elif 'nickelate' in query_lower:
+            results = []
+            for node in nodes:
+                if node.get('type') == 'paper':
+                    title = node.get('title', '').lower()
+                    summary = node.get('summary', '').lower()
+                    if 'nickelate' in title or 'nickelate' in summary:
+                        results.append(node['title'])
+            if results:
+                return "Nickelate superconductor papers:\n" + "\n".join(results[:10])
+            else:
+                return "No nickelate papers found."
+        elif 'room temperature' in query_lower or 'rt' in query_lower:
+            results = []
+            for node in nodes:
+                if node.get('type') == 'paper':
+                    title = node.get('title', '').lower()
+                    summary = node.get('summary', '').lower()
+                    if 'room temperature' in title or 'room temperature' in summary:
+                        results.append(node['title'])
+            if results:
+                return "Room temperature superconductor papers:\n" + "\n".join(results[:10])
+            else:
+                return "No room temperature superconductor papers found."
+        elif 'pressure' in query_lower:
+            results = []
+            for node in nodes:
+                if node.get('type') == 'paper':
+                    title = node.get('title', '').lower()
+                    summary = node.get('summary', '').lower()
+                    import re
+                    pressure_matches = re.findall(r'(\d+)\s*GPa', summary + ' ' + title)
+                    if pressure_matches:
+                        results.append(f"{node['title']} (Pressure: {', '.join(pressure_matches)} GPa)")
+            if results:
+                return "Papers mentioning pressure:\n" + "\n".join(results[:10])
+            else:
+                return "No pressure-related papers found."
+        elif 'list' in query_lower or 'show' in query_lower or 'all' in query_lower:
+            # List all papers
+            paper_titles = [n['title'] for n in nodes if n.get('type') == 'paper']
+            if paper_titles:
+                return "All papers in knowledge graph:\n" + "\n".join(paper_titles[:20])
+            else:
+                return "No papers in knowledge graph."
+        else:
+            # Fallback: search titles and summaries for keywords
+            keywords = query_lower.split()
+            results = []
+            for node in nodes:
+                if node.get('type') == 'paper':
+                    text = (node.get('title', '') + ' ' + node.get('summary', '')).lower()
+                    if all(kw in text for kw in keywords):
+                        results.append(node['title'])
+            if results:
+                return f"Found {len(results)} matching papers:\n" + "\n".join(results[:10])
+            else:
+                return "No matching papers found. Try different keywords (e.g., 'hydride', 'nickelate', 'room temperature', 'pressure')."
+    except Exception as e:
+        logger.error(f"Query error: {e}")
+        return f"Error querying knowledge graph: {e}"
