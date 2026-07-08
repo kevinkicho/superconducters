@@ -7027,3 +7027,322 @@ def submit_to_arxiv():
     print("[submit_to_arxiv] Note: Automated arXiv submission via API is not officially supported.")
     print("[submit_to_arxiv] Please use the manual submission guide above.")
     print("[submit_to_arxiv] Once submitted, update literature_review.md with the real preprint link.")
+
+
+def generate_latex_paper():
+    """
+    Convert docs/research_paper.md to LaTeX using a Nature Communications template.
+
+    Reads the Markdown research paper from docs/research_paper.md, converts it to
+    LaTeX format with the Nature Communications article template (including title,
+    authors, abstract, sections, figures, tables, and references), and writes the
+    result to docs/research_paper.tex.
+
+    Requires:
+      - pandoc (for Markdown -> LaTeX conversion)
+      - A custom LaTeX template file (templates/nature_comm_template.tex) if available;
+        otherwise uses a built-in minimal template.
+
+    Environment variables:
+      - PAPER_TITLE: override the paper title (optional)
+      - PAPER_AUTHORS: comma-separated author list (optional)
+    """
+    import os
+    import subprocess
+    import sys
+
+    md_path = "docs/research_paper.md"
+    tex_path = "docs/research_paper.tex"
+
+    if not os.path.exists(md_path):
+        print("[generate_latex_paper] {} not found. Skipping.".format(md_path))
+        return
+
+    # Determine template path
+    template_path = "templates/nature_comm_template.tex"
+    if not os.path.exists(template_path):
+        print("[generate_latex_paper] Custom template not found at {}. Using built-in minimal template.".format(template_path))
+        template_path = None
+
+    # Build pandoc command
+    cmd = ["pandoc", md_path, "-o", tex_path, "--from", "markdown", "--to", "latex"]
+    if template_path:
+        cmd.extend(["--template", template_path])
+    # Add metadata if provided
+    title = os.environ.get("PAPER_TITLE")
+    authors = os.environ.get("PAPER_AUTHORS")
+    if title:
+        cmd.extend(["--metadata", "title={}".format(title)])
+    if authors:
+        cmd.extend(["--metadata", "author={}".format(authors)])
+
+    try:
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        print("[generate_latex_paper] LaTeX paper written to {}".format(tex_path))
+    except subprocess.CalledProcessError as e:
+        print("[generate_latex_paper] pandoc conversion failed: {}".format(e.stderr))
+        sys.exit(1)
+    except FileNotFoundError:
+        print("[generate_latex_paper] pandoc not found. Please install pandoc (https://pandoc.org).")
+        sys.exit(1)
+
+
+def generate_weekly_newsletter():
+    """
+    Create docs/weekly_digest.md from arxiv_scraper results and send via SMTP.
+
+    Steps:
+      1. Import arxiv_scraper module and call its run() function to get recent
+         preprints related to superconductivity.
+      2. Format the results into a Markdown digest with sections for new papers,
+         trending topics, and notable citations.
+      3. Write the digest to docs/weekly_digest.md.
+      4. If SMTP credentials are configured, send the digest via email to the
+         subscriber list.
+
+    Environment variables for SMTP:
+      - SMTP_HOST: SMTP server hostname (default: smtp.gmail.com)
+      - SMTP_PORT: SMTP server port (default: 587)
+      - SMTP_USER: SMTP username (email address)
+      - SMTP_PASSWORD: SMTP password or app password
+      - NEWSLETTER_RECIPIENTS: comma-separated list of recipient email addresses
+      - NEWSLETTER_SENDER: sender email address (default: SMTP_USER)
+    """
+    import os
+    import sys
+    import importlib
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    from datetime import datetime
+
+    # Step 1: Fetch arxiv results
+    try:
+        arxiv_mod = importlib.import_module("arxiv_scraper")
+        if hasattr(arxiv_mod, "run"):
+            results = arxiv_mod.run()
+        else:
+            print("[generate_weekly_newsletter] arxiv_scraper module has no run() function. Using empty results.")
+            results = []
+    except ImportError:
+        print("[generate_weekly_newsletter] arxiv_scraper module not found. Skipping.")
+        results = []
+
+    # Step 2: Build digest content
+    digest_lines = []
+    digest_lines.append("# Weekly Superconductor Digest")
+    digest_lines.append("")
+    digest_lines.append("Generated: {}".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+    digest_lines.append("")
+    digest_lines.append("## New Preprints")
+    digest_lines.append("")
+    if results:
+        for paper in results:
+            title = paper.get("title", "Untitled")
+            authors = paper.get("authors", "Unknown")
+            link = paper.get("link", "#")
+            summary = paper.get("summary", "")[:200]
+            digest_lines.append("- **{}** by {} ([arXiv]({})): {}".format(title, authors, link, summary))
+    else:
+        digest_lines.append("No new preprints found this week.")
+    digest_lines.append("")
+    digest_lines.append("## Trending Topics")
+    digest_lines.append("")
+    digest_lines.append("- Hydride superconductors under high pressure")
+    digest_lines.append("- Nickelate superconductors")
+    digest_lines.append("- Machine learning for materials discovery")
+    digest_lines.append("")
+    digest_lines.append("## Notable Citations")
+    digest_lines.append("")
+    digest_lines.append("- Drozdov et al., Nature 2015 (H3S, Tc=203 K)")
+    digest_lines.append("- Drozdov et al., Nature 2019 (LaH10, Tc=250 K)")
+    digest_lines.append("- Snider et al., Nature 2020 (C-S-H, Tc=288 K)")
+    digest_lines.append("")
+    digest_lines.append("---")
+    digest_lines.append("*This digest is automatically generated by the superconductor discovery pipeline.*")
+    digest_content = "\n".join(digest_lines)
+
+    # Step 3: Write to file
+    digest_path = "docs/weekly_digest.md"
+    os.makedirs(os.path.dirname(digest_path), exist_ok=True)
+    with open(digest_path, "w") as f:
+        f.write(digest_content)
+    print("[generate_weekly_newsletter] Weekly digest written to {}".format(digest_path))
+
+    # Step 4: Send via SMTP if configured
+    smtp_host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    smtp_port = int(os.environ.get("SMTP_PORT", "587"))
+    smtp_user = os.environ.get("SMTP_USER")
+    smtp_password = os.environ.get("SMTP_PASSWORD")
+    recipients = os.environ.get("NEWSLETTER_RECIPIENTS")
+    sender = os.environ.get("NEWSLETTER_SENDER", smtp_user)
+
+    if not (smtp_user and smtp_password and recipients):
+        print("[generate_weekly_newsletter] SMTP not fully configured. Skipping email send.")
+        print("[generate_weekly_newsletter] To enable email, set SMTP_USER, SMTP_PASSWORD, and NEWSLETTER_RECIPIENTS.")
+        return
+
+    try:
+        msg = MIMEMultipart()
+        msg["From"] = sender
+        msg["To"] = recipients
+        msg["Subject"] = "Weekly Superconductor Digest - {}".format(datetime.now().strftime("%Y-%m-%d"))
+        msg.attach(MIMEText(digest_content, "plain"))
+
+        server = smtplib.SMTP(smtp_host, smtp_port)
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        server.sendmail(sender, recipients.split(","), msg.as_string())
+        server.quit()
+        print("[generate_weekly_newsletter] Digest sent to {}".format(recipients))
+    except Exception as e:
+        print("[generate_weekly_newsletter] Failed to send email: {}".format(e))
+
+
+def export_candidate_data():
+    """
+    Write output/candidates.json and output/candidates.csv with current candidate data.
+
+    Reads the candidate list from candidate_materials.md (or from the pipeline's
+    internal candidate store if available), extracts structured fields (compound,
+    predicted Tc, confidence, synthesis method, status), and writes both JSON and
+    CSV formats to the output/ directory.
+
+    The JSON file contains a list of candidate objects with all fields.
+    The CSV file contains the same data in tabular form with a header row.
+    """
+    import os
+    import json
+    import csv
+    import re
+
+    candidate_file = "candidate_materials.md"
+    output_dir = "output"
+    os.makedirs(output_dir, exist_ok=True)
+
+    candidates = []
+
+    if os.path.exists(candidate_file):
+        with open(candidate_file, "r") as f:
+            content = f.read()
+        # Parse markdown table or list format
+        lines = content.split("\n")
+        for line in lines:
+            # Try to match a table row: | compound | Tc | confidence | ...
+            if line.startswith("|") and "|" in line[1:]:
+                cols = [c.strip() for c in line.split("|")[1:-1]]
+                if len(cols) >= 2:
+                    candidate = {
+                        "compound": cols[0],
+                        "predicted_tc": cols[1] if len(cols) > 1 else "",
+                        "confidence": cols[2] if len(cols) > 2 else "",
+                        "synthesis_method": cols[3] if len(cols) > 3 else "",
+                        "status": cols[4] if len(cols) > 4 else ""
+                    }
+                    candidates.append(candidate)
+            # Also try list items: - compound: Tc, confidence, ...
+            elif line.startswith("- "):
+                parts = line[2:].split(" - ")
+                if len(parts) >= 1:
+                    candidate = {
+                        "compound": parts[0].strip(),
+                        "predicted_tc": parts[1].strip() if len(parts) > 1 else "",
+                        "confidence": parts[2].strip() if len(parts) > 2 else "",
+                        "synthesis_method": parts[3].strip() if len(parts) > 3 else "",
+                        "status": parts[4].strip() if len(parts) > 4 else ""
+                    }
+                    candidates.append(candidate)
+    else:
+        print("[export_candidate_data] {} not found. Using empty candidate list.".format(candidate_file))
+
+    # Write JSON
+    json_path = os.path.join(output_dir, "candidates.json")
+    with open(json_path, "w") as f:
+        json.dump(candidates, f, indent=2)
+    print("[export_candidate_data] JSON written to {}".format(json_path))
+
+    # Write CSV
+    csv_path = os.path.join(output_dir, "candidates.csv")
+    if candidates:
+        fieldnames = candidates[0].keys()
+        with open(csv_path, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(candidates)
+    else:
+        with open(csv_path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["compound", "predicted_tc", "confidence", "synthesis_method", "status"])
+    print("[export_candidate_data] CSV written to {}".format(csv_path))
+
+
+def send_slack_alert():
+    """
+    Notify Slack webhook on critical failures in the pipeline.
+
+    This function checks for critical failure indicators (e.g., pipeline exit code,
+    error log files, or a sentinel file) and sends a formatted alert message to a
+    Slack webhook URL.
+
+    Environment variables:
+      - SLACK_WEBHOOK_URL: Slack Incoming Webhook URL (required)
+      - PIPELINE_LOG_FILE: path to the pipeline log file (default: pipeline.log)
+      - CRITICAL_ERROR_PATTERN: regex pattern to detect critical errors in the log
+        (default: "CRITICAL|FATAL|ERROR.*failed")
+
+    The alert includes:
+      - Pipeline name and timestamp
+      - Brief error summary (first matching critical line)
+      - Link to the log file (if available)
+    """
+    import os
+    import re
+    import requests
+    import json
+    from datetime import datetime
+
+    webhook_url = os.environ.get("SLACK_WEBHOOK_URL")
+    if not webhook_url:
+        print("[send_slack_alert] SLACK_WEBHOOK_URL not set. Skipping.")
+        return
+
+    log_file = os.environ.get("PIPELINE_LOG_FILE", "pipeline.log")
+    error_pattern = os.environ.get("CRITICAL_ERROR_PATTERN", "CRITICAL|FATAL|ERROR.*failed")
+
+    error_summary = None
+    if os.path.exists(log_file):
+        with open(log_file, "r") as f:
+            for line in f:
+                if re.search(error_pattern, line, re.IGNORECASE):
+                    error_summary = line.strip()
+                    break
+
+    if not error_summary:
+        print("[send_slack_alert] No critical errors found in {}. Skipping alert.".format(log_file))
+        return
+
+    # Build Slack message
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    message = {
+        "text": ":warning: *Pipeline Critical Failure Alert*",
+        "attachments": [
+            {
+                "color": "danger",
+                "fields": [
+                    {"title": "Pipeline", "value": "Superconductor Discovery Pipeline", "short": True},
+                    {"title": "Timestamp", "value": timestamp, "short": True},
+                    {"title": "Error Summary", "value": error_summary, "short": False},
+                    {"title": "Log File", "value": log_file, "short": True}
+                ]
+            }
+        ]
+    }
+
+    try:
+        resp = requests.post(webhook_url, json=message, timeout=10)
+        if resp.status_code == 200:
+            print("[send_slack_alert] Slack alert sent successfully.")
+        else:
+            print("[send_slack_alert] Slack webhook returned status {}: {}".format(resp.status_code, resp.text))
+    except Exception as e:
+        print("[send_slack_alert] Failed to send Slack alert: {}".format(e))
