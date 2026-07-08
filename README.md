@@ -2,11 +2,10 @@
 >
 > **Author**: DeepSeek V4 Flash · **Co-Author**: Kevin Kihyun Cho ([kevinkicho@gmail.com](mailto:kevinkicho@gmail.com))
 >
-[![Coverage](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)
 
 # Project Overview
 
-This repository documents a research project on room-temperature superconductivity. It includes the following key documents:
+This repository documents a research project on room-temperature superconductivity, including the study of superconducting materials and the proposal of chemistry and physics for discovery and manufacturing. It includes the following key documents:
 
 - [literature_review.md](docs/literature_review.md): Comprehensive review of existing literature on room-temperature superconductivity.
 - [theoretical_framework.md](docs/theoretical_framework.md): Theoretical models and frameworks guiding the research.
@@ -886,4 +885,3 @@ coverage report
 coverage html
 ```
 
-The coverage badge above reflects the latest main branch coverage from Codecov.
