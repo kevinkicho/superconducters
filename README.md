@@ -153,3 +153,12 @@ To reproduce the results in this repository, you can use the provided Dockerfile
 4. Run the pipeline as described in the User Manual.
 
 For more details, see the [Dockerfile](Dockerfile) and [environment.yml](environment.yml) in the repository root.
+
+
+## Business Plan
+
+A comprehensive business plan for the top candidate material is available in [business_plan.md](business_plan.md).
+
+## Press Release
+
+A press release announcing the discovery of the top candidate material is available in [press_release.md](press_release.md).
