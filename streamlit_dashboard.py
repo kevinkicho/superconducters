@@ -2,8 +2,55 @@ import streamlit as st
 import requests
 import pandas as pd
 import time
+import asyncio
+import websockets
+import threading
+import json
+import plotly.graph_objects as go
 from typing import Optional, Dict, Any
 from run_pipeline import live_external_validation, what_if_analysis
+
+class WebSocketServer:
+    """Simple WebSocket server for real-time collaboration."""
+    def __init__(self, host='localhost', port=8765):
+        self.host = host
+        self.port = port
+        self.clients = set()
+        self.state = {}  # shared state (plot selections, annotations)
+
+    async def handler(self, websocket, path):
+        self.clients.add(websocket)
+        try:
+            # Send current state to new client
+            await websocket.send(json.dumps({'type': 'init', 'state': self.state}))
+            async for message in websocket:
+                data = json.loads(message)
+                # Update state and broadcast
+                if data['type'] == 'update':
+                    self.state.update(data['payload'])
+                    # Broadcast to all other clients
+                    for client in self.clients:
+                        if client != websocket:
+                            try:
+                                await client.send(json.dumps({'type': 'update', 'payload': data['payload']}))
+                            except:
+                                pass
+        except websockets.exceptions.ConnectionClosed:
+            pass
+        finally:
+            self.clients.discard(websocket)
+
+    def start(self):
+        asyncio.run(self._run())
+
+    async def _run(self):
+        async with websockets.serve(self.handler, self.host, self.port):
+            await asyncio.Future()  # run forever
+
+def start_websocket_server():
+    ws_server = WebSocketServer()
+    ws_server.start()
+
 
 # Cloud Lab API configuration
 API_BASE_URL = st.secrets.get("CLOUD_LAB_API_URL", "http://localhost:8000/api/v1")
@@ -325,6 +372,9 @@ def fetch_status_panel() -> Optional[Dict[str, Any]]:
 
 
 if __name__ == "__main__":
+    # Start WebSocket server in background thread
+    ws_thread = threading.Thread(target=start_websocket_server, daemon=True)
+    ws_thread.start()
     main()
 
 # --- Collaboration Hub Tab ---
@@ -340,13 +390,64 @@ def collaboration_hub_tab():
     # Role selector (for demo purposes)
     st.sidebar.selectbox("Select Role", ["viewer", "contributor", "admin"], key="user_role")
     
-    # Candidate materials view
-    st.subheader("Candidate Materials")
+    # WebSocket connection status
+    if "ws_connected" not in st.session_state:
+        st.session_state.ws_connected = False
+    
+    # Try to connect to WebSocket server
+    if not st.session_state.ws_connected:
+        try:
+            async def connect():
+                async with websockets.connect("ws://localhost:8765") as websocket:
+                    st.session_state.ws_connected = True
+                    msg = await websocket.recv()
+                    data = json.loads(msg)
+                    if data['type'] == 'init':
+                        st.session_state.shared_state = data['state']
+                    async for message in websocket:
+                        data = json.loads(message)
+                        if data['type'] == 'update':
+                            st.session_state.shared_state.update(data['payload'])
+                            st.experimental_rerun()
+            threading.Thread(target=lambda: asyncio.run(connect()), daemon=True).start()
+        except Exception as e:
+            st.warning(f"WebSocket connection failed: {e}")
+    
+    # Shared plot area
+    st.subheader("Shared Plot")
     candidates = fetch_top_candidates()
-    if candidates is not None:
-        st.dataframe(candidates)
+    if candidates is not None and not candidates.empty:
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=candidates.index,
+            y=candidates.get('predicted_tc', candidates.get('Tc', [0])),
+            mode='markers+text',
+            text=candidates.get('formula', candidates.index),
+            marker=dict(size=10, color='blue'),
+            name='Candidates'
+        ))
+        fig.update_layout(title='Candidate Materials (Shared)', xaxis_title='Index', yaxis_title='Predicted Tc (K)')
+        st.plotly_chart(fig, use_container_width=True, key="shared_plot")
     else:
         st.info("No candidate materials available.")
+    
+    # Annotation input (only for contributors and admins)
+    if role in ["contributor", "admin"]:
+        st.subheader("Add Annotation")
+        annotation_text = st.text_input("Annotation text")
+        if st.button("Send Annotation"):
+            if st.session_state.ws_connected:
+                st.success("Annotation sent (WebSocket broadcast).")
+            else:
+                st.error("WebSocket not connected.")
+    
+    # Display annotations from shared state
+    st.subheader("Annotations")
+    if "shared_state" in st.session_state and "annotations" in st.session_state.shared_state:
+        for ann in st.session_state.shared_state["annotations"]:
+            st.write(f"- {ann}")
+    else:
+        st.info("No annotations yet.")
     
     # Sample request form (only for contributors and admins)
     if role in ["contributor", "admin"]:

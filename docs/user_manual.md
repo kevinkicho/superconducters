@@ -130,6 +130,33 @@ The dashboard provides:
 - Feedback submission (admin/researcher)
 - Performance metrics
 
+### Collaboration Features
+
+The dashboard now supports real-time collaboration via WebSockets. Multiple users can view, annotate, and interact with plots simultaneously.
+
+#### Enabling Collaboration
+
+1. Ensure the WebSocket server is running (it starts automatically with the dashboard).
+2. Open the dashboard in multiple browser tabs or on different machines.
+3. Navigate to the **Collaboration Hub** tab.
+
+#### Features
+
+- **Shared Plot Area**: All users see the same interactive plot. Any user can select data points, zoom, or pan, and changes are broadcast to all connected clients.
+- **Annotations**: Users can add text annotations to the plot. Annotations are visible to all users in real time.
+- **Role-Based Access**: The collaboration hub respects the user's role (viewer, contributor, admin). Only contributors and admins can add annotations or submit sample requests.
+
+#### Usage
+
+1. In the Collaboration Hub tab, you will see a shared plot of candidate materials.
+2. To annotate, select a data point and click "Add Annotation" or use the annotation input box.
+3. All changes are synchronized across sessions.
+
+#### Troubleshooting
+
+- If the plot does not update, check that the WebSocket server is running (port 8765 by default).
+- Ensure all users are connected to the same network and the WebSocket server is accessible.
+
 ### Logs
 
 Pipeline logs are written to `pipeline.log`. Use `tail -f pipeline.log` to monitor progress.
