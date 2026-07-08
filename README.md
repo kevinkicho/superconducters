@@ -6,12 +6,12 @@
 
 This repository documents a research project on room-temperature superconductivity. It includes the following key documents:
 
-- [literature_review.md](literature_review.md): Comprehensive review of existing literature on room-temperature superconductivity.
-- [theoretical_framework.md](theoretical_framework.md): Theoretical models and frameworks guiding the research.
-- [candidate_materials.md](candidate_materials.md): List and properties of candidate materials for room-temperature superconductivity.
-- [synthesis_methods.md](synthesis_methods.md): Methods and procedures for synthesizing candidate materials.
-- [characterization_techniques.md](characterization_techniques.md): Techniques used to characterize superconducting properties.
-- [roadmap.md](roadmap.md): Project roadmap and future milestones.
+- [literature_review.md](docs/literature_review.md): Comprehensive review of existing literature on room-temperature superconductivity.
+- [theoretical_framework.md](docs/theoretical_framework.md): Theoretical models and frameworks guiding the research.
+- [candidate_materials.md](docs/candidate_materials.md): List and properties of candidate materials for room-temperature superconductivity.
+- [synthesis_methods.md](docs/synthesis_methods.md): Methods and procedures for synthesizing candidate materials.
+- [characterization_techniques.md](docs/characterization_techniques.md): Techniques used to characterize superconducting properties.
+- [roadmap.md](docs/roadmap.md): Project roadmap and future milestones.
 - [proposed_chemistry_physics.md](proposed_chemistry_physics.md): Proposed chemistry and physics for discovering and manufacturing room-temperature superconducting compounds.
 - [slide_deck.md](docs/slide_deck.md): Generated slide deck summarizing the research.
 - [technology_transfer_plan.md](docs/technology_transfer_plan.md): Technology transfer plan for commercializing room-temperature superconductors.

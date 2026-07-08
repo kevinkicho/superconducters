@@ -126,3 +126,51 @@ The implementation in `scripts/generate_candidates.py` uses a denoising diffusio
 
 ## Conclusion
 This framework provides a systematic path to identify and design room temperature superconductors by optimizing electron-phonon coupling, electronic structure, and lattice dynamics. It is intended to guide both computational searches and experimental synthesis efforts.
+
+
+## 13. McMillan-Allen-Dynes Theory
+
+### Derivation
+The McMillan-Allen-Dynes (MAD) theory extends the BCS theory to strong electron-phonon coupling. It is derived from the Eliashberg equations, which describe the frequency-dependent electron-phonon interaction via the Eliashberg function \(\alpha^2 F(\omega)\). The critical temperature is given by the Allen-Dynes formula:
+
+\[
+T_c = \frac{\omega_{\log}}{1.2} \exp\left[-\frac{1.04(1+\lambda)}{\lambda - \mu^*(1+0.62\lambda)}\right]
+\]
+
+where \(\lambda = 2\int_0^\infty d\omega \frac{\alpha^2 F(\omega)}{\omega}\) is the electron-phonon coupling constant, \(\omega_{\log} = \exp\left[\frac{2}{\lambda}\int_0^\infty d\omega \frac{\alpha^2 F(\omega)}{\omega} \ln \omega\right]\) is the logarithmic average phonon frequency, and \(\mu^*\) is the Coulomb pseudopotential (typically 0.1–0.15). The formula is valid for \(\lambda \lesssim 2\) and assumes isotropic s-wave pairing.
+
+### Parameters
+- \(\lambda\): coupling strength (0.5–2.5 for conventional superconductors).
+- \(\omega_{\log}\): logarithmic average phonon frequency (100–500 K for hydrides).
+- \(\mu^*\): Coulomb repulsion parameter.
+
+### Applicability
+The MAD formula works well for strong-coupling superconductors such as hydrides under high pressure (e.g., H\(_3\)S, LaH\(_{10}\)). It fails for very strong coupling (\(\lambda > 2\)) where retardation effects become important, and for anisotropic or multiband systems. Anharmonic corrections can be incorporated via self-consistent phonon theory.
+
+**References:**
+- W. L. McMillan, *Phys. Rev.* 167, 331 (1968). [https://journals.aps.org/pr/abstract/10.1103/PhysRev.167.331](https://journals.aps.org/pr/abstract/10.1103/PhysRev.167.331)
+- P. B. Allen and R. C. Dynes, *Phys. Rev. B* 12, 905 (1975). [https://journals.aps.org/prb/abstract/10.1103/PhysRevB.12.905](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.12.905)
+- J. P. Carbotte, *Rev. Mod. Phys.* 62, 1027 (1990). [https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.62.1027](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.62.1027)
+
+## 14. Dynamical Mean-Field Theory (DMFT) for Strongly Correlated Superconductors
+
+### Overview
+Dynamical mean-field theory (DMFT) is a non-perturbative method for treating local electronic correlations in strongly correlated systems. It maps the lattice problem to a quantum impurity model (Anderson impurity model) that is solved self-consistently. For superconductivity, the self-energy becomes anomalous (off-diagonal in Nambu space), and the pairing gap is computed self-consistently.
+
+### Key Concepts
+- **Local self-energy**: DMFT assumes the self-energy is momentum-independent, capturing local quantum fluctuations exactly.
+- **Impurity solver**: The Anderson impurity model is solved using methods such as continuous-time quantum Monte Carlo (CT-QMC) or exact diagonalization.
+- **Self-consistency**: The local Green's function is computed from the lattice and used to update the impurity bath.
+
+### Application to Superconductivity
+DMFT has been extended to superconducting phases by introducing Nambu formalism. The superconducting order parameter is obtained from the anomalous self-energy. Cluster DMFT (e.g., DCA) includes short-range spatial correlations and can capture d-wave pairing in the Hubbard model, relevant for cuprates and nickelates.
+
+### Strengths and Limitations
+- **Strengths**: Captures Mott physics, pseudogap, and d-wave superconductivity; can be combined with DFT for realistic materials.
+- **Limitations**: Neglects long-range spatial fluctuations; cluster extensions are needed for anisotropic pairing.
+
+**References:**
+- A. Georges et al., *Rev. Mod. Phys.* 68, 13 (1996). [https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.68.13](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.68.13)
+- G. Kotliar et al., *Rev. Mod. Phys.* 78, 865 (2006). [https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.78.865](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.78.865)
+- T. Maier et al., *Rev. Mod. Phys.* 77, 1027 (2005). [https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.77.1027](https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.77.1027)
+- M. Civelli, *Front. Phys.* 8, 576 (2020). [https://www.frontiersin.org/articles/10.3389/fphy.2020.000576/full](https://www.frontiersin.org/articles/10.3389/fphy.2020.000576/full)
