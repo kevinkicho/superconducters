@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import patch
 from scripts.api_client import fetch_materials_project, fetch_icsd, fetch_arxiv
 
 def test_fetch_materials_project_returns_dict():

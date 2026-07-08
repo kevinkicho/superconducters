@@ -1,47 +1,17 @@
 {
   "schemaVersion": 1,
   "sourceRunId": "43e79fa7-6d4e-4e81-8d1b-b65003969d4e",
-  "writtenAt": 1783550992133,
-  "completedTodoHints": [],
+  "writtenAt": 1783551086097,
+  "completedTodoHints": [
+    "Consolidate duplicate run_pipeline.py files (root and scripts/) into a single entry point. Wire scripts/arxiv_scraper.py"
+  ],
   "todos": [
-    {
-      "description": "Implement real DFT computation logic in dft_calculator.py using an open-source engine (e.g., ASE + GPAW) to compute electronic structure and electron-phonon coupling for candidate hydrides, replacing the current stub.",
-      "expectedFiles": [
-        "dft_calculator.py"
-      ],
-      "createdBy": "council-synthesis"
-    },
-    {
-      "description": "Consolidate duplicate run_pipeline.py files (root and scripts/) into a single entry point. Wire scripts/arxiv_scraper.py into run_pipeline.py so that its output updates docs/online_research_summary.md and candidate_materials.md automatically.",
-      "expectedFiles": [
-        "run_pipeline.py",
-        "scripts/run_pipeline.py",
-        "scripts/arxiv_scraper.py"
-      ],
-      "createdBy": "council-synthesis"
-    },
-    {
-      "description": "Populate data/superconductor_database.json with verified Tc, composition, and pressure data from SuperCon or literature mining, ensuring scripts/generate_candidates.py and scripts/predict_tc.py load from this file and no placeholder data remains.",
-      "expectedFiles": [
-        "data/superconductor_database.json",
-        "scripts/generate_candidates.py",
-        "scripts/predict_tc.py"
-      ],
-      "createdBy": "council-synthesis"
-    },
     {
       "description": "Implement missing functions (fetch_materials_project, fetch_icsd, fetch_arxiv) in scripts/api_client.py and add 'from unittest.mock import patch' to tests, or rewrite tests to use PipelineClient. Also create a minimal FastAPI server (app.py) implementing /candidates, /submit, /batch_predict endpoints, or modify client for offline mode.",
       "expectedFiles": [
         "tests/test_api_client.py",
         "scripts/api_client.py",
         "app.py"
-      ],
-      "createdBy": "council-synthesis"
-    },
-    {
-      "description": "Add a dedicated subsection on 'chemical precompression' strategies (e.g., ternary hydrides Li2MgH16, CaYH12) under Manufacturing Pathways in proposed_chemistry_physics.md to detail approaches for lowering required synthesis pressure.",
-      "expectedFiles": [
-        "proposed_chemistry_physics.md"
       ],
       "createdBy": "council-synthesis"
     },
