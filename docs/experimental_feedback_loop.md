@@ -2123,3 +2123,98 @@ If the operator does not respond within the configured `approval_timeout`, the s
 3. **Pause pipeline**: If auto-approve is disabled or fails, the pipeline pauses and no new proposals are executed until manual intervention. An alert is sent to all operators.
 
 All fallback actions are recorded in the `approval_log` table in the central database for auditability.
+
+
+## Human-in-the-Loop Approval Implementation Details
+
+### Database Schema
+
+The approval system uses the `approval_log` table in the central database with the following schema:
+- `id` (UUID, primary key)
+- `proposal_id` (UUID, foreign key to `proposals` table)
+- `operator_id` (UUID, foreign key to `users` table)
+- `status` (ENUM: 'pending', 'approved', 'modified', 'rejected', 'timeout_auto_approved')
+- `decision_timestamp` (TIMESTAMP)
+- `modification_details` (JSONB, stores parameter changes if modified)
+- `rejection_reason` (TEXT)
+- `fallback_triggered` (BOOLEAN)
+- `fallback_reason` (TEXT)
+
+### API Endpoints
+
+The approval system exposes RESTful endpoints via the FastAPI backend:
+- `GET /api/approval/pending` — Returns list of pending proposals with full context (predicted Tc, uncertainty, digital twin status).
+- `POST /api/approval/{proposal_id}/approve` — Approves a proposal.
+- `POST /api/approval/{proposal_id}/modify` — Accepts modified parameters in request body.
+- `POST /api/approval/{proposal_id}/reject` — Accepts optional reason.
+- `GET /api/approval/log` — Returns approval history with filters (date range, operator, status).
+
+### Streamlit Dashboard Integration
+
+The dashboard (`app/streamlit_app.py`) includes an "Approval" page that:
+- Fetches pending proposals via the API.
+- Displays each proposal in a card with expandable details (predicted Tc, uncertainty, synthesis parameters, digital twin validation).
+- Provides Approve/Modify/Reject buttons.
+- Shows a real-time notification badge for new pending proposals.
+- Logs all actions to the `approval_log` table.
+
+### Notification Service
+
+A background worker (`scripts/approval_notifier.py`) runs every 60 seconds and:
+- Queries for proposals pending longer than `approval_timeout`.
+- Sends email via SMTP (configurable) and/or Slack webhook.
+- Escalates to secondary operator if primary does not respond.
+- Triggers fallback auto-approve after timeout.
+
+## User Feedback Analysis
+
+### Feedback Collection
+
+User feedback is collected through multiple channels:
+- **Dashboard Feedback Form**: A form on the Streamlit dashboard where operators can rate predictions (1–5 stars) and leave comments.
+- **Post-Experiment Survey**: After each experiment, operators are prompted to provide feedback on the proposed synthesis conditions (e.g., ease of execution, unexpected results).
+- **Manual Annotations**: Operators can annotate experimental records with free-text notes, which are stored in the `experiment_notes` table.
+
+### Feedback Analysis Pipeline
+
+1. **Ingestion**: Feedback data is ingested into the `user_feedback` table (schema: `id`, `experiment_id`, `rating`, `comment`, `timestamp`, `operator_id`).
+2. **Sentiment Analysis**: Comments are analyzed using a pre-trained NLP model (e.g., `transformers` pipeline) to extract sentiment (positive/negative/neutral) and key topics (e.g., "safety", "reproducibility", "cost").
+3. **Trend Detection**: Time-series analysis identifies shifts in operator satisfaction or recurring issues (e.g., frequent comments about high pressure).
+4. **Actionable Insights**: Results are summarized in a weekly report (`reports/user_feedback_report.md`) and fed back into the adaptive DoE module to adjust exploration/exploitation balance.
+
+### Integration with ML Models
+
+User feedback ratings are used as a reward signal to fine-tune the Bayesian optimization acquisition function. Low-rated proposals are penalized, while high-rated proposals are favored in future candidate generation. This creates a human-guided learning loop.
+
+## Data Quality
+
+### Quality Dimensions
+
+Data quality is assessed across five dimensions:
+- **Completeness**: Are all required fields present? (e.g., Tc, pressure, XRD peaks)
+- **Accuracy**: Are values within expected physical ranges? (e.g., Tc between 0 and 300 K, pressure between 0 and 100 GPa)
+- **Consistency**: Do related fields agree? (e.g., Meissner volume fraction ≤ 100%, transition width ≤ Tc)
+- **Timeliness**: Is data ingested within 24 hours of experiment completion?
+- **Uniqueness**: Are experiment IDs and candidate compound identifiers unique?
+
+### Validation Rules
+
+A validation module (`scripts/validate_data_quality.py`) runs on every ingestion and checks:
+- Schema compliance (data types, non-null constraints).
+- Range checks (e.g., Tc > 0, pressure within equipment limits).
+- Cross-field consistency (e.g., if Tc is reported, resistivity data must show a transition).
+- Duplicate detection (same experiment ID or candidate+date combination).
+
+### Monitoring and Alerts
+
+- **Dashboard Widget**: A "Data Quality" widget on the Streamlit dashboard shows a real-time score (0–100%) and a list of recent validation failures.
+- **Alerting**: If the quality score drops below 90%, an alert is sent to the data steward via email/Slack.
+- **Automated Remediation**: Minor issues (e.g., missing optional fields) are auto-corrected with default values; major issues (e.g., out-of-range Tc) are flagged for manual review and the experiment is not used for model retraining until resolved.
+
+### Quality Reports
+
+A weekly data quality report is generated (`reports/data_quality_report.md`) containing:
+- Overall quality score and trend over time.
+- Breakdown by quality dimension.
+- Top 5 most common validation failures.
+- Recommendations for improving data collection protocols.
