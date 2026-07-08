@@ -326,3 +326,46 @@ def fetch_status_panel() -> Optional[Dict[str, Any]]:
 
 if __name__ == "__main__":
     main()
+
+# --- Collaboration Hub Tab ---
+def collaboration_hub_tab():
+    st.header("Collaboration Hub")
+    
+    # Role-based access control
+    if "user_role" not in st.session_state:
+        st.session_state.user_role = "viewer"
+    
+    role = st.session_state.user_role
+    
+    # Role selector (for demo purposes)
+    st.sidebar.selectbox("Select Role", ["viewer", "contributor", "admin"], key="user_role")
+    
+    # Candidate materials view
+    st.subheader("Candidate Materials")
+    candidates = fetch_top_candidates()
+    if candidates is not None:
+        st.dataframe(candidates)
+    else:
+        st.info("No candidate materials available.")
+    
+    # Sample request form (only for contributors and admins)
+    if role in ["contributor", "admin"]:
+        st.subheader("Sample Request Form")
+        with st.form("sample_request"):
+            material = st.text_input("Material Name")
+            composition = st.text_input("Composition")
+            quantity = st.number_input("Quantity (g)", min_value=0.1, step=0.1)
+            submitted = st.form_submit_button("Submit Request")
+            if submitted:
+                st.success(f"Sample request for {material} submitted.")
+    else:
+        st.info("You need contributor or admin role to submit sample requests.")
+    
+    # Feedback submission form (all roles)
+    st.subheader("Feedback")
+    with st.form("feedback_form"):
+        feedback_text = st.text_area("Your feedback")
+        feedback_submitted = st.form_submit_button("Submit Feedback")
+        if feedback_submitted:
+            st.success("Feedback submitted. Thank you!")
+
