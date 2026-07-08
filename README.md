@@ -325,3 +325,37 @@ If no role is set, the system defaults to `viewer` with no API key required. The
 - [User Manual](docs/user_manual.md): Comprehensive guide for using the project.
 - [Deployment Guide](docs/deployment_guide.md): Instructions for deploying the system.
 - [Model Versioning and Experiment Tracking](docs/model_versioning_and_experiment_tracking.md): Guide for managing model versions and tracking experiments.
+
+## OAuth2 Provider Configuration
+
+This project supports OAuth2 authentication via Google and GitHub for user login. When OAuth2 is enabled, the system maps authenticated users to RBAC roles based on their email domain or a predefined mapping.
+
+### Google OAuth2
+
+1. Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
+2. Enable the Google+ API and create OAuth2 credentials (Web application type).
+3. Set the authorized redirect URI to `http://your-domain.com/auth/google/callback`.
+4. Set the following environment variables:
+   - `OAUTH2_GOOGLE_CLIENT_ID`: Your Google client ID.
+   - `OAUTH2_GOOGLE_CLIENT_SECRET`: Your Google client secret.
+   - `OAUTH2_GOOGLE_REDIRECT_URI`: The redirect URI (e.g., `http://localhost:8000/auth/google/callback`).
+
+### GitHub OAuth2
+
+1. Register a new OAuth application in [GitHub Developer Settings](https://github.com/settings/developers).
+2. Set the authorization callback URL to `http://your-domain.com/auth/github/callback`.
+3. Set the following environment variables:
+   - `OAUTH2_GITHUB_CLIENT_ID`: Your GitHub client ID.
+   - `OAUTH2_GITHUB_CLIENT_SECRET`: Your GitHub client secret.
+   - `OAUTH2_GITHUB_REDIRECT_URI`: The redirect URI (e.g., `http://localhost:8000/auth/github/callback`).
+
+### Role Mapping
+
+After authentication, the system assigns an RBAC role based on the user's email domain or a configuration file. By default:
+- Emails ending with `@admin.org` are assigned the `admin` role.
+- Emails ending with `@research.org` are assigned the `researcher` role.
+- All other authenticated users get the `viewer` role.
+
+You can override this mapping by setting the `OAUTH2_ROLE_MAPPING` environment variable to a JSON object mapping email domains to roles (e.g., `{"@example.com": "admin"}`).
+
+If OAuth2 is not configured, the system falls back to the environment-variable-based RBAC described above.
