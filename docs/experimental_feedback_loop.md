@@ -2546,3 +2546,42 @@ The `send_slack_alert()` function is used in the following pipeline components:
 - `run_pipeline.py` — alerts on pipeline errors or critical events
 
 For more details, see the function docstring in `utils/slack_alert.py`.
+
+
+## Chemistry and Physics of Room Temperature Superconductors
+
+### Key Approaches
+
+1. **High-Pressure Hydrides**: The discovery of superconductivity near 203 K in H₃S (sulfur hydride) under ~150 GPa (Drozdov et al., *Nature* 2015) and 250 K in LaH₁₀ under ~170 GPa (Drozdov et al., *Nature* 2019) established that hydrogen-rich compounds under extreme pressure can achieve near-room-temperature superconductivity. The mechanism is conventional phonon-mediated pairing (BCS theory) with very high Debye temperatures due to light hydrogen atoms. The challenge is to stabilize these phases at lower pressures or ambient conditions.
+
+2. **Carbonaceous Sulfur Hydride**: A room-temperature superconductor (Tc ≈ 287 K) was reported in a carbon‑sulfur‑hydrogen system at 267 GPa (Snider et al., *Nature* 2020). The exact stoichiometry and structure remain debated, but the result suggests that ternary hydrides can further enhance Tc. Subsequent theoretical work (e.g., by Peng et al., *Phys. Rev. Lett.* 2020) proposed that yttrium superhydrides (YH₆, YH₉) could be stable at lower pressures.
+
+3. **Clathrate Hydrides**: Cage‑like structures (e.g., CaH₆, MgH₆) have been predicted to host high‑Tc superconductivity at moderate pressures (50–100 GPa). The clathrate geometry allows strong electron‑phonon coupling and high hydrogen density. Recent experiments on CeH₉ (Chen et al., *Nature Communications* 2021) confirmed Tc ≈ 100 K at 100 GPa.
+
+4. **Doping and Chemical Substitution**: Alloying hydrides with other elements (e.g., adding carbon, nitrogen, or rare‑earth metals) can tune the electronic structure and potentially lower the required pressure. For example, the (La,Y)Hₓ system shows promise for stabilizing high‑Tc phases at reduced pressures.
+
+5. **Metallic Hydrogen and Hydrogen Alloys**: The ultimate goal is metallic hydrogen, predicted to be a room‑temperature superconductor at ambient pressure (Ashcroft, *Phys. Rev. Lett.* 1968). While direct metallization of hydrogen requires >400 GPa, hydrogen‑rich alloys (e.g., H₃S, LaH₁₀) are considered “precompressed” metallic hydrogen. Strategies to achieve metastable metallic hydrogen at lower pressures include using thin films, strain engineering, or chemical precompression via heavy elements.
+
+### Manufacturing Considerations
+
+- **High‑Pressure Synthesis**: Current methods use diamond anvil cells (DAC) or large‑volume presses. Scaling to bulk samples requires alternative techniques such as dynamic compression (e.g., gas‑gun, laser‑driven shock) or multi‑anvil presses. The reproducibility of hydride synthesis is a major hurdle.
+- **Recovery to Ambient Conditions**: Most high‑pressure hydrides are metastable and decompose upon pressure release. Encapsulation in a diamond or sapphire anvil, or embedding in a polymer matrix, may allow ex situ characterization. Recent work on laser‑heated DACs has produced samples that remain superconducting after partial pressure release (e.g., Kong et al., *Nature* 2021).
+- **Thin‑Film Deposition**: Epitaxial growth of hydride films on substrates (e.g., using pulsed laser deposition or sputtering) could enable integration into devices. The challenge is maintaining the correct stoichiometry and preventing hydrogen loss.
+- **Machine Learning for Candidate Screening**: Our pipeline already uses ML to predict Tc from composition and structure. The next step is to incorporate synthesis feasibility (e.g., predicted stability at accessible pressures) into the candidate ranking. This requires training on experimental data from high‑pressure synthesis attempts.
+
+### Open Questions
+
+- What is the exact mechanism of superconductivity in carbonaceous sulfur hydride? Is it conventional or unconventional?
+- Can we design hydrides that are stable at pressures below 10 GPa (achievable with large‑volume presses)?
+- Are there non‑hydride room‑temperature superconductors (e.g., nickelates, cuprates under pressure)?
+- How can we improve the reproducibility of high‑pressure synthesis and characterization?
+
+### References
+
+- Drozdov, A. P. et al. *Nature* 525, 73–76 (2015). [Conventional superconductivity at 203 K in H₃S]
+- Drozdov, A. P. et al. *Nature* 569, 528–531 (2019). [Superconductivity at 250 K in LaH₁₀]
+- Snider, E. et al. *Nature* 586, 373–377 (2020). [Room‑temperature superconductivity in carbonaceous sulfur hydride]
+- Peng, F. et al. *Phys. Rev. Lett.* 125, 017001 (2020). [Prediction of yttrium superhydrides]
+- Chen, W. et al. *Nature Communications* 12, 5706 (2021). [Superconductivity in CeH₉ at 100 K]
+- Ashcroft, N. W. *Phys. Rev. Lett.* 21, 1748 (1968). [Metallic hydrogen: a high‑temperature superconductor?]
+- Kong, P. et al. *Nature* 599, 73–78 (2021). [Retained superconductivity after pressure release in LaH₁₀]
