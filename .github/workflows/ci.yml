@@ -32,6 +32,10 @@ jobs:
       run: |
         pytest tests/test_run_pipeline.py::TestPerformanceAndStress tests/test_run_pipeline.py::test_pipeline_scales_to_1000_candidates -v
 
+    - name: Run performance benchmark (100k candidates)
+      run: |
+        pytest tests/test_run_pipeline.py::test_pipeline_scales_to_100000_candidates -v
+
     - name: Run integration tests
       run: |
         pytest tests/integration/ -v
@@ -50,6 +54,10 @@ jobs:
     - name: Run stress tests
       run: |
         pytest tests/ -m stress -v
+
+    - name: Run stress test (simultaneous API failures)
+      run: |
+        pytest tests/test_run_pipeline.py::test_simultaneous_api_failures -v
 
 
   pipeline:
