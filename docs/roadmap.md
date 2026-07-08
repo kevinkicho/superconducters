@@ -337,3 +337,103 @@ gantt
 - Sun et al., *Nature* 621, 493–498 (2023) – Bilayer nickelate Tc~80K at 18 GPa.
 - Flores-Livas et al., *Physics Reports* 856, 1–78 (2020) – Review of hydride superconductivity.
 - Snider et al., *Nature* 586, 373–377 (2020) – Retracted carbonaceous sulfur hydride; lessons on reproducibility.
+
+
+## Project Schedule
+
+### 3-Year Gantt Chart (Mermaid)
+
+```mermaid
+gantt
+    title 3-Year Project Schedule: Room-Temperature Superconductor Discovery & Manufacturing
+    dateFormat  YYYY-MM-DD
+    axisFormat  %Y-Q%q
+
+    section Year 1: Screening & Synthesis
+    DFT/ML screening of 10,000+ candidates          :a1, 2025-01-01, 90d
+    Top 20 candidates down-selected                 :milestone, m1, 2025-04-01, 0d
+    High-pressure synthesis (DAC) of top 5          :a2, after a1, 120d
+    Thin-film synthesis (PLD/MBE) of top 5         :a3, after a1, 120d
+    Chemical doping optimization                     :a4, after a2, 90d
+    Phase identification (XRD, Raman)               :a5, after a2 a3, 60d
+    Gate 1 (≥2 candidates Tc>200K at ≤50 GPa)      :milestone, m2, 2025-10-01, 0d
+
+    section Year 1: Characterization
+    Resistivity & susceptibility measurements       :b1, after a5, 60d
+    Heat capacity & upper critical field            :b2, after b1, 60d
+    Structural refinement (synchrotron XRD)         :b3, after a5, 90d
+    Gate 2 (≥1 candidate Tc>250K at ≤30 GPa)       :milestone, m3, 2026-01-01, 0d
+
+    section Year 2: Optimization & Scaling
+    Iterative DFT-guided doping optimization        :c1, 2026-01-01, 120d
+    Scale-up synthesis (multi-anvil press)          :c2, after c1, 120d
+    Batch reproducibility (≥3 batches)              :c3, after c2, 60d
+    Wire fabrication (PIT method)                   :c4, after c3, 90d
+    Gate 3 (Tc>280K at ≤10 GPa, ≥2 labs)           :milestone, m4, 2026-10-01, 0d
+
+    section Year 2: Prototyping
+    Critical current density (Jc) optimization      :d1, after c4, 90d
+    Short sample (1 m) cable test                   :d2, after d1, 60d
+    Gate 4 (Jc>10⁵ A/cm² at 77 K)                  :milestone, m5, 2027-01-01, 0d
+
+    section Year 3: Manufacturing & Commercialization
+    Pilot production line design & build            :e1, 2027-01-01, 120d
+    Process optimization (yield >80%)               :e2, after e1, 90d
+    Industrial partnership negotiation              :e3, after e1, 90d
+    Field demo (10 m cable, 100 A)                  :e4, after e2 e3, 90d
+    Commercialization roadmap & business plan       :e5, after e4, 90d
+    Gate 5 (partner committed, demo successful)     :milestone, m6, 2028-01-01, 0d
+```
+
+### Critical Path Analysis
+
+The critical path runs through the following sequence of tasks (total duration ~3 years):
+
+1. **DFT/ML screening** (Q1 2025) → **Top 20 candidates** (Q2 2025) → **High-pressure synthesis** (Q2–Q3 2025) → **Phase identification** (Q3–Q4 2025) → **Resistivity & susceptibility** (Q4 2025) → **Gate 2** (Q1 2026) → **DFT-guided doping optimization** (Q1–Q2 2026) → **Scale-up synthesis** (Q2–Q3 2026) → **Batch reproducibility** (Q3–Q4 2026) → **Wire fabrication** (Q4 2026) → **Jc optimization** (Q1 2027) → **Short sample test** (Q2 2027) → **Gate 4** (Q2 2027) → **Pilot line design** (Q2–Q3 2027) → **Process optimization** (Q3–Q4 2027) → **Field demo** (Q4 2027–Q1 2028) → **Gate 5** (Q1 2028).
+
+Any delay in screening, synthesis, or characterization tasks will directly push the entire project timeline. To mitigate, parallelize thin-film synthesis and chemical doping optimization, and maintain a buffer of 2–3 months at each gate.
+
+### Resource Leveling Table (Per Quarter)
+
+| Quarter | Personnel (FTE) | Equipment Cost | Consumables | Total Budget | Key Activities |
+|---------|----------------|---------------|-------------|--------------|----------------|
+| 2025-Q1 | 3 | $150,000 | $50,000 | $200,000 | DFT/ML screening setup, literature review |
+| 2025-Q2 | 4 | $200,000 | $75,000 | $275,000 | Screening execution, DAC preparation |
+| 2025-Q3 | 5 | $250,000 | $100,000 | $350,000 | Synthesis of top 5, thin-film deposition |
+| 2025-Q4 | 5 | $200,000 | $100,000 | $300,000 | Phase identification, initial characterization |
+| 2026-Q1 | 6 | $300,000 | $150,000 | $450,000 | Doping optimization, multi-anvil press setup |
+| 2026-Q2 | 6 | $350,000 | $150,000 | $500,000 | Scale-up synthesis, batch reproducibility |
+| 2026-Q3 | 7 | $400,000 | $200,000 | $600,000 | Wire fabrication, Jc optimization |
+| 2026-Q4 | 7 | $350,000 | $200,000 | $550,000 | Short sample test, cable design |
+| 2027-Q1 | 8 | $500,000 | $250,000 | $750,000 | Pilot line design, partnership outreach |
+| 2027-Q2 | 8 | $600,000 | $250,000 | $850,000 | Pilot line construction, process optimization |
+| 2027-Q3 | 9 | $700,000 | $300,000 | $1,000,000 | Field demo preparation, yield improvement |
+| 2027-Q4 | 9 | $700,000 | $300,000 | $1,000,000 | Field demo execution, commercialization plan |
+| **Total** | — | **$4,700,000** | **$2,125,000** | **$6,825,000** | (excludes contingency) |
+
+*Note: Personnel costs are included in the total budget at $150,000/FTE/year. Equipment costs include capital purchases (DAC, multi-anvil press, PLD system, synchrotron beamtime) and maintenance. Consumables include precursors, gases, substrates, and sample holders.*
+
+### Dependencies and Milestones Discussion
+
+**Key Dependencies:**
+- Screening results must be available before synthesis can begin (sequential dependency).
+- Phase identification requires successful synthesis of each candidate (sequential).
+- Doping optimization depends on initial characterization feedback (sequential).
+- Scale-up synthesis depends on successful doping optimization (sequential).
+- Wire fabrication requires reproducible batches (sequential).
+- Field demo requires successful short sample test and industrial partnership (parallel dependencies).
+- Commercialization depends on field demo success and partner commitment (sequential).
+
+**Critical Milestones:**
+- **M1 (2025-04-01):** Top 20 candidates identified — go/no-go for synthesis.
+- **M2 (2025-10-01):** Gate 1 — at least 2 candidates with Tc>200K at ≤50 GPa.
+- **M3 (2026-01-01):** Gate 2 — at least 1 candidate with Tc>250K at ≤30 GPa.
+- **M4 (2026-10-01):** Gate 3 — Tc>280K at ≤10 GPa confirmed in ≥2 independent labs.
+- **M5 (2027-01-01):** Gate 4 — Jc>10⁵ A/cm² at 77 K demonstrated.
+- **M6 (2028-01-01):** Gate 5 — industrial partner committed and field demo successful.
+
+**Risk Mitigation for Schedule:**
+- Maintain a 2–3 month buffer at each gate to absorb delays.
+- Parallelize thin-film and high-pressure synthesis tracks to reduce critical path length.
+- Establish pre-approved material transfer agreements with partner labs to avoid administrative delays.
+- Use agile sprint planning (2-week cycles) for screening and optimization tasks to quickly re-prioritize based on results.
