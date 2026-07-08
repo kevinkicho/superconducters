@@ -40,6 +40,30 @@
 ### 2.5 Cross-Licensing
 - Exchange IP with other companies holding complementary patents (e.g., cryogenics, power electronics) to build a stronger portfolio.
 
+### 2.6 Draft Licensing Agreement
+
+**Royalty Rates**:
+- **Base Royalty**: 3% of net sales for exclusive licenses, 2% for non-exclusive licenses.
+- **Field-of-Use Adjustments**: Energy transmission: 4%; Transportation (maglev): 3.5%; Medical devices: 2.5%; Electronics: 2%.
+- **Minimum Annual Royalty**: $100,000 per licensed field, escalating 5% annually.
+- **Royalty Stacking Cap**: Total royalties from all licensors not to exceed 8% of net sales.
+
+**Milestones**:
+- **Proof of Concept**: $500,000 upon successful demonstration of a 1-meter superconducting wire at 77 K.
+- **Pilot Production**: $2,000,000 upon achieving MRL 6 (pilot-scale production of 100 kg/month).
+- **First Commercial Sale**: $5,000,000 upon first revenue-generating sale of a licensed product.
+- **Regulatory Approval**: $1,000,000 upon receipt of first regulatory clearance (e.g., UL, CE, or equivalent).
+- **Annual Sales Thresholds**: $500,000 milestone when cumulative sales exceed $50M; $1,000,000 when exceeding $200M.
+
+**Termination Clauses**:
+- **Breach of Payment**: Licensee has 60 days to cure missed royalty payments; failure results in automatic termination.
+- **Failure to Commercialize**: If licensee fails to achieve first commercial sale within 3 years of license execution, licensor may terminate with 90 days' notice.
+- **Insolvency**: Licensee's bankruptcy or insolvency triggers immediate termination.
+- **Challenge to Patents**: If licensee challenges the validity of any licensed patent, licensor may terminate the license.
+- **Change of Control**: Assignment of license without prior written consent is grounds for termination.
+- **Force Majeure**: Suspension of obligations for up to 6 months; if force majeure persists beyond 6 months, either party may terminate.
+- **Survival**: Sections on confidentiality, indemnification, and limitation of liability survive termination.
+
 ## 3. Partnership Recommendations
 
 ### 3.1 National Laboratories and Government Agencies
