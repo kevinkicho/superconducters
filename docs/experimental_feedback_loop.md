@@ -1575,3 +1575,174 @@ To move from high-pressure laboratory synthesis to practical manufacturing, the 
 8. Kong, P. P. et al. (2019). Superconductivity up to 243 K in yttrium hydrides under high pressure. *Nature Communications*, 10, 2820. https://doi.org/10.1038/s41467-019-10826-3
 9. Wang, H. et al. (2012). Superconductivity in calcium hydride at high pressures. *Physical Review B*, 85, 144520. https://doi.org/10.1103/PhysRevB.85.144520
 10. Zhang, S. et al. (2021). Prediction of high-Tc superconductivity in Li-Mg-H ternary hydrides under moderate pressure. *Journal of Physical Chemistry Letters*, 12, 1234–1240. https://doi.org/10.1021/acs.jpclett.0c03612
+
+
+## Model Cards
+
+### Physics-Informed Neural Network (PINN)
+
+**Model Details**
+- **Name**: PINN-TcPredictor v1.0
+- **Version**: 1.0 (2024-03-15)
+- **Type**: Physics-Informed Neural Network
+- **Architecture**: 6 hidden layers (256 neurons each), tanh activation, residual connections. Physics loss term enforces Ginzburg-Landau free energy minimization.
+- **Training Data**: 12,000 experimental Tc measurements from literature (Drozdov et al., Snider et al., Eremets et al.) plus 50,000 DFT-computed Tc values (Eliashberg-based).
+- **Input Features**: Lattice parameters, atomic positions, elemental composition, pressure, doping concentration.
+- **Output**: Predicted Tc (K), transition width (K), critical current density (A/cm²).
+
+**Intended Use**
+- **Primary Intended Uses**: Rapid screening of candidate hydride structures for high-Tc superconductivity; guiding experimental synthesis priorities.
+- **Primary Intended Users**: Computational materials scientists, experimental physicists in the feedback loop pipeline.
+- **Out-of-Scope Uses**: Prediction of Tc for non-hydride systems, ambient-pressure predictions without retraining, or use as a substitute for experimental validation.
+
+**Factors**
+- **Relevant Factors**: Pressure (10–300 GPa), hydrogen content, metal atom size, crystal symmetry.
+- **Evaluation Factors**: Performance is evaluated across pressure regimes (low <50 GPa, medium 50–150 GPa, high >150 GPa) and chemical families (binary hydrides, ternary hydrides, carbonaceous systems).
+
+**Metrics**
+- **Primary Metric**: Mean Absolute Error (MAE) on held-out experimental Tc: 8.2 K.
+- **Secondary Metrics**: R² = 0.91, Spearman rank correlation = 0.94.
+- **Decision Threshold**: Candidates with predicted Tc > 250 K and transition width < 5 K are flagged for high-priority synthesis.
+
+**Evaluation Data**
+- **Dataset**: 1,200 experimental Tc values from 2020–2024 publications (not seen during training).
+- **Motivation**: To assess generalization to newly discovered compounds.
+- **Preprocessing**: Tc values normalized to zero-pressure equivalent using Birch-Murnaghan equation of state.
+
+**Training Data**
+- **Dataset**: 62,000 samples (12,000 experimental + 50,000 DFT).
+- **Motivation**: Combine real-world accuracy with physics-based coverage of phase space.
+- **Preprocessing**: DFT Tc computed using Allen-Dynes formula with McMillan scaling; experimental Tc corrected for pressure effects.
+
+**Quantitative Analyses**
+- **Unitary Results**: MAE = 8.2 K overall; MAE = 12.1 K for ternary hydrides, 6.5 K for binary hydrides.
+- **Disaggregated**: Performance degrades for systems with >4 elements (MAE = 18.3 K).
+
+**Ethical Considerations**
+- The model may prioritize high-Tc predictions that are experimentally challenging (e.g., >200 GPa), potentially biasing resource allocation toward extreme conditions. Users should balance predicted Tc with synthesis feasibility.
+- No personal data used; all training data from public literature.
+
+**Caveats and Recommendations**
+- Model is calibrated for hydride superconductors only. Retraining required for other material classes.
+- Physics loss term assumes mean-field Ginzburg-Landau; strong fluctuations near Tc may not be captured.
+- Recommend ensemble predictions with uncertainty quantification (Monte Carlo dropout) before experimental commitment.
+
+---
+
+### Graph Neural Network (GNN)
+
+**Model Details**
+- **Name**: GNN-CrystalProperty v2.3
+- **Version**: 2.3 (2024-02-20)
+- **Type**: Message-Passing Graph Neural Network
+- **Architecture**: 8 message-passing layers (edge update + node update), global attention pooling, 512-dimensional latent space. Uses SchNet-style continuous filter convolutions.
+- **Training Data**: 150,000 crystal structures from Materials Project (MP) and ICSD, each with DFT-computed formation energy, band gap, and superconducting Tc (where available).
+- **Input Features**: Graph representation of unit cell (atoms as nodes, bonds as edges with distance and bond type).
+- **Output**: Formation energy (eV/atom), band gap (eV), predicted Tc (K) for metallic systems.
+
+**Intended Use**
+- **Primary Intended Uses**: Predicting stability and electronic properties of candidate superconductor structures; identifying metastable phases that may be synthesizable under high pressure.
+- **Primary Intended Users**: Computational chemists, materials informaticians in the feedback loop.
+- **Out-of-Scope Uses**: Prediction of mechanical properties, thermal conductivity, or non-crystalline materials.
+
+**Factors**
+- **Relevant Factors**: Crystal system (cubic, hexagonal, orthorhombic), number of atoms per unit cell, presence of hydrogen, pressure range.
+- **Evaluation Factors**: Performance by space group, by elemental composition (hydrides vs. oxides), and by DFT functional (PBE vs. SCAN).
+
+**Metrics**
+- **Primary Metric**: MAE for formation energy: 0.08 eV/atom; MAE for band gap: 0.15 eV; MAE for Tc: 15.4 K (on DFT-computed Tc).
+- **Secondary Metrics**: F1 score for metallic vs. insulating classification: 0.97.
+- **Decision Threshold**: Candidates with formation energy within 0.2 eV/atom of convex hull and predicted Tc > 200 K are passed to PINN for refined Tc prediction.
+
+**Evaluation Data**
+- **Dataset**: 10,000 structures from OQMD (Open Quantum Materials Database) not used in training.
+- **Motivation**: Independent benchmark on diverse chemistries.
+- **Preprocessing**: Structures relaxed with PBE+U; graph constructed with 5 Å cutoff radius.
+
+**Training Data**
+- **Dataset**: 150,000 structures from MP (v2023.11) and ICSD (2023 release).
+- **Motivation**: Large coverage of known inorganic crystals.
+- **Preprocessing**: Structures with >50 atoms per cell downsampled; hydrogen-rich structures upsampled to improve representation.
+
+**Quantitative Analyses**
+- **Unitary Results**: Formation energy MAE = 0.08 eV/atom; Tc MAE = 15.4 K.
+- **Disaggregated**: Performance on hydrides (MAE = 12.1 K) better than on oxides (MAE = 18.7 K). Performance degrades for structures with >30 atoms/cell.
+
+**Ethical Considerations**
+- GNN predictions may be used to deprioritize certain chemical families, potentially overlooking unconventional superconductors. Regular validation against experimental data is essential.
+- No personal data; all training data from public databases.
+
+**Caveats and Recommendations**
+- GNN is trained on DFT-computed properties; systematic errors in DFT (e.g., band gap underestimation) propagate to predictions.
+- For Tc prediction, GNN should be used as a pre-filter; final Tc estimates should come from PINN or direct DFT-Eliashberg calculations.
+- Recommend periodic retraining as new experimental data becomes available via the feedback loop.
+
+---
+
+### Variational Autoencoder (VAE)
+
+**Model Details**
+- **Name**: VAE-CrystalGenerator v1.5
+- **Version**: 1.5 (2024-01-10)
+- **Type**: Variational Autoencoder with Crystal Diffusion Decoder
+- **Architecture**: Encoder: 4-layer GNN (256 dim) → 128-dimensional latent space (μ, σ). Decoder: autoregressive crystal graph generator with bond angle constraints. Uses β-VAE objective (β=0.5) for disentangled latent representation.
+- **Training Data**: 200,000 crystal structures from MP, ICSD, and generated hypothetical hydride structures from USPEX evolutionary search.
+- **Input/Output**: Encodes crystal structure to latent vector; decodes latent vector to new crystal structure (lattice parameters, atomic positions, species).
+
+**Intended Use**
+- **Primary Intended Uses**: Generating novel candidate superconductor structures with desired properties (e.g., high hydrogen content, specific symmetry); exploring chemical space beyond known compounds.
+- **Primary Intended Users**: Computational discovery team, high-throughput screening pipeline.
+- **Out-of-Scope Uses**: Generating structures with >100 atoms per cell (computationally expensive), or structures requiring exotic elements (e.g., transuranics).
+
+**Factors**
+- **Relevant Factors**: Latent space region (interpolation vs. extrapolation), number of elements, target Tc range.
+- **Evaluation Factors**: Validity (crystal structure relaxes to local minimum), novelty (not in training set), diversity (structural similarity), and property prediction accuracy (via GNN/PINN).
+
+**Metrics**
+- **Primary Metrics**: Validity rate: 78% (structures that relax to stable/metastable minima); Novelty rate: 92% (not exact match to training set); Diversity (average Tanimoto distance): 0.45.
+- **Secondary Metrics**: Reconstruction MAE (lattice parameters): 0.12 Å; Element type accuracy: 95%.
+- **Decision Threshold**: Generated structures with validity > 70% and predicted Tc > 200 K (by PINN) are added to candidate pool.
+
+**Evaluation Data**
+- **Dataset**: 5,000 held-out structures from MP (not used in training).
+- **Motivation**: Measure reconstruction fidelity and generation quality on known crystals.
+- **Preprocessing**: Structures standardized to primitive cell, same graph construction as GNN.
+
+**Training Data**
+- **Dataset**: 200,000 structures (150,000 from MP/ICSD, 50,000 hypothetical hydrides from USPEX).
+- **Motivation**: Cover both known and plausible unknown structures.
+- **Preprocessing**: Structures with >60 atoms/cell excluded; hydrogen-rich structures upsampled 2×.
+
+**Quantitative Analyses**
+- **Unitary Results**: Validity 78%, Novelty 92%, Diversity 0.45.
+- **Disaggregated**: Validity higher for binary systems (85%) than ternary (70%). Structures with >4 elements have validity < 50%.
+
+**Ethical Considerations**
+- VAE may generate structures that are difficult or impossible to synthesize, leading to wasted experimental resources. Generated candidates should be filtered by synthesis feasibility (e.g., thermodynamic stability, precursor availability).
+- No personal data; all training data from public databases.
+
+**Caveats and Recommendations**
+- VAE-generated structures often require DFT relaxation before property prediction; the validity rate is a lower bound after relaxation.
+- Latent space interpolation can produce physically unrealistic intermediate structures; use with property-conditional generation (e.g., conditional VAE) for targeted design.
+- Recommend coupling with active learning to focus generation on regions of high predicted Tc and synthesizability.
+
+---
+
+### Additional Models
+
+**Random Forest (RF) Baseline**
+- Used for quick feature importance analysis and as a baseline for comparison.
+- MAE on Tc: 22.1 K (on same test set as PINN).
+- Strengths: Interpretable, fast, robust to outliers.
+- Limitations: Cannot extrapolate to unseen chemistries; requires hand-crafted features.
+
+**Transformer (CrystalTransformer)**
+- **Name**: CrystalTransformer v0.9 (experimental)
+- **Architecture**: 12-layer transformer with relative position encoding, trained on 50,000 crystal structures as sequence of atoms and bonds.
+- **Intended Use**: Property prediction and structure generation via autoregressive decoding.
+- **Current Performance**: MAE on Tc = 18.7 K (preliminary). Under active development.
+- **Caveats**: Requires large memory; not yet integrated into production pipeline.
+
+---
+
+*All model cards follow Google’s Model Card template (Mitchell et al., 2019). Performance metrics are based on internal validation sets and may change as new experimental data is ingested through the feedback loop.*
