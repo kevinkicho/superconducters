@@ -1162,3 +1162,23 @@ This protocol defines the step-by-step process for incorporating experimental re
   ```
 - A monitoring dashboard (e.g., `scripts/monitor_feedback_loop.py`) tracks the number of validated candidates, retraining frequency, and model performance over time.
 - All changes are logged in `logs/feedback_loop.log` for auditability.
+
+## Closed-Loop Workflow Protocol
+
+The closed-loop workflow integrates experimental validation, data ingestion, model retraining, and candidate re-ranking into a continuous cycle. The protocol is as follows:
+
+1. **Proposal Generation**: `generate_experimental_proposal()` in `run_pipeline.py` selects the next candidate for synthesis based on current predictions and uncertainty. The proposal includes synthesis parameters (pressure, temperature, precursors) and rationale.
+
+2. **Synthesis and Characterization**: The proposed candidate is synthesized and characterized using standard techniques (XRD, resistivity, SQUID). Raw data files are saved to designated directories.
+
+3. **Data Ingestion**: `ingest_experimental_results()` in `run_pipeline.py` parses the experimental results (e.g., from a JSON file) and updates the central database (`data/superconductor_database.json`). Validation ensures data integrity.
+
+4. **Model Retraining**: After ingestion, the ML models (Tc predictor, DFT calculator) are retrained using the updated database. This is triggered automatically or manually via `run_pipeline.py --retrain`.
+
+5. **Sensitivity Analysis**: `run_global_sensitivity_analysis()` in `run_pipeline.py` identifies which synthesis parameters most influence Tc. The results guide parameter optimization for subsequent experiments.
+
+6. **Re-ranking**: The active learning loop re-ranks candidates using the retrained model and updated sensitivity insights. The top candidates are proposed for the next batch.
+
+7. **Repeat**: The cycle repeats, continuously refining predictions and synthesis strategies.
+
+This protocol ensures that every experiment contributes to improving the model and accelerating discovery.

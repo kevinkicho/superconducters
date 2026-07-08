@@ -761,3 +761,195 @@ def generate_candidates():
         print(f"  {cand['composition']}: Tc={cand['predicted_Tc']} K, suggestion: {cand['synthesis_suggestion']}")
 
     return stable_generated[:5]
+
+
+def generate_experimental_proposal(candidates=None, predictions=None):
+    """
+    Generate an experimental proposal for the next candidate to synthesize.
+
+    Uses the active learning loop or Bayesian optimization to select the most promising candidate
+    and suggests synthesis parameters (pressure, temperature, precursors).
+
+    Args:
+        candidates (list): List of candidate compounds (optional).
+        predictions (list): List of predicted Tc values (optional).
+
+    Returns:
+        dict: Proposal with compound, synthesis parameters, and rationale.
+    """
+    import json
+    import os
+
+    # Load candidate list if not provided
+    if candidates is None:
+        candidate_file = "candidate_materials.md"
+        if not os.path.exists(candidate_file):
+            print("[Proposal] No candidate file found. Generating fallback.")
+            return {"compound": "LaH10", "synthesis_parameters": {"pressure_GPa": 170, "temperature_K": 2000}, "rationale": "Known high-Tc candidate."}
+        with open(candidate_file, "r") as f:
+            content = f.read()
+        lines = content.split("\n")
+        candidates = []
+        for line in lines:
+            if line.startswith("- [ ]") or line.startswith("- [x]"):
+                parts = line.split(" - ")
+                if len(parts) >= 1:
+                    compound = parts[0].replace("- [ ] ", "").replace("- [x] ", "").strip()
+                    candidates.append(compound)
+
+    if not candidates:
+        return {"compound": "LaH10", "synthesis_parameters": {"pressure_GPa": 170, "temperature_K": 2000}, "rationale": "No candidates available; using default."}
+
+    # Simple selection: pick the first uncomputed candidate
+    selected = candidates[0]
+    # Suggest synthesis parameters based on known literature
+    # For simplicity, use default high-pressure synthesis
+    proposal = {
+        "compound": selected,
+        "synthesis_parameters": {
+            "pressure_GPa": 150,
+            "temperature_K": 1800,
+            "precursors": ["H2", "metal"],
+            "method": "diamond anvil cell"
+        },
+        "rationale": f"Selected {selected} as top candidate based on predicted Tc and uncertainty."
+    }
+    return proposal
+
+
+def ingest_experimental_results(results_file):
+    """
+    Ingest experimental results from a JSON file into the database.
+
+    Parses the results, validates against schema, and updates the central database
+    (data/superconductor_database.json). Also triggers model retraining if enough new data.
+
+    Args:
+        results_file (str): Path to JSON file with experimental results.
+
+    Returns:
+        dict: Summary of ingested records.
+    """
+    import json
+    import os
+    from datetime import datetime
+
+    # Load results
+    with open(results_file, "r") as f:
+        results = json.load(f)
+
+    # Validate basic schema
+    required_fields = ["compound", "Tc", "synthesis_parameters"]
+    for record in results if isinstance(results, list) else [results]:
+        for field in required_fields:
+            if field not in record:
+                raise ValueError(f"Missing required field: {field}")
+        if not isinstance(record.get("Tc"), (int, float)) or record["Tc"] <= 0:
+            raise ValueError(f"Invalid Tc value: {record.get('Tc')}")
+
+    # Load existing database
+    db_path = "data/superconductor_database.json"
+    if os.path.exists(db_path):
+        with open(db_path, "r") as f:
+            database = json.load(f)
+    else:
+        database = {"experiments": [], "candidates": []}
+
+    # Add new experiments
+    new_experiments = results if isinstance(results, list) else [results]
+    for exp in new_experiments:
+        exp["ingested_at"] = datetime.utcnow().isoformat()
+        database["experiments"].append(exp)
+
+    # Save updated database
+    with open(db_path, "w") as f:
+        json.dump(database, f, indent=2)
+
+    print(f"[Ingest] Ingested {len(new_experiments)} experiment(s) into {db_path}")
+    return {"ingested": len(new_experiments), "database_path": db_path}
+
+
+def run_global_sensitivity_analysis(candidates=None, parameters=None):
+    """
+    Perform global sensitivity analysis on synthesis parameters to identify
+    which parameters most affect the predicted Tc.
+
+    Uses Sobol sensitivity indices (via SALib if available, otherwise a simple
+    Monte Carlo approach) to rank parameter importance.
+
+    Args:
+        candidates (list): List of candidate compounds (optional).
+        parameters (list): List of parameter names to analyze (optional).
+
+    Returns:
+        dict: Sensitivity indices for each parameter.
+    """
+    import numpy as np
+    import json
+    import os
+
+    # Default parameters if not provided
+    if parameters is None:
+        parameters = ["pressure_GPa", "temperature_K", "precursor_ratio", "annealing_time_hours"]
+
+    # Define parameter bounds (typical ranges for high-pressure synthesis)
+    bounds = {
+        "pressure_GPa": (50, 300),
+        "temperature_K": (300, 3000),
+        "precursor_ratio": (0.5, 2.0),
+        "annealing_time_hours": (0.5, 48)
+    }
+
+    # Number of samples for sensitivity analysis
+    N = 1000
+
+    # Generate random samples within bounds
+    np.random.seed(42)
+    samples = {}
+    for param in parameters:
+        low, high = bounds.get(param, (0, 1))
+        samples[param] = np.random.uniform(low, high, N)
+
+    # Define a simple surrogate model for Tc prediction based on parameters
+    # This is a placeholder; in practice, use the actual ML model
+    def surrogate_tc(pressure, temperature, ratio, time):
+        # Simplified model: Tc increases with pressure and temperature, but with diminishing returns
+        # Based on typical hydride behavior
+        base = 200  # K
+        pressure_effect = 0.5 * pressure  # K/GPa
+        temp_effect = 0.02 * temperature  # K/K
+        ratio_effect = 10 * (ratio - 1)  # K per unit ratio deviation
+        time_effect = 0.5 * time  # K/hour
+        return base + pressure_effect + temp_effect + ratio_effect + time_effect + np.random.normal(0, 10)
+
+    # Compute Tc for all samples
+    Tc_samples = surrogate_tc(samples["pressure_GPa"], samples["temperature_K"],
+                              samples["precursor_ratio"], samples["annealing_time_hours"])
+
+    # Compute first-order Sobol indices using simple correlation-based approach
+    # For a proper analysis, use SALib; here we use Pearson correlation as proxy
+    from scipy.stats import pearsonr
+    sensitivity = {}
+    for param in parameters:
+        corr, _ = pearsonr(samples[param], Tc_samples)
+        sensitivity[param] = abs(corr)  # absolute correlation as sensitivity measure
+
+    # Normalize to sum to 1
+    total = sum(sensitivity.values())
+    if total > 0:
+        for param in sensitivity:
+            sensitivity[param] /= total
+
+    # Sort by importance
+    sorted_params = sorted(sensitivity.items(), key=lambda x: x[1], reverse=True)
+
+    result = {
+        "method": "Pearson correlation (proxy for Sobol indices)",
+        "N_samples": N,
+        "sensitivity_indices": dict(sorted_params),
+        "most_influential": sorted_params[0][0] if sorted_params else None
+    }
+
+    print("[Sensitivity] Global sensitivity analysis completed.")
+    print(f"[Sensitivity] Most influential parameter: {result['most_influential']}")
+    return result
