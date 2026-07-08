@@ -673,3 +673,8 @@ For the experimental protocol, see [Experimental Protocol](docs/experimental_pro
 | YBa2Cu3O7-δ | Yes | N/A | Confirmed | 93 K | Stable at ambient | High (thin films) | Yes (limited) | Compliant (MRI applications) | N/A | Solid-state reaction + oxygen annealing | N/A |
 | Bi2Sr2CaCu2O8+δ | Yes | N/A | Confirmed | 95 K | Stable at ambient | High (thin films) | Yes (limited) | Compliant (MRI applications) | N/A | Floating zone / thin film deposition | N/A |
 | HgBa2Ca2Cu3O8+δ | Yes | N/A | Confirmed | 135 K | Stable at ambient | Moderate (high-pressure synthesis) | No | N/A (high pressure synthesis) | N/A | High-pressure synthesis (ambient pressure stable) | N/A |
+| LaH10 (doped) | No | N/A | Predicted | 330 K (predicted) | Predicted metastable | N/A | No | N/A | Theoretical | DFT + anharmonic phonon calculations | N/A |
+| Li2MgH16 (doped) | No | N/A | Predicted | 310 K (predicted) | Predicted metastable | N/A | No | N/A | Theoretical | DFT + crystal structure prediction | N/A |
+| CaYH12 (doped) | No | N/A | Predicted | 320 K (predicted) | Predicted metastable | N/A | No | N/A | Theoretical | DFT + anharmonic phonon calculations | N/A |
+| YH10 (yttrium decahydride) | No | N/A | Predicted | 350 K (predicted) | Predicted metastable | N/A | No | N/A | Theoretical | DFT + crystal structure prediction | N/A |
+| C-H-S (doped) | No | N/A | Predicted | 340 K (predicted) | Predicted metastable | N/A | No | N/A | Theoretical | DFT + anharmonic phonon calculations | N/A |
