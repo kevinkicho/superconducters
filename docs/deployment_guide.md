@@ -222,3 +222,71 @@ In your GitHub Actions workflow, add the following step after checkout:
 ```
 
 Make sure to add `DOCKER_USERNAME` and `DOCKER_PASSWORD` as secrets in your GitHub repository settings.
+
+
+## 9. Environment Variables for Registry Credentials
+
+To simplify Docker image generation and pushing, set the following environment variables for your container registry. These can be used in local scripts or CI/CD pipelines.
+
+### Docker Hub
+- `DOCKER_USERNAME` – your Docker Hub username
+- `DOCKER_PASSWORD` – your Docker Hub password or access token
+
+Example local setup:
+```bash
+export DOCKER_USERNAME=myuser
+export DOCKER_PASSWORD=mypassword
+```
+
+### AWS ECR
+- `AWS_ACCOUNT` – your 12-digit AWS account ID
+- `AWS_REGION` – the AWS region (e.g., `us-east-1`)
+- `AWS_ACCESS_KEY_ID` – IAM access key (if not using instance profile)
+- `AWS_SECRET_ACCESS_KEY` – IAM secret key
+
+Example:
+```bash
+export AWS_ACCOUNT=123456789012
+export AWS_REGION=us-east-1
+export AWS_ACCESS_KEY_ID=AKIA...
+export AWS_SECRET_ACCESS_KEY=...
+```
+
+Then use in scripts:
+```bash
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com
+docker tag supercon-pipeline:latest $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/supercon-pipeline:latest
+docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/supercon-pipeline:latest
+```
+
+### GCP GCR
+- `GCP_PROJECT_ID` – your Google Cloud project ID
+- `GCP_SERVICE_ACCOUNT_KEY` – path to a JSON key file (optional, for CI/CD)
+
+Example:
+```bash
+export GCP_PROJECT_ID=my-project-123
+gcloud auth configure-docker --quiet
+docker tag supercon-pipeline:latest gcr.io/$GCP_PROJECT_ID/supercon-pipeline:latest
+docker push gcr.io/$GCP_PROJECT_ID/supercon-pipeline:latest
+```
+
+### Azure ACR
+- `AZURE_REGISTRY_NAME` – your Azure Container Registry name
+- `AZURE_CLIENT_ID` – service principal client ID (optional)
+- `AZURE_CLIENT_SECRET` – service principal secret (optional)
+- `AZURE_TENANT_ID` – Azure AD tenant ID (optional)
+
+Example:
+```bash
+export AZURE_REGISTRY_NAME=myregistry
+export AZURE_CLIENT_ID=...
+export AZURE_CLIENT_SECRET=...
+export AZURE_TENANT_ID=...
+az acr login --name $AZURE_REGISTRY_NAME
+docker tag supercon-pipeline:latest $AZURE_REGISTRY_NAME.azurecr.io/supercon-pipeline:latest
+docker push $AZURE_REGISTRY_NAME.azurecr.io/supercon-pipeline:latest
+```
+
+### CI/CD Secrets
+In GitHub Actions, add the relevant variables as repository secrets (e.g., `AWS_ACCOUNT`, `DOCKER_USERNAME`, `GCP_PROJECT_ID`, `AZURE_REGISTRY_NAME`) and reference them in your workflow as `${{ secrets.VAR_NAME }}`.
