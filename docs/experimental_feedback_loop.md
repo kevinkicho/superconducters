@@ -2780,3 +2780,112 @@ This section provides a foundation for the experimental feedback loop, guiding c
 - Peng, F. et al. (2023). Prediction of room-temperature superconductivity in ternary hydrides under moderate pressure. *Physical Review Letters*, 130, 126001.
 - Stanev, V. et al. (2018). Machine learning modeling of superconducting critical temperature. *npj Computational Materials*, 4, 29.
 - Li, D. et al. (2019). Superconductivity in an infinite-layer nickelate. *Nature*, 572, 624–627.
+
+
+## Automated Literature Mining Module
+
+### Overview
+The automated literature mining module continuously scans scientific databases (arXiv, PubMed, Google Scholar) for new publications on room-temperature superconductivity. It extracts key data points (compound, Tc, pressure, synthesis method) and integrates them into the central database to update candidate rankings and trigger new computational predictions.
+
+### Configuration
+The module is configured via a YAML file (`config/literature_mining.yaml`):
+
+```yaml
+literature_mining:
+  enabled: true
+  schedule: "0 6 * * *"  # Daily at 6:00 AM
+  sources:
+    - name: arxiv
+      base_url: "https://export.arxiv.org/api/query"
+      search_terms:
+        - "room temperature superconductivity"
+        - "high Tc superconductor"
+        - "hydride superconductor"
+        - "nickelate superconductor"
+      max_results_per_query: 50
+    - name: pubmed
+      base_url: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+      search_terms:
+        - "superconductivity room temperature"
+        - "high temperature superconductor"
+      max_results_per_query: 20
+    - name: google_scholar
+      base_url: "https://scholar.google.com/scholar"
+      search_terms:
+        - "room temperature superconductor"
+        - "superconductivity hydride"
+      max_results_per_query: 20
+  extraction:
+    llm_model: "gpt-4"  # Model used for extracting structured data from abstracts
+    confidence_threshold: 0.7  # Minimum confidence score for automatic ingestion
+    fields:
+      - compound_name
+      - critical_temperature_K
+      - pressure_GPa
+      - synthesis_method
+      - characterization_techniques
+      - doi
+      - publication_date
+      - authors
+  database:
+    table: literature_entries
+    schema: |
+      CREATE TABLE literature_entries (
+        id SERIAL PRIMARY KEY,
+        doi VARCHAR(255) UNIQUE,
+        title TEXT,
+        authors TEXT,
+        publication_date DATE,
+        journal VARCHAR(255),
+        compound_name VARCHAR(255),
+        critical_temperature_K FLOAT,
+        pressure_GPa FLOAT,
+        synthesis_method TEXT,
+        characterization_techniques TEXT[],
+        confidence_score FLOAT,
+        ingested_at TIMESTAMP DEFAULT NOW(),
+        reviewed BOOLEAN DEFAULT FALSE
+      );
+  notification:
+    email: "superconductor-team@example.com"
+    slack_webhook: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+    on_new_high_tc: true  # Notify when Tc > 200 K
+    on_new_low_pressure: true  # Notify when pressure < 50 GPa
+```
+
+### Scheduling
+The module runs on a configurable cron schedule (default: daily at 6:00 AM). The schedule can be adjusted in the configuration file. The module also supports manual triggering via a CLI command:
+
+```bash
+python scripts/run_literature_mining.py --force
+```
+
+For continuous monitoring, a long-running daemon mode is available:
+
+```bash
+python scripts/run_literature_mining.py --daemon --interval 3600  # Check every hour
+```
+
+### Usage Instructions
+
+1. **Installation**: Ensure all dependencies are installed (`pip install -r requirements/literature_mining.txt`). Required packages: `requests`, `beautifulsoup4`, `lxml`, `openai`, `psycopg2`, `pyyaml`, `schedule`.
+
+2. **Configuration**: Edit `config/literature_mining.yaml` to set your API keys (arXiv API is free, PubMed requires an API key for high volume, Google Scholar requires careful rate limiting). Set the database connection string in `config/database.yaml`.
+
+3. **Running**:
+   - One-time scan: `python scripts/run_literature_mining.py`
+   - Scheduled via cron: Add `0 6 * * * /path/to/venv/bin/python /path/to/scripts/run_literature_mining.py` to crontab.
+   - Docker deployment: `docker-compose up literature-miner` (see `docker-compose.yml` for details).
+
+4. **Output**: New literature entries are stored in the `literature_entries` table. High-confidence entries (confidence_score > 0.7) are automatically flagged for review and can trigger model retraining. A daily summary report is emailed to the team.
+
+5. **Reviewing**: Use the Streamlit dashboard (`streamlit_dashboard.py`) to review flagged entries. Navigate to the "Literature Mining" tab to see new entries, accept/reject them, and add manual annotations.
+
+6. **Integration with Feedback Loop**: When a new literature entry is accepted, the system:
+   - Updates the candidate ranking with the new Tc/pressure data.
+   - Triggers a retraining of the ML model if the new data significantly changes the training set.
+   - Sends a notification to the experimental team if a promising new compound is identified (Tc > 200 K or pressure < 50 GPa).
+
+### References
+- Stanev, V. et al. (2018). Machine learning modeling of superconducting critical temperature. *npj Computational Materials*, 4, 29. [DOI: 10.1038/s41524-018-0085-8](https://doi.org/10.1038/s41524-018-0085-8)
+- Kim, K. et al. (2023). Literature mining for materials discovery: A review. *Nature Reviews Materials*, 8, 360–375. [DOI: 10.1038/s41578-023-00550-2](https://doi.org/10.1038/s41578-023-00550-2)
