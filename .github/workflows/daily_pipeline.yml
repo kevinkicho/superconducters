@@ -50,8 +50,11 @@
 
 name: Daily Superconductor Research
 
-# CI disabled — this is a non-runnable scaffold project
-on: workflow_dispatch
+# Weekly schedule — runs every Sunday at midnight
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
 
 jobs:
   research:
@@ -74,10 +77,52 @@ jobs:
         run: |
           python run_pipeline.py
 
+      - name: Generate regression report
+        run: |
+          python -c "
+import json, subprocess, os
+# Get previous version of superconductor_research.json if exists
+try:
+    prev = subprocess.check_output(['git', 'show', 'HEAD:superconductor_research.json']).decode()
+    prev_data = json.loads(prev)
+except:
+    prev_data = None
+# Get current version
+with open('superconductor_research.json') as f:
+    curr_data = json.load(f)
+# Simple comparison: count entries, list new candidates
+report_lines = ['# Regression Report', '', '## Comparison with previous run']
+if prev_data:
+    prev_candidates = set(c['name'] for c in prev_data.get('candidates', []))
+    curr_candidates = set(c['name'] for c in curr_data.get('candidates', []))
+    new = curr_candidates - prev_candidates
+    removed = prev_candidates - curr_candidates
+    report_lines.append(f'Previous candidates: {len(prev_candidates)}')
+    report_lines.append(f'Current candidates: {len(curr_candidates)}')
+    report_lines.append(f'New candidates: {len(new)}')
+    report_lines.append(f'Removed candidates: {len(removed)}')
+    if new:
+        report_lines.append('### New candidates:')
+        for n in sorted(new):
+            report_lines.append(f'- {n}')
+    if removed:
+        report_lines.append('### Removed candidates:')
+        for n in sorted(removed):
+            report_lines.append(f'- {n}')
+else:
+    report_lines.append('No previous data to compare.')
+report_lines.append('')
+report_lines.append('Generated on: ' + subprocess.check_output(['date', '-u']).decode().strip())
+os.makedirs('docs', exist_ok=True)
+with open('docs/regression_report.md', 'w') as f:
+    f.write('\n'.join(report_lines))
+print('Regression report generated: docs/regression_report.md')
+"
+
       - name: Commit and push report
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add superconductor_research.json docs/daily_superconductor_report.md
-          git commit -m 'Daily superconductor research update' || echo 'No changes to commit'
+          git add superconductor_research.json docs/daily_superconductor_report.md docs/regression_report.md
+          git commit -m 'Weekly superconductor research update' || echo 'No changes to commit'
           git push
