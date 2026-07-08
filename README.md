@@ -199,3 +199,52 @@ git push origin main
 ```
 
 For a more robust setup, configure a GitHub Actions workflow (see `.github/workflows/ci.yml`) that triggers on push and runs the pipeline, then commits any updated output files back to the repository. Ensure that `config.yaml` includes a `version_control` section with `auto_commit: true` to enable automatic commits.
+
+
+## Quickstart Tutorial
+
+This quickstart tutorial walks you through using the pipeline to discover a room-temperature superconductor. Follow these steps to run a complete discovery workflow.
+
+### Step 1: Install Dependencies
+
+Ensure you have Python 3.8+ and install the required packages:
+
+```
+pip install -r requirements.txt
+```
+
+### Step 2: Run the Pipeline
+
+Execute the main pipeline script with a candidate material. For example, to evaluate yttrium barium copper oxide (YBCO):
+
+```
+python run_pipeline.py --candidate "YBa2Cu3O7" --output-dir output/
+```
+
+### Step 3: Expected Outputs
+
+The pipeline will produce the following outputs in the `output/` directory:
+
+- `pipeline.log`: Detailed log of all steps.
+- `audit.json`: Machine-readable audit trail with timestamps and parameters.
+- `audit_summary.md`: Human-readable summary of the run.
+- Updated `candidate_materials.md` with new columns (CloudLabStatus, ValidationScore).
+
+Sample log output:
+
+```
+[INFO] Loading candidate: YBa2Cu3O7
+[INFO] Predicting Tc...
+[INFO] Predicted Tc: 92 K
+[INFO] Validation score: 0.87
+[INFO] Cloud lab integration: submitted for synthesis
+[INFO] Audit trail written to output/audit.json
+```
+
+### Step 4: Interpret Results
+
+- **Predicted Tc**: The critical temperature predicted by the model. A value above 77 K (liquid nitrogen boiling point) is promising for practical applications.
+- **ValidationScore**: A confidence metric (0–1) indicating how reliable the prediction is based on known data.
+- **CloudLabStatus**: Whether the candidate has been submitted for automated synthesis and testing in the cloud lab.
+
+For a detailed discovery report, see [final_report.md](final_report.md).
