@@ -40,3 +40,28 @@ def test_write_pdf_invalid_path():
     """Test write_pdf raises exception for invalid path."""
     with pytest.raises(Exception):
         write_pdf("content", "/nonexistent/dir/report.pdf")
+
+
+def test_generate_report_multiple_candidates():
+    candidates = [
+        {"formula": "H3S", "tc": 203, "pressure": 150},
+        {"formula": "LaH10", "tc": 250, "pressure": 170},
+    ]
+    report = generate_report(candidates)
+    assert "H3S" in report
+    assert "LaH10" in report
+    assert "203" in report
+    assert "250" in report
+
+
+def test_format_candidate_table_with_special_chars():
+    candidates = [{"formula": "YBa2Cu3O7", "tc": 93, "pressure": 0}]
+    table = format_candidate_table(candidates)
+    assert "YBa2Cu3O7" in table
+
+
+def test_write_pdf_empty_content(tmp_path):
+    content = ""
+    output_path = tmp_path / "empty.pdf"
+    write_pdf(content, str(output_path))
+    assert output_path.exists()
