@@ -1271,3 +1271,71 @@ class TestPerformanceAndStress:
 
         # Self-healing verification: the pipeline should have continued despite failures
         # (If it crashed, the test would have failed earlier)
+
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_end_to_end_integration_1000_candidates(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """End-to-end integration test with 1000 synthetic candidates, verifying all output files are updated."""
+        # Generate 1000 synthetic candidates
+        candidates = []
+        for i in range(1000):
+            candidates.append({
+                "name": f"Candidate_{i}",
+                "Tc": 100.0 + i,
+                "pressure": 150.0 + i * 0.1,
+                "composition": f"X{i}Y{i}"
+            })
+        mock_load.return_value = candidates
+
+        # Mock train_model to return a simple model
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [100.0 + i for i in range(1000)]
+        mock_train.return_value = mock_model
+
+        # Mock predict_tc_with_uncertainty to return (Tc, uncertainty) for each candidate
+        def predict_side_effect(name, pressure=None):
+            idx = int(name.split('_')[1])
+            return (100.0 + idx, 5.0 + idx % 10)
+        mock_predict.side_effect = predict_side_effect
+
+        # Mock DFT calculation to return a standard result
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+
+        # Mock open to capture write calls
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline
+        try:
+            result = rp.run_pipeline()
+        except Exception as e:
+            pytest.fail(f"Pipeline raised an unhandled exception during integration test: {e}")
+
+        # Verify pipeline completed
+        assert result is not None, "Pipeline returned None"
+
+        # Verify load_data was called once
+        mock_load.assert_called_once()
+
+        # Verify train_model was called once
+        mock_train.assert_called_once()
+
+        # Verify predict_tc_with_uncertainty was called for each candidate (at least 1000 times)
+        assert mock_predict.call_count >= 1000, f"Expected at least 1000 predict calls, got {mock_predict.call_count}"
+
+        # Verify DFT was called at least once (for high-uncertainty candidates)
+        assert mock_dft.call_count >= 1, "DFT was not called"
+
+        # Verify that open was called to write output files
+        expected_files = ["candidate_materials.md", "roadmap.md", "research_report.md", "experimental_plan.md"]
+        open_calls = [c for c in mock_open.call_args_list if c[0][0] in expected_files]
+        assert len(open_calls) >= 1, f"Expected at least one output file to be written, got {len(open_calls)}"
+
+        # Verify that all expected output files were written (each at least once)
+        written_files = set(c[0][0] for c in open_calls)
+        for fname in expected_files:
+            assert fname in written_files, f"Output file {fname} was not written"
