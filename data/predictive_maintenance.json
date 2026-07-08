@@ -1,0 +1,62 @@
+[
+  {
+    "equipment_id": "HP-001",
+    "equipment_name": "Hydraulic Press 2000T",
+    "location": "Synthesis Lab A",
+    "last_maintenance_date": "2025-03-10",
+    "sensor_data": {
+      "temperature_c": 45.2,
+      "pressure_bar": 1800,
+      "vibration_mm_s": 2.1,
+      "rpm": 120
+    },
+    "health_score": 87,
+    "predicted_remaining_useful_life_days": 120,
+    "failure_probability": 0.03
+  },
+  {
+    "equipment_id": "CVD-001",
+    "equipment_name": "CVD Reactor Mk IV",
+    "location": "Thin Film Lab",
+    "last_maintenance_date": "2025-02-28",
+    "sensor_data": {
+      "temperature_c": 850.0,
+      "pressure_mtorr": 150,
+      "gas_flow_sccm": 50,
+      "rf_power_w": 300
+    },
+    "health_score": 72,
+    "predicted_remaining_useful_life_days": 45,
+    "failure_probability": 0.15
+  },
+  {
+    "equipment_id": "FUR-001",
+    "equipment_name": "Tube Furnace 1200C",
+    "location": "Heat Treatment Room",
+    "last_maintenance_date": "2025-01-15",
+    "sensor_data": {
+      "temperature_c": 1050.0,
+      "heating_rate_c_per_min": 10,
+      "atmosphere": "Argon",
+      "power_consumption_kw": 8.5
+    },
+    "health_score": 65,
+    "predicted_remaining_useful_life_days": 30,
+    "failure_probability": 0.22
+  },
+  {
+    "equipment_id": "CRYO-001",
+    "equipment_name": "Cryostat 4K",
+    "location": "Characterization Lab",
+    "last_maintenance_date": "2025-03-01",
+    "sensor_data": {
+      "base_temperature_k": 4.2,
+      "helium_pressure_bar": 1.5,
+      "cooling_power_w": 0.5,
+      "vacuum_pressure_mbar": 1e-6
+    },
+    "health_score": 92,
+    "predicted_remaining_useful_life_days": 200,
+    "failure_probability": 0.01
+  }
+]
