@@ -285,3 +285,36 @@ For a detailed discovery report, see [final_report.md](final_report.md).
 ## Market Analysis
 
 For an analysis of the market size, growth projections, key players, and competitive landscape, see the [Market Analysis Report](docs/market_analysis.md). For details on funding requirements and strategy, see the [Funding Proposal](docs/funding_proposal.md).
+
+
+## User Management and Role-Based Access Control (RBAC)
+
+This project supports role-based access control (RBAC) to restrict access to sensitive operations and data. Three roles are defined:
+
+- **admin**: Full access — can run the pipeline, modify configurations, manage users, and view all data.
+- **researcher**: Can run experiments, view candidate materials, synthesis methods, and characterization results, but cannot modify system configurations or manage users.
+- **viewer**: Read-only access to published reports and summaries. Cannot run experiments or modify any data.
+
+### Setting Environment Variables
+
+Set the following environment variables to configure RBAC:
+
+- `RBAC_ROLE`: The role assigned to the current user. Valid values: `admin`, `researcher`, `viewer`. Default: `viewer`.
+- `RBAC_ADMIN_API_KEY`: API key for admin-level operations (required when `RBAC_ROLE=admin`).
+- `RBAC_RESEARCHER_API_KEY`: API key for researcher-level operations (required when `RBAC_ROLE=researcher`).
+
+Example for a researcher:
+
+```bash
+export RBAC_ROLE=researcher
+export RBAC_RESEARCHER_API_KEY=your_researcher_key_here
+```
+
+For an admin:
+
+```bash
+export RBAC_ROLE=admin
+export RBAC_ADMIN_API_KEY=your_admin_key_here
+```
+
+If no role is set, the system defaults to `viewer` with no API key required. The pipeline scripts check these variables before executing privileged operations and will exit with an error if the role is insufficient.
