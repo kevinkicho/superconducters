@@ -101,3 +101,82 @@ python run_pipeline.py --watch
 ```
 
 This will start the watcher and automatically perform validation and retraining on each change to `data/experimental_results.json`.
+
+
+## Data Assimilation Module
+
+The Data Assimilation Module (DAM) ingests experimental results from `data/experimental_results.json` and applies Kalman filtering to reduce measurement noise and estimate hidden state variables (e.g., actual Tc, lattice parameters). It outputs a cleaned, uncertainty-weighted dataset that is fed into the ML model retraining pipeline.
+
+### Configuration
+
+DAM is configured via `config/data_assimilation.yaml`:
+
+```yaml
+filter_type: "ensemble_kalman"
+ensemble_size: 100
+observation_noise: 0.05  # eV/atom
+process_noise: 0.01
+state_variables: ["formation_energy", "tc", "lattice_constant_a"]
+```
+
+### Usage
+
+```bash
+python run_pipeline.py --assimilate
+```
+
+This command runs the DAM on the latest experimental results and writes the assimilated dataset to `data/assimilated_results.json`. The pipeline automatically uses this file for retraining if present.
+
+## VirtualLabSimulator
+
+The VirtualLabSimulator (VLS) is a physics-based surrogate model that simulates synthesis and characterization experiments for candidate compounds. It uses density functional theory (DFT) calculations and thermodynamic models to predict Tc, stability, and synthesis feasibility without physical lab work. This enables rapid screening of thousands of candidates before committing to expensive experiments.
+
+### Configuration
+
+VLS is configured via `config/virtual_lab.yaml`:
+
+```yaml
+simulation_engine: "dft"
+pseudopotential: "pbe"
+kpoints: [4,4,4]
+pressure_range: [50, 200]  # GPa
+temperature_range: [300, 2000]  # K
+max_candidates_per_run: 100
+```
+
+### Usage
+
+```bash
+python run_pipeline.py --simulate
+```
+
+This runs the VLS on the current candidate list and appends simulated results to `data/simulated_results.json`. The active learning loop can optionally use these synthetic data points to guide exploration.
+
+## Integration with ML Model and Active Learning Loop
+
+The closed-loop workflow now integrates all components:
+
+1. **Candidate Selection**: The active learning loop (Bayesian optimization) selects candidates from `candidate_materials.md`.
+2. **VirtualLabSimulator**: For each candidate, VLS generates simulated Tc and stability scores. These are stored in `data/simulated_results.json`.
+3. **Cloud Lab API**: Top candidates (based on combined simulated + experimental scores) are submitted to the cloud lab for physical synthesis.
+4. **Data Assimilation**: Experimental results from the cloud lab are assimilated by DAM to produce a cleaned dataset.
+5. **Model Retraining**: The ML model (GNN/PINN ensemble) is retrained on the assimilated dataset, improving prediction accuracy.
+6. **Active Learning Update**: The Bayesian optimizer updates the acquisition function using the retrained model and new data, producing an updated candidate ranking.
+
+This cycle runs continuously, with the VLS providing a fast, cheap screening layer that reduces the number of expensive physical experiments needed.
+
+### Configuration for the Full Loop
+
+To enable the full closed-loop workflow, set the following environment variables:
+
+- `CLOUD_LAB_API_KEY`: API token for cloud lab.
+- `VLS_ENGINE`: DFT engine path (default: `vasp`).
+- `DAM_CONFIG`: Path to data assimilation config (default: `config/data_assimilation.yaml`).
+
+Then run:
+
+```bash
+python run_pipeline.py --full-loop
+```
+
+This starts the watcher, VLS, DAM, and active learning retraining in a coordinated manner. See `run_pipeline.py` for detailed command-line options.
