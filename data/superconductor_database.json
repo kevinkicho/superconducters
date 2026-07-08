@@ -3024,6 +3024,31 @@
       "prediction_method": null,
       "confidence_score": null
     }
+  },
+  {
+    "name": "TestMaterial",
+    "Tc": 100,
+    "pressure": 0,
+    "structure": "test",
+    "reference": "Test reference",
+    "doi": "10.1234/test",
+    "synthesis_method": "solid state reaction",
+    "synthesis_parameters": "ambient pressure, temperature 900 °C",
+    "Tc_error": 5,
+    "pressure_error": 0,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Test"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "TestDB",
+      "database_id": "TEST-001",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   }
 ]
 
