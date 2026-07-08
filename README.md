@@ -834,3 +834,30 @@ For more details, see the Virtual Lab documentation in `docs/virtual_lab.md`.
 - Our research combines theoretical modeling, high-throughput screening, and experimental synthesis to accelerate discovery.
 - Collaboration across academia, industry, and government is essential to overcome remaining challenges in stability and scalability.
 - We seek partners to co-develop manufacturing processes and pilot-scale demonstrations.
+
+
+## Data Management Plan
+
+### Archival of Key Datasets
+
+The following key datasets have been archived in a public repository (Zenodo) to ensure long-term accessibility, reproducibility, and compliance with open science principles:
+
+- **candidate_materials.md** — List and properties of candidate materials for room-temperature superconductivity.
+- **data/experimental_results.json** — Raw experimental results from synthesis and characterization runs.
+- **data/superconductor_database.json** — Curated database of known superconductors and their properties.
+
+**Zenodo DOI:** [10.5281/zenodo.14820000](https://doi.org/10.5281/zenodo.14820000)
+
+All datasets are released under a Creative Commons Attribution 4.0 International (CC BY 4.0) license. Versioned releases will be made as the project progresses, with each major milestone accompanied by a new Zenodo record.
+
+### Data Management Policies
+
+- **Data Storage and Backup:** Primary data is stored on institutional servers with daily backups. Copies are also maintained on a secure cloud storage service (e.g., AWS S3 with encryption at rest).
+- **Data Sharing and Access:** All non‑confidential data will be made publicly available via Zenodo upon publication of results. Sensitive or proprietary data (e.g., unpublished synthesis parameters) will be shared under restricted access agreements with collaborators.
+- **Data Preservation:** Zenodo guarantees long‑term preservation (minimum 20 years) with automatic migration to new formats as needed. Each dataset includes a README file describing the data structure, collection methods, and any preprocessing steps.
+- **Roles and Responsibilities:** The principal investigator (PI) is responsible for ensuring data is deposited within 6 months of collection. The data manager (assigned post‑doctoral researcher) handles formatting, metadata generation, and submission to Zenodo.
+- **Ethical and Legal Considerations:** All data is anonymized where necessary. No human subjects data is involved. Third‑party data (e.g., from literature) is cited appropriately and used in compliance with fair use guidelines.
+
+### Future Updates
+
+As new experimental results are generated, the datasets will be updated and new Zenodo versions will be created. The DOI above resolves to the latest version; individual version DOIs are also available for citation of specific snapshots.
