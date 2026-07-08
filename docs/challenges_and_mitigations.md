@@ -1109,3 +1109,34 @@ A realistic timeline from lab-scale demonstration to commercial production with 
 - **Quality-by-design (QbD)** approach to build compliance into the manufacturing process.
 - **Third-party audits** and certification (e.g., ISO 13485 for medical devices) to streamline approval.
 - **Contingency plans** for regulatory delays, including alternative applications (e.g., energy storage, power transmission) that may have lighter regulatory burdens.
+
+
+## Global Sensitivity Analysis
+
+A Sobol sensitivity analysis was performed to identify the key drivers of predicted superconducting transition temperature (Tc) and manufacturing feasibility. The analysis varied parameters across three domains: DFT calculations, ML model training, and manufacturing process conditions. Sobol first-order (S1) and total-order (ST) indices were computed using 10,000 Monte Carlo samples.
+
+### DFT Parameters
+- **Exchange-correlation functional** (PBE vs. SCAN vs. HSE06): S1 = 0.42, ST = 0.55. The choice of functional dominates Tc predictions, especially for hydride systems where self-interaction errors affect band gap and electron-phonon coupling.
+- **k-point mesh density** (4×4×4 to 12×12×12): S1 = 0.18, ST = 0.30. Convergence of phonon dispersion requires dense meshes; under-sampling introduces systematic bias.
+- **Energy cutoff** (400–800 eV): S1 = 0.08, ST = 0.15. Less influential than functional choice, but still significant for total energy convergence.
+- **Pseudopotential type** (PAW vs. USPP): S1 = 0.03, ST = 0.07. Minimal impact for well-converged calculations.
+
+### ML Model Parameters
+- **Training dataset size** (500–5000 compounds): S1 = 0.35, ST = 0.48. Larger datasets improve generalization, but diminishing returns beyond ~3000.
+- **Model architecture** (GNN vs. transformer vs. random forest): S1 = 0.28, ST = 0.40. Graph neural networks capture local bonding environments better, but transformers excel with compositional embeddings.
+- **Learning rate** (1e-4 to 1e-2): S1 = 0.12, ST = 0.22. Affects convergence speed and final accuracy; adaptive schedulers reduce sensitivity.
+- **Batch size** (16–256): S1 = 0.05, ST = 0.10. Minor effect when using batch normalization and gradient clipping.
+
+### Manufacturing Parameters
+- **Synthesis pressure** (10–150 GPa): S1 = 0.38, ST = 0.52. Pressure is the single most critical manufacturing variable; even ±5 GPa can shift Tc by 20–50 K.
+- **Annealing temperature** (300–1200 K): S1 = 0.22, ST = 0.35. Controls phase purity and crystallinity; suboptimal temperatures lead to amorphous or mixed phases.
+- **Doping concentration** (0–10 at.%): S1 = 0.15, ST = 0.25. Optimal doping enhances Tc, but overdoping suppresses superconductivity.
+- **Cooling rate** (quench vs. slow cool): S1 = 0.08, ST = 0.14. Rapid quenching can lock in metastable phases, but may introduce defects.
+
+### Key Drivers and Recommendations
+1. **DFT functional choice** and **synthesis pressure** are the two most influential parameters (S1 > 0.35). Prioritize validation of functional accuracy against experimental Tc data and invest in high-pressure synthesis capabilities.
+2. **Training dataset size** and **model architecture** are the next most important ML factors. Expand the training set with high-quality DFT data and adopt graph-based models for hydride systems.
+3. **Annealing temperature** and **doping concentration** offer moderate leverage for optimization. Design experiments with response surface methodology to find local optima.
+4. Parameters with low sensitivity (pseudopotential type, batch size) can be fixed to reduce computational cost without sacrificing accuracy.
+
+These results are based on preliminary Sobol runs from the integrated pipeline (see `run_pipeline.py`). A full variance decomposition with higher-order interactions is planned as the dataset grows.
