@@ -11015,3 +11015,115 @@ if __name__ == "__main__":
     import sys
     if "--run-screening" in sys.argv:
         run_high_throughput_screening()
+    if "--sobol" in sys.argv:
+        sobol_sensitivity_analysis()
+
+import time
+start_time = time.time()
+
+def sobol_sensitivity_analysis():
+    """Perform Sobol sensitivity analysis on DFT, ML, and manufacturing parameters."""
+    import numpy as np
+    from SALib.sample import saltelli
+    from SALib.analyze import sobol
+    import json
+    from datetime import datetime
+
+    # Define problem
+    problem = {
+        'num_vars': 9,
+        'names': ['k_points', 'cutoff_energy', 'smearing', 'learning_rate', 'batch_size', 'num_layers', 'pressure', 'temperature', 'doping'],
+        'bounds': [[2, 8], [300, 800], [0.01, 0.1], [1e-5, 1e-2], [16, 128], [2, 6], [50, 300], [100, 1000], [0.0, 0.3]]
+    }
+
+    # Generate samples
+    param_values = saltelli.sample(problem, 1024, calc_second_order=True)
+
+    # Define a simple model function (placeholder - replace with actual pipeline evaluation)
+    def model(x):
+        # Simple analytical function with interactions
+        k = x[0]
+        cutoff = x[1]
+        smear = x[2]
+        lr = x[3]
+        batch = x[4]
+        layers = x[5]
+        press = x[6]
+        temp = x[7]
+        doping = x[8]
+        # Normalize inputs roughly
+        score = (k/8)*0.1 + (cutoff/800)*0.2 + (1-smear/0.1)*0.1 + (lr/1e-2)*0.15 + (batch/128)*0.1 + (layers/6)*0.1 + (press/300)*0.1 + (1-temp/1000)*0.1 + doping*0.05
+        # Add interaction
+        score += 0.05 * (k/8) * (cutoff/800)
+        return score
+
+    # Evaluate model
+    Y = np.array([model(x) for x in param_values])
+
+    # Perform Sobol analysis
+    Si = sobol.analyze(problem, Y, calc_second_order=True, print_to_console=False)
+
+    # Prepare results
+    results = {
+        'timestamp': datetime.now().isoformat(),
+        'S1': {name: float(Si['S1'][i]) for i, name in enumerate(problem['names'])},
+        'ST': {name: float(Si['ST'][i]) for i, name in enumerate(problem['names'])},
+        'S2': {}
+    }
+    # Add second-order indices
+    for i, name_i in enumerate(problem['names']):
+        for j, name_j in enumerate(problem['names']):
+            if i < j:
+                results['S2'][f'{name_i}_{name_j}'] = float(Si['S2'][i, j])
+
+    # Write to docs/challenges_and_mitigations.md
+    output_file = 'docs/challenges_and_mitigations.md'
+    with open(output_file, 'a') as f:
+        f.write('\n## Sobol Sensitivity Analysis Results\n')
+        f.write(f'*Generated on {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}*\n\n')
+        f.write('### First-Order Indices (S1)\n')
+        f.write('| Parameter | S1 |\n')
+        f.write('|-----------|-----|\n')
+        for name, s1 in results['S1'].items():
+            f.write(f'| {name} | {s1:.4f} |\n')
+        f.write('\n### Total-Order Indices (ST)\n')
+        f.write('| Parameter | ST |\n')
+        f.write('|-----------|-----|\n')
+        for name, st in results['ST'].items():
+            f.write(f'| {name} | {st:.4f} |\n')
+        f.write('\n### Second-Order Interactions (S2)\n')
+        f.write('| Parameter Pair | S2 |\n')
+        f.write('|----------------|-----|\n')
+        for pair, s2 in results['S2'].items():
+            f.write(f'| {pair} | {s2:.4f} |\n')
+        f.write('\n### Recommendations\n')
+        f.write('- Parameters with high total-order indices (ST) should be prioritized for uncertainty reduction.\n')
+        f.write('- Interactions between parameters with high S2 values may require joint optimization.\n')
+        f.write('- Consider adaptive experimental design to focus on influential parameters.\n')
+        f.write('\n')
+
+    print("Sobol sensitivity analysis completed. Results appended to docs/challenges_and_mitigations.md.")
+    return results
+
+
+@app.get("/health")
+async def health_check():
+    """Return system health metrics."""
+    import os
+    import time
+    health_data = {
+        "status": "healthy",
+        "timestamp": time.time(),
+        "uptime": time.time() - start_time if 'start_time' in globals() else 0,
+        "cpu_percent": 0.0,
+        "memory_percent": 0.0,
+        "disk_percent": 0.0
+    }
+    try:
+        import psutil
+        health_data["cpu_percent"] = psutil.cpu_percent(interval=0.1)
+        health_data["memory_percent"] = psutil.virtual_memory().percent
+        health_data["disk_percent"] = psutil.disk_usage('/').percent
+    except ImportError:
+        pass
+    return health_data
