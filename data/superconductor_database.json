@@ -9,7 +9,22 @@
     "synthesis_method": "solid state reaction",
     "synthesis_parameters": "ambient pressure, temperature 900 °C",
     "lambda": 0.3,
-    "omega_log": 300
+    "omega_log": 300,
+    "Tc_error": 5,
+    "pressure_error": 0,
+    "measurement_method": "AC susceptibility",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["HgO", "BaO", "CaO", "CuO"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "SuperCon",
+      "database_id": "SC-12345",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   },
   {
     "name": "YBa2Cu3O7",
@@ -22,7 +37,22 @@
     "synthesis_parameters": "ambient pressure, temperature 950 °C",
     "lambda": 0.3,
     "omega_log": 300,
-    "mu_star": 0.1
+    "mu_star": 0.1,
+    "Tc_error": 2,
+    "pressure_error": 0,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Y2O3", "BaCO3", "CuO"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "SuperCon",
+      "database_id": "SC-67890",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   },
   {
     "name": "La1.85Sr0.15CuO4",
@@ -32,7 +62,22 @@
     "reference": "Bednorz & Müller, Z. Phys. B 64, 189 (1986)",
     "doi": "10.1007/BF01303701",
     "synthesis_method": "solid state reaction",
-    "synthesis_parameters": "ambient pressure, temperature 1000 °C"
+    "synthesis_parameters": "ambient pressure, temperature 1000 °C",
+    "Tc_error": 2,
+    "pressure_error": 0,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["La2O3", "SrCO3", "CuO"],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "SuperCon",
+      "database_id": "SC-11111",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   },
   {
     "name": "MgB2",
@@ -2783,6 +2828,90 @@
     "doi": "10.1103/PhysRev.131.140",
     "synthesis_method": "arc melting",
     "synthesis_parameters": "ambient pressure, temperature 2000 °C"
+  },
+  {
+    "name": "YH10 (250 GPa)",
+    "Tc": 326,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m (predicted)",
+    "reference": "Peng et al., Phys. Rev. Lett. 125, 017001 (2020)",
+    "doi": "10.1103/PhysRevLett.125.017001",
+    "synthesis_method": "predicted high-pressure synthesis",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K (predicted)",
+    "lambda": 2.5,
+    "omega_log": 1200,
+    "mu_star": 0.1,
+    "Tc_error": 10,
+    "pressure_error": 10,
+    "measurement_method": "predicted (Eliashberg)",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Y", "H2"],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "AFLOW",
+      "database_id": "YH10_predicted",
+      "predicted_Tc": 326,
+      "prediction_method": "Eliashberg",
+      "confidence_score": 0.7
+    }
+  },
+  {
+    "name": "Li2MgH16 (250 GPa)",
+    "Tc": 473,
+    "pressure": 250,
+    "structure": "cubic, Fm-3m (predicted)",
+    "reference": "Sun et al., Phys. Rev. B 105, 214515 (2022)",
+    "doi": "10.1103/PhysRevB.105.214515",
+    "synthesis_method": "predicted high-pressure synthesis",
+    "synthesis_parameters": "pressure 250 GPa, temperature 2000 K (predicted)",
+    "lambda": 2.8,
+    "omega_log": 1300,
+    "mu_star": 0.1,
+    "Tc_error": 20,
+    "pressure_error": 10,
+    "measurement_method": "predicted (Eliashberg)",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Li", "Mg", "H2"],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "AFLOW",
+      "database_id": "Li2MgH16_predicted",
+      "predicted_Tc": 473,
+      "prediction_method": "Eliashberg",
+      "confidence_score": 0.6
+    }
+  },
+  {
+    "name": "CaH6 (150 GPa)",
+    "Tc": 220,
+    "pressure": 150,
+    "structure": "cubic, Im-3m (predicted)",
+    "reference": "Wang et al., Phys. Rev. B 103, 214502 (2021)",
+    "doi": "10.1103/PhysRevB.103.214502",
+    "synthesis_method": "predicted high-pressure synthesis",
+    "synthesis_parameters": "pressure 150 GPa, temperature 2000 K (predicted)",
+    "lambda": 2.0,
+    "omega_log": 1000,
+    "mu_star": 0.1,
+    "Tc_error": 10,
+    "pressure_error": 10,
+    "measurement_method": "predicted (Eliashberg)",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": ["Ca", "H2"],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "AFLOW",
+      "database_id": "CaH6_predicted",
+      "predicted_Tc": 220,
+      "prediction_method": "Eliashberg",
+      "confidence_score": 0.8
+    }
   }
 ]
 
