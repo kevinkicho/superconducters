@@ -2465,3 +2465,62 @@ A multi-anvil press (Kawai-type) is simulated for kg-scale synthesis of LaH10. T
 - Multi-anvil presses are currently limited to ~25 GPa; reaching 170 GPa requires diamond anvil cells (not scalable). Chemical precompression (e.g., NH3BH3) could reduce pressure to <50 GPa, enabling multi-anvil synthesis.
 - Alternative: Laser‑heated diamond anvil cell for mg batches; not cost‑effective for kg production.
 - Recommended path: Develop chemical precompression routes to lower pressure, then adapt large‑volume multi‑anvil technology.
+
+
+## Techno-Economic Analysis for Top Candidates
+
+### Top 3 Pareto-Optimal Candidates
+Based on multi-objective optimization (Tc vs. synthesis pressure/cost) and manufacturing feasibility, the top three candidates are:
+1. **LaH10** (Tc ~250 K, synthesis pressure ~170 GPa, cost ~$39/kg at lab scale)
+2. **H3S** (Tc ~203 K, synthesis pressure ~155 GPa, cost ~$35/kg at lab scale)
+3. **Carbonaceous sulfur hydride (CSH)** (Tc ~288 K, synthesis pressure ~267 GPa, cost ~$55/kg at lab scale)
+
+### Assumptions for NPV/IRR Analysis
+- **Project lifetime**: 20 years
+- **Discount rate**: 10% (real, after tax)
+- **Production scale**: 10,000 tonnes/year (target industrial scale)
+- **Capital investment**: $2B (as estimated in Cost Estimates section)
+- **Operating cost per kg**: LaH10 $20/kg, H3S $18/kg, CSH $30/kg (projected at scale)
+- **Selling price**: $50/kg (conservative estimate for bulk superconductor market; actual price may be higher for specialized applications)
+- **Revenue per year**: 10,000,000 kg × $50/kg = $500M
+- **Operating cost per year**: LaH10: 10,000,000 × $20 = $200M; H3S: $180M; CSH: $300M
+- **Depreciation**: Straight-line over 20 years, $100M/year
+- **Tax rate**: 25%
+- **Working capital**: 10% of revenue ($50M)
+
+### NPV and IRR Calculations
+
+#### LaH10
+- Annual cash flow before tax: $500M - $200M - $100M = $200M
+- Tax: $200M × 25% = $50M
+- Net cash flow: $150M
+- NPV (10% discount, 20 years): $150M × [1 - (1.1)^-20] / 0.1 - $2B = $150M × 8.5136 - $2B = $1,277M - $2B = **-$723M**
+- IRR: Solve 0 = -$2B + $150M × [1 - (1+r)^-20]/r → r ≈ 4.2% (below 10% hurdle)
+
+#### H3S
+- Net cash flow: ($500M - $180M - $100M) × (1-0.25) = $220M × 0.75 = $165M
+- NPV: $165M × 8.5136 - $2B = $1,405M - $2B = **-$595M**
+- IRR: ≈ 5.1%
+
+#### CSH
+- Net cash flow: ($500M - $300M - $100M) × 0.75 = $100M × 0.75 = $75M
+- NPV: $75M × 8.5136 - $2B = $638.5M - $2B = **-$1,361.5M**
+- IRR: ≈ 1.8%
+
+### Sensitivity Analysis
+Sensitivity of NPV to key parameters (LaH10 as base case):
+
+| Parameter | Base Value | -20% Change | +20% Change | NPV Impact (ΔNPV) |
+|-----------|------------|-------------|-------------|-------------------|
+| Selling price | $50/kg | $40/kg | $60/kg | ±$1,277M |
+| Operating cost | $20/kg | $16/kg | $24/kg | ∓$1,277M |
+| Capital investment | $2B | $1.6B | $2.4B | ∓$400M |
+| Discount rate | 10% | 8% | 12% | +$300M / -$250M |
+| Production volume | 10,000 t/yr | 8,000 t/yr | 12,000 t/yr | ±$255M |
+
+**Interpretation**: All three candidates show negative NPV at base assumptions, indicating that current cost and price projections do not yield attractive returns. The primary lever is selling price: a 20% increase to $60/kg makes LaH10 NPV positive (~$554M). Reducing capital investment or operating cost also improves viability. H3S is the most attractive candidate due to lower operating cost, while CSH is least attractive due to high pressure and cost. Sensitivity analysis suggests that achieving a selling price above $55/kg or reducing capital cost below $1.5B could make LaH10 and H3S economically viable.
+
+### Recommendations
+- Focus R&D on reducing synthesis pressure for LaH10 and H3S via chemical precompression to lower capital and operating costs.
+- Explore niche high-value applications (e.g., MRI magnets, fusion reactors) where selling price could exceed $100/kg.
+- Re-evaluate NPV/IRR as process improvements and market data mature.
