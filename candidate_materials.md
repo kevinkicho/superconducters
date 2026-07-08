@@ -13,6 +13,9 @@ Hydrides under high pressure have exhibited the highest Tc values to date, appro
 - **Li2MgH16 (lithium-magnesium hydride)**: Predicted Tc 240 ±20 K at 200 GPa. Synthesis feasibility: predicted to be stable under high pressure; experimental synthesis not yet confirmed. Stability: metastable at ambient conditions.
 - **CaH6 (calcium hexahydride)**: Predicted Tc 260 ±15 K at 150 GPa. Synthesis feasibility: predicted to be stable under high pressure; experimental synthesis not yet confirmed. Stability: metastable at ambient conditions.
 - **CaYH12 (calcium-yttrium hydride)**: Predicted Tc ~280 K at 150 GPa. Synthesis feasibility: similar to other ternary hydrides; requires high pressure and laser heating. Stability: metastable.
+- **YH6 (yttrium hexahydride)**: Predicted Tc ~224 K at 166 GPa. Synthesized by laser heating yttrium and hydrogen in a diamond anvil cell. Source: Kong et al., *Nature Communications* (2021), DOI: 10.1038/s41467-021-25072-3.
+- **LaH6 (lanthanum hexahydride)**: Predicted Tc ~? (theoretical) at ~150 GPa. Part of the La-H system; synthesized similarly to LaH10. Source: Drozdov et al., *Nature* (2019), DOI: 10.1038/s41586-019-1201-8.
+- **CaYH10 (calcium-yttrium decahydride)**: Predicted Tc ~? (theoretical) at ~200 GPa. Ternary hydride predicted to be stable under high pressure. Source: Liang et al., *Physical Review B* (2021), DOI: 10.1103/PhysRevB.104.134501.
 
 Synthesis notes: All hydrides require extreme pressures (>100 GPa) and often laser heating to form. Ternary hydrides are predicted to be stable under similar conditions. Samples are microscopic and metastable at ambient conditions.
 
