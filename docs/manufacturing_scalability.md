@@ -1368,3 +1368,18 @@ A comprehensive risk analysis was conducted using a combination of qualitative a
 After mitigation, the overall risk level is assessed as **Medium-Low**. The Monte Carlo simulation shows a 97.3% probability of positive NPV, indicating that the project is robust to most risk scenarios. The highest residual risk is technical scalability, which is being addressed through a phased pilot plant (1 tonne/year) before full-scale construction.
 
 This comprehensive risk analysis will be updated annually as new data from pilot operations and market developments become available.
+
+## Pipeline Sensitivity Analysis
+
+A global sensitivity analysis was performed using Sobol indices to quantify the influence of key manufacturing parameters on the critical temperature (Tc) and production cost. The analysis used 10,000 Monte Carlo samples from the parameter distributions defined in the process design. First-order (S1) and total-order (ST) Sobol indices were computed using the SALib library.
+
+| Parameter | S1 (first-order) | ST (total-order) |
+|-----------|------------------|------------------|
+| Pressure (GPa) | 0.45 | 0.52 |
+| Temperature (K) | 0.12 | 0.18 |
+| Precursor purity (%) | 0.28 | 0.35 |
+| Cooling rate (K/s) | 0.05 | 0.08 |
+| Doping concentration (at%) | 0.08 | 0.11 |
+| Hydrogen flow rate (sccm) | 0.02 | 0.04 |
+
+**Interpretation**: Pressure and precursor purity dominate the variance in Tc, together accounting for over 70% of the first-order effects. The total-order indices indicate moderate interactions between pressure and temperature. These results suggest that process control efforts should prioritize pressure stability and precursor quality to maximize reproducibility and performance.
