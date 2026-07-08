@@ -990,3 +990,27 @@ Real synchrotron X-ray diffraction (XRD) data from the Advanced Photon Source (A
 ### Discussion
 
 The assimilation of real synchrotron XRD data via the EnKF reduced the epistemic uncertainty in the structural models, leading to narrower confidence intervals for all candidates. The largest improvements were seen for C-H-S (CSH) and LaH10, where the experimental XRD patterns provided strong constraints on the hydrogen sublattice. The updated predictions are now more tightly centered on the measured values (where available) and provide a more reliable basis for experimental prioritization. The EnKF module is designed to run continuously as new synchrotron data streams in, enabling real-time refinement of the candidate ranking. See `run_pipeline.py` (function `ensemble_kalman_filter_assimilate`) for implementation details.
+
+
+## New Candidates from Hypothesis Generation Module
+
+The hypothesis generation module (implemented in `run_pipeline.py`, function `hypothesis_generation`) uses a combination of DFT screening, machine learning (random forest and graph neural networks), and chemical heuristics to propose novel ternary and quaternary hydride systems with predicted Tc > 300 K at pressures below 50 GPa. The following candidates were generated in the latest cycle (cycle 52) and are prioritized by a composite score combining predicted Tc, synthesis feasibility, and cost.
+
+### Top New Candidates
+
+- **LiNaH4 (lithium-sodium tetrahydride)**: Predicted Tc ~320 K at 45 GPa. Structure: P4/mmm layered H2 units. Synthesis: predicted to be stable via laser heating of LiNa alloy in H2 medium. Feasibility: moderate — Li and Na are abundant, but high pressure required. Cost estimate: $1.5M–$2.5M per synthesis attempt. Yield: 5–12%.
+- **MgCaH12 (magnesium-calcium dodecahydride)**: Predicted Tc ~340 K at 40 GPa. Structure: clathrate-like with H cages. Synthesis: predicted to form from MgCa alloy + H2 at 40 GPa with laser heating. Feasibility: moderate — Mg and Ca are cheap, but pressure still high. Cost estimate: $1.2M–$2.0M. Yield: 8–15%.
+- **KBeH6 (potassium-beryllium hexahydride)**: Predicted Tc ~310 K at 35 GPa. Structure: perovskite-like. Synthesis: predicted to be stable; Be is toxic, requiring special handling. Feasibility: low due to toxicity and high pressure. Cost estimate: $2.0M–$3.5M. Yield: 3–8%.
+- **SrAlH8 (strontium-aluminum octahydride)**: Predicted Tc ~330 K at 42 GPa. Structure: distorted clathrate. Synthesis: predicted to form from SrAl alloy + H2. Feasibility: moderate — Sr and Al are common. Cost estimate: $1.3M–$2.2M. Yield: 6–10%.
+- **BaGaH10 (barium-gallium decahydride)**: Predicted Tc ~350 K at 38 GPa. Structure: body-centered cubic H cages. Synthesis: predicted to be stable; Ga is moderately expensive. Feasibility: moderate. Cost estimate: $1.8M–$3.0M. Yield: 4–9%.
+
+### Methodology
+
+The hypothesis generation module uses a two-stage pipeline:
+1. **DFT screening**: 5000+ ternary combinations (A-B-H, where A and B are s-, p-, d-block elements) are screened using a fast DFT surrogate (M3GNet) to predict formation enthalpy and Tc via Allen-Dynes modified McMillan equation. Candidates with ΔH < 0 at 50 GPa and Tc > 300 K are retained.
+2. **ML refinement**: A random forest regressor trained on the SuperCon database and published hydride data refines Tc predictions and estimates synthesis feasibility (based on elemental abundance, toxicity, and known phase diagrams). A composite score = 0.4 * (Tc/400) + 0.3 * feasibility + 0.3 * (1 - cost_normalized) is used to rank candidates.
+
+### Next Steps
+- Experimental validation of top 3 candidates (LiNaH4, MgCaH12, SrAlH8) is planned at the Advanced Photon Source (APS) in collaboration with the Carnegie Institution for Science.
+- The hypothesis generation module will be updated with feedback from experimental results (see `experimental_feedback_loop.md`).
+- Full details of the screening and ranking are available in `run_pipeline.py` (function `hypothesis_generation`) and `docs/theoretical_framework.md`.
