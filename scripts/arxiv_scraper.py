@@ -14,10 +14,9 @@ import json
 import os
 import re
 import sys
-import time
 import xml.etree.ElementTree as ET
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -25,7 +24,9 @@ import requests
 ARXIV_API_URL = "http://export.arxiv.org/api/query"
 DEFAULT_QUERY = "superconductivity room temperature"
 DEFAULT_MAX_RESULTS = 10
-SUMMARY_FILE = os.path.join(os.path.dirname(__file__), "..", "docs", "online_research_summary.md")
+SUMMARY_FILE = os.path.join(
+    os.path.dirname(__file__), "..", "docs", "online_research_summary.md"
+)
 
 # Patterns for extracting material, Tc, pressure
 MATERIAL_PATTERN = re.compile(
@@ -43,7 +44,9 @@ PRESSURE_PATTERN = re.compile(
 )
 
 
-def fetch_papers(query: str, max_results: int = 10, start: int = 0) -> List[Dict[str, Any]]:
+def fetch_papers(
+    query: str, max_results: int = 10, start: int = 0
+) -> List[Dict[str, Any]]:
     """
     Fetch papers from arXiv API.
 
@@ -63,11 +66,15 @@ def fetch_papers(query: str, max_results: int = 10, start: int = 0) -> List[Dict
         "sortOrder": "descending",
     }
     headers = {
-        "User-Agent": "RoomTempSuperconductorResearch/1.0 (mailto:research@example.com)"
+        "User-Agent": (
+            "RoomTempSuperconductorResearch/1.0 (mailto:research@example.com)"
+        )
     }
 
     try:
-        response = requests.get(ARXIV_API_URL, params=params, headers=headers, timeout=30)
+        response = requests.get(
+            ARXIV_API_URL, params=params, headers=headers, timeout=30
+        )
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         print(f"Error fetching papers: {e}", file=sys.stderr)
@@ -82,9 +89,12 @@ def fetch_papers(query: str, max_results: int = 10, start: int = 0) -> List[Dict
     papers = []
     for entry in root.findall("atom:entry", ns):
         paper = {}
-        paper["id"] = entry.find("atom:id", ns).text.strip() if entry.find("atom:id", ns) is not None else ""
-        paper["title"] = entry.find("atom:title", ns).text.strip().replace("\n", " ") if entry.find("atom:title", ns) is not None else ""
-        paper["summary"] = entry.find("atom:summary", ns).text.strip().replace("\n", " ") if entry.find("atom:summary", ns) is not None else ""
+        id_elem = entry.find("atom:id", ns)
+        paper["id"] = id_elem.text.strip() if id_elem is not None else ""
+        title_elem = entry.find("atom:title", ns)
+        paper["title"] = title_elem.text.strip().replace("\n", " ") if title_elem is not None else ""
+        summary_elem = entry.find("atom:summary", ns)
+        paper["summary"] = summary_elem.text.strip().replace("\n", " ") if summary_elem is not None else ""
         paper["published"] = entry.find("atom:published", ns).text.strip() if entry.find("atom:published", ns) is not None else ""
         paper["link"] = entry.find("atom:link", ns).attrib.get("href", "") if entry.find("atom:link", ns) is not None else ""
         authors = []
