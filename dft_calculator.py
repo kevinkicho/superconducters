@@ -735,7 +735,7 @@ def compute_phonon_tc_for_candidates(candidates: List[Dict], prefix_base: str = 
     return results
 
 
-def fine_tune_pinn_on_real_data(pinn_model, real_data, epochs=10, lr=1e-4, device=None):
+def fine_tune_pinn_on_real_data(pinn_model: torch.nn.Module, real_data: List[Tuple[Data, float]], epochs: int = 10, lr: float = 1e-4, device: Optional[torch.device] = None) -> torch.nn.Module:
     """
     Fine-tune a pre-trained PINN (simulation-trained) on real experimental data
     using sim-to-real transfer learning.
