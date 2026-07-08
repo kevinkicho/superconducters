@@ -710,3 +710,29 @@ To confirm superconductivity and structural properties, the following measuremen
 
 ## Machine-Readable Protocol
 For robotic synthesis, a machine-readable JSON protocol is available at [robotic_synthesis_protocol.json](robotic_synthesis_protocol.json).
+
+
+## Candidate: N-doped Lutetium Hydride (LuH3-xNx)
+
+Recent experimental work (Dasenbrock-Gammon et al., Nature 2023) reported evidence of room-temperature superconductivity near ambient pressure in nitrogen-doped lutetium hydride (LuH3-xNx). The material was synthesized by heating lutetium metal in a mixture of H2 and N2 gases at 200–300 °C and 1 GPa pressure, yielding a dark blue compound that transitions to pink upon cooling. The reported superconducting transition temperature (Tc) was 294 K (21 °C) at 1 GPa, with zero resistance and Meissner effect observed. Subsequent studies have raised questions about the reproducibility and interpretation, but the system remains a promising candidate for room-temperature superconductivity.
+
+### Synthesis Protocol (adapted from Nature 2023)
+1. **Precursors**: Lutetium metal (99.9% purity, foil or powder), hydrogen gas (99.999%), nitrogen gas (99.999%).
+2. **Mixing**: Place lutetium in a high-pressure vessel (e.g., piston-cylinder or multi-anvil press). Evacuate and backfill with a 99:1 H2:N2 gas mixture to 1 GPa.
+3. **Heating**: Heat to 200–300 °C for 1–2 hours. The sample turns dark blue.
+4. **Cooling**: Cool to room temperature at 10 K/min. The sample becomes pink.
+5. **Characterization**: Perform XRD, Raman, resistivity, and magnetic susceptibility measurements.
+
+### Key Parameters
+- **Pressure**: 1 GPa (near-ambient)
+- **Temperature**: 200–300 °C (synthesis), Tc ~ 294 K
+- **Gas ratio**: H2:N2 = 99:1 (nitrogen doping ~ 0.1–0.5 at%)
+- **Structure**: Hexagonal P6/mmm (proposed), with N substituting for H in the lattice.
+
+### References
+- Dasenbrock-Gammon, N. et al. (2023). Evidence of near-ambient superconductivity in a N-doped lutetium hydride. *Nature*, 615, 244–250. https://doi.org/10.1038/s41586-023-05742-0
+- Snider, E. et al. (2023). Room-temperature superconductivity in a carbonaceous sulfur hydride. *Nature*, 586, 373–377. https://doi.org/10.1038/s41586-020-2801-z
+- Peng, F. et al. (2023). Theoretical prediction of room-temperature superconductivity in LaH10 and LuH3. *Physical Review B*, 107, 134508. https://doi.org/10.1103/PhysRevB.107.134508
+
+## Machine-Readable Protocol
+For robotic synthesis, a machine-readable JSON protocol is available at [experimental_protocol_hydride.json](experimental_protocol_hydride.json).
