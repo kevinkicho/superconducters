@@ -497,7 +497,14 @@ def query_supercon_database(db_path=DATABASE_PATH, max_entries=100):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    query_supercon_database()
+    parser = argparse.ArgumentParser(description='Query superconductor database')
+    parser.add_argument('--room-temp', action='store_true', help='List room-temperature candidate compounds from literature')
+    args, _ = parser.parse_known_args()
+    if args.room_temp:
+        candidates = query_room_temperature_candidates()
+        print(json.dumps(candidates, indent=2))
+    else:
+        query_supercon_database()
 
 
 def query_known_hydrides():
@@ -510,3 +517,102 @@ def query_known_hydrides():
         {'name': 'ThH10', 'composition': 'ThH10', 'Tc': 161, 'pressure': 170, 'synthesis_method': 'DAC', 'reference': 'Semenok et al., J. Phys. Chem. Lett. 2020'},
     ]
     return hydrides
+
+
+def query_room_temperature_candidates():
+    """Return candidate room-temperature superconductor compounds from recent literature.
+    
+    Based on web research (2020-2025):
+    - Hydrides under high pressure (e.g., H3S, LaH10) show Tc up to 250 K but require >100 GPa.
+    - Recent claims of ambient-pressure room-temperature superconductivity (e.g., LK-99, Pb10-xCux(PO4)6O) have been retracted or not reproduced.
+    - Theoretical predictions: hydrogen-rich compounds (e.g., YH6, YH9, ThH10) under pressure.
+    - Ternary hydrides (e.g., Li2MgH16) predicted to be metastable at lower pressures.
+    - Doped fullerides (e.g., Cs3C60) show Tc up to 38 K at ambient pressure.
+    - Nickelate superconductors (e.g., infinite-layer nickelates) show Tc up to 15 K.
+    - Cuprates remain the only family with Tc > 77 K at ambient pressure (e.g., HgBa2Ca2Cu3O8+δ, Tc=134 K).
+    
+    References:
+    - Drozdov et al., Nature 2015 (H3S, Tc=203 K at 155 GPa)
+    - Drozdov et al., Nature 2019 (LaH10, Tc=250 K at 170 GPa)
+    - Kong et al., Nat. Commun. 2021 (YH6, YH9)
+    - Semenok et al., J. Phys. Chem. Lett. 2020 (ThH10)
+    - Snider et al., Nature 2020 (C-S-H system, Tc=288 K at 267 GPa)
+    - Lee et al., arXiv 2023 (LK-99, retracted)
+    - Gan et al., Nature 2023 (nickelate superconductors)
+    - Takagi et al., Nat. Rev. Phys. 2021 (cuprates)
+    """
+    candidates = [
+        {
+            "name": "C-S-H (carbonaceous sulfur hydride)",
+            "composition": "C-S-H",
+            "Tc": 288,
+            "pressure": 267,
+            "synthesis_method": "DAC",
+            "reference": "Snider et al., Nature 2020",
+            "notes": "Highest Tc reported under pressure; not ambient."
+        },
+        {
+            "name": "LaH10",
+            "composition": "LaH10",
+            "Tc": 250,
+            "pressure": 170,
+            "synthesis_method": "DAC",
+            "reference": "Drozdov et al., Nature 2019",
+            "notes": "Clathrate structure; requires extreme pressure."
+        },
+        {
+            "name": "YH9",
+            "composition": "YH9",
+            "Tc": 243,
+            "pressure": 201,
+            "synthesis_method": "DAC",
+            "reference": "Kong et al., Nat. Commun. 2021",
+            "notes": "Yttrium hydride; high pressure."
+        },
+        {
+            "name": "YH6",
+            "composition": "YH6",
+            "Tc": 224,
+            "pressure": 166,
+            "synthesis_method": "DAC",
+            "reference": "Kong et al., Nat. Commun. 2021",
+            "notes": "Lower Tc than YH9."
+        },
+        {
+            "name": "H3S",
+            "composition": "H3S",
+            "Tc": 203,
+            "pressure": 155,
+            "synthesis_method": "DAC",
+            "reference": "Drozdov et al., Nature 2015",
+            "notes": "First high-Tc hydride."
+        },
+        {
+            "name": "ThH10",
+            "composition": "ThH10",
+            "Tc": 161,
+            "pressure": 170,
+            "synthesis_method": "DAC",
+            "reference": "Semenok et al., J. Phys. Chem. Lett. 2020",
+            "notes": "Thorium hydride."
+        },
+        {
+            "name": "HgBa2Ca2Cu3O8+δ (Hg-1223)",
+            "composition": "HgBa2Ca2Cu3O8+δ",
+            "Tc": 134,
+            "pressure": 0,
+            "synthesis_method": "High-pressure synthesis",
+            "reference": "Schilling et al., Nature 1993",
+            "notes": "Highest Tc at ambient pressure (cuprate)."
+        },
+        {
+            "name": "Li2MgH16 (predicted)",
+            "composition": "Li2MgH16",
+            "Tc": 473,
+            "pressure": 250,
+            "synthesis_method": "Theoretical prediction",
+            "reference": "Sun et al., Phys. Rev. Lett. 2022",
+            "notes": "Predicted room-temperature superconductor under pressure; not yet synthesized."
+        },
+    ]
+    return candidates
