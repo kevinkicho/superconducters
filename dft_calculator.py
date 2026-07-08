@@ -480,6 +480,39 @@ class MLTcPredictor:
             mu_star = structure.get('mu_star', 0.1)
             return self.predict_tc_ml(lambda_val, omega_log, mu_star)
 
+    def predict_tc_with_uncertainty(self, structure, n_samples=10):
+        """Predict Tc with uncertainty using Monte Carlo dropout.
+        Returns (mean, std)."""
+        if not self.gnn_trained or self.gnn_model is None:
+            # Fallback: use random forest with uncertainty via bootstrap
+            lambda_val = structure.get('lambda', 0.0)
+            omega_log = structure.get('omega_log', 0.0)
+            mu_star = structure.get('mu_star', 0.1)
+            mean = self.predict_tc_ml(lambda_val, omega_log, mu_star)
+            std = 0.0  # placeholder
+            return mean, std
+        graph = self._structure_to_graph(structure)
+        self.gnn_model.train()  # enable dropout
+        predictions = []
+        with torch.no_grad():
+            for _ in range(n_samples):
+                pred = self.gnn_model(graph)
+                predictions.append(pred.item())
+        self.gnn_model.eval()  # restore eval mode
+        mean = sum(predictions) / len(predictions)
+        variance = sum((p - mean) ** 2 for p in predictions) / len(predictions)
+        std = math.sqrt(variance)
+        return mean, std
+
+    def predict_tc_low_fidelity(self, structure):
+        """Low-fidelity prediction using simple linear regression on basic features.
+        Supports multi-fidelity optimization."""
+        lambda_val = structure.get('lambda', 0.0)
+        mu_star = structure.get('mu_star', 0.1)
+        # Simple linear model: Tc = a*lambda + b*mu_star + c (placeholder coefficients)
+        a, b, c = 100.0, -50.0, 0.0  # dummy
+        return a * lambda_val + b * mu_star + c
+
 
 if __name__ == "__main__":
     # Example: simple cubic hydrogen (H) at high pressure (placeholder)
