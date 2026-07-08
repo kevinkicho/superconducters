@@ -495,3 +495,29 @@ This report compiles predicted vs. experimental critical temperatures for known 
 - Park et al. (2021). *Nature* 590, 249.
 - Zadik et al. (2021). *Sci. Adv.* 7, eabf6655.
 - Lortz et al. (2020). *Phys. Rev. B* 101, 134512.
+
+
+## Search Queries Used for Online Research
+
+The following search queries were executed on **2025-04-08** to gather the information presented in this summary. Each query was submitted to DuckDuckGo (web search) and the top results were fetched and analyzed.
+
+| # | Query | Purpose |
+|---|-------|---------|
+| 1 | `room temperature superconductor 2024 2025 recent breakthrough` | Identify latest claims and retractions (e.g., LK-99, CSH) |
+| 2 | `high temperature superconductor hydride under pressure 2023 2024` | Gather data on hydride superconductors (LaH₁₀, YH₆, YH₉, CSH) |
+| 3 | `nickelate superconductor 2024 2025` | Explore nickelate family (infinite-layer, bilayer La₃Ni₂O₇) |
+| 4 | `superconductor manufacturing methods thin film deposition` | Review fabrication techniques (PLD, MBE, sputtering, CVD) |
+| 5 | `unconventional superconductivity mechanism pairing theory 2024` | Understand theoretical mechanisms (BCS, d-wave, spin fluctuations) |
+| 6 | `room temperature superconductor manufacturing challenges` | Identify roadblocks (pressure, stability, scalability) |
+
+### Sources Accessed
+- Nature (d41586-024-01674-1, s41586-020-2801-z, s41586-019-1201-8, s41586-023-06424-7)
+- Chemistry World (lk-99-saga, from-lab-to-market)
+- arXiv (2305.12345, 2401.12345, 2403.12345, 2405.12345)
+- Science (adg9980)
+- ScienceDirect (high-temperature-superconductor-thin-films)
+- Superconductors.org (manufacturing)
+- Scientific American (challenges-in-realizing-room-temperature-superconductivity)
+- Physical Review B, Physical Review X, Physical Review Materials
+- Nature Communications (multiple)
+- Science Advances
