@@ -8184,3 +8184,93 @@ def _simulate_cloud_experiment(candidate_info: dict) -> dict:
     experiment_id = f"sim-{random.randint(100000, 999999)}"
     print(f"[simulate_cloud_experiment] Simulation complete. Experiment ID: {experiment_id}")
     return {"status": "simulated", "experiment_id": experiment_id, "message": "Simulated experiment completed."}
+
+
+def study_superconductors_and_propose_rt_compounds():
+    """
+    Study superconducting materials via online research and propose chemistry/physics
+    for room-temperature superconducting compounds. Writes findings to
+    docs/rt_superconductor_proposal.md.
+    """
+    import requests
+    import json
+    import os
+    from datetime import datetime
+
+    # Gather recent literature on room-temperature superconductors
+    # Using arXiv API for recent papers
+    arxiv_url = "http://export.arxiv.org/api/query?search_query=all:room+temperature+superconductor&start=0&max_results=10&sortBy=submittedDate&sortOrder=descending"
+    try:
+        resp = requests.get(arxiv_url, timeout=30)
+        resp.raise_for_status()
+        # Parse XML (simplified: extract titles and summaries)
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(resp.content)
+        ns = {"atom": "http://www.w3.org/2005/Atom", "arxiv": "http://arxiv.org/schemas/atom"}
+        papers = []
+        for entry in root.findall("atom:entry", ns):
+            title = entry.find("atom:title", ns).text.strip()
+            summary = entry.find("atom:summary", ns).text.strip()[:500]
+            papers.append({"title": title, "summary": summary})
+    except Exception as e:
+        papers = [{"title": "Error fetching papers", "summary": str(e)}]
+
+    # Compile chemistry and physics insights
+    # Based on known literature: hydrides under high pressure (e.g., H3S, LaH10, CSH),
+    # and recent claims of ambient pressure superconductivity (e.g., LK-99, but retracted).
+    # We propose a systematic approach: machine learning guided search of ternary hydrides
+    # with specific doping and strain engineering.
+    proposal = f"""# Room-Temperature Superconductor Proposal
+
+Generated on: {datetime.now().isoformat()}
+
+## Literature Review
+
+Recent arXiv papers on room-temperature superconductors:
+
+"""
+    for p in papers:
+        proposal += f"- **{p['title']}**\n  {p['summary']}\n\n"
+
+    proposal += """
+## Proposed Chemistry and Physics
+
+### Candidate Systems
+1. **Ternary hydrides under moderate pressure (<10 GPa)**:
+   - Systems like Y-C-H, La-C-H, or Sc-C-H with hydrogen content >50%.
+   - Doping with electron donors (e.g., Li, Na) to enhance electron-phonon coupling.
+2. **Strained thin films of binary hydrides**:
+   - Epitaxial strain on H3S or LaH10 films to stabilize the high-Tc phase at lower pressures.
+3. **Organic-inorganic hybrid superconductors**:
+   - Intercalated graphite or fullerene compounds with high hydrogen density.
+
+### Manufacturing Approach
+- **High-pressure synthesis** using diamond anvil cells or multi-anvil presses.
+- **Thin-film deposition** (MBE, PLD) with in-situ strain control.
+- **Machine learning optimization** of synthesis parameters (temperature, pressure, composition).
+
+### Key Physics
+- Strong electron-phonon coupling mediated by hydrogen vibrations.
+- Van Hove singularities near Fermi level from flat bands.
+- Avoidance of competing phases (e.g., charge density waves) via doping.
+
+## Next Steps
+1. Run DFT calculations for top 10 candidate compositions.
+2. Synthesize and characterize under high pressure.
+3. Measure Tc via four-probe resistivity and magnetic susceptibility.
+
+## References
+- Drozdov et al., Nature 525, 73 (2015) – H3S under pressure.
+- Somayazulu et al., PRL 122, 027001 (2019) – LaH10.
+- Snider et al., Nature 586, 373 (2020) – CSH near room temperature.
+- Recent arXiv preprints (see above).
+"""
+
+    # Write to file
+    output_dir = "docs"
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "rt_superconductor_proposal.md")
+    with open(output_path, "w") as f:
+        f.write(proposal)
+    print(f"[study_superconductors] Proposal written to {output_path}")
+    return proposal
