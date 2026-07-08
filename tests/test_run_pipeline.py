@@ -1184,3 +1184,90 @@ class TestPerformanceAndStress:
 
         # Verify that the pipeline did not raise any exceptions
         # (If an exception occurred, the test would fail before reaching here)
+
+    @patch('scripts.run_pipeline.load_data')
+    @patch('scripts.run_pipeline.train_model')
+    @patch('scripts.run_pipeline.predict_tc_with_uncertainty')
+    @patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation')
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_extreme_stress(self, mock_open, mock_dft, mock_predict, mock_train, mock_load):
+        """Stress test: high load, network failures, corrupted data, and self-healing."""
+        # 1. High load: 10,000 synthetic candidates
+        candidates = []
+        for i in range(10000):
+            candidates.append({
+                "name": f"Material_{i}",
+                "Tc": 100 + i,
+                "pressure": 150 + i,
+                "composition": f"H{i}S"
+            })
+        # 2. Corrupted data: inject entries with missing keys or invalid types
+        candidates[5000] = {"name": "Corrupted_5000"}  # missing Tc, pressure, composition
+        candidates[5001] = {"Tc": "invalid", "pressure": None, "composition": 123}  # missing name, invalid types
+        mock_load.return_value = candidates
+
+        # Mock train_model to return a model that predicts Tc values
+        mock_model = MagicMock()
+        mock_model.predict.return_value = [100.0 + i for i in range(10000)]
+        mock_train.return_value = mock_model
+
+        # 3. Network failures: simulate intermittent failures in predict_tc_with_uncertainty
+        call_count = [0]
+        def predict_side_effect(name, pressure=None):
+            call_count[0] += 1
+            # Simulate network failure for every 100th call (indices 0, 100, 200, ...)
+            if call_count[0] % 100 == 0:
+                raise ConnectionError("Simulated network failure")
+            # For corrupted entries, return None or raise
+            if name == "Corrupted_5000":
+                return (None, None)
+            if name == "Corrupted_5001":
+                raise ValueError("Invalid data")
+            # Normal response
+            idx = int(name.split('_')[1])
+            return (100.0 + idx, 5.0 + idx % 10)
+        mock_predict.side_effect = predict_side_effect
+
+        # Mock DFT calculation (also simulate occasional failures)
+        dft_call_count = [0]
+        def dft_side_effect(*args, **kwargs):
+            dft_call_count[0] += 1
+            if dft_call_count[0] % 50 == 0:
+                raise TimeoutError("Simulated DFT timeout")
+            return {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        mock_dft.side_effect = dft_side_effect
+
+        # Mock open to capture write calls
+        mock_file = MagicMock()
+        mock_open.return_value.__enter__.return_value = mock_file
+
+        # Run the pipeline
+        try:
+            result = rp.run_pipeline()
+        except Exception as e:
+            pytest.fail(f"Pipeline raised an unhandled exception under stress: {e}")
+
+        # Verify pipeline completed (result may be None or some value)
+        # The pipeline should not crash; it should handle failures gracefully
+        assert result is not None, "Pipeline returned None under stress"
+
+        # Verify that load_data was called once
+        mock_load.assert_called_once()
+
+        # Verify that train_model was called once
+        mock_train.assert_called_once()
+
+        # Verify that predict_tc_with_uncertainty was called many times (at least for non-corrupted)
+        # Even with failures, the pipeline should attempt to process all candidates
+        assert mock_predict.call_count >= 9000, f"Expected at least 9000 predict calls, got {mock_predict.call_count}"
+
+        # Verify that DFT was called at least once (for some high-uncertainty candidates)
+        assert mock_dft.call_count >= 1, "DFT was not called"
+
+        # Verify that open was called to write output files
+        expected_files = ["candidate_materials.md", "roadmap.md", "research_report.md", "experimental_plan.md"]
+        open_calls = [c for c in mock_open.call_args_list if c[0][0] in expected_files]
+        assert len(open_calls) >= 1, f"Expected at least one output file to be written, got {len(open_calls)}"
+
+        # Self-healing verification: the pipeline should have continued despite failures
+        # (If it crashed, the test would have failed earlier)
