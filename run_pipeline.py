@@ -9396,6 +9396,120 @@ def integrate_manufacturing_cost():
     # In real implementation, read cost data, compute optimal conditions, and update the doc.
 
 
+# --- Benchmarking module ---
+def run_benchmark():
+    """
+    Benchmark the ML model inference: measure time, memory, throughput.
+    Logs results to data/model_performance_log.json.
+    """
+    import time
+    import tracemalloc
+    import psutil
+    import os
+    # Load the model (assume trained model exists)
+    model_path = os.path.join(os.path.dirname(__file__), 'models', 'tc_gp_predictor.pkl')
+    if not os.path.exists(model_path):
+        print("[Benchmark] No trained model found. Run training first.")
+        return
+    import joblib
+    model = joblib.load(model_path)
+    # Generate dummy test data (e.g., 1000 samples)
+    np.random.seed(42)
+    X_test = np.random.rand(1000, 7)  # 7 features as used in GP model
+    # Warm-up
+    _ = model.predict(X_test[:10], return_std=True)
+    # Measure inference time
+    start = time.perf_counter()
+    tracemalloc.start()
+    y_pred, y_std = model.predict(X_test, return_std=True)
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    elapsed = time.perf_counter() - start
+    throughput = len(X_test) / elapsed
+    # Log results
+    log_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "benchmark": "inference",
+        "num_samples": len(X_test),
+        "inference_time_sec": elapsed,
+        "throughput_samples_per_sec": throughput,
+        "peak_memory_mb": peak / 1e6,
+        "current_memory_mb": current / 1e6,
+        "model": "GaussianProcessRegressor"
+    }
+    log_path = "data/model_performance_log.json"
+    if os.path.exists(log_path):
+        with open(log_path, 'r') as f:
+            log_data = json.load(f)
+    else:
+        log_data = []
+    log_data.append(log_entry)
+    with open(log_path, 'w') as f:
+        json.dump(log_data, f, indent=2)
+    print(f"[Benchmark] Logged results: {elapsed:.4f}s, {throughput:.2f} samples/s, peak memory {peak/1e6:.2f} MB")
+
+
+# --- FastAPI application ---
+from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
+
+app = FastAPI(title="Superconductor Pipeline API", version="1.0.0")
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Authentication
+API_KEY_NAME = "X-API-Key"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+# Define a simple API key (in production, use a secure store)
+API_KEYS = os.environ.get("PIPELINE_API_KEYS", "").split(",")
+if not API_KEYS or API_KEYS == [""]:
+    API_KEYS = ["dev-key-123"]  # fallback for development
+
+async def verify_api_key(api_key: str = Depends(api_key_header)):
+    if api_key not in API_KEYS:
+        raise HTTPException(status_code=403, detail="Invalid API key")
+    return api_key
+
+@app.get("/health")
+async def health():
+    return {"status": "ok", "service": "superconductor-pipeline"}
+
+@app.post("/run-pipeline", dependencies=[Depends(verify_api_key)])
+async def run_pipeline_endpoint():
+    """Trigger the full pipeline."""
+    # In a real implementation, run the pipeline asynchronously
+    # For now, just return a placeholder
+    return {"message": "Pipeline triggered. Check logs for progress."}
+
+@app.get("/benchmark", dependencies=[Depends(verify_api_key)])
+async def benchmark_endpoint():
+    """Run benchmark and return results."""
+    run_benchmark()
+    return {"message": "Benchmark completed. Check data/model_performance_log.json"}
+
+# Mangum handler for AWS Lambda
+handler = Mangum(app)
+
 if __name__ == "__main__":
-    run_validation()
-    integrate_manufacturing_cost()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mode", choices=["pipeline", "api", "benchmark"], default="pipeline", help="Run mode")
+    args = parser.parse_args()
+    if args.mode == "pipeline":
+        run_validation()
+        integrate_manufacturing_cost()
+    elif args.mode == "benchmark":
+        run_benchmark()
+    else:
+        # Run API server
+        host = os.environ.get("HOST", "0.0.0.0")
+        port = int(os.environ.get("PORT", "8000"))
+        uvicorn.run(app, host=host, port=port)

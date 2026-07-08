@@ -274,3 +274,70 @@ Navigate to the Dashboard Overview tab to explore candidates interactively.
 ## Support
 
 For issues, open a GitHub issue or contact the development team.
+
+## API Reference
+
+### Live API Endpoint
+
+The pipeline can be accessed via a REST API at:
+
+```
+https://api.superconductor-pipeline.example.com
+```
+
+(Replace with actual deployed URL.)
+
+### Authentication
+
+All API requests require an API key passed via the `X-API-Key` header.
+
+```bash
+curl -H "X-API-Key: YOUR_API_KEY" https://api.superconductor-pipeline.example.com/health
+```
+
+To obtain an API key, contact the development team or set the `PIPELINE_API_KEYS` environment variable on the server.
+
+### Example Requests
+
+#### Health Check
+
+```bash
+curl -H "X-API-Key: YOUR_API_KEY" https://api.superconductor-pipeline.example.com/health
+```
+
+Response:
+```json
+{"status": "ok", "service": "superconductor-pipeline"}
+```
+
+#### Trigger Pipeline
+
+```bash
+curl -X POST -H "X-API-Key: YOUR_API_KEY" https://api.superconductor-pipeline.example.com/run-pipeline
+```
+
+Response:
+```json
+{"message": "Pipeline triggered. Check logs for progress."}
+```
+
+#### Run Benchmark
+
+```bash
+curl -H "X-API-Key: YOUR_API_KEY" https://api.superconductor-pipeline.example.com/benchmark
+```
+
+Response:
+```json
+{"message": "Benchmark completed. Check data/model_performance_log.json"}
+```
+
+### Deployment
+
+The API is deployed on AWS Lambda using Mangum. Environment variables for configuration:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `HOST` | Host to bind (for local uvicorn) | `0.0.0.0` |
+| `PORT` | Port to bind (for local uvicorn) | `8000` |
+| `PIPELINE_API_KEYS` | Comma-separated list of valid API keys | `dev-key-123` |

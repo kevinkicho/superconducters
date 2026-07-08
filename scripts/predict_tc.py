@@ -1745,12 +1745,69 @@ def train_gp_model():
     
     return gp
 
+
+def benchmark():
+    """Benchmark inference time, memory usage, and throughput."""
+    import time
+    import tracemalloc
+    import numpy as np
+    import joblib
+    import os
+    import json
+    import datetime
+
+    # Load the trained model (assume GP model exists)
+    model_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
+    model_path = os.path.join(model_dir, 'tc_gp_predictor.pkl')
+    if not os.path.exists(model_path):
+        print("[Benchmark] No trained GP model found. Train first with --model gp.")
+        return
+    model = joblib.load(model_path)
+    # Generate dummy test data (1000 samples, 7 features)
+    np.random.seed(42)
+    X_test = np.random.rand(1000, 7)
+    # Warm-up
+    _ = model.predict(X_test[:10], return_std=True)
+    # Measure
+    start = time.perf_counter()
+    tracemalloc.start()
+    y_pred, y_std = model.predict(X_test, return_std=True)
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    elapsed = time.perf_counter() - start
+    throughput = len(X_test) / elapsed
+    # Log
+    log_entry = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "benchmark": "inference",
+        "num_samples": len(X_test),
+        "inference_time_sec": elapsed,
+        "throughput_samples_per_sec": throughput,
+        "peak_memory_mb": peak / 1e6,
+        "current_memory_mb": current / 1e6,
+        "model": "GaussianProcessRegressor"
+    }
+    log_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'model_performance_log.json')
+    try:
+        with open(log_path, 'r') as f:
+            log_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        log_data = []
+    log_data.append(log_entry)
+    with open(log_path, 'w') as f:
+        json.dump(log_data, f, indent=2)
+    print(f"[Benchmark] Logged results: {elapsed:.4f}s, {throughput:.2f} samples/s, peak memory {peak/1e6:.2f} MB")
+
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', choices=['rf', 'gp'], default='rf', help='Model type: rf (Random Forest) or gp (Gaussian Process)')
+    parser.add_argument('--benchmark', action='store_true', help='Run benchmark instead of training')
     args = parser.parse_args()
-    if args.model == 'gp':
+    if args.benchmark:
+        benchmark()
+    elif args.model == 'gp':
         train_gp_model()
     else:
         train_model()
