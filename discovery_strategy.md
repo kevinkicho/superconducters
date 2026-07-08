@@ -460,3 +460,60 @@ To illustrate the effectiveness of the active learning loop, we present results 
 - **Comparison to random screening:** Random screening of the same 5,000 candidates required an average of 320 experiments to find a compound with Tc > 280 K, demonstrating a ~6× improvement in query efficiency.
 
 These results confirm that Bayesian optimization with Expected Improvement is a powerful tool for navigating the synthesis condition space, significantly reducing the experimental burden in the search for room-temperature superconductors.
+
+
+## 18. Decision Support System
+
+### 18.1 Overview
+The Decision Support System (DSS) is the core algorithmic engine that selects the next experiment (synthesis condition or candidate compound) to maximize the expected information gain. It operates within the active learning loop described in Section 17, integrating with the Gaussian process surrogate model and the acquisition function.
+
+### 18.2 Expected Information Gain (EIG)
+The EIG for a candidate experiment \(x\) is defined as the reduction in uncertainty about the optimal Tc (or other objective) after observing the outcome \(y\) at \(x\). Formally, if the current belief about the objective function \(f\) is represented by a Gaussian process \(\mathcal{GP}(\mu, k)\), then the EIG is:
+
+\[
+\text{EIG}(x) = H[p(f^* | \mathcal{D})] - \mathbb{E}_{y|x}[H[p(f^* | \mathcal{D} \cup \{(x, y)\})]]
+\]
+
+where \(f^* = \max_x f(x)\) is the maximum of the objective, \(H\) is the entropy, and \(\mathcal{D}\) is the current dataset. In practice, the EIG is approximated by the Expected Improvement (EI) acquisition function:
+
+\[
+\text{EI}(x) = \mathbb{E}[\max(0, f(x) - f^*_{\text{best}})] = (f^*_{\text{best}} - \mu(x)) \Phi\left(\frac{f^*_{\text{best}} - \mu(x)}{\sigma(x)}\right) + \sigma(x) \phi\left(\frac{f^*_{\text{best}} - \mu(x)}{\sigma(x)}\right)
+\]
+
+where \(\mu(x)\) and \(\sigma(x)\) are the GP posterior mean and standard deviation at \(x\), \(f^*_{\text{best}}\) is the best observed Tc so far, and \(\Phi, \phi\) are the CDF and PDF of the standard normal.
+
+### 18.3 Algorithm for Next Experiment Selection
+1. **Candidate Pool:** Retrieve all candidate compounds from the high-throughput screening pipeline (Section 16) that pass the low-pressure stability filter (Section 17.4).
+2. **GP Surrogate:** Train or update the Gaussian process surrogate on the current experimental dataset \(\mathcal{D}\).
+3. **Acquisition Function:** Compute EI (or another acquisition function such as Upper Confidence Bound or Knowledge Gradient) for each candidate.
+4. **Select Top Candidate:** Choose the candidate with the highest acquisition value. If multiple candidates have similar values, apply a diversity penalty (e.g., Tanimoto distance > 0.3) to avoid repeated sampling of similar compounds.
+5. **Experiment Execution:** Synthesize the selected candidate and measure its Tc (or other property). Add the result to \(\mathcal{D}\).
+6. **Loop:** Repeat from step 2 until a stopping criterion is met (e.g., Tc > 300 K, or budget exhausted).
+
+### 18.4 Integration with Active Learning Loop
+The DSS is invoked at each iteration of the active learning loop (Section 17.5). After each batch of experiments, the GP surrogate is retrained, and the acquisition function re-ranks the candidate queue. The DSS also incorporates a "cold start" phase where initial experiments are selected via Latin hypercube sampling to seed the GP.
+
+### 18.5 Mathematical Formulation of Information Gain
+For a more rigorous treatment, the expected information gain can be expressed in terms of the mutual information between the candidate outcome and the optimal value:
+
+\[
+\text{EIG}(x) = I(y(x); f^* | \mathcal{D}) = H[y(x) | \mathcal{D}] - H[y(x) | f^*, \mathcal{D}]
+\]
+
+Under the GP assumption, the posterior of \(y(x)\) is Gaussian, and the mutual information can be computed analytically using the GP's predictive variance and the conditional variance given \(f^*\). This formulation is used in the Knowledge Gradient acquisition function, which directly maximizes the expected improvement in the maximum posterior mean.
+
+### 18.6 Example Usage
+Consider a scenario where the GP surrogate has been trained on 20 experimental data points. The candidate pool contains 500 compounds. The DSS computes EI for each candidate:
+
+- Candidate A (LaH₁₀ at 120 GPa): \(\mu = 250\) K, \(\sigma = 15\) K, EI = 12.3 K
+- Candidate B (YH₆ at 150 GPa): \(\mu = 240\) K, \(\sigma = 20\) K, EI = 10.1 K
+- Candidate C (Li₂MgH₆ at 5 GPa): \(\mu = 180\) K, \(\sigma = 30\) K, EI = 8.5 K
+
+The DSS selects Candidate A because it has the highest EI, balancing exploitation (high mean) and exploration (moderate uncertainty). After synthesizing Candidate A and measuring Tc = 248 K, the GP is updated, and the process repeats.
+
+In practice, the DSS can be configured to use different acquisition functions (EI, UCB, KG) and to incorporate multi-objective optimization (e.g., maximizing Tc while minimizing pressure). The system also logs all decisions and outcomes for auditability and model improvement.
+
+### 18.7 Implementation Notes
+The DSS is implemented in Python using the `scikit-learn` or `GPyTorch` library for Gaussian processes. The acquisition functions are computed using the `botorch` library, which provides efficient Monte Carlo and analytic acquisition functions. The candidate pool is stored in a SQLite database, and the GP model is serialized after each iteration for reproducibility.
+
+This decision support system ensures that each experiment is maximally informative, accelerating the discovery of room-temperature superconductors by an estimated factor of 5–10 compared to random screening.
