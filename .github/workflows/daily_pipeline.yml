@@ -50,10 +50,8 @@
 
 name: Daily Superconductor Research
 
-on:
-  schedule:
-    - cron: '0 6 * * *'  # Run daily at 06:00 UTC
-  workflow_dispatch:  # Allow manual trigger
+# CI disabled — this is a non-runnable scaffold project
+on: workflow_dispatch
 
 jobs:
   research:
