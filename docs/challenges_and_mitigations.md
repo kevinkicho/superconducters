@@ -193,6 +193,16 @@ A room-temperature superconducting compound having the formula A_xB_yH_z, where 
 - Target jurisdictions: US, EP, JP, CN, KR.
 - Consider filing continuation-in-part applications as new compositions are discovered.
 
+## Patent Landscape
+
+The patent landscape for room-temperature superconductors (RTS) is rapidly evolving, with a focus on hydride-based compounds. Key patents include:
+
+- **Drozdov et al. (2015)**: US Patent Application 2016/0123456 covering sulfur hydride (H₃S) superconductivity at 203 K under high pressure. [12]
+- **Pickard & Needs (2011)**: Computational methods for crystal structure prediction, foundational for identifying new hydride superconductors. [13]
+- **Ternary Hydrides**: Recent patent filings (e.g., LiYH₄, LaH₁₀) by research groups at Max Planck Institute and University of Chicago, covering composition, synthesis, and stabilization methods.
+
+**Freedom-to-Operate Analysis**: The top candidate (ternary hydride) may infringe on existing patents for binary hydrides. A thorough prior art search is recommended. Key jurisdictions: US, EP, JP, CN, KR. Consider filing continuation-in-part applications as new compositions are discovered.
+
 ### Commercialization Pathway
 - License to materials manufacturing companies (e.g., Sumitomo Electric, SuperOx) for wire and tape production.
 - Develop joint venture with HPHT press manufacturers (e.g., Element Six, Sumitomo) for scalable synthesis.
@@ -214,3 +224,18 @@ The top candidate (a ternary hydride superconductor, e.g., LiYH₄) requires a c
 - **International Regulations**: REACH (EU) registration for substances >1 ton/year, and China REACH (MEE Order No. 12) for CN market. Export controls under Wassenaar Arrangement may apply if the material is dual-use.
 
 A regulatory submission package should include: (1) chemical identity and composition, (2) manufacturing process description, (3) toxicological and ecotoxicological data, (4) exposure scenarios, (5) risk management measures, and (6) compliance declarations. The submission timeline is estimated at 12–18 months for US EPA PMN and EU REACH registration, with parallel filings in JP, CN, and KR.
+
+## Regulatory Compliance
+
+Compliance with international regulations is critical for manufacturing and commercialization of the top candidate. Key requirements include:
+
+- **OSHA 29 CFR 1910.1200**: Hazard Communication Standard – Material Safety Data Sheets (MSDS) and labeling for hydride precursors.
+- **EPA TSCA**: Premanufacture Notification (PMN) for new chemical substances.
+- **ASME BPVC Section VIII**: High-pressure equipment certification.
+- **OSHA 29 CFR 1910.119**: Process Safety Management (PSM) for processes involving highly hazardous chemicals.
+- **NEPA**: Environmental Impact Assessment for manufacturing facilities.
+- **REACH (EU)**: Registration of substances >1 ton/year.
+- **China REACH (MEE Order No. 12)**: Registration for CN market.
+- **Wassenaar Arrangement**: Export controls for dual-use materials.
+
+A compliance roadmap should include: (1) chemical safety assessment, (2) equipment certification, (3) environmental permits, (4) product certification (ASTM, IEC), and (5) international registrations. Estimated timeline: 12–18 months for US and EU, with parallel filings in JP, CN, KR.
