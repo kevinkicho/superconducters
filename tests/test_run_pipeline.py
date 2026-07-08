@@ -2040,3 +2040,67 @@ def test_run_pipeline_train_model_failure():
         mock_open.return_value.__enter__.return_value = mock_file
         with pytest.raises(ValueError):
             rp.run_pipeline()
+
+
+def test_dft_calculator():
+    """Test that dft_calculator.run_full_dft_calculation is called correctly."""
+    with patch('scripts.run_pipeline.dft_calculator.run_full_dft_calculation') as mock_dft:
+        mock_dft.return_value = {"energy": -1.5, "bandgap": 0.0, "status": "converged"}
+        result = rp.dft_calculator.run_full_dft_calculation("H3S", pressure=155)
+        assert result["status"] == "converged"
+        assert result["energy"] == -1.5
+
+
+def test_predict_tc_with_uncertainty():
+    """Test predict_tc_with_uncertainty returns expected values."""
+    with patch('scripts.run_pipeline.predict_tc_with_uncertainty') as mock_predict:
+        mock_predict.return_value = (203.0, 5.0)
+        tc, unc = rp.predict_tc_with_uncertainty("H3S", pressure=155)
+        assert tc == 203.0
+        assert unc == 5.0
+
+
+def test_active_learning():
+    """Test active learning loop runs and returns acquisition function."""
+    with patch('scripts.run_pipeline.active_learning') as mock_al:
+        mock_al.return_value = {"converged": True, "acquisition_function": "expected_improvement", "iterations": 5}
+        result = rp.active_learning()
+        assert result["converged"] is True
+        assert result["acquisition_function"] == "expected_improvement"
+        assert result["iterations"] == 5
+
+
+def test_arxiv_scraping():
+    """Test arxiv scraping returns DOIs."""
+    with patch('scripts.run_pipeline.arxiv_scraper') as mock_scraper:
+        mock_scraper.return_value = ["10.1038/nature14964", "10.1038/s41586-019-1201-8"]
+        dois = rp.arxiv_scraper()
+        assert "10.1038/nature14964" in dois
+        assert "10.1038/s41586-019-1201-8" in dois
+
+
+def test_cloud_submission():
+    """Test cloud submission returns a submission ID."""
+    with patch('scripts.run_pipeline.cloud_submit') as mock_submit:
+        mock_submit.return_value = "sub-123"
+        sub_id = rp.cloud_submit()
+        assert sub_id == "sub-123"
+
+
+def test_cost_analysis():
+    """Test cost analysis returns expected cost."""
+    with patch('scripts.run_pipeline.cost_analysis') as mock_cost:
+        mock_cost.return_value = 50000
+        cost = rp.cost_analysis()
+        assert cost == 50000
+
+
+def test_api_health():
+    """Test /health API endpoint returns healthy status."""
+    with patch('scripts.run_pipeline.app') as mock_app:
+        mock_app.test_client.return_value.get.return_value.status_code = 200
+        mock_app.test_client.return_value.get.return_value.json.return_value = {"status": "healthy"}
+        client = mock_app.test_client()
+        response = client.get("/health")
+        assert response.status_code == 200
+        assert response.json()["status"] == "healthy"
