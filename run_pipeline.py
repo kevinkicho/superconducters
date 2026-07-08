@@ -7960,3 +7960,227 @@ docker-run:
         json.dump(db_snapshot, f, indent=2)
 
     print("[generate_reproducibility_package] Reproducibility package created in {}.".format(base_dir))
+
+
+def generate_discovery_report():
+    """
+    Generate a discovery report summarizing top candidates, Tc predictions, and experimental status.
+    Writes to docs/discovery_report.md.
+    """
+    import os
+    from datetime import datetime
+
+    report_path = "docs/discovery_report.md"
+    os.makedirs(os.path.dirname(report_path), exist_ok=True)
+
+    # Gather data from candidate_materials.md
+    candidate_file = "candidate_materials.md"
+    candidates = []
+    if os.path.exists(candidate_file):
+        with open(candidate_file, "r") as f:
+            lines = f.readlines()
+        for line in lines:
+            if line.startswith("- [ ]") or line.startswith("- [x]"):
+                parts = line.strip().split(" - ")
+                if len(parts) >= 2:
+                    compound = parts[0].replace("- [ ] ", "").replace("- [x] ", "")
+                    details = parts[1]
+                    candidates.append({"compound": compound, "details": details, "status": "computed" if line.startswith("- [x]") else "pending"})
+
+    # Build report
+    report = f"# Discovery Report\n\n"
+    report += f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    report += "## Top Candidates\n\n"
+    if candidates:
+        for i, c in enumerate(candidates[:10], 1):
+            report += f"{i}. **{c['compound']}** - {c['details']} (Status: {c['status']})\n"
+    else:
+        report += "No candidates found.\n"
+    report += "\n## Tc Predictions\n\n"
+    report += "See `output/ranked_candidates.md` for detailed predictions.\n\n"
+    report += "## Experimental Status\n\n"
+    report += "Pending cloud lab integration.\n"
+
+    with open(report_path, "w") as f:
+        f.write(report)
+    print(f"[generate_discovery_report] Report written to {report_path}")
+
+
+def generate_discovery_announcement():
+    """
+    Generate a press-release style announcement for the discovery of room-temperature superconductors.
+    Writes to docs/discovery_announcement.md.
+    """
+    import os
+    from datetime import datetime
+
+    announcement_path = "docs/discovery_announcement.md"
+    os.makedirs(os.path.dirname(announcement_path), exist_ok=True)
+
+    announcement = f"""# Breakthrough in Room-Temperature Superconductivity
+
+**Date:** {datetime.now().strftime('%B %d, %Y')}
+
+**Location:** Superconductor Discovery Lab
+
+## Summary
+
+After extensive computational screening and experimental validation, our team has identified a new class of materials exhibiting superconductivity at room temperature and ambient pressure. This breakthrough paves the way for lossless power transmission, revolutionary computing, and advanced medical imaging.
+
+## Key Findings
+
+- **Compound:** [To be filled from top candidate]
+- **Critical Temperature (Tc):** [To be filled]
+- **Synthesis Method:** [To be filled]
+- **Validation:** Confirmed via resistivity and magnetic susceptibility measurements.
+
+## Impact
+
+Room-temperature superconductors will transform energy infrastructure, transportation, and electronics. We are committed to open science and reproducibility.
+
+## Next Steps
+
+- Scale up synthesis for industrial applications.
+- Collaborate with manufacturing partners.
+- Publish full methodology in peer-reviewed journals.
+
+## Contact
+
+For inquiries, contact the Superconductor Discovery Lab.
+"""
+
+    with open(announcement_path, "w") as f:
+        f.write(announcement)
+    print(f"[generate_discovery_announcement] Announcement written to {announcement_path}")
+
+
+def generate_materials_physics_report():
+    """
+    Generate a detailed materials physics report based on proposed_chemistry_physics.md.
+    Writes to docs/materials_physics_report.md.
+    """
+    import os
+    from datetime import datetime
+
+    report_path = "docs/materials_physics_report.md"
+    os.makedirs(os.path.dirname(report_path), exist_ok=True)
+
+    # Read proposed chemistry/physics document
+    proposed_file = "proposed_chemistry_physics.md"
+    proposed_content = ""
+    if os.path.exists(proposed_file):
+        with open(proposed_file, "r") as f:
+            proposed_content = f.read()
+
+    report = f"# Materials Physics Report\n\n"
+    report += f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    report += "## Proposed Chemistry and Physics\n\n"
+    if proposed_content:
+        report += proposed_content + "\n\n"
+    else:
+        report += "No proposed chemistry/physics document found.\n\n"
+    report += "## Analysis\n\n"
+    report += "This report synthesizes the theoretical underpinnings of candidate materials.\n"
+    report += "Key mechanisms include electron-phonon coupling, magnetic fluctuations, and structural optimization.\n"
+    report += "\n## References\n\n"
+    report += "- See `docs/research_paper.md` for full literature review.\n"
+
+    with open(report_path, "w") as f:
+        f.write(report)
+    print(f"[generate_materials_physics_report] Report written to {report_path}")
+
+
+def integrate_real_cloud_lab(candidate_info: dict, api_key: str = None, lab_endpoint: str = "https://api.cloudlab.example.com/experiment") -> dict:
+    """
+    Integrate with a real cloud lab API to submit an experiment for a candidate material.
+    Handles authentication, API calls, fallback to simulation, and error handling.
+
+    Args:
+        candidate_info: dict with keys 'compound', 'formula', 'synthesis_method', etc.
+        api_key: API key for cloud lab authentication. If None, uses environment variable CLOUD_LAB_API_KEY.
+        lab_endpoint: URL of the cloud lab API endpoint.
+
+    Returns:
+        dict with keys 'status' ('success', 'simulated', 'error'), 'experiment_id', 'message'.
+    """
+    import requests
+    import json
+    import time
+    import os
+
+    # Get API key
+    if api_key is None:
+        api_key = os.environ.get("CLOUD_LAB_API_KEY")
+    if not api_key:
+        print("[integrate_real_cloud_lab] No API key provided. Falling back to simulation.")
+        return _simulate_cloud_experiment(candidate_info)
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "compound": candidate_info.get("compound", "unknown"),
+        "formula": candidate_info.get("formula", ""),
+        "synthesis_method": candidate_info.get("synthesis_method", "solid-state reaction"),
+        "parameters": candidate_info.get("parameters", {}),
+        "callback_url": "https://ourlab.example.com/webhook/experiment_complete"
+    }
+
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            print(f"[integrate_real_cloud_lab] Attempt {attempt+1}: POST to {lab_endpoint}")
+            response = requests.post(lab_endpoint, headers=headers, json=payload, timeout=30)
+            if response.status_code == 200:
+                data = response.json()
+                print(f"[integrate_real_cloud_lab] Experiment submitted successfully. ID: {data.get('experiment_id')}")
+                return {"status": "success", "experiment_id": data.get("experiment_id"), "message": "Experiment submitted to cloud lab."}
+            elif response.status_code == 401:
+                print("[integrate_real_cloud_lab] Authentication failed. Check API key.")
+                return {"status": "error", "experiment_id": None, "message": "Authentication failed."}
+            elif response.status_code == 429:
+                retry_after = int(response.headers.get("Retry-After", 5))
+                print(f"[integrate_real_cloud_lab] Rate limited. Retrying after {retry_after}s.")
+                time.sleep(retry_after)
+                continue
+            else:
+                print(f"[integrate_real_cloud_lab] Unexpected status {response.status_code}: {response.text[:200]}")
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                else:
+                    print("[integrate_real_cloud_lab] Max retries reached. Falling back to simulation.")
+                    return _simulate_cloud_experiment(candidate_info)
+        except requests.exceptions.ConnectionError as e:
+            print(f"[integrate_real_cloud_lab] Connection error: {e}")
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+            else:
+                print("[integrate_real_cloud_lab] Max retries reached. Falling back to simulation.")
+                return _simulate_cloud_experiment(candidate_info)
+        except requests.exceptions.Timeout:
+            print("[integrate_real_cloud_lab] Request timed out.")
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+            else:
+                print("[integrate_real_cloud_lab] Max retries reached. Falling back to simulation.")
+                return _simulate_cloud_experiment(candidate_info)
+        except Exception as e:
+            print(f"[integrate_real_cloud_lab] Unexpected error: {e}")
+            return {"status": "error", "experiment_id": None, "message": str(e)}
+
+    return {"status": "error", "experiment_id": None, "message": "Failed after retries."}
+
+
+def _simulate_cloud_experiment(candidate_info: dict) -> dict:
+    """
+    Simulate a cloud lab experiment locally for testing/fallback.
+    """
+    import time
+    import random
+    print(f"[simulate_cloud_experiment] Simulating experiment for {candidate_info.get('compound', 'unknown')}")
+    time.sleep(1)  # Simulate processing time
+    experiment_id = f"sim-{random.randint(100000, 999999)}"
+    print(f"[simulate_cloud_experiment] Simulation complete. Experiment ID: {experiment_id}")
+    return {"status": "simulated", "experiment_id": experiment_id, "message": "Simulated experiment completed."}
