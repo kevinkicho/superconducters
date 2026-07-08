@@ -235,3 +235,64 @@ This section logs all submissions to the cloud lab for synthesis and characteriz
 | —           | —         | —          | —      | —              | —                 |
 
 *Note: New rows are appended by the pipeline upon retrieval of results from the cloud lab API.*
+
+
+## Autonomous Mode
+
+The pipeline supports an autonomous mode that continuously runs the closed-loop cycle without manual intervention. In this mode, the system watches for new experimental results, runs the data assimilation and active learning modules, submits new candidates to the cloud lab, and updates the candidate ranking automatically.
+
+### Starting Autonomous Mode
+
+To start the autonomous loop, run:
+
+```bash
+python run_pipeline.py --autonomous
+```
+
+Optional flags:
+- `--config <path>`: Path to a YAML configuration file (default: `config/autonomous.yaml`).
+- `--interval <seconds>`: Polling interval for checking new results (default: 300).
+- `--max-cycles <N>`: Maximum number of closed-loop cycles before stopping (default: unlimited).
+- `--dry-run`: Simulate the loop without actually submitting experiments.
+
+### Stopping Autonomous Mode
+
+Press `Ctrl+C` to gracefully stop the loop. The pipeline will finish the current cycle and save state. To force stop, press `Ctrl+C` twice.
+
+### Configuration Options
+
+Configuration can be set via environment variables or a YAML file. Key options:
+
+| Variable / Config Key | Description | Default |
+|-----------------------|-------------|---------|
+| `AUTONOMOUS_INTERVAL` | Polling interval (seconds) | 300 |
+| `AUTONOMOUS_MAX_CYCLES` | Maximum cycles | 0 (unlimited) |
+| `AUTONOMOUS_CONFIG_PATH` | Path to config file | `config/autonomous.yaml` |
+| `CLOUD_LAB_API_KEY` | API key for cloud lab | (required) |
+| `DATA_DIR` | Directory for data files | `data/` |
+
+Example `config/autonomous.yaml`:
+
+```yaml
+interval: 600
+max_cycles: 10
+data_dir: data/
+cloud_lab:
+  base_url: https://api.emeraldcloudlab.com/v1
+  max_retries: 5
+  backoff_factor: 2
+```
+
+### Monitoring Progress
+
+- **Logs**: The pipeline writes structured logs to `logs/autonomous.log` with timestamps and cycle numbers.
+- **Dashboard**: A real-time dashboard is available at `http://localhost:8501` (requires Streamlit). Start it with:
+  ```bash
+  streamlit run dashboard.py
+  ```
+- **Status File**: The file `data/autonomous_status.json` is updated after each cycle with current cycle number, last submission ID, and error count.
+- **Notifications**: Optional email/Slack notifications can be configured via `AUTONOMOUS_NOTIFY_URL` (e.g., a webhook URL).
+
+### Safety and Error Handling
+
+If an experiment submission fails, the pipeline retries up to 3 times with exponential backoff. After 3 consecutive failures, the autonomous loop pauses and logs an alert. Manual intervention is required to resume.
