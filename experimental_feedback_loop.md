@@ -345,3 +345,8 @@ predictions = [300, 0.5]  # example Tc and pressure
 observations = [295, 0.45]  # from synchrotron
 updated = ensemble_kalman_filter(observations, predictions)
 ```
+
+
+### Integration with Experimental Feedback Loop
+
+The synchrotron data assimilation process is tightly integrated into the experimental feedback loop. After the ensemble Kalman filter updates the digital twin and ML model predictions, the revised candidate rankings are automatically recomputed. If the predicted Tc of any candidate changes by more than a threshold (e.g., 5 K), a new synthesis and characterization experiment is automatically submitted via the cloud lab API (see [Cloud Lab API Integration](#cloud-lab-api-integration)). This closed-loop cycle ensures that experimental results from the synchrotron directly influence the next iteration of candidate selection and experiment design. The assimilation metrics (RMSE before/after, Kalman gain norm) are logged to `data/model_performance_log.json` and can be monitored via the dashboard.
