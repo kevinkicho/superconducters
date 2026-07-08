@@ -4522,3 +4522,116 @@ def lifecycle_assessment():
     with open("lifecycle_assessment.md", "w") as f:
         f.write(lca)
     print("[Lifecycle] Written lifecycle_assessment.md")
+
+
+def study_superconducting_materials():
+    """
+    Study superconducting materials and generate chemistry/physics for discovery and manufacturing.
+    Outputs a markdown file 'superconductor_study.md' with findings.
+    """
+    study = """# Study of Superconducting Materials for Room-Temperature Superconductor Discovery
+
+## 1. Introduction
+This study reviews current literature on room-temperature superconductors, focusing on hydride systems under high pressure, cuprates, and emerging materials. The goal is to identify promising chemical and physical strategies for discovery and manufacturing.
+
+## 2. Key Candidate Systems
+
+### 2.1 Hydride Superconductors (High Pressure)
+- **H3S (sulfur hydride):** Tc ~203 K at 155 GPa (Drozdov et al., Nature 2015). Mechanism: strong electron-phonon coupling in metallic hydrogen sublattice.
+- **LaH10 (lanthanum decahydride):** Tc ~250-260 K at 170 GPa (Somayazulu et al., PRL 2019; Drozdov et al., Nature 2019). Clathrate structure with H cages.
+- **YH6, YH9:** Tc up to 227 K at 237 GPa (Kong et al., Nat. Commun. 2019).
+- **C-S-H (carbonaceous sulfur hydride):** Claimed Tc ~287 K at 267 GPa (Snider et al., Nature 2020) – controversial, not fully reproduced.
+- **Ternary hydrides (e.g., Li2MgH16, CaYH12):** Predicted high Tc via first-principles calculations (Sun et al., PRB 2020; Wang et al., PRB 2021).
+
+### 2.2 Cuprate High-Tc Superconductors
+- **YBCO (YBa2Cu3O7-d):** Tc ~93 K at ambient pressure. Mechanism: spin fluctuations, d-wave pairing.
+- **HgBa2Ca2Cu3O8+δ:** Tc ~135 K at ambient pressure, up to 164 K under pressure.
+- **Bi2Sr2CaCu2O8+δ (BSCCO):** Tc ~110 K, used in tape manufacturing.
+
+### 2.3 Iron-Based Superconductors
+- **FeSe (iron selenide):** Tc ~8 K at ambient, up to 100 K in monolayer on SrTiO3.
+- **SmFeAsO1-xFx:** Tc ~55 K at ambient pressure.
+
+### 2.4 Nickelates and Other Oxides
+- **Nd0.8Sr0.2NiO2 (infinite-layer nickelate):** Tc ~15 K (Li et al., Nature 2019). Analogous to cuprates.
+- **SrTiO3 (doped):** Tc ~0.3 K, but 2D interface superconductivity at higher Tc.
+
+### 2.5 Organic and Carbon-Based Superconductors
+- **K3C60 (fulleride):** Tc ~19 K at ambient, up to 38 K under pressure.
+- **Cs3C60:** Tc ~38 K at 7 kbar.
+- **Graphene moiré superlattices:** Tc ~1.7 K in twisted bilayer graphene (Cao et al., Nature 2018).
+
+## 3. Physics of Superconductivity
+
+### 3.1 Conventional (BCS) Mechanism
+- Electron-phonon coupling leads to Cooper pair formation.
+- Tc ∝ ω_D exp(-1/λ) where λ is electron-phonon coupling constant.
+- High pressure increases phonon frequencies and λ, raising Tc.
+- Hydrides achieve high λ due to light hydrogen atoms and strong electron-phonon coupling.
+
+### 3.2 Unconventional Mechanisms
+- **Spin fluctuations:** Cuprates, iron-based, nickelates.
+- **Charge density waves:** Some transition metal dichalcogenides.
+- **Magnetic fluctuations:** Heavy fermion systems.
+- **Topological superconductivity:** Edge states, Majorana fermions.
+
+### 3.3 Key Parameters for Room-Temperature Superconductivity
+- High density of states at Fermi level.
+- Strong electron-phonon coupling (λ > 1).
+- High Debye temperature (Θ_D > 1000 K).
+- Avoidance of competing orders (charge density waves, antiferromagnetism).
+- Metastability at ambient pressure (for hydrides, pressure quenching).
+
+## 4. Chemistry for Discovery and Manufacturing
+
+### 4.1 Synthesis Methods
+- **High-pressure synthesis:** Diamond anvil cell (DAC) for small samples; multi-anvil press for larger volumes.
+- **Laser heating:** Combined with DAC to reach high temperatures.
+- **Chemical vapor deposition (CVD):** For thin films of cuprates and iron-based.
+- **Solid-state reaction:** For bulk cuprates (e.g., YBCO).
+- **Molecular beam epitaxy (MBE):** For nickelate thin films.
+- **Spark plasma sintering (SPS):** For dense polycrystalline samples.
+
+### 4.2 Doping Strategies
+- **Chemical substitution:** Replace elements to optimize carrier concentration (e.g., YBCO: Y→Ca, Ba→Sr, Cu→Co).
+- **Oxygen content control:** Annealing in O2 or Ar to tune hole doping.
+- **Electrostatic doping:** Field-effect transistor (FET) gating for 2D materials.
+- **Pressure-induced doping:** High pressure modifies band structure and carrier density.
+
+### 4.3 Computational Screening
+- **Density functional theory (DFT):** Predict crystal structures, electronic bands, phonon spectra.
+- **Machine learning:** Train models on known superconductors to predict Tc and stability.
+- **High-throughput screening:** Enumerate ternary and quaternary hydrides, oxides, etc.
+- **Crystal structure prediction:** Evolutionary algorithms (USPEX, CALYPSO) to find stable phases.
+
+### 4.4 Manufacturing Challenges
+- **Scaling up high-pressure synthesis:** Multi-anvil presses limited to ~10 GPa; need new techniques for >100 GPa.
+- **Stabilization at ambient pressure:** Pressure quenching, chemical precompression (e.g., using clathrate structures).
+- **Thin film deposition:** For device integration (e.g., superconducting quantum interference devices, SQUIDs).
+- **Cost of raw materials:** Yttrium, lanthanum, barium are relatively abundant; but high-purity precursors are expensive.
+- **Environmental impact:** Mining and processing of rare earths; need recycling and green synthesis.
+
+## 5. Recommended Research Directions
+1. **Ternary and quaternary hydrides:** Explore systems like Li-Mg-H, Ca-Y-H, La-Ce-H using DFT and high-pressure experiments.
+2. **Chemical precompression:** Use clathrate hydrates with large cages to stabilize metallic hydrogen at lower pressures.
+3. **Machine learning for Tc prediction:** Train on existing data (SuperCon database) to guide synthesis.
+4. **Thin film growth of hydrides:** Attempt epitaxial stabilization of hydride phases on substrates.
+5. **Doping of cuprates with hydrogen:** Intercalate hydrogen into YBCO to enhance Tc.
+6. **Nickelate superconductors:** Optimize doping and strain to raise Tc above 100 K.
+7. **Topological superconductors:** Search for materials with Majorana edge states for fault-tolerant quantum computing.
+
+## 6. References
+- Drozdov et al., Nature 525, 73 (2015) – H3S.
+- Somayazulu et al., PRL 122, 027001 (2019) – LaH10.
+- Drozdov et al., Nature 569, 528 (2019) – LaH10.
+- Kong et al., Nat. Commun. 10, 2820 (2019) – YH6/YH9.
+- Snider et al., Nature 586, 373 (2020) – C-S-H.
+- Sun et al., PRB 101, 174511 (2020) – Li2MgH16.
+- Wang et al., PRB 103, 174511 (2021) – CaYH12.
+- Li et al., Nature 572, 624 (2019) – Nd0.8Sr0.2NiO2.
+- Cao et al., Nature 556, 43 (2018) – twisted bilayer graphene.
+- SuperCon database (NIMS).
+"""
+    with open("superconductor_study.md", "w") as f:
+        f.write(study)
+    print("[Study] Written superconductor_study.md")
