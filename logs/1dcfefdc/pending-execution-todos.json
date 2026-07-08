@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "1dcfefdc-e3ea-453b-96a1-fd210d8daefe",
+  "writtenAt": 1783489449385,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Populate data/superconductor_database.json with verified entries for known superconductors (H3S, LaH10, YH9, YH10, CaH12, MgH16) including composition, pressure, Tc, and electron-phonon coupling parameters, sourced from docs/online_research_summary.md and candidate_materials.md.",
+      "expectedFiles": [
+        "data/superconductor_database.json"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement dft_calculator.py with a placeholder DFT calculation function (e.g., using ASE or a mock) that reads structure from data/superconductor_database.json and returns electronic density of states at Fermi level, to support the screening pipeline.",
+      "expectedFiles": [
+        "dft_calculator.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update streamlit_dashboard.py to load real data from data/superconductor_database.json and display interactive plots (Tc vs pressure, composition explorer) instead of hardcoded mock data.",
+      "expectedFiles": [
+        "streamlit_dashboard.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Implement predict_tc() in scripts/predict_tc.py using the McMillan-Allen-Dynes equation with parameters (ω_log, λ, μ*) loaded from data/superconductor_database.json, returning realistic Tc values (e.g., LaH10 at 170 GPa → ~250 K). Add unit tests in tests/test_predict_tc.py.",
+      "expectedFiles": [
+        "scripts/predict_tc.py",
+        "tests/test_predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Delete duplicate test file tests/tests_predict_tc.py and consolidate all tests in tests/test_predict_tc.py.",
+      "expectedFiles": [
+        "tests/tests_predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Consolidate duplicate documents: move canonical versions of candidate_materials.md, characterization_techniques.md, experimental_feedback_loop.md, literature_review.md, roadmap.md, synthesis_methods.md, theoretical_framework.md into docs/, remove root duplicates, and update all cross-references in README.md to point to the docs/ versions.\n\nAlso (council-synthesis): Add missing sections to theoretical_framework.md: McMillan-Allen-Dynes theory (derivation, parameters, applicability) and DMFT (dynamical mean-field theory) for strongly correlated superconductors, with references to literature.",
+      "expectedFiles": [
+        "README.md",
+        "candidate_materials.md",
+        "characterization_techniques.md",
+        "experimental_feedback_loop.md",
+        "literature_review.md",
+        "roadmap.md",
+        "synthesis_methods.md",
+        "theoretical_framework.md",
+        "docs/candidate_materials.md",
+        "docs/characterization_techniques.md",
+        "docs/experimental_feedback_loop.md",
+        "docs/literature_review.md",
+        "docs/roadmap.md",
+        "docs/synthesis_methods.md",
+        "docs/theoretical_framework.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Add synthesis protocols section to proposed_chemistry_physics.md detailing high-pressure synthesis methods (diamond anvil cell, laser heating) for predicted compounds (LaH10, YH9, etc.) with target pressures and temperature ranges.",
+      "expectedFiles": [
+        "proposed_chemistry_physics.md"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}
