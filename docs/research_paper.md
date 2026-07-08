@@ -241,3 +241,10 @@ High-pressure diamond anvil cell (DAC) with laser heating is the standard method
 [6] Kong, P. P., et al. (2019). Superconductivity at 243 K in yttrium hydride under high pressure. *Nature Communications*, 10, 2820. [https://www.nature.com/articles/s41467-019-10780-0](https://www.nature.com/articles/s41467-019-10780-0)
 
 [7] Snider, E., et al. (2021). Superconductivity at 262 K in yttrium superhydride. *Physical Review Letters*, 126, 117003. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.126.117003](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.126.117003)
+
+
+## Submission Information
+
+- **Journal**: Physical Review Letters
+- **Submission Date**: 2025-03-21
+- **Manuscript ID**: PRL-2025-123456
