@@ -12,6 +12,9 @@ import re
 import json
 from typing import Dict, List, Optional, Tuple
 from sklearn.ensemble import RandomForestRegressor
+import torch
+import torch_geometric
+from torch_geometric.data import Data
 
 # Default pseudopotential directory (adjust as needed)
 PSEUDO_DIR = os.environ.get("QE_PSEUDO_DIR", "./pseudo")
@@ -359,7 +362,7 @@ def compute_tc_mcmillan_allen_dynes(lambda_val, omega_log, mu_star=0.1):
 
 
 class MLTcPredictor:
-    """Machine learning predictor for Tc using random forest."""
+    """Machine learning predictor for Tc using random forest and GNN."""
     def __init__(self, database_path="data/superconductor_database.json"):
         import json
         import os
@@ -367,7 +370,7 @@ class MLTcPredictor:
         # Load database
         with open(database_path, "r") as f:
             data = json.load(f)
-        # Extract features and target
+        # Extract features and target for random forest
         self.features = []
         self.targets = []
         for entry in data:
@@ -375,11 +378,107 @@ class MLTcPredictor:
                 self.features.append([entry["lambda"], entry["omega_log"], entry["mu_star"]])
                 self.targets.append(entry["Tc"])
         # Train random forest
-        self.model = RandomForestRegressor(n_estimators=100, random_state=42)
-        self.model.fit(self.features, self.targets)
+        self.rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+        self.rf_model.fit(self.features, self.targets)
+        # GNN model (not trained yet; requires graph data)
+        self.gnn_model = None
+        self.gnn_trained = False
     def predict_tc_ml(self, lambda_val, omega_log, mu_star=0.1):
         """Predict Tc using trained random forest model."""
-        return self.model.predict([[lambda_val, omega_log, mu_star]])[0]
+        return self.rf_model.predict([[lambda_val, omega_log, mu_star]])[0]
+    def _structure_to_graph(self, structure):
+        """Convert a crystal structure dictionary to a PyTorch Geometric Data object."""
+        # Extract atomic positions and species
+        positions = []
+        atomic_numbers = []
+        for atom in structure['atomic_positions']:
+            positions.append([atom['x'], atom['y'], atom['z']])
+            # Map element symbol to atomic number (simplified)
+            element = atom['element']
+            element_to_z = {'H':1, 'He':2, 'Li':3, 'Be':4, 'B':5, 'C':6, 'N':7, 'O':8, 'F':9, 'Ne':10,
+                           'Na':11, 'Mg':12, 'Al':13, 'Si':14, 'P':15, 'S':16, 'Cl':17, 'Ar':18,
+                           'K':19, 'Ca':20, 'Sc':21, 'Ti':22, 'V':23, 'Cr':24, 'Mn':25, 'Fe':26,
+                           'Co':27, 'Ni':28, 'Cu':29, 'Zn':30, 'Ga':31, 'Ge':32, 'As':33, 'Se':34,
+                           'Br':35, 'Kr':36, 'Rb':37, 'Sr':38, 'Y':39, 'Zr':40, 'Nb':41, 'Mo':42,
+                           'Tc':43, 'Ru':44, 'Rh':45, 'Pd':46, 'Ag':47, 'Cd':48, 'In':49, 'Sn':50,
+                           'Sb':51, 'Te':52, 'I':53, 'Xe':54, 'Cs':55, 'Ba':56, 'La':57, 'Ce':58,
+                           'Pr':59, 'Nd':60, 'Pm':61, 'Sm':62, 'Eu':63, 'Gd':64, 'Tb':65, 'Dy':66,
+                           'Ho':67, 'Er':68, 'Tm':69, 'Yb':70, 'Lu':71, 'Hf':72, 'Ta':73, 'W':74,
+                           'Re':75, 'Os':76, 'Ir':77, 'Pt':78, 'Au':79, 'Hg':80, 'Tl':81, 'Pb':82,
+                           'Bi':83, 'Po':84, 'At':85, 'Rn':86, 'Fr':87, 'Ra':88, 'Ac':89, 'Th':90,
+                           'Pa':91, 'U':92, 'Np':93, 'Pu':94, 'Am':95, 'Cm':96, 'Bk':97, 'Cf':98,
+                           'Es':99, 'Fm':100, 'Md':101, 'No':102, 'Lr':103, 'Rf':104, 'Db':105,
+                           'Sg':106, 'Bh':107, 'Hs':108, 'Mt':109, 'Ds':110, 'Rg':111, 'Cn':112,
+                           'Nh':113, 'Fl':114, 'Mc':115, 'Lv':116, 'Ts':117, 'Og':118}
+            atomic_numbers.append(element_to_z.get(element, 0))
+        # Node features: atomic number (scalar)
+        x = torch.tensor(atomic_numbers, dtype=torch.float).view(-1, 1)
+        # Positions as tensor
+        pos = torch.tensor(positions, dtype=torch.float)
+        # Compute edges based on distance (simple cutoff)
+        edge_index = []
+        num_atoms = len(positions)
+        for i in range(num_atoms):
+            for j in range(i+1, num_atoms):
+                dist = torch.norm(pos[i] - pos[j]).item()
+                if dist < 3.0:  # cutoff in Angstrom
+                    edge_index.append([i, j])
+                    edge_index.append([j, i])
+        edge_index = torch.tensor(edge_index, dtype=torch.long).t().contiguous()
+        data = Data(x=x, edge_index=edge_index, pos=pos)
+        return data
+    def train_gnn(self, graph_dataset, targets, epochs=100):
+        """Train the GNN on a dataset of graphs and corresponding Tc values."""
+        import torch.nn as nn
+        import torch.nn.functional as F
+        from torch_geometric.nn import GCNConv, global_mean_pool
+        # Define a simple GNN
+        class GNN(nn.Module):
+            def __init__(self, node_features, hidden_channels, num_layers=3):
+                super().__init__()
+                self.convs = nn.ModuleList()
+                self.convs.append(GCNConv(node_features, hidden_channels))
+                for _ in range(num_layers - 1):
+                    self.convs.append(GCNConv(hidden_channels, hidden_channels))
+                self.lin = nn.Linear(hidden_channels, 1)
+            def forward(self, data):
+                x, edge_index, batch = data.x, data.edge_index, data.batch
+                for conv in self.convs:
+                    x = conv(x, edge_index)
+                    x = F.relu(x)
+                x = global_mean_pool(x, batch)
+                x = self.lin(x)
+                return x.squeeze()
+        self.gnn_model = GNN(node_features=graph_dataset[0].x.size(1), hidden_channels=64)
+        optimizer = torch.optim.Adam(self.gnn_model.parameters(), lr=0.001)
+        loss_fn = nn.MSELoss()
+        for epoch in range(epochs):
+            self.gnn_model.train()
+            total_loss = 0
+            for data, target in zip(graph_dataset, targets):
+                optimizer.zero_grad()
+                out = self.gnn_model(data)
+                loss = loss_fn(out, torch.tensor([target], dtype=torch.float))
+                loss.backward()
+                optimizer.step()
+                total_loss += loss.item()
+            if epoch % 10 == 0:
+                print(f"Epoch {epoch}, Loss: {total_loss/len(graph_dataset):.4f}")
+        self.gnn_trained = True
+    def predict_tc_gnn(self, structure):
+        """Predict Tc using GNN if trained, otherwise fallback to random forest."""
+        if self.gnn_trained and self.gnn_model is not None:
+            graph = self._structure_to_graph(structure)
+            self.gnn_model.eval()
+            with torch.no_grad():
+                pred = self.gnn_model(graph)
+            return pred.item()
+        else:
+            # Fallback: use random forest with default features (requires lambda, omega_log, mu_star)
+            lambda_val = structure.get('lambda', 0.0)
+            omega_log = structure.get('omega_log', 0.0)
+            mu_star = structure.get('mu_star', 0.1)
+            return self.predict_tc_ml(lambda_val, omega_log, mu_star)
 
 
 if __name__ == "__main__":
