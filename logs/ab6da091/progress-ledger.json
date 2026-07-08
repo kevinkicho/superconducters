@@ -1,191 +1,9 @@
 {
   "schemaVersion": 1,
   "runId": "ab6da091-a9fa-49eb-9a21-350c6d0ba7bb",
-  "updatedAt": 1783479400640,
-  "lastCycle": 48,
+  "updatedAt": 1783479504330,
+  "lastCycle": 49,
   "observations": [
-    {
-      "kind": "finding",
-      "text": "Supply chain optimization module using linear programming is only documented in docs/manufacturing_scalability.md but not implemented in run_pipeline.py. The pipeline does not perform cost/risk optimization for raw material sourcing. — Implement a function that uses a linear programming library (e.g., PuLP) to minimize total cost and risk for raw material supply, given constraints on availability,",
-      "cycle": 44,
-      "agentId": "agent-3",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Automated Docker image generation function (generate_docker_image) may exist but is not integrated into the pipeline run or tested. The CI workflow does not verify that the Docker image is built successfully. — Ensure generate_docker_image is called at the end of the pipeline run (if configured). Add a test in tests/test_run_pipeline.py that mocks Docker commands and verifies the function executes",
-      "cycle": 44,
-      "agentId": "agent-3",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Human-in-the-loop approval workflow is documented but not enforced in pipeline execution; the function `human_in_the_loop_approval` is not called before submitting candidates to the cloud lab. — Add a call to `human_in_the_loop_approval` in the main pipeline run function (e.g., `run_full_pipeline`) before the cloud lab submission step, and ensure the function returns only after explicit approval (",
-      "cycle": 44,
-      "agentId": "agent-2",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Pipeline FMEA section in docs/challenges_and_mitigations.md lacks a risk priority number (RPN) table with quantified severity, occurrence, and detection ratings for each failure mode. — Add a table with columns: Failure Mode, Cause, Effect, Severity (1-10), Occurrence (1-10), Detection (1-10), RPN, and Recommended Actions. Populate it for at least the top 5 failure modes identified in the pipeline",
-      "cycle": 44,
-      "agentId": "agent-2",
-      "files": [
-        "docs/challenges_and_mitigations.md"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Real-time collaboration feature in the Streamlit dashboard is documented in README.md but the actual implementation (WebSocket-based shared state, comment storage) is missing from `run_pipeline.py`; the dashboard does not support multi-user annotations. — Implement a WebSocket endpoint (e.g., using `st_websocket` or a separate FastAPI WebSocket) to broadcast comments and presence, and store annota",
-      "cycle": 44,
-      "agentId": "agent-2",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Automated Docker image generation function `generate_docker_image` exists but is not triggered by the CI workflow; the `.github/workflows/ci.yml` does not include a job to build and push the Docker image on successful pipeline run. — Add a job `build-and-push-docker` that runs after the test job, uses `docker/build-push-action`, and calls `python run_pipeline.py --generate-docker` or directly buil",
-      "cycle": 44,
-      "agentId": "agent-2",
-      "files": [
-        ".github/workflows/ci.yml"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "The `generate_docker_image` function in run_pipeline.py may be incomplete or not properly integrated; it likely relies on external Docker commands and registry credentials that are not configured, and it may not be called during a full pipeline run. — Verify that `generate_docker_image` builds a Docker image using a Dockerfile, tags it, and pushes to a registry (e.g., Docker Hub) with proper error",
-      "cycle": 44,
-      "agentId": "agent-1",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "The human-in-the-loop approval workflow for cloud lab submission may not be fully integrated; the function might only log a message without actually pausing for expert review or providing a mechanism to approve/reject candidates. — Implement a blocking prompt (e.g., input() or a simple webhook) that waits for an expert to approve or reject each top candidate before submitting to the cloud lab. Upd",
-      "cycle": 44,
-      "agentId": "agent-1",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "The `candidate_materials.md` file may be missing several required columns (e.g., 'SimilarMaterials', 'DFT_Tc', 'DFT_Consistency', 'PredictedStructure', 'SuperConValidation', 'DecisionRank') because the corresponding functions (similarity_search, first_principles_validation, crystal_structure_prediction, etc.) may not have been executed or their outputs not appended to the markdown table. — Run the",
-      "cycle": 44,
-      "agentId": "agent-1",
-      "files": [
-        "candidate_materials.md"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "The `docs/experimental_feedback_loop.md` may lack the 'User Feedback Analysis' and 'Data Quality' sections, as the functions `generate_user_feedback_report` and `check_data_quality` might not have been implemented or their output not appended to the document. — Implement `generate_user_feedback_report` to summarize user ratings from data/experimental_results.json and append a 'User Feedback Analys",
-      "cycle": 44,
-      "agentId": "agent-1",
-      "files": [
-        "docs/experimental_feedback_loop.md"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Duplicate files exist between root and docs/ directory (e.g., candidate_materials.md, experimental_feedback_loop.md, literature_review.md, etc.) with potentially inconsistent content, violating the single-source-of-truth principle. — Remove duplicate files from the root directory (e.g., candidate_materials.md, experimental_feedback_loop.md) and update all references to point to the canonical versi",
-      "cycle": 44,
-      "agentId": "agent-4",
-      "files": [
-        "candidate_materials.md"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "Typo/duplicate test file tests/tests_predict_tc.py exists alongside tests/test_predict_tc.py, causing confusion and potential test duplication. — Delete the typo file tests/tests_predict_tc.py and ensure all test imports reference the correct file tests/test_predict_tc.py.",
-      "cycle": 44,
-      "agentId": "agent-4",
-      "files": [
-        "tests/tests_predict_tc.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "The function generate_docker_image in run_pipeline.py is implemented but not called in the CI workflow (.github/workflows/ci.yml), which uses its own Docker build step. This leads to unused code and potential inconsistency between the automated Docker build and the pipeline's own function. — Either integrate the generate_docker_image function into the CI workflow (e.g., by calling it as a step) or",
-      "cycle": 44,
-      "agentId": "agent-4",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "finding",
-      "text": "The human-in-the-loop approval workflow is implemented in run_pipeline.py but the Streamlit dashboard does not expose a UI for experts to review and approve candidates, making the feature unusable in practice. — Add a new page or modal in the Streamlit dashboard that lists candidates pending approval, allows experts to view details, and approve/reject them. Update the dashboard's main loop to chec",
-      "cycle": 44,
-      "agentId": "agent-4",
-      "files": [
-        "run_pipeline.py"
-      ],
-      "at": 1783477796653
-    },
-    {
-      "kind": "synthesis",
-      "text": "Synthesized 10 proposal(s) into unified plan.",
-      "cycle": 44,
-      "at": 1783477820911
-    },
-    {
-      "kind": "skip",
-      "text": "Add a Docker build and push job to .github/workflows/ci.yml that runs after tests, using the generate_docker_image function or direct Docker build, and configure Docker Hub credentials. — Deploy job already exists in .github/workflows/ci.yml that builds and pushes Docker image after tests with Docker Hub credentials.",
-      "cycle": 44,
-      "files": [
-        ".github/workflows/ci.yml"
-      ],
-      "at": 1783477827742
-    },
-    {
-      "kind": "commit",
-      "text": "Add a test for the generate_docker_image function in tests/test_run_pipeline.py that mocks Docker commands and verifies successful execution.",
-      "cycle": 44,
-      "files": [
-        "tests/test_run_pipeline.py"
-      ],
-      "at": 1783477846416
-    },
-    {
-      "kind": "fail",
-      "text": "Delete the duplicate typo test file tests/tests_predict_tc.py. — all retries exhausted (last: hunks.0.op: Invalid discriminator value. Expected 'replace' | 'create' | 'append'); no failover model in chain",
-      "cycle": 44,
-      "files": [
-        "tests/tests_predict_tc.py"
-      ],
-      "at": 1783477848236
-    },
-    {
-      "kind": "commit",
-      "text": "Add sections for human-in-the-loop approval implementation details, user feedback analysis, and data quality to docs/experimental_feedback_loop.md.",
-      "cycle": 44,
-      "files": [
-        "docs/experimental_feedback_loop.md"
-      ],
-      "at": 1783477859515
-    },
     {
       "kind": "skip",
       "text": "Update docs/manufacturing_scalability.md with results from the implemented supply chain optimization function (linear programming). — The file already contains a 'Supply Chain Optimization' section with optimization results and sensitivity analysis, matching the TODO goal.",
@@ -1150,6 +968,194 @@
         "candidate_materials.md"
       ],
       "at": 1783479352851
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to perform quality check on all generated markdown files (headings, broken links, placeholder text, formatting). — Implement a function `quality_check_documents()` that scans all markdown files in the project (e.g., candidate_materials.md, roadmap.md, docs/*.md) and checks for proper heading hierarchy, broken internal links, placeholder text (e.g., 'TODO', 'FIXME'), and consistent",
+      "cycle": 49,
+      "agentId": "agent-2",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to automatically fix common document issues (missing sections, broken internal links, inconsistent table formatting). — Implement a function `auto_fix_documents()` that identifies and fixes common issues in generated markdown files (e.g., add missing required sections, correct broken internal links, standardize table formatting). Log all fixes and add a new section 'Automated Docu",
+      "cycle": 49,
+      "agentId": "agent-2",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to generate a comprehensive table of contents for major documents (README.md, literature_review.md, theoretical_framework.md, candidate_materials.md, etc.) and update each document with a linked ToC at the top. — Implement a function `generate_table_of_contents()` that parses each major document, extracts headings, and prepends a linked table of contents. Update README.md, literat",
+      "cycle": 49,
+      "agentId": "agent-2",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to generate a cross-reference index between all documents, listing which documents reference each other and for what purpose. — Implement a function `generate_cross_reference_index()` that scans all markdown files for internal links (e.g., `[text](path/to/file.md)`) and builds a cross-reference index. Add a new section 'Cross-Reference Index' in docs/experimental_feedback_loop.md ",
+      "cycle": 49,
+      "agentId": "agent-2",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to perform quality check on all generated markdown files (headings, broken links, placeholder text, formatting). — Implement a function `quality_check_documents()` that scans all markdown files in the project (e.g., candidate_materials.md, roadmap.md, docs/*.md) and reports violations. Add a new section 'Document Quality Check' in docs/experimental_feedback_loop.md to log results.",
+      "cycle": 49,
+      "agentId": "agent-3",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to automatically fix common issues in generated documents (missing sections, broken internal links, inconsistent table formatting). — Implement a function `auto_fix_documents()` that applies corrections (e.g., add missing headings, fix internal links, normalize table formatting) and logs fixes. Add a new section 'Automated Document Fixes' in docs/experimental_feedback_loop.md.",
+      "cycle": 49,
+      "agentId": "agent-3",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to generate a comprehensive table of contents for all major documents (README.md, literature_review.md, theoretical_framework.md, candidate_materials.md, etc.). — Implement a function `generate_table_of_contents()` that parses each document's headings and inserts a linked TOC at the top. Update each document accordingly.",
+      "cycle": 49,
+      "agentId": "agent-3",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to generate a cross-reference index between all documents, listing which documents reference each other and for what purpose. — Implement a function `generate_cross_reference_index()` that scans all markdown files for internal links and builds an index. Add a new section 'Cross-Reference Index' in docs/experimental_feedback_loop.md.",
+      "cycle": 49,
+      "agentId": "agent-3",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function in run_pipeline.py to perform automated quality checks on all generated markdown files (headings, broken links, placeholder text, formatting) and generate a quality report in docs/experimental_feedback_loop.md with a new 'Document Quality Check' section. — Implement a function `quality_check_documents()` that scans all markdown files, validates headings, links, and formatting, and",
+      "cycle": 49,
+      "agentId": "agent-1",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function in run_pipeline.py to automatically fix common issues in generated documents (missing sections, broken internal links, inconsistent table formatting) and log fixes, with a new 'Automated Document Fixes' section in docs/experimental_feedback_loop.md. — Implement a function `auto_fix_documents()` that corrects identified issues and logs changes, updating docs/experimental_feedback_l",
+      "cycle": 49,
+      "agentId": "agent-1",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function in run_pipeline.py to generate a comprehensive table of contents for major documents (README.md, literature_review.md, theoretical_framework.md, candidate_materials.md) and update each document with a linked TOC at the top. — Implement a function `generate_table_of_contents()` that parses headings and inserts a linked TOC at the beginning of each specified document.",
+      "cycle": 49,
+      "agentId": "agent-1",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function in run_pipeline.py to enforce a project-wide style guide (heading hierarchy, citation format, figure captions) by checking all markdown files against a configuration file and reporting violations, with a new 'Style Guide Enforcement' section in docs/experimental_feedback_loop.md. — Implement a function `enforce_style_guide()` that reads a style config, checks all markdown files, a",
+      "cycle": 49,
+      "agentId": "agent-1",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to perform quality check on all generated markdown files (headings, broken links, placeholder text, formatting) and generate a report in docs/experimental_feedback_loop.md. — Implement a function `quality_check_documents()` that scans all markdown files in the project, checks for proper heading hierarchy, broken internal links, placeholder text (e.g., 'TODO', 'FIXME'), and consist",
+      "cycle": 49,
+      "agentId": "agent-4",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to automatically fix common issues in generated documents (missing sections, broken internal links, inconsistent table formatting) and log fixes. — Implement a function `auto_fix_documents()` that corrects common issues such as missing required sections, broken internal links, and inconsistent table formatting. Log all fixes and add a new section 'Automated Document Fixes' in docs",
+      "cycle": 49,
+      "agentId": "agent-4",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to generate a comprehensive table of contents for all major documents (README.md, literature_review.md, theoretical_framework.md, candidate_materials.md) and update each document with a linked TOC at the top. — Implement a function `generate_table_of_contents()` that parses each major document, extracts headings, and prepends a linked table of contents. Update README.md, literatur",
+      "cycle": 49,
+      "agentId": "agent-4",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "finding",
+      "text": "Missing function to generate a cross-reference index between all documents, listing which documents reference each other and for what purpose. — Implement a function `generate_cross_reference_index()` that scans all markdown files for internal links (e.g., `[text](path)`) and builds an index. Add a new section 'Cross-Reference Index' in docs/experimental_feedback_loop.md.",
+      "cycle": 49,
+      "agentId": "agent-4",
+      "files": [
+        "run_pipeline.py"
+      ],
+      "at": 1783479416762
+    },
+    {
+      "kind": "synthesis",
+      "text": "Synthesized 2 proposal(s) into unified plan.",
+      "cycle": 49,
+      "at": 1783479438404
+    },
+    {
+      "kind": "commit",
+      "text": "Add new sections 'Document Quality Check', 'Automated Document Fixes', 'Cross-Reference Index', and 'Style Guide Enforcement' to docs/experimental_feedback_loop.md to document the outputs of the new functions implemented in run_pipeline.py.",
+      "cycle": 49,
+      "files": [
+        "docs/experimental_feedback_loop.md"
+      ],
+      "at": 1783479444012
+    },
+    {
+      "kind": "commit",
+      "text": "Implement quality_check_documents(), auto_fix_documents(), generate_table_of_contents(), generate_cross_reference_index(), and enforce_style_guide() in run_pipeline.py. The generate_table_of_contents() function will parse headings and prepend a linked table of contents to README.md, literature_review.md, theoretical_framework.md, and candidate_materials.md. The other functions will perform quality",
+      "cycle": 49,
+      "files": [
+        "run_pipeline.py",
+        "README.md",
+        "literature_review.md",
+        "theoretical_framework.md",
+        "candidate_materials.md"
+      ],
+      "at": 1783479476814
     }
   ]
 }
