@@ -359,3 +359,16 @@ After authentication, the system assigns an RBAC role based on the user's email 
 You can override this mapping by setting the `OAUTH2_ROLE_MAPPING` environment variable to a JSON object mapping email domains to roles (e.g., `{"@example.com": "admin"}`).
 
 If OAuth2 is not configured, the system falls back to the environment-variable-based RBAC described above.
+
+
+## Real-Time Collaboration
+
+The Streamlit dashboard supports real-time collaboration through a comment and annotation feature. To use it:
+
+1. **Commenting on data points**: Click on any data point in a chart or table to open a comment dialog. Type your comment and press Enter. Other users viewing the dashboard will see the comment in real time.
+2. **Annotating plots**: Use the annotation toolbar (pencil icon) to draw arrows, highlight regions, or add text labels directly on plots. Annotations are saved per user session and can be toggled on/off.
+3. **Threaded discussions**: Each comment can be replied to, creating a threaded discussion. Notifications appear in the sidebar for new replies.
+4. **Permissions**: Only users with `researcher` or `admin` roles (see RBAC section) can add comments and annotations. `viewer` users can see existing comments but cannot create new ones.
+5. **Persistence**: Comments and annotations are stored in the project database and persist across sessions. They are tied to the specific dashboard view and data version.
+
+For more details, refer to the [User Manual](docs/user_manual.md).
