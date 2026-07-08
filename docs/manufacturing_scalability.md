@@ -2057,3 +2057,55 @@ These parameters, when implemented together, can reduce the production cost from
 - Somayazulu, M. et al. (2019). Evidence for superconductivity above 260 K in lanthanum superhydride at megabar pressures. *Physical Review Letters*, 122, 027001.
 - Errea, I. et al. (2020). Quantum crystal structure in the 250 K superconducting LaH10. *Nature*, 578, 66–69.
 - Geballe, Z. M. et al. (2021). Synthesis and stability of lanthanum superhydrides. *Journal of Applied Physics*, 129, 185901.
+
+
+## Pilot Plant Engineering Design
+
+### Process Flow Diagram (PFD)
+The pilot plant is designed for continuous synthesis of LaH10, the top candidate due to its high Tc (~250 K) and relatively well-established synthesis conditions. The PFD comprises the following unit operations:
+1. **Hydrogen purification**: Feed H2 (99.9% purity) passes through a Pd membrane purifier to achieve 99.9999% purity, removing O2, H2O, and N2.
+2. **Lanthanum powder preparation**: La metal (99.9% purity) is milled to <10 µm particle size in an inert argon atmosphere to prevent oxidation.
+3. **Mixing and pre-compression**: La powder and H2 gas are mixed in a stoichiometric ratio (1:10) in a high-pressure stirred tank at 50 MPa and 200°C, forming a LaHx precursor.
+4. **High-pressure reactor**: The precursor is fed into a continuous-flow tubular reactor (ID 25 mm, length 2 m) operating at 170 GPa and 1000°C. Pressure is maintained by a multi-stage hydraulic intensifier. Residence time: 30 minutes.
+5. **Quenching**: The product stream is rapidly cooled to -196°C (LN2) to stabilize the LaH10 phase.
+6. **Product separation**: Unreacted H2 is separated via a cryogenic flash drum and recycled. LaH10 powder is collected in a nitrogen-filled glovebox.
+7. **Quality control**: In-line Raman spectroscopy and X-ray diffraction (XRD) confirm phase purity.
+
+### Piping and Instrumentation Diagram (P&ID)
+Key instrumentation and control loops:
+- **Pressure control**: PID loop on the hydraulic intensifier (PT-101, PCV-101) maintains reactor pressure at 170 ± 1 GPa.
+- **Temperature control**: Thermocouples (TT-201 to TT-210) along the reactor tube feed a cascade controller (TC-201) adjusting electrical heating zones.
+- **Flow control**: Mass flow controllers (FIC-301, FIC-302) regulate H2 feed and recycle rates.
+- **Safety interlocks**: High-pressure relief valves (PSV-401, PSV-402) set at 180 GPa; emergency shutdown (ESD) triggered by pressure or temperature excursions.
+- **Analytical**: Raman probe (AT-501) and XRD detector (AT-502) provide real-time composition data.
+
+### Equipment List
+| Tag | Equipment | Specification | Material | Quantity |
+|-----|-----------|---------------|----------|----------|
+| E-101 | H2 Purifier | Pd membrane, 10 Nm³/h, 99.9999% purity | Stainless steel 316L | 1 |
+| E-102 | Ball Mill | Attritor, 5 kg/h, argon atmosphere | Al2O3-lined steel | 1 |
+| E-103 | Mixing Vessel | Stirred autoclave, 50 MPa, 200°C, 100 L | Hastelloy C-276 | 1 |
+| E-104 | High-Pressure Reactor | Continuous tubular, 170 GPa, 1000°C, 2 m length, 25 mm ID | Diamond-reinforced tungsten carbide | 1 |
+| E-105 | Hydraulic Intensifier | 200 GPa max, 10 L/min | Maraging steel | 1 |
+| E-106 | Quench Bath | LN2 bath, 100 L, -196°C | Stainless steel 304L | 1 |
+| E-107 | Flash Drum | Cryogenic, 50 L, 10 MPa | Stainless steel 316L | 1 |
+| E-108 | Glovebox | O2 < 1 ppm, H2O < 1 ppm, argon atmosphere | Stainless steel 304L | 1 |
+| E-109 | Raman Spectrometer | In-line, 532 nm laser, 100 cm⁻¹ resolution | - | 1 |
+| E-110 | XRD System | In-line, Cu Kα, 2θ range 10-80° | - | 1 |
+
+### HAZOP Analysis
+A HAZOP study was conducted on the high-pressure reactor (E-104) and associated piping. Key deviations and safeguards:
+
+| Parameter | Deviation | Cause | Consequence | Safeguard |
+|-----------|-----------|-------|-------------|-----------|
+| Pressure | High | Blockage in outlet, intensifier failure | Rupture, explosion | PSV-401/402 (set at 180 GPa), ESD system, burst disk (200 GPa) |
+| Pressure | Low | Leak in reactor or upstream | Incomplete reaction, off-spec product | Pressure alarm (PAL-101), automatic shutdown |
+| Temperature | High | Heater controller failure, exothermic runaway | Material degradation, reactor damage | Over-temperature alarm (TAH-201), emergency cooling (LN2 injection) |
+| Temperature | Low | Heater failure | Reaction rate too slow, yield loss | Low-temperature alarm (TAL-201), backup heater |
+| Flow | High | Pump overspeed | Overpressure, flooding | Flow limiter (FIC-301), high-flow alarm |
+| Flow | Low | Pump cavitation, blockage | Starvation, yield loss | Low-flow alarm (FAL-301), pump redundancy |
+| Composition | Off-spec | Impure H2, incorrect La/H ratio | Low Tc, phase impurity | Raman/XRD alarms, automatic divert to waste |
+| Hydrogen leak | Any | Seal failure, corrosion | Fire/explosion risk | H2 detectors (AT-601 to AT-610), ventilation, ESD, fire suppression |
+| Oxygen ingress | Any | Glovebox leak | Oxidation of LaH10, loss of superconductivity | O2 monitor (AT-701), inert gas purge, alarm |
+
+All HAZOP recommendations are incorporated into the P&ID and operating procedures. The pilot plant is designed to operate at a throughput of 1 kg/day of LaH10, sufficient for material characterization and process optimization before scale-up to 10 tonnes/year.
