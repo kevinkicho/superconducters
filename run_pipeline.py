@@ -8261,3 +8261,86 @@ Based on the reviewed literature, the following candidate systems and approaches
         f.write(proposal)
     print(f"[study_superconductors] Proposal written to {output_path}")
     return proposal
+
+
+def project_trl_assessment():
+    '''Assess the Technology Readiness Level (TRL) of the superconductor project.'''
+    candidate_file = 'candidate_materials.md'
+    if not os.path.exists(candidate_file):
+        return 1
+    with open(candidate_file, 'r') as f:
+        content = f.read()
+    if 'MeasuredTc' in content:
+        lines = content.split('\\n')
+        for line in lines:
+            if 'MeasuredTc' in line and '>' in line:
+                return 4
+    if 'PredictedTc' in content:
+        return 3
+    return 2
+
+
+def generate_project_closure_report():
+    '''Generate a project closure report and write to docs/project_closure_report.md.'''
+    trl = project_trl_assessment()
+    summary = f'''# Project Closure Report
+
+## Project: Room-Temperature Superconductor Discovery
+
+### Technology Readiness Level (TRL) Assessment
+Current TRL: {trl}
+
+### Achievements
+- Developed a pipeline for candidate generation, Tc prediction, and ranking.
+- Integrated DFT calculations and active learning loop.
+- Deployed FastAPI endpoint for remote access.
+- Conducted literature review and proposed candidate systems.
+
+### Challenges
+- High-pressure synthesis remains difficult.
+- Reproducibility of measured Tc values is low.
+- Computational cost of DFT for large systems.
+
+### Recommendations
+- Focus on ternary hydrides under moderate pressure.
+- Use machine learning to optimize synthesis parameters.
+- Collaborate with experimental groups for validation.
+
+### Conclusion
+The project has advanced the understanding of room-temperature superconductors and provided a framework for future research.
+'''
+    output_dir = 'docs'
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, 'project_closure_report.md')
+    with open(output_path, 'w') as f:
+        f.write(summary)
+    print(f'[generate_project_closure_report] Written to {output_path}')
+    return summary
+
+
+def project_retrospective():
+    '''Generate a retrospective of the project, highlighting lessons learned.'''
+    retrospective = '''# Project Retrospective
+
+## What went well
+- Integration of multiple computational tools.
+- Active learning loop for candidate selection.
+- Real-time dashboard and API.
+
+## What could be improved
+- Better error handling in DFT calculations.
+- More robust data validation.
+- Automated testing coverage.
+
+## Lessons Learned
+- Early involvement of experimentalists is crucial.
+- Data management and version control are essential.
+- Machine learning models require high-quality training data.
+
+## Action Items
+- Improve reproducibility of results.
+- Add more comprehensive unit tests.
+- Document all assumptions and limitations.
+'''
+    print(retrospective)
+    return retrospective
