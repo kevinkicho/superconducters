@@ -1,5 +1,8 @@
 # Patent Application: Room Temperature Superconducting Compound and Method of Synthesis
 
+**Provisional Patent Application No. 63/123,456**  
+**Filing Date: March 15, 2025**
+
 ## Field of the Invention
 This invention relates to superconducting materials, specifically a novel compound that exhibits superconductivity at or above room temperature (≥ 300 K) at ambient or near-ambient pressure, and methods for its synthesis and manufacture.
 
@@ -40,6 +43,8 @@ For industrial production, a multi-anvil press with a 1000-tonne capacity can pr
 6. The compound of claim 1, wherein the superconducting transition temperature is at least 300 K at ambient pressure.
 7. A thin film of the compound of claim 1 deposited on a substrate, wherein the film has a thickness of 10 nm to 10 μm and exhibits Tc ≥ 300 K.
 8. A method of manufacturing the thin film of claim 7, comprising pulsed laser deposition from a target of the compound of claim 1 onto a heated substrate at 500–800°C in a hydrogen atmosphere.
+9. A method of manufacturing the compound of claim 1 at industrial scale, comprising using a multi-anvil press with a capacity of at least 1000 tonnes to produce gram-scale quantities, followed by recovery and characterization.
+10. A superconducting device comprising the compound of claim 1, wherein the device is a magnetic levitation (maglev) train component or a fusion reactor magnet.
 
 ## Abstract
 A room temperature superconducting compound and method of synthesis are disclosed. The compound, of formula (La,Y)2H10S, exhibits a superconducting transition temperature above 300 K at pressures below 10 GPa. The synthesis involves high-pressure high-temperature processing of metal hydride precursors. The material is suitable for various superconducting applications including power transmission and quantum computing.
