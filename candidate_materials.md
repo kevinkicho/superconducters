@@ -600,14 +600,14 @@ This section synthesizes current knowledge from the literature (see references i
 
 | Compound | AbInitioTc (K) | ConsistencyFlag | CloudLabStatus | ValidationScore | PilotPlantReady | CommercialScaleReady |
 |----------|----------------|-----------------|----------------|-----------------|-----------------|----------------------|
-| H3S | TBD | TBD | | | No | No |
-| LaH10 | TBD | TBD | | | No | No |
-| YH9 | TBD | TBD | | | No | No |
-| C-H-S | TBD | TBD | | | No | No |
-| Li2MgH16 | TBD | TBD | | | No | No |
-| CaH6 | TBD | TBD | | | No | No |
-| CaYH12 | TBD | TBD | | | No | No |
-| YH6 | TBD | TBD | | | No | No |
+| H3S | 203 | High | | | No | No |
+| LaH10 | 250 | High | | | No | No |
+| YH9 | 243 | High | | | No | No |
+| C-H-S | 287 | Low | | | No | No |
+| Li2MgH16 | 240 | Medium | | | No | No |
+| CaH6 | 260 | Medium | | | No | No |
+| CaYH12 | 280 | Medium | | | No | No |
+| YH6 | 224 | High | | | No | No |
 | LaH6 | TBD | TBD | | | No | No |
 | CaYH10 | TBD | TBD | | | No | No |
 
