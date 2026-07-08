@@ -411,3 +411,46 @@ Access the real-time monitoring dashboard at [Monitoring Dashboard](docs/monitor
 ## New Features
 
 For instructions on new features, refer to the [New Features Guide](docs/new_features_guide.md).
+
+
+## Cloud Lab Integration
+
+The project supports integration with cloud lab platforms for automated synthesis and characterization of candidate materials. To use cloud lab integration:
+
+1. **Configure API Credentials**: Set the environment variables `CLOUD_LAB_API_KEY` and `CLOUD_LAB_ENDPOINT` with your cloud lab provider's credentials.
+2. **Run the Pipeline**: Execute `python run_pipeline.py --cloud-lab` to trigger automated synthesis and characterization workflows.
+3. **Monitor Results**: Results are logged to the database and can be viewed in the [Real-Time Monitoring Dashboard](docs/monitoring_dashboard.md).
+4. **Validation**: Cloud lab validated results are automatically added to the [Candidate Materials](candidate_materials.md) table with a `CloudLabValidated` flag.
+
+For detailed setup instructions, see the [Cloud Lab Integration Guide](docs/experimental_feedback_loop.md#real-cloud-lab-integration).
+
+## Alert Configuration
+
+Alerts can be configured to notify the team of critical events such as synthesis failures, anomalous characterization results, or funding deadline reminders. To set up alerts:
+
+1. **Edit Alert Configuration**: Open `config/alerts.yaml` (or create it if it does not exist) and define alert rules. Example:
+   ```yaml
+   alerts:
+     - name: synthesis_failure
+       condition: "synthesis_status == 'failed'"
+       channels: [email, slack]
+       recipients: ["team@example.com", "#superconductivity-alerts"]
+     - name: funding_deadline
+       condition: "days_until_deadline <= 7"
+       channels: [email]
+       recipients: ["pi@example.com"]
+   ```
+2. **Enable Alert Service**: Run `python run_pipeline.py --alert-service` to start the alert monitoring daemon.
+3. **Test Alerts**: Use `python run_pipeline.py --test-alert` to send a test notification.
+
+For more details, refer to the [Alert Configuration Guide](docs/alert_configuration.md).
+
+## Publication Figures
+
+Publication-ready figures are generated automatically by the pipeline. To access the latest figures:
+
+- **View Figures**: Open the [Research Paper](docs/research_paper.md#publication-ready-figures) document to see embedded figures.
+- **Regenerate Figures**: Run `python run_pipeline.py --generate-figures` to regenerate all figures from the latest data.
+- **Export**: Figures are saved in the `figures/` directory in PNG and PDF formats.
+
+For a complete list of available figures and customization options, see the [Figures Guide](docs/figures_guide.md).
