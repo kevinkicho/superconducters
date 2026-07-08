@@ -1303,3 +1303,22 @@ When a retraining trigger fires, the following automated workflow executes:
 6. **Logging**: All retraining events, drift metrics, and model version changes are logged to a dedicated `model_retraining_log` table for audit and analysis.
 
 This online learning loop ensures that the computational predictions remain aligned with experimental reality, accelerating the discovery of room-temperature superconductors by adapting to new evidence in near real-time.
+
+
+## Model Benchmarking
+
+Error metrics (RMSE, R²) and comparison plots for all ML models are tracked here.
+
+### Metrics
+
+| Model | RMSE (K) | R² |
+|-------|----------|----|
+| GNN   | TBD      | TBD|
+| PINN  | TBD      | TBD|
+| Ensemble | TBD   | TBD|
+
+### Comparison Plots
+
+*Placeholder for comparison plots (e.g., predicted vs. actual Tc scatter plots, residual distributions).*
+
+These metrics are updated after each retraining cycle (see [Retraining Workflow](#retraining-workflow)).
