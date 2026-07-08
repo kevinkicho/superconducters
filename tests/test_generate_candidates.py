@@ -36,3 +36,31 @@ def test_generate_candidates_includes_required_keys():
         assert "formula" in c
         assert "tc" in c
         assert "pressure" in c
+
+def test_filter_candidates_all_valid():
+    candidates = [
+        {"formula": "H3S", "tc": 203, "pressure": 150},
+        {"formula": "LaH10", "tc": 250, "pressure": 170},
+    ]
+    filtered = filter_candidates(candidates)
+    assert filtered == candidates
+
+
+def test_rank_candidates_ties():
+    candidates = [
+        {"formula": "A", "tc": 100},
+        {"formula": "B", "tc": 100},
+    ]
+    ranked = rank_candidates(candidates)
+    assert ranked[0]["tc"] == 100
+    assert ranked[1]["tc"] == 100
+
+
+def test_filter_candidates_handles_none_formula():
+    candidates = [
+        {"formula": None, "tc": 0, "pressure": 0},
+        {"formula": "H3S", "tc": 203, "pressure": 150},
+    ]
+    filtered = filter_candidates(candidates)
+    assert len(filtered) == 1
+    assert filtered[0]["formula"] == "H3S"
