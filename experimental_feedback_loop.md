@@ -54,7 +54,7 @@ The `--watch` flag (see `run_pipeline.py`) enables event-driven mode, which proc
 
 ## Cloud Lab API Integration
 
-The closed-loop cycle is now extended with a cloud lab API that enables automated submission of synthesis and characterization experiments. The API is hosted at `https://api.cloudlab.example.com/v1` and requires authentication via a bearer token stored in the environment variable `CLOUD_LAB_API_KEY`.
+The closed-loop cycle is now extended with a cloud lab API that enables automated submission of synthesis and characterization experiments. The API is hosted at `https://api.emeraldcloudlab.com/v1` and requires authentication via a bearer token stored in the environment variable `CLOUD_LAB_API_KEY`. For OAuth2, set `CLOUD_LAB_AUTH_URL`, `CLOUD_LAB_CLIENT_ID`, and `CLOUD_LAB_CLIENT_SECRET`.
 
 ### Authentication
 
@@ -191,12 +191,22 @@ The `CloudLabClient` class in `run_pipeline.py` provides a robust interface to c
 1. **API Key**: Set `CLOUD_LAB_API_KEY` environment variable. The client reads it automatically.
 2. **OAuth2**: For OAuth2, set `CLOUD_LAB_AUTH_URL`, `CLOUD_LAB_CLIENT_ID`, and `CLOUD_LAB_CLIENT_SECRET`. The client will obtain a bearer token using the client credentials grant.
 
+### Configuration
+
+- `CLOUD_LAB_API_KEY`: Your API token for Emerald Cloud Lab (obtain from [Emerald Cloud Lab Dashboard](https://dashboard.emeraldcloudlab.com)).
+- `CLOUD_LAB_AUTH_URL`: OAuth2 token endpoint (default: `https://auth.emeraldcloudlab.com/oauth2/token`).
+- `CLOUD_LAB_CLIENT_ID`: OAuth2 client ID.
+- `CLOUD_LAB_CLIENT_SECRET`: OAuth2 client secret.
+- `CLOUD_LAB_BASE_URL`: API base URL (default: `https://api.emeraldcloudlab.com/v1`).
+- `CLOUD_LAB_MAX_RETRIES`: Maximum retry attempts (default: 5).
+- `CLOUD_LAB_BACKOFF_FACTOR`: Exponential backoff factor (default: 2).
+
 ### Example API Calls
 
 ```python
 from run_pipeline import CloudLabClient
 
-client = CloudLabClient(base_url="https://api.cloudlab.example.com/v1")
+client = CloudLabClient(base_url="https://api.emeraldcloudlab.com/v1")
 
 # Submit a synthesis request
 result = client.submit_synthesis_request(
@@ -213,4 +223,4 @@ final = client.poll_for_results(result['id'], poll_interval=60, max_polls=60)
 print(f"Tc: {final['tc']} K")
 ```
 
-The client automatically updates `data/experimental_results.json` and `candidate_materials.md` with new experimental data.
+The client automatically updates `data/experimental_results.json` and `candidate_materials.md` with new experimental data. For full API documentation, see [Emerald Cloud Lab API Reference](https://docs.emeraldcloudlab.com/api).
