@@ -372,3 +372,29 @@ The Streamlit dashboard supports real-time collaboration through a comment and a
 5. **Persistence**: Comments and annotations are stored in the project database and persist across sessions. They are tied to the specific dashboard view and data version.
 
 For more details, refer to the [User Manual](docs/user_manual.md).
+
+
+## Funding Opportunities
+
+Below are relevant funding sources for room-temperature superconductivity research:
+
+### DOE SBIR/STTR
+- **Agency:** U.S. Department of Energy (DOE) Small Business Innovation Research (SBIR) / Small Business Technology Transfer (STTR)
+- **Award Amounts:** Phase I up to $200,000; Phase II up to $1,000,000
+- **Deadlines:** Typically quarterly (February, June, October) – check [DOE SBIR website](https://science.osti.gov/sbir) for current dates.
+- **Focus:** Advanced materials, energy efficiency, and high-risk/high-reward technologies.
+
+### NSF STTR
+- **Agency:** National Science Foundation (NSF) Small Business Technology Transfer (STTR)
+- **Award Amounts:** Up to $250,000 for Phase I; up to $1,000,000 for Phase II
+- **Deadlines:** Typically June and December – see [NSF STTR page](https://www.nsf.gov/eng/iip/sbir/sttr.jsp).
+- **Focus:** Translational research with strong scientific merit, including materials science and condensed matter physics.
+
+### ARPA-E
+- **Agency:** Advanced Research Projects Agency – Energy (ARPA-E)
+- **Award Amounts:** Varies by program; typically $1M–$10M for multi-year projects
+- **Deadlines:** Program-specific; subscribe to [ARPA-E email updates](https://arpa-e.energy.gov/).
+- **Focus:** Transformational energy technologies, including novel superconductors for power transmission and storage.
+
+### Stakeholder Dashboard
+For a consolidated view of funding opportunities, deadlines, and project milestones, see the [Stakeholder Dashboard](docs/stakeholder_dashboard.md).
