@@ -2355,3 +2355,28 @@ The `enforce_style_guide` function in `run_pipeline.py` ensures all documentatio
 - **Capitalization rules**: Section titles use title case, acronyms are defined on first use.
 
 **Output**: A style violation report (`reports/style_violations.json`) with file, line number, rule violated, and suggested fix. The function can optionally auto-fix certain violations (e.g., adding missing alt text) when run with the `--auto-fix` flag.
+
+## System Health Check
+
+The `system_health_check()` function in `run_pipeline.py` monitors the operational status of all critical subsystems. It performs the following checks:
+
+- **Database connectivity**: Verifies that the PostgreSQL database is reachable and responsive.
+- **File watcher status**: Checks that the file watcher (`scripts/watch_experimental_data.py`) is running and monitoring the correct directories.
+- **ML model availability**: Ensures that the latest trained models are loaded and ready for inference.
+- **API endpoints**: Tests that external APIs (e.g., Materials Project, cloud lab) are accessible and returning valid responses.
+- **Disk space**: Monitors available disk space on data storage volumes and alerts if below threshold.
+- **Log health**: Scans recent log files for error spikes or anomalies.
+
+**Output**: A JSON report (`reports/system_health.json`) with a status (healthy, degraded, critical) for each subsystem, plus a summary timestamp. The function is called periodically by a cron job or as part of the pipeline's daily loop.
+
+## Real-Time Experimental Monitoring
+
+A Streamlit dashboard (`dashboard/experimental_monitor.py`) provides real-time visualization of ongoing experiments and system health. The dashboard includes:
+
+- **Live experiment feed**: Displays recently ingested experiments with key parameters (compound, Tc, synthesis conditions) as they are processed.
+- **System health panel**: Shows the current status of all subsystems from the `system_health_check()` output, with color-coded indicators (green=healthy, yellow=degraded, red=critical).
+- **Performance charts**: Plots of model performance metrics (RMSE, R²) over time, updated after each retraining cycle.
+- **Data quality metrics**: Visual indicators of data completeness, schema validation pass rates, and outlier detection.
+- **Alert history**: A log of recent alerts and their resolution status.
+
+The dashboard is designed to be run on a dedicated server or cloud instance, accessible to the research team via a web browser. It refreshes automatically every 30 seconds to provide near-real-time updates.
