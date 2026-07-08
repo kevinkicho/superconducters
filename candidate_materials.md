@@ -655,19 +655,21 @@ Manufacturing room-temperature superconductors at scale remains a challenge. Cur
 
 > **Note:** The CloudLabValidated column currently reflects literature-reported experimental validation, not results from a cloud lab. This column is a placeholder until real cloud lab experiments are run. The RealExperimentStatus, MeasuredTc, and DiscoveryConfidenceScore columns are updated by the autonomous daily loop.
 
+For the experimental protocol, see [Experimental Protocol](docs/experimental_protocol.md).
 
-| Candidate | CloudLabValidated | RealCloudLabStatus | RealExperimentStatus | MeasuredTc | MeasuredStability | MeasuredYield | CommercialScaleReady | RegulatoryStatus | DiscoveryConfidenceScore | ValidationMethod |
-|-----------|-------------------|--------------------|----------------------|------------|-------------------|---------------|----------------------|------------------|--------------------------|-----------------|
-| H3S | Yes | N/A | Confirmed | 203 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC + laser heating |
-| LaH10 | Yes | N/A | Confirmed | 250 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC |
-| YH9 | Yes | N/A | Confirmed | 243 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC + laser heating |
-| C-H-S | Controversial | N/A | Controversial | ~287 K | Unstable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC (unconfirmed) |
-| Li2MgH16 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction |
-| CaH6 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction |
-| CaYH12 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction |
-| YH6 | Yes | N/A | Confirmed | 224 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC + laser heating |
-| LaH6 | Yes | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | High-pressure DAC |
-| CaYH10 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction |
-| YBa2Cu3O7-δ | Yes | N/A | Confirmed | 93 K | Stable at ambient | High (thin films) | Yes (limited) | Compliant (MRI applications) | N/A | Solid-state reaction + oxygen annealing |
-| Bi2Sr2CaCu2O8+δ | Yes | N/A | Confirmed | 95 K | Stable at ambient | High (thin films) | Yes (limited) | Compliant (MRI applications) | N/A | Floating zone / thin film deposition |
-| HgBa2Ca2Cu3O8+δ | Yes | N/A | Confirmed | 135 K | Stable at ambient | Moderate (high-pressure synthesis) | No | N/A (high pressure synthesis) | N/A | High-pressure synthesis (ambient pressure stable) |
+
+| Candidate | CloudLabValidated | RealCloudLabStatus | RealExperimentStatus | MeasuredTc | MeasuredStability | MeasuredYield | CommercialScaleReady | RegulatoryStatus | DiscoveryConfidenceScore | ValidationMethod | UserScore |
+|-----------|-------------------|--------------------|----------------------|------------|-------------------|---------------|----------------------|------------------|--------------------------|-----------------|-----------|
+| H3S | Yes | N/A | Confirmed | 203 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC + laser heating | N/A |
+| LaH10 | Yes | N/A | Confirmed | 250 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC | N/A |
+| YH9 | Yes | N/A | Confirmed | 243 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC + laser heating | N/A |
+| C-H-S | Controversial | N/A | Controversial | ~287 K | Unstable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC (unconfirmed) | N/A |
+| Li2MgH16 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction | N/A |
+| CaH6 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction | N/A |
+| CaYH12 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction | N/A |
+| YH6 | Yes | N/A | Confirmed | 224 K | Metastable at ambient | Low (microscopic) | No | N/A (high pressure) | N/A | High-pressure DAC + laser heating | N/A |
+| LaH6 | Yes | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | High-pressure DAC | N/A |
+| CaYH10 | No | N/A | Pending | N/A | Predicted metastable | N/A | No | N/A | N/A | Theoretical prediction | N/A |
+| YBa2Cu3O7-δ | Yes | N/A | Confirmed | 93 K | Stable at ambient | High (thin films) | Yes (limited) | Compliant (MRI applications) | N/A | Solid-state reaction + oxygen annealing | N/A |
+| Bi2Sr2CaCu2O8+δ | Yes | N/A | Confirmed | 95 K | Stable at ambient | High (thin films) | Yes (limited) | Compliant (MRI applications) | N/A | Floating zone / thin film deposition | N/A |
+| HgBa2Ca2Cu3O8+δ | Yes | N/A | Confirmed | 135 K | Stable at ambient | Moderate (high-pressure synthesis) | No | N/A (high pressure synthesis) | N/A | High-pressure synthesis (ambient pressure stable) | N/A |
