@@ -334,46 +334,110 @@ if __name__ == "__main__":
 
 def multi_fidelity_optimization(candidates, predictions, dft_results):
     """Multi-fidelity optimization combining low-fidelity ML predictions with high-fidelity DFT calculations.
-    Uses expected improvement acquisition function."""
+    Uses expected improvement acquisition function with proper uncertainty handling."""
     import numpy as np
     from scipy.stats import norm
-    # Compute expected improvement for each candidate
-    best_observed = max([v for v in dft_results.values() if v is not None], default=0.0)
+    # Determine best observed DFT result
+    dft_values = [v for v in dft_results.values() if v is not None]
+    best_observed = max(dft_values) if dft_values else 0.0
     ei_values = []
     for c in candidates:
-        mu = predictions.get(c, 0.0)
-        sigma = 1.0  # placeholder uncertainty
-        if sigma == 0:
+        pred = predictions.get(c, {})
+        if isinstance(pred, dict) and 'mean' in pred and 'std' in pred:
+            mu = pred['mean']
+            sigma = pred['std']
+        elif isinstance(pred, (int, float)):
+            mu = pred
+            sigma = 1.0  # default uncertainty if not provided
+        else:
+            mu = 0.0
+            sigma = 1.0
+        if sigma <= 0:
             ei = 0.0
         else:
             z = (mu - best_observed) / sigma
             ei = (mu - best_observed) * norm.cdf(z) + sigma * norm.pdf(z)
         ei_values.append((c, ei))
     # Select candidate with highest EI
+    if not ei_values:
+        return None
     best_candidate = max(ei_values, key=lambda x: x[1])[0]
     return best_candidate
 
 def query_external_databases():
-    """Fetch candidate materials from the Materials Project API."""
-    try:
-        from mp_api.client import MPRester
-        with MPRester() as mpr:
-            docs = mpr.materials.search(**{"superconducting": True})
-            candidates = [{"composition": doc.composition.reduced_formula, "tc": doc.superconducting_data.get("critical_temperature", None)} for doc in docs]
-            return candidates
-    except ImportError:
-        print("[ExternalDB] mp_api not available. Using placeholder.")
+    """Fetch candidate materials from the Materials Project API with retry logic and API key validation."""
+    import os
+    import time
+    import sys
+    api_key = os.environ.get("MAPI_KEY", "")
+    if not api_key:
+        print("[ExternalDB] MAPI_KEY environment variable not set. Skipping external database query.", file=sys.stderr)
         return []
-    except Exception as e:
-        print(f"[ExternalDB] Error querying Materials Project: {e}")
-        return []
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            from mp_api.client import MPRester
+            with MPRester(api_key=api_key) as mpr:
+                docs = mpr.materials.search(**{"superconducting": True})
+                candidates = []
+                for doc in docs:
+                    comp = doc.composition.reduced_formula
+                    tc = doc.superconducting_data.get("critical_temperature", None) if doc.superconducting_data else None
+                    candidates.append({"composition": comp, "tc": tc})
+                return candidates
+        except ImportError:
+            print("[ExternalDB] mp_api not available. Install with: pip install mp-api", file=sys.stderr)
+            return []
+        except Exception as e:
+            print(f"[ExternalDB] Attempt {attempt+1}/{max_retries} failed: {e}", file=sys.stderr)
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+            else:
+                print("[ExternalDB] All retries exhausted. Returning empty list.", file=sys.stderr)
+                return []
+    return []
 
 def digital_twin_simulation(candidates):
-    """Digital twin simulation of synthesis processes (phase diagrams, reaction kinetics)."""
+    """Digital twin simulation of synthesis processes (phase diagrams, reaction kinetics).
+    Uses a simple thermodynamic model based on elemental reference energies."""
     import numpy as np
+    import re
+    # Elemental reference energies (eV/atom) - approximate values for illustration
+    ELEM_ENERGIES = {
+        'H': -0.5, 'He': 0.0, 'Li': -1.0, 'Be': -1.5, 'B': -2.0, 'C': -3.0, 'N': -2.5, 'O': -2.0,
+        'F': -1.5, 'Ne': 0.0, 'Na': -1.0, 'Mg': -1.5, 'Al': -2.0, 'Si': -2.5, 'P': -2.0, 'S': -1.5,
+        'Cl': -1.0, 'Ar': 0.0, 'K': -0.5, 'Ca': -1.0, 'Sc': -1.5, 'Ti': -2.0, 'V': -2.5, 'Cr': -3.0,
+        'Mn': -2.5, 'Fe': -2.0, 'Co': -1.5, 'Ni': -1.0, 'Cu': -0.5, 'Zn': -0.5, 'Ga': -1.0, 'Ge': -1.5,
+        'As': -2.0, 'Se': -1.5, 'Br': -1.0, 'Kr': 0.0, 'Rb': -0.5, 'Sr': -1.0, 'Y': -1.5, 'Zr': -2.0,
+        'Nb': -2.5, 'Mo': -3.0, 'Tc': -2.5, 'Ru': -2.0, 'Rh': -1.5, 'Pd': -1.0, 'Ag': -0.5, 'Cd': -0.5,
+        'In': -1.0, 'Sn': -1.5, 'Sb': -2.0, 'Te': -1.5, 'I': -1.0, 'Xe': 0.0, 'Cs': -0.5, 'Ba': -1.0,
+        'La': -1.5, 'Ce': -2.0, 'Pr': -2.0, 'Nd': -2.0, 'Pm': -2.0, 'Sm': -2.0, 'Eu': -1.5, 'Gd': -2.0,
+        'Tb': -2.0, 'Dy': -2.0, 'Ho': -2.0, 'Er': -2.0, 'Tm': -2.0, 'Yb': -1.5, 'Lu': -2.0,
+        'Hf': -2.0, 'Ta': -2.5, 'W': -3.0, 'Re': -2.5, 'Os': -2.0, 'Ir': -1.5, 'Pt': -1.0, 'Au': -0.5,
+        'Hg': -0.5, 'Tl': -1.0, 'Pb': -1.5, 'Bi': -2.0, 'Po': -1.5, 'At': -1.0, 'Rn': 0.0,
+        'Fr': -0.5, 'Ra': -1.0, 'Ac': -1.5, 'Th': -2.0, 'Pa': -2.5, 'U': -3.0, 'Np': -2.5, 'Pu': -2.0,
+        'Am': -1.5, 'Cm': -2.0, 'Bk': -2.0, 'Cf': -2.0, 'Es': -2.0, 'Fm': -2.0, 'Md': -2.0, 'No': -2.0, 'Lr': -2.0
+    }
+    R = 8.314e-5  # eV/K
+    T = 1000.0  # K
+    Ea = 0.5  # eV
     results = []
     for c in candidates:
-        phase_stable = np.random.rand() > 0.3
-        reaction_rate = np.random.exponential(scale=1.0)
+        # Parse composition string like "YBa2Cu3O7"
+        pattern = r'([A-Z][a-z]?)(\d*\.?\d*)'
+        matches = re.findall(pattern, c)
+        total_energy = 0.0
+        total_atoms = 0
+        for elem, count_str in matches:
+            count = float(count_str) if count_str else 1.0
+            energy = ELEM_ENERGIES.get(elem, 0.0)
+            total_energy += energy * count
+            total_atoms += count
+        if total_atoms == 0:
+            formation_energy = 0.0
+        else:
+            formation_energy = total_energy / total_atoms  # per atom
+        phase_stable = formation_energy < 0.0
+        reaction_rate = np.exp(-Ea / (R * T))
         results.append({"compound": c, "phase_stable": phase_stable, "reaction_rate": reaction_rate})
     return results
