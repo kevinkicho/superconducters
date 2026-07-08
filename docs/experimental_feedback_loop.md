@@ -1071,3 +1071,61 @@ The demonstration confirmed that the closed-loop system can autonomously discove
 ### Source Code and Reproducibility
 
 The full demonstration script is available at `scripts/run_pipeline.py` (function `full_closed_loop_demo()`). All simulation parameters and random seeds are documented in the script’s docstring. Results are logged to `logs/demo_results.json` for reproducibility.
+
+## Experimental Results Feedback Protocol
+
+This protocol defines the step-by-step process for incorporating experimental results into the candidate materials list, DFT calculator, and machine learning model. It closes the loop between prediction and validation.
+
+### Step 1: Collect Experimental Tc and Synthesis Outcomes
+
+1. **Data Extraction**: After each experiment, extract the following from the database (see Data Ingestion Protocol):
+   - Measured Tc (K) and transition width (K)
+   - Synthesis parameters (pressure, temperature, duration, precursors)
+   - Sample quality metrics (purity %, Meissner volume fraction %)
+   - Experiment ID and candidate compound identifier
+2. **Validation**: Verify that the measured Tc is consistent with characterization data (resistivity, magnetization). Flag outliers for manual review.
+3. **Storage**: Store validated outcomes in a dedicated `experimental_results` table with columns: `candidate_id`, `measured_tc`, `transition_width`, `synthesis_params` (JSON), `quality_metrics` (JSON), `experiment_id`, `timestamp`.
+
+### Step 2: Update candidate_materials.md with Validated Data
+
+1. **Locate Entry**: Find the candidate compound in `candidate_materials.md` by its identifier (e.g., composition).
+2. **Append Results**: Add a new row or bullet under the candidate’s entry with:
+   - Measured Tc (K)
+   - Synthesis conditions used
+   - Sample quality (purity, Meissner fraction)
+   - Reference to experiment ID
+3. **Update Status**: Change the candidate’s status from "predicted" to "validated" (if Tc > 0) or "failed" (if no superconductivity detected).
+4. **Automation**: A script `scripts/update_candidate_materials.py` reads the `experimental_results` table and modifies `candidate_materials.md` accordingly. The script is triggered after each batch of experiments.
+
+### Step 3: Retrain the ML Model in dft_calculator.py with New Data
+
+1. **Data Aggregation**: Collect all validated experimental results (Tc, synthesis parameters) and corresponding computational predictions (predicted Tc, lambda, omega_log) from the database.
+2. **Feature Engineering**: Combine features from DFT calculations (e.g., density of states at Fermi level, phonon frequencies) with synthesis parameters (pressure, temperature) into a training dataset.
+3. **Model Retraining**:
+   - Load the existing ML model (e.g., random forest or neural network) in `dft_calculator.py`.
+   - Split data into training and validation sets (80/20).
+   - Retrain the model using the new data, optionally fine-tuning hyperparameters via grid search.
+   - Evaluate performance (R², MAE on Tc) and log metrics to `logs/model_retraining.log`.
+4. **Model Update**: Save the retrained model to `models/tc_predictor_v{timestamp}.pkl` and update the symlink `models/tc_predictor_latest.pkl` to point to the new version.
+
+### Step 4: Adjust DFT Parameters if Needed
+
+1. **Discrepancy Analysis**: Compare predicted Tc (from DFT + McMillan-Allen-Dynes) with measured Tc for validated candidates. If systematic bias is observed (e.g., overprediction > 20 K), flag for parameter adjustment.
+2. **Parameter Tuning**:
+   - Adjust the effective Coulomb repulsion parameter (mu_star) in `dft_calculator.py` based on the discrepancy (e.g., increase mu_star if overpredicting).
+   - Recompute Tc for all candidates using the updated mu_star.
+   - Document the change in `docs/parameter_tuning_log.md` with rationale and date.
+3. **Validation**: Run the updated DFT calculator on a holdout set of known superconductors to ensure no regression.
+
+### Step 5: Feed Back into Active Learning Loop in run_pipeline.py
+
+1. **Update Candidate Rankings**: The active learning loop in `run_pipeline.py` (function `active_learning_cycle()`) reads the updated candidate list from `candidate_materials.md` and the retrained ML model.
+2. **Acquisition Function**: Use the updated model to compute acquisition scores (e.g., expected improvement, upper confidence bound) for all candidates. Prioritize candidates with high uncertainty and high predicted Tc.
+3. **Next Experiment Selection**: The loop selects the top N candidates for the next experimental batch, balancing exploration (high uncertainty) and exploitation (high predicted Tc).
+4. **Trigger**: After each retraining event, call `run_pipeline.py --mode active_learning` to generate a new ranked list and update the experiment queue.
+
+### Automation and Scheduling
+
+- The entire feedback loop (Steps 1–5) can be triggered automatically after each experimental batch via a cron job or CI/CD pipeline.
+- A monitoring dashboard (e.g., `scripts/monitor_feedback_loop.py`) tracks the number of validated candidates, retraining frequency, and model performance over time.
+- All changes are logged in `logs/feedback_loop.log` for auditability.
