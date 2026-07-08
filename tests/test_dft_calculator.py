@@ -1,3 +1,4 @@
+# Reference: Lu et al., Transfer learning for physics-informed neural networks, CMAME, 2021. https://doi.org/10.1016/j.cma.2021.113933
 import pytest
 import torch
 import torch.nn as nn
