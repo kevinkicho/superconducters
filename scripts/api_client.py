@@ -160,3 +160,110 @@ class PipelineClient:
             logger.info(f"Downloaded data to {output_path}")
             return None
         return response.content
+
+
+# ---------------------------------------------------------------------------
+# External API fetch utilities (for materials discovery and literature)
+# ---------------------------------------------------------------------------
+
+def fetch_materials_project(api_key: str, query: str, max_results: int = 20) -> List[Dict[str, Any]]:
+    """Fetch materials from the Materials Project API.
+
+    Args:
+        api_key: Materials Project API key.
+        query: Query string (e.g., chemical formula, elements, or properties).
+        max_results: Maximum number of results to return.
+
+    Returns:
+        List of material dictionaries with fields like 'material_id', 'formula',
+        'band_gap', 'energy_per_atom', etc.
+    """
+    url = "https://api.materialsproject.org/rest/v2/materials/" + query + "/vasp"
+    headers = {"X-API-KEY": api_key}
+    params = {"max_results": max_results}
+    try:
+        resp = requests.get(url, headers=headers, params=params, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        logger.info(f"Fetched {len(data.get('response', []))} materials from Materials Project")
+        return data.get("response", [])
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Materials Project fetch failed: {e}")
+        return []
+
+
+def fetch_icsd(api_key: str, query: str, max_results: int = 20) -> List[Dict[str, Any]]:
+    """Fetch structures from the Inorganic Crystal Structure Database (ICSD).
+
+    Uses the ICSD REST API (requires a subscription).
+
+    Args:
+        api_key: ICSD API key.
+        query: Search query (e.g., formula, elements, or collection code).
+        max_results: Maximum number of results.
+
+    Returns:
+        List of structure dictionaries with fields like 'coll_code', 'formula',
+        'cell_parameters', 'space_group', etc.
+    """
+    url = "https://icsd.ill.fr/icsd/rest/1.0/search"
+    headers = {"Authorization": f"Bearer {api_key}", "Accept": "application/json"}
+    params = {"q": query, "limit": max_results}
+    try:
+        resp = requests.get(url, headers=headers, params=params, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        logger.info(f"Fetched {len(data)} structures from ICSD")
+        return data if isinstance(data, list) else []
+    except requests.exceptions.RequestException as e:
+        logger.error(f"ICSD fetch failed: {e}")
+        return []
+
+
+def fetch_arxiv(query: str, max_results: int = 20) -> List[Dict[str, Any]]:
+    """Fetch papers from the arXiv API.
+
+    Args:
+        query: arXiv search query (e.g., "superconductivity room temperature").
+        max_results: Maximum number of results.
+
+    Returns:
+        List of paper dictionaries with keys 'id', 'title', 'summary', 'authors',
+        'published', 'link', etc.
+    """
+    url = "http://export.arxiv.org/api/query"
+    params = {
+        "search_query": query,
+        "max_results": max_results,
+        "sortBy": "relevance",
+        "sortOrder": "descending",
+    }
+    try:
+        resp = requests.get(url, params=params, timeout=30)
+        resp.raise_for_status()
+        # arXiv returns Atom XML; parse with feedparser-like approach or just return raw text
+        # For simplicity, we parse using xml.etree.ElementTree
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(resp.content)
+        ns = {"atom": "http://www.w3.org/2005/Atom",
+              "arxiv": "http://arxiv.org/schemas/atom"}
+        papers = []
+        for entry in root.findall("atom:entry", ns):
+            paper = {
+                "id": entry.find("atom:id", ns).text if entry.find("atom:id", ns) is not None else "",
+                "title": entry.find("atom:title", ns).text if entry.find("atom:title", ns) is not None else "",
+                "summary": entry.find("atom:summary", ns).text if entry.find("atom:summary", ns) is not None else "",
+                "published": entry.find("atom:published", ns).text if entry.find("atom:published", ns) is not None else "",
+                "link": entry.find("atom:link", ns).attrib.get("href", "") if entry.find("atom:link", ns) is not None else "",
+                "authors": [
+                    author.find("atom:name", ns).text
+                    for author in entry.findall("atom:author", ns)
+                    if author.find("atom:name", ns) is not None
+                ],
+            }
+            papers.append(paper)
+        logger.info(f"Fetched {len(papers)} papers from arXiv")
+        return papers
+    except requests.exceptions.RequestException as e:
+        logger.error(f"arXiv fetch failed: {e}")
+        return []
