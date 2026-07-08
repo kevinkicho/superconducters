@@ -257,3 +257,32 @@ The iterative discovery pipeline (Phases 1–4) generates a stream of candidate 
 ### Regulatory and Competitor Monitoring
 - Establish a quarterly review of regulatory changes (e.g., EU Critical Raw Materials Act, US CHIPS Act) and competitor publications/patents.
 - Key decision points: (1) If a competitor achieves Tc > 300 K at ambient pressure, accelerate Phase 3 timeline. (2) If new regulations restrict key elements (e.g., yttrium, barium), pivot to alternative compositions.
+
+
+## Pilot Plant Construction Milestone (12 Months)
+
+### Specific Steps
+1. **Month 1–2**: Site selection and facility lease negotiation. Secure permits and environmental clearances.
+2. **Month 2–4**: Equipment procurement (CVD reactor, tape casting line, wire drawing machine, QC stations). Issue purchase orders with 8–12 week lead times.
+3. **Month 4–8**: Installation and commissioning of all equipment. Integrate inline QC (XRD, resistivity, critical current mapping).
+4. **Month 8–10**: Process validation — replicate lab-scale synthesis at pilot scale. Establish standard operating procedures (SOPs).
+5. **Month 10–12**: Pilot production ramp-up to target rate ≥100 m/month. Achieve Tc >300 K (or >250 K at <10 GPa) and Jc >10⁵ A/cm².
+
+### Budget
+| Category | Cost (USD) |
+|----------|------------|
+| Facility lease and renovation | $2,000,000 |
+| Equipment (CVD reactor, tape casting, wire drawing, QC) | $8,000,000 |
+| Installation and commissioning | $1,500,000 |
+| Personnel (12 months, 5 FTE) | $1,500,000 |
+| Raw materials and consumables | $1,000,000 |
+| Contingency (20%) | $2,800,000 |
+| **Total** | **$16,800,000** |
+
+### Responsible Teams
+- **Project Manager**: Oversees timeline, budget, and cross-team coordination.
+- **Lead Experimentalist**: Ensures material quality matches lab-scale performance.
+- **Process Engineer**: Develops and optimizes manufacturing parameters.
+- **QC Engineer**: Implements inline QC and data collection.
+- **Data Scientist**: Manages QC data analysis and process optimization.
+- **Safety Officer**: Ensures compliance with safety regulations (chemical handling, high-temperature operations).
