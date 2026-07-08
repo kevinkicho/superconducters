@@ -76,6 +76,31 @@ Current TRL: 2 (concept validated with literature and computational models)
 - **Room-temperature ambient-pressure superconductor**: Requires new physics (excitonic, plasmonic) or novel materials (e.g., hydrogen-rich alloys with internal chemical pressure).
 - **Manufacturing at scale**: Continuous high-pressure synthesis, wire drawing, and integration into power cables, magnets, and electronics.
 
+### Experimental Validation Results
+
+No cloud lab experiments have been executed to date. The following detailed plan outlines the intended validation steps for the most promising candidate materials identified through literature review and computational screening.
+
+| Candidate | Predicted Tc (K) | Predicted Pressure (GPa) | Validation Status | Notes |
+|-----------|------------------|--------------------------|-------------------|-------|
+| Li-Mg-H (ternary hydride) | ~200 | 50 | Planned (Q1 2025) | Synthesis at Carnegie Institution; multi-anvil press |
+| Ca-Y-H (ternary hydride) | ~250 | 40 | Planned (Q2 2025) | Chemical precompression approach |
+| CSH (carbonaceous sulfur hydride) | ~288 | 267 | Reproducibility study planned | Requires diamond anvil cell; collaboration with Dias group |
+| LaH₁₀ (lanthanum superhydride) | ~260 | 170 | Planned (Q3 2025) | Multi-anvil press up to 20 GPa; quench recovery |
+| YH₆ (yttrium superhydride) | ~200 | 200 | Planned (Q4 2025) | Thin film deposition for transport measurements |
+
+**Validation methodology**: For each candidate, the following steps will be performed:
+1. High-pressure synthesis using diamond anvil cell or multi-anvil press.
+2. In-situ electrical resistance and magnetic susceptibility measurements under pressure.
+3. X-ray diffraction for structural characterization.
+4. Quench recovery attempts for ambient-pressure retention.
+5. Transport measurements (Tc, critical current density) on recovered samples.
+
+**Updated recommendations for manufacturing**:
+- Prioritize ternary hydrides with predicted stabilization pressures below 50 GPa, as they are accessible with multi-anvil presses and offer potential for scale-up.
+- Invest in quench recovery techniques to retain metastable phases at ambient pressure.
+- Develop thin film deposition methods (PLD, MBE) for hydride thin films to enable device integration.
+- Establish a cloud lab infrastructure for remote synthesis and characterization to accelerate iteration.
+
 ### Recommendations
 - **Focus on ternary hydrides** under moderate pressure (<50 GPa) using chemical precompression.
 - **Use machine learning** to optimize synthesis parameters (pressure, temperature, composition).
