@@ -423,3 +423,29 @@ The discovery process is organized as a prioritized screening pipeline that comb
 - **Candidate Queue Re-ranking:** After each retraining, the entire candidate queue is re-scored and re-sorted using the updated models and weights, ensuring the most promising candidates are always at the top.
 
 This feedback loop ensures that the screening pipeline adapts to model performance, continuously improving the efficiency of the discovery process.
+
+## 17. Active Learning Workflow (Bayesian Optimization)
+
+### 17.1 Overview
+Bayesian optimization (BO) is used to efficiently navigate the vast chemical space of potential superconductors. The BO loop iteratively selects candidate compounds to synthesize based on a surrogate model (Gaussian process) that predicts Tc and stability, balancing exploration and exploitation via an acquisition function (e.g., expected improvement, upper confidence bound).
+
+### 17.2 Surrogate Model and Acquisition Function
+- **Surrogate:** A Gaussian process (GP) regressor trained on the existing database of known superconductors and experimental results. The GP provides both a mean prediction and an uncertainty estimate for each candidate.
+- **Acquisition Function:** Expected Improvement (EI) is used to select candidates that maximize the probability of exceeding the current best Tc while accounting for uncertainty. This ensures that the algorithm explores regions of high uncertainty (novel compounds) and exploits known high-Tc regions.
+
+### 17.3 Performance Metrics for Active Learning
+- **Regret:** The difference between the best Tc found so far and the true global optimum. Monitored over iterations to assess convergence.
+- **Cumulative Regret:** Sum of regrets over all iterations; used to compare acquisition functions.
+- **Query Efficiency:** Number of experiments required to reach a target Tc (e.g., 300 K). Target < 100 experiments.
+- **Diversity of Selected Candidates:** Fraction of selected candidates that are chemically distinct (Tanimoto distance > 0.3). Ensures the algorithm does not repeatedly sample similar compounds.
+
+### 17.4 Screening Filter for Low-Pressure Stability
+To prioritize compounds that are synthesizable at accessible pressures, a screening filter is applied before Bayesian optimization:
+- **Criterion:** Only compounds predicted to be thermodynamically stable (or metastable with a decomposition energy < 50 meV/atom) at pressures ≤ 10 GPa are considered.
+- **Implementation:** DFT-based convex hull analysis (using the Materials Project or custom calculations) for each candidate. If the compound lies on or within 50 meV/atom of the convex hull at 10 GPa, it passes the filter.
+- **Impact:** This filter reduces the search space by approximately 70% (based on initial screening of 10,000 candidates), focusing resources on compounds that can be synthesized in multi-anvil presses or diamond anvil cells at moderate pressures.
+
+### 17.5 Integration with Existing Pipeline
+The active learning loop runs in parallel with the high-throughput screening pipeline (Section 16). After each batch of experiments, the GP surrogate is retrained, and the acquisition function re-ranks the candidate queue. The low-pressure stability filter is applied at the beginning of each iteration to ensure only feasible candidates are considered.
+
+This active learning approach accelerates the discovery of room-temperature superconductors by intelligently selecting the most informative experiments, reducing the number of required syntheses by an estimated factor of 5–10 compared to random screening.
