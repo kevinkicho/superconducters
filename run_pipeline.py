@@ -11669,3 +11669,8 @@ def integrate_arxiv_and_dft() -> None:
     except Exception as e:
         print(f"[Integrate] Error updating candidate file: {e}")
     print("[Integrate] Integration complete.")
+
+
+if __name__ == '__main__':
+    # Run the arxiv integration as part of the pipeline
+    integrate_arxiv_and_dft()

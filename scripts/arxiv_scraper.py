@@ -376,6 +376,14 @@ def extract_candidates_from_paper(query: str = DEFAULT_QUERY, max_results: int =
     except IOError as e:
         print(f"Error writing to candidates file: {e}", file=sys.stderr)
 
+    # Append to docs/online_research_summary.md
+    try:
+        with open(SUMMARY_FILE, "a", encoding="utf-8") as f:
+            f.write("\n".join(new_candidate_lines))
+        print(f"Appended {len(new_candidate_lines)} entries to {SUMMARY_FILE}")
+    except IOError as e:
+        print(f"Error writing to summary file: {e}", file=sys.stderr)
+
     # Trigger retraining of ML model
     try:
         import subprocess
