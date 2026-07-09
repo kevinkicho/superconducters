@@ -1,0 +1,31 @@
+# Runtime / agent session logs
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local env / secrets
+.env
+.env.*
+
+# Build / packaging
+dist/
+build/
+*.egg-info/

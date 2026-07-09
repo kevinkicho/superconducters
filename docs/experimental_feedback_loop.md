@@ -1,4 +1,4 @@
-# Experimental Feedback Loop
+﻿# Experimental Feedback Loop
 
 ## Overview
 This document describes the closed-loop feedback cycle between experimental validation and computational prediction for discovering and manufacturing room-temperature superconducting compounds. Experimental results are systematically ingested into a central database, triggering automatic retraining of machine learning (ML) models and updating candidate rankings. This data-driven cycle accelerates discovery by continuously refining predictions based on real-world outcomes.
@@ -39,8 +39,8 @@ Experimental data from synchrotron X-ray diffraction (XRD) and resistivity measu
 
 After each successful ingestion, the system checks whether the new data warrants updates to the candidate materials list and the roadmap:
 
-- **candidate_materials.md**: If the new data includes a Tc measurement for a candidate that was previously untested, or if the measured Tc deviates significantly from the predicted value, the candidate ranking is recalculated. The script `scripts/generate_candidates.py` is triggered to regenerate `docs/candidate_materials.md` with updated rankings and a changelog.
-- **roadmap.md**: If the new data indicates a breakthrough (e.g., Tc > 300 K) or a systematic failure (e.g., three consecutive candidates fail at Gate 3), the roadmap milestones are adjusted. The script `scripts/update_roadmap.py` is triggered to revise `docs/roadmap.md` with updated timelines and priorities.
+- **candidate_materials.md**: If the new data includes a Tc measurement for a candidate that was previously untested, or if the measured Tc deviates significantly from the predicted value, the candidate ranking is recalculated. The script `scripts/generate_candidates.py` is triggered to regenerate `candidate_materials.md` with updated rankings and a changelog.
+- **roadmap.md**: If the new data indicates a breakthrough (e.g., Tc > 300 K) or a systematic failure (e.g., three consecutive candidates fail at Gate 3), the roadmap milestones are adjusted. The script `scripts/update_roadmap.py` is triggered to revise `roadmap.md` with updated timelines and priorities.
 
 ### Workflow Diagram
 
@@ -248,11 +248,11 @@ Retraining is triggered by any of the following events:
 - **Trigger 4**: Weekly scheduled retraining.
 
 ### 4. Candidate Material Ranking Update
-After retraining, the script `scripts/generate_candidates.py` is executed to regenerate `docs/candidate_materials.md`. This script:
+After retraining, the script `scripts/generate_candidates.py` is executed to regenerate `candidate_materials.md`. This script:
 - Loads the updated model and the full candidate pool from `data/superconductor_database.json`.
 - Re‑predicts Tc for all untested candidates.
 - Re‑ranks candidates by predicted Tc, confidence, and feasibility score.
-- Outputs a new `docs/candidate_materials.md` with the updated rankings, including a changelog section noting which candidates were promoted/demoted and why.
+- Outputs a new `candidate_materials.md` with the updated rankings, including a changelog section noting which candidates were promoted/demoted and why.
 
 ### 5. Decision Gates for Re‑running Computational Screening
 In addition to the existing experimental gates (Gates 1–5), the following decision gates determine when to re‑run the full computational screening pipeline (e.g., DFT + phonon calculations for new candidate families):
@@ -280,7 +280,7 @@ For candidates flagged by the ML uncertainty module, DFT calculations are perfor
 
 ### 3. Prioritized Candidate List
 
-The updated predictions and confidence scores are compiled into a prioritized list (`docs/candidate_materials.md`). This list is sorted by a composite score that balances predicted Tc, confidence, and experimental feasibility. The top candidates are forwarded to the experimental synthesis team.
+The updated predictions and confidence scores are compiled into a prioritized list (`candidate_materials.md`). This list is sorted by a composite score that balances predicted Tc, confidence, and experimental feasibility. The top candidates are forwarded to the experimental synthesis team.
 
 ### 4. Experimental Synthesis and Characterization
 
@@ -314,7 +314,7 @@ loop:
 
 - `scripts/run_pipeline.py` orchestrates the entire feedback loop, calling the ML model, DFT calculator, and database update scripts.
 - `scripts/dft_calculator.py` performs the DFT validation step.
-- `docs/candidate_materials.md` contains the prioritized list.
+- `candidate_materials.md` contains the prioritized list.
 - `docs/synthesis_methods.md` details experimental protocols.
 
 This loop ensures that computational resources are focused on the most promising candidates while continuously learning from experimental outcomes.
@@ -327,7 +327,7 @@ Bayesian optimization (BO) provides a principled framework for selecting the nex
 
 The BO module (`scripts/bayesian_optimizer.py`) is called after each round of experimental characterization. It takes as input:
 - The current database of measured Tc and synthesis parameters.
-- The candidate pool from `docs/candidate_materials.md`.
+- The candidate pool from `candidate_materials.md`.
 - Uncertainty estimates from the ML model and DFT validation.
 
 The optimizer outputs a ranked list of the next experiments to perform, including suggested synthesis parameters (e.g., pressure, temperature, doping level). These recommendations are forwarded to the experimental team via the prioritized candidate list.
@@ -339,7 +339,7 @@ The optimizer outputs a ranked list of the next experiments to perform, includin
 3. **Compute acquisition function** for all candidates in the pool.
 4. **Select top-N candidates** with highest acquisition value.
 5. **Generate synthesis parameters** for each selected candidate (e.g., via parameter optimization within BO).
-6. **Append to prioritized list** in `docs/candidate_materials.md` with BO score and suggested parameters.
+6. **Append to prioritized list** in `candidate_materials.md` with BO score and suggested parameters.
 7. **Experimental team** executes the planned experiments.
 8. **Loop back** to step 1.
 
@@ -347,7 +347,7 @@ This automated planning reduces human bias and accelerates the discovery of opti
 
 ### Multi-Fidelity Bayesian Optimization
 
-The multi-fidelity Bayesian optimization (MFBO) module in `scripts/run_pipeline.py` treats ML predictions as low-fidelity and DFT calculations as high-fidelity. It uses a weighted acquisition function to select candidates for experimental synthesis, balancing exploitation of high-confidence predictions with exploration of uncertain regions. The MFBO module is called after the initial ML prediction and DFT validation steps, and its output feeds into the prioritized candidate list in `docs/candidate_materials.md`.
+The multi-fidelity Bayesian optimization (MFBO) module in `scripts/run_pipeline.py` treats ML predictions as low-fidelity and DFT calculations as high-fidelity. It uses a weighted acquisition function to select candidates for experimental synthesis, balancing exploitation of high-confidence predictions with exploration of uncertain regions. The MFBO module is called after the initial ML prediction and DFT validation steps, and its output feeds into the prioritized candidate list in `candidate_materials.md`.
 
 #### Workflow
 
@@ -361,7 +361,7 @@ The multi-fidelity Bayesian optimization (MFBO) module in `scripts/run_pipeline.
 
 - `scripts/run_pipeline.py` implements the MFBO module as `multi_fidelity_bayesian_optimization`.
 - `scripts/dft_calculator.py` provides high-fidelity DFT data.
-- `docs/candidate_materials.md` receives the MFBO-ranked candidates.
+- `candidate_materials.md` receives the MFBO-ranked candidates.
 - `scripts/bayesian_optimizer.py` implements the single-fidelity BO loop (legacy).
 
 ## Real-Time Experimental Data Analysis

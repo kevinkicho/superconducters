@@ -1,10 +1,10 @@
-# Comprehensive Final Report
+﻿# Comprehensive Final Report
 
 ## Executive Summary
 This report synthesizes all project outcomes: experimental validation of superconducting candidates, ML model performance, manufacturing scalability, technology readiness, and a roadmap to commercialization. Key data files and decisions are referenced throughout.
 
 ## 1. Experimental Validation Results
-- **Candidates tested**: See [candidate_materials.md](candidate_materials.md) for predicted vs. actual Tc, pressure, and validation status.
+- **Candidates tested**: See [candidate_materials.md](../candidate_materials.md) for predicted vs. actual Tc, pressure, and validation status.
 - **Cloud lab submissions**: Detailed in [experimental_feedback_loop.md](experimental_feedback_loop.md) (submission IDs, timestamps, retrieved results).
 - **Key findings**: Discrepancies between DFT/ML predictions and experimental outcomes are analyzed in candidate_materials.md (error bars, calibration curves).
 
@@ -37,7 +37,7 @@ This report synthesizes all project outcomes: experimental validation of superco
 - `data/superconductor_database.json`: All candidate materials and properties.
 - `data/model_performance_log.json`: ML metrics and calibration data.
 - `data/experimental_results.json`: Real experimental outcomes (if available).
-- `docs/candidate_materials.md`: Detailed comparison of predictions vs. experiments.
+- `candidate_materials.md`: Detailed comparison of predictions vs. experiments.
 - `docs/manufacturing_scalability.md`: Cost, yield, energy analysis.
 - `docs/experimental_feedback_loop.md`: Cloud lab submission and retrieval logs.
 - `docs/technology_transfer_plan.md`: Market analysis and commercialization roadmap.
@@ -82,7 +82,7 @@ The project successfully demonstrated an integrated pipeline for the discovery a
 - File patents and secure funding for scale-up (Q4 2026).
 
 ### References
-- [candidate_materials.md](candidate_materials.md) — detailed comparison of predictions vs. experiments.
+- [candidate_materials.md](../candidate_materials.md) — detailed comparison of predictions vs. experiments.
 - [manufacturing_scalability.md](manufacturing_scalability.md) — cost, yield, energy analysis.
 - [experimental_feedback_loop.md](experimental_feedback_loop.md) — cloud lab submission logs.
 - [technology_transfer_plan.md](technology_transfer_plan.md) — market analysis and commercialization roadmap.
