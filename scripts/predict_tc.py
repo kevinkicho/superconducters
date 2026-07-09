@@ -242,18 +242,7 @@ def predict_tc(formula, pressure=0):
             if tc < 0:
                 tc = 0.0
             return tc
-    raise ValueError(f"Material {formula} not found in database.")    """
-    Predict Tc using a linear regression model trained on external database.
-    Features: average valence electrons per atom, average Debye temperature.
-    """
-    features = extract_features(formula)
-    # Add bias term
-    x = [1.0] + features
-    tc = sum(c * xi for c, xi in zip(_coefficients, x))
-    # Clamp to non-negative
-    if tc < 0:
-        tc = 0.0
-    return tc
+    raise ValueError(f"Material {formula} not found in database.")
 
 def predict_tc_rf(formula: str) -> float:
     """
@@ -1615,6 +1604,20 @@ def train_model():
     model = RandomForestRegressor(n_estimators=100, random_state=42)
     model.fit(X, y)
     
+    # Cross-validation
+    from sklearn.model_selection import cross_val_score, KFold
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    cv_r2 = cross_val_score(model, X, y, cv=kf, scoring='r2')
+    cv_rmse = np.sqrt(-cross_val_score(model, X, y, cv=kf, scoring='neg_mean_squared_error'))
+    print(f"Cross-validation (k=5): R² = {cv_r2.mean():.3f} ± {cv_r2.std():.3f}, RMSE = {cv_rmse.mean():.3f} ± {cv_rmse.std():.3f} K")
+    
+    # Feature importance
+    importances = model.feature_importances_
+    feature_names = ['avg_valence', 'avg_debye', 'avg_mass', 'num_elements', 'total_atoms', 'dos_fermi', 'avg_phonon_freq']
+    print("Feature importances:")
+    for name, imp in zip(feature_names, importances):
+        print(f"  {name}: {imp:.4f}")
+    
     # Save model
     model_dir = os.path.join(os.path.dirname(__file__), '..', 'models')
     os.makedirs(model_dir, exist_ok=True)
@@ -1746,6 +1749,25 @@ def train_gp_model():
     return gp
 
 
+def composition_to_features(composition: str):
+    """Parse a composition string and return feature vector [avg_valence, avg_debye, avg_mass, num_elements, total_atoms]."""
+    elements = {}
+    pattern = r'([A-Z][a-z]*)(\d*\.?\d*)'
+    for match in re.finditer(pattern, composition):
+        elem = match.group(1)
+        count_str = match.group(2)
+        count = float(count_str) if count_str else 1.0
+        elements[elem] = elements.get(elem, 0) + count
+    total_atoms = sum(elements.values())
+    if total_atoms == 0:
+        return None
+    avg_valence = sum(VALENCE.get(e, 0) * c for e, c in elements.items()) / total_atoms
+    avg_debye = sum(DEBYE_TEMP.get(e, 100) * c for e, c in elements.items()) / total_atoms
+    avg_mass = sum(ATOMIC_MASS.get(e, 50) * c for e, c in elements.items()) / total_atoms
+    num_elements = len(elements)
+    return [avg_valence, avg_debye, avg_mass, num_elements, total_atoms]
+
+
 def benchmark():
     """Benchmark inference time, memory usage, and throughput."""
     import time
@@ -1833,15 +1855,14 @@ if __name__ == '__main__':
             print(f"Predicted Tc: {y_pred[0]:.2f} K")
             print(f"95% confidence interval: [{y_pred[0]-ci_95:.2f}, {y_pred[0]+ci_95:.2f}] K")
         else:
-            # Random forest does not provide uncertainty natively; use ensemble std
+            # Random forest: use ensemble std for confidence interval
             y_pred = model.predict(X)[0]
-            # Estimate std from tree predictions if possible
             try:
                 tree_preds = np.array([tree.predict(X)[0] for tree in model.estimators_])
                 y_std = np.std(tree_preds)
                 ci_95 = 1.96 * y_std
                 print(f"Predicted Tc: {y_pred:.2f} K")
-                print(f"95% confidence interval (from tree ensemble): [{y_pred-ci_95:.2f}, {y_pred+ci_95:.2f}] K")
+                print(f"95% confidence interval: [{y_pred-ci_95:.2f}, {y_pred+ci_95:.2f}] K")
             except:
                 print(f"Predicted Tc: {y_pred:.2f} K")
                 print("Confidence interval not available for Random Forest without tree predictions.")
