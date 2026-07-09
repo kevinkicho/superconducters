@@ -142,6 +142,25 @@
   - [https://phys.org/news/2025-04-high-pressure-electron-tunneling-spectroscopy.html](https://phys.org/news/2025-04-high-pressure-electron-tunneling-spectroscopy.html)
 
 
+#### 9.9 MIT Magic-Angle Graphene — Direct Spectroscopic Measurement of the Superconducting Gap
+- **Paper**: Park, Sun, Watanabe, Taniguchi, Jarillo-Herrero, "Simultaneous transport and tunneling spectroscopy of moiré graphene: Distinct observation of the superconducting gap and signatures of nodal superconductivity," *Science* (November 2025). DOI: 10.1126/science.adv8376.
+- **arXiv preprint**: arXiv:2503.16410 (submitted March 20, 2025).
+- **Technique**: First simultaneous tunneling spectroscopy + electrical transport measurements on magic-angle twisted trilayer graphene (MATTG), enabling unambiguous correlation of the tunneling signal with the zero-resistance superconducting state.
+- **Key findings**:
+  - Two coexisting V-shaped tunneling gaps: a low-energy superconducting gap that vanishes at Tc and at the critical magnetic field, plus a higher-energy pseudogap that persists above Tc.
+  - The V-shaped gap profile is fundamentally different from the flat U-shaped gap of conventional s-wave BCS superconductors, characteristic of a **nodal order parameter** (d-wave or p-wave pairing).
+  - Linear gap-filling behavior with temperature and magnetic field, consistent with unconventional superconductivity.
+  - Volovik effect observed — a hallmark of nodal superconductivity where quasiparticle excitations are generated around vortex cores.
+  - Tightly bound Cooper pairs ("almost like a molecule") compared to weakly bound pairs in conventional BCS superconductors.
+- **Proposed mechanism**: Electron pairing likely arises from strong electronic interactions rather than lattice vibrations (phonons), placing MATTG in the same family as cuprate high-temperature superconductors.
+- **Broader context**: This work follows the 2018 discovery of superconductivity in magic-angle twisted bilayer graphene (Cao et al., *Nature* 556, 43–50, 2018) and the 2021 discovery of superconductivity in twisted trilayer graphene (Park et al., *Nature* 590, 249–255, 2021). In 2026, Pablo Jarillo-Herrero was awarded the **2026 Kavli Prize in Nanoscience** for foundational work in twistronics.
+- **Significance for room-temperature superconductivity**: MATTG provides a highly tunable, clean platform to study the microscopic mechanism of unconventional superconductivity — the same class that enables high Tc in cuprates. Understanding the pairing mechanism in one unconventional superconductor may guide the design of room-temperature superconductors.
+- **Sources**:
+  - [https://www.science.org/doi/10.1126/science.adv8376](https://www.science.org/doi/10.1126/science.adv8376)
+  - [https://arxiv.org/abs/2503.16410](https://arxiv.org/abs/2503.16410)
+  - [https://news.mit.edu/2025/physicists-observe-evidence-unconventional-superconductivity-graphene-1106](https://news.mit.edu/2025/physicists-observe-evidence-unconventional-superconductivity-graphene-1106)
+  - [https://scitechdaily.com/mits-magic-angle-graphene-just-changed-superconductivity/](https://scitechdaily.com/mits-magic-angle-graphene-just-changed-superconductivity/)
+
 ### Implications for Project Discovery Strategy
 
 - **Focus on ternary hydrides and clathrate structures** predicted by crystal structure prediction (USPEX, CALYPSO) to achieve high Tc at lower pressures. Use high-throughput DFT screening to identify promising candidates.
