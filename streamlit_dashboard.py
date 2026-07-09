@@ -295,7 +295,7 @@ def main():
                 doping = st.slider("Doping Level (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
                 if st.button("Run What-If"):
                     parameters = {"temperature (K)": [temperature], "pressure (GPa)": [pressure], "doping level": [doping / 100.0]}
-                    result = what_if_analysis(parameters=parameters)
+                    result = what_if_analysis()
                     if result is not None:
                         if isinstance(result, pd.DataFrame):
                             st.dataframe(result, use_container_width=True)
@@ -527,11 +527,7 @@ def collaboration_hub_tab():
             st.write(f"{i+1}. Rating: {resp['rating']}, Category: {resp['category']}, Feedback: {resp['text']}")
     
 
-    elif tab == "System Health":
-        system_health_tab()
-    elif tab == "Data Export":
-        st.subheader("Data Export")
-        data_export_tab()
+
 
 
 
@@ -1174,4 +1170,5 @@ def display_candidate_materials():
             except Exception as e:
                 st.error(f"Pipeline update failed: {e}")
 
-display_candidate_materials()
+if __name__ == "__main__":
+    display_candidate_materials()
