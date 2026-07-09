@@ -3,12 +3,12 @@ from unittest.mock import patch
 from scripts.api_client import fetch_materials_project, fetch_icsd, fetch_arxiv
 
 def test_fetch_materials_project_returns_dict():
-    result = fetch_materials_project("H3S")
+    result = fetch_materials_project('mock_key', 'H3S')
     assert isinstance(result, dict)
     assert "data" in result
 
 def test_fetch_icsd_returns_list():
-    result = fetch_icsd("LaH10")
+    result = fetch_icsd('mock_key', 'LaH10')
     assert isinstance(result, list)
 
 def test_fetch_arxiv_returns_papers():
@@ -17,11 +17,11 @@ def test_fetch_arxiv_returns_papers():
     assert len(result) > 0
 
 def test_fetch_materials_project_handles_empty():
-    result = fetch_materials_project("")
+    result = fetch_materials_project('mock_key', '')
     assert result == {"data": []}
 
 def test_fetch_icsd_handles_invalid():
-    result = fetch_icsd("InvalidFormula")
+    result = fetch_icsd('mock_key', 'InvalidFormula')
     assert result == []
 
 
@@ -29,7 +29,7 @@ def test_fetch_materials_project_network_error():
     """Test fetch_materials_project raises exception on network error."""
     with patch('scripts.api_client.requests.get', side_effect=Exception("Network error")):
         with pytest.raises(Exception):
-            fetch_materials_project("H3S")
+            fetch_materials_project('mock_key', 'H3S')
 
 
 def test_fetch_arxiv_handles_empty():
@@ -42,7 +42,7 @@ def test_fetch_icsd_network_error():
     """Test fetch_icsd raises exception on network error."""
     with patch('scripts.api_client.requests.get', side_effect=Exception("Network error")):
         with pytest.raises(Exception):
-            fetch_icsd("LaH10")
+            fetch_icsd('mock_key', 'LaH10')
 
 
 def test_fetch_arxiv_network_error():
@@ -54,7 +54,7 @@ def test_fetch_arxiv_network_error():
 
 def test_fetch_materials_project_handles_invalid_formula():
     """Test fetch_materials_project returns empty data for invalid formula."""
-    result = fetch_materials_project("InvalidFormula")
+    result = fetch_materials_project('mock_key', 'InvalidFormula')
     assert result == {"data": []}
 
 
@@ -66,5 +66,5 @@ def test_fetch_arxiv_handles_invalid_query():
 
 def test_fetch_icsd_handles_empty():
     """Test fetch_icsd returns empty list for empty formula."""
-    result = fetch_icsd("")
+    result = fetch_icsd('mock_key', '')
     assert result == []
