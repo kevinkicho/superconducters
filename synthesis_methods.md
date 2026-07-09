@@ -497,3 +497,86 @@ Based on recent theoretical and experimental advances, the most promising room-t
 - P. Kong et al., Nat. Commun. 12, 5075 (2021).
 - N. Dasenbrock-Gammon et al., Nature 615, 244–250 (2023).
 - J.A. Flores-Livas et al., Phys. Rep. 856, 1–78 (2020).
+
+
+## 7. Diamond Anvil Cell Synthesis of LaSc₂H₂₄ (Ternary La-Sc-H System)
+
+LaSc₂H₂₄ is a ternary superhydride that exhibits room-temperature superconductivity (Tₑ = 271–298 K) at pressures of 195–266 GPa, as first reported by Song et al. (arXiv:2510.01273, 2025). The compound crystallizes in a hexagonal clathrate structure (space group P6/mmm) with La@H₃₀ and Sc@H₂₄ cages. The following protocol is adapted from the original synthesis.
+
+### Procedure
+1. **Precursor preparation**: Prepare a La–Sc alloy with a 1:2 molar ratio (LaSc₂) by arc-melting or co-sputtering high-purity La (99.9%) and Sc (99.9%) under argon atmosphere. Verify composition by energy-dispersive X-ray spectroscopy (EDS); target 33–36 at% La and 64–66 at% Sc. Crush the alloy into a fine powder or thin foil in an argon-filled glovebox (O₂, H₂O <0.01 ppm).
+2. **DAC loading**: Place the LaSc₂ precursor in the sample chamber of a diamond anvil cell (culet size 30 µm). Use a rhenium gasket with an epoxy–Al₂O₃ insulating layer. Sandwich the precursor between layers of ammonia borane (NH₃BH₃, ≥99% purity) which serves as the solid hydrogen source. Add Pt electrodes for four-probe electrical transport measurements. Include a ruby chip for pressure calibration.
+3. **Pressurization**: Increase pressure to 250–260 GPa at room temperature. Monitor pressure via ruby fluorescence (R1 line shift). The target phase forms above ∼195 GPa; optimal synthesis occurs at 250–266 GPa.
+4. **Pulsed laser heating**: Use a double-sided YAG laser (1064 nm, pulsed or continuous-wave) to heat the sample to 1500–2000 K. Apply laser pulses of 1–5 seconds duration. The laser spot should cover the entire sample chamber. Double-sided heating ensures thermal uniformity.
+5. **Quenching**: Turn off the laser; the sample cools rapidly (≈10⁶ K/s) while maintaining pressure.
+6. **Characterization**:
+   - **Structural**: Perform synchrotron X-ray diffraction (XRD) to identify the hexagonal P6/mmm phase. Lattice parameters at 254 GPa: a = 4.86(4) Å, c = 3.35(6) Å. Rietveld refinement confirms the LaSc₂H₂₄ stoichiometry.
+   - **Electrical transport**: Measure four-probe resistance as a function of temperature. Zero resistance at Tₑ = 271–298 K confirms superconductivity.
+   - **Magnetic**: Measure Tₑ suppression under applied magnetic fields to verify the superconducting origin (upper critical field Hₑ₂₀₀₀).
+7. **Reproducibility**: The synthesis has been reproduced across thirteen independent experimental runs, confirming robustness.
+
+### Equipment Requirements
+- Diamond anvil cell (Boehler–Almax type or symmetric DAC) with 30 µm culets
+- Double-sided YAG laser heating system (1064 nm) with beam shaping optics
+- Ruby fluorescence system for pressure measurement
+- Synchrotron X-ray source for in-situ XRD
+- Cryostat and four-probe electrical transport measurement setup
+- SQUID magnetometer for magnetic susceptibility
+- Arc-melter or sputter coater for LaSc₂ alloy preparation
+- Argon-filled glovebox (O₂, H₂O <0.01 ppm)
+
+### Safety Considerations
+- High-pressure DAC work requires extensive training. Use protective shielding.
+- Laser heating: Class 4 laser requires interlocks, beam enclosures, and laser-safety goggles.
+- Ammonia borane may release ammonia upon decomposition; handle in fume hood.
+- Diamond anvils are brittle; handle with care to avoid shattering.
+- High-pressure experiments require institutional approval and trained personnel.
+
+### References
+- Y. Song et al., "Room-Temperature Superconductivity at 298 K in Ternary La-Sc-H System at High-pressure Conditions," arXiv:2510.01273 (2025).
+- H. Wang et al., follow-up studies on LaSc₂H₂₄ (2026).
+
+
+## 8. Pressure-Quench Protocol (PQP)
+
+The pressure-quench protocol (PQP) is a method for retaining metastable high-pressure superconducting phases at ambient pressure. Developed by Chu, Deng et al. (University of Houston / TcSUH), PQP was first demonstrated on HgBa₂Ca₂Cu₃O₈₊δ (Hg-1223), achieving a record ambient-pressure Tₑ of 151 K (PNAS, 2026). The technique exploits kinetic barriers that protect metastable phases from reverting to the thermodynamically stable ground state upon pressure release.
+
+### Procedure
+1. **Target phase identification**: Identify the high-pressure superconducting phase of interest using a diamond anvil cell (DAC). For Hg-1223, the optimal pressure range is 10–30 GPa, where Tₑ is enhanced from 133 K (ambient) to 164 K.
+2. **Low-temperature quenching**: While maintaining the target pressure, cool the DAC to cryogenic temperature (4.2 K, liquid helium). This step “locks in” the high-pressure phase by suppressing thermally activated relaxation.
+3. **Rapid pressure release**: At 4.2 K, rapidly decompress the DAC to ambient pressure (complete pressure release). The rapid quench prevents the system from crossing kinetic barriers back to the low-Tₑ phase.
+4. **Recovery and measurement**: Extract the sample from the DAC at cryogenic temperatures. Measure the superconducting transition temperature at ambient pressure via four-probe electrical transport or magnetic susceptibility (SQUID). For Hg-1223, Tₑ = 151 K is observed at ambient pressure.
+5. **Structural verification**: Perform synchrotron X-ray diffraction at ambient pressure to confirm that the crystal structure of the pressure-quenched phase matches the high-pressure parent phase. The quenched phase retains its original structure, possibly with quenched-in defects that help stabilize the metastable state.
+6. **Stability assessment**: Monitor Tₑ over time. The Hg-1223 quenched phase remains stable for at least 3 days when stored at 77 K. Tₑ degrades upon heating above 200 K, indicating the metastable nature of the phase.
+
+### Key Parameters
+- **Quench temperature**: 4.2 K (liquid He) is critical to freeze atomic motion.
+- **Decompression rate**: Rapid (seconds to minutes) to outrun phase transformation kinetics.
+- **Sample size**: 50–80 µm (DAC scale).
+- **Ambient-pressure Tₑ achieved**: 151 K in Hg-1223 (previous record: 133 K).
+
+### Applicability to Hydride Superconductors
+PQP is directly relevant to room-temperature hydride superconductors (e.g., LaH₁₀, YH₉, C-S-H, LaSc₂H₂₄) that currently require megabar pressures. Applying PQP to these systems could enable ambient-pressure retention of their high-Tₑ states, provided suitable kinetic barriers exist. Key challenges include:
+- Hydrides often decompose upon decompression (hydrogen loss).
+- The large volume collapse upon pressure release may destroy the clathrate structure.
+- Encapsulation strategies (e.g., epoxy embedding, diamond anvil retention) may help preserve the phase.
+
+### Equipment Requirements
+- Diamond anvil cell with cryogenic compatibility
+- Liquid helium cryostat or closed-cycle cryocooler (base temperature <10 K)
+- Pressure control system capable of rapid decompression at low temperature
+- Four-probe electrical transport measurement setup
+- Synchrotron X-ray source for ex-situ XRD at ambient pressure
+- SQUID magnetometer for magnetic characterization
+
+### Safety Considerations
+- Cryogenic safety: Use cryogenic gloves, face shield, and proper ventilation for liquid He.
+- High-pressure DAC handling at cryogenic temperatures requires specialized training.
+- Rapid decompression may cause gasket failure or diamond damage; use appropriate shielding.
+- Electrical leads are fragile during quenching; careful design of electrode geometry is essential.
+
+### References
+- L. Deng, P.C.W. Chu et al., "Ambient-pressure 151-K superconductivity in HgBa₂Ca₂Cu₃O₈₊δ via pressure-quench protocol," Proc. Natl. Acad. Sci. USA (2026). DOI: 10.1073/pnas.2536178123
+- P.C.W. Chu and L. Deng, companion perspective on pressure-quench methods, PNAS (2026).
+- Physics World, "Pressure quench increases superconducting transition temperature," March 2026.
+- University of Houston News, March 10, 2026.
