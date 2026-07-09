@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "runId": "d21cf8b3-3f41-4241-910e-29a2bfe52214",
+  "updatedAt": 1783635656131,
+  "lastCycle": 1,
+  "observations": [
+    {
+      "kind": "commit",
+      "text": "Add dedicated 2025–2026 breakthrough sections to root-level proposed_chemistry_physics.md: LaSc₂H₂₄ (first reproducible RT superconductor, Tc 271–298 K at ~260 GPa, hexagonal clathrate, Sc-induced gap unification), Zentropy theory (first-principles Tc prediction bridging BCS and DFT, validated on 18 elements + YBa₂Cu₃O₇), pressure-quench protocol (PQP) for Hg-1223 (ambient-pressure Tc record 151 K",
+      "cycle": 1,
+      "files": [
+        "proposed_chemistry_physics.md"
+      ],
+      "at": 1783635446791
+    },
+    {
+      "kind": "fail",
+      "text": "Deduplicate data/superconductor_database.json: YH6 appears 6 times with conflicting Tc values (200 K, 220 K, 224 K, 227 K, etc.), LaH10 appears 2+ times, C-S-H  — all retries exhausted (last: prompt wall-clock exceeded 120000ms); no failover model in chain",
+      "cycle": 1,
+      "files": [
+        "data/superconductor_database.json"
+      ],
+      "at": 1783635603524
+    },
+    {
+      "kind": "commit",
+      "text": "Update docs/proposed_chemistry_physics.md stub cross-reference table to accurately list all section headings present in the root-level proposed_chemistry_physics.md after the breakthrough sections are added; remove any claims about sections that do not exist (currently claims 7 breakthroughs are 'documented in full' in the root file, which is false)",
+      "cycle": 1,
+      "files": [
+        "docs/proposed_chemistry_physics.md"
+      ],
+      "at": 1783635641768
+    }
+  ]
+}

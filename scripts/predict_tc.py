@@ -381,13 +381,163 @@ def load_data():
         return json.load(f)
 
 
+def causal_discovery(candidates: List[str] = None, alpha: float = 0.05) -> dict:
+    """
+    Fujitsu/Tohoku-inspired causal discovery for superconducting materials.
+
+    Implements a NOTEARS-based causal structure learning algorithm to:
+    1. Build a causal graph from feature data (avg_valence, avg_debye, avg_mass,
+       num_elements, total_atoms) using continuous optimization for DAG learning.
+    2. Compute Average Causal Effect (ACE) of each feature on Tc via the learned
+       path coefficients.
+    3. Return causal scores that weight features by their causal strength.
+
+    Inspired by the Fujitsu Kozuchi platform's discovery intelligence technique
+    (Fujita et al., Scientific Reports 2025, DOI: 10.1038/s41598-025-29687-8)
+    which compresses causal graphs by fitting model equations and extracting
+    parameters from measurement data, enabling efficient causal discovery.
+
+    Args:
+        candidates: List of candidate formulas. If None, uses TRAINING_DATA.
+        alpha: Significance level (reserved for future PC-algorithm variant).
+
+    Returns:
+        dict with keys:
+            - 'causal_graph': adjacency matrix of the learned DAG
+            - 'ace_scores': dict mapping feature names to ACE values
+            - 'causal_weights': normalized causal weights for each feature
+            - 'candidate_scores': list of dicts with formula, predicted_tc, causal_score
+    """
+    import numpy as np
+    from scipy.optimize import minimize
+
+    feature_names = ['avg_valence', 'avg_debye', 'avg_mass', 'num_elements', 'total_atoms']
+    n_features = len(feature_names)
+
+    if candidates is None:
+        formulas = [f for f, _ in TRAINING_DATA]
+    else:
+        formulas = candidates
+
+    X_list = []
+    y_list = []
+    valid_formulas = []
+    for formula in formulas:
+        try:
+            elements = parse_formula(formula)
+            avg_val = average_valence(elements)
+            avg_deb = average_debye(elements)
+            avg_mass = average_atomic_mass(elements)
+            num_elem = len(elements)
+            total_at = sum(elements.values())
+            X_list.append([avg_val, avg_deb, avg_mass, num_elem, total_at])
+            tc_val = None
+            for f, tc in TRAINING_DATA:
+                if f == formula:
+                    tc_val = tc
+                    break
+            if tc_val is None:
+                tc_val = float(_rf_model.predict([X_list[-1]])[0])
+            y_list.append(tc_val)
+            valid_formulas.append(formula)
+        except Exception:
+            continue
+
+    if len(X_list) < n_features + 2:
+        raise ValueError(f"Not enough data for causal discovery (need >= {n_features + 2} samples, got {len(X_list)})")
+
+    X = np.array(X_list)
+    y = np.array(y_list)
+
+    X_mean = X.mean(axis=0)
+    X_std = X.std(axis=0) + 1e-10
+    Xs = (X - X_mean) / X_std
+    ys = (y - y.mean()) / (y.std() + 1e-10)
+
+    all_data = np.column_stack([Xs, ys])
+    d = n_features + 1
+
+    lambda_reg = 0.1
+
+    def dag_constraint(W_flat):
+        W = W_flat.reshape(d, d)
+        W_sq = W * W
+        eigvals = np.linalg.eigvalsh(W_sq)
+        h = np.sum(np.exp(eigvals)) - d
+        return h
+
+    def objective(W_flat):
+        W = W_flat.reshape(d, d)
+        residual = all_data - all_data @ W
+        loss = 0.5 * np.sum(residual ** 2) / all_data.shape[0]
+        penalty = lambda_reg * np.sum(np.abs(W))
+        h = dag_constraint(W_flat)
+        rho = 1.0
+        mu = 0.0
+        return loss + penalty + 0.5 * rho * h**2 + mu * h
+
+    np.random.seed(42)
+    W0 = np.random.randn(d, d) * 0.01
+    np.fill_diagonal(W0, 0)
+
+    result = minimize(objective, W0.flatten(), method='L-BFGS-B', options={'maxiter': 500, 'ftol': 1e-8})
+    W_opt = result.x.reshape(d, d)
+
+    threshold = 0.1
+    W_opt[np.abs(W_opt) < threshold] = 0.0
+
+    causal_edges = W_opt[:-1, -1]
+    ace_values = np.abs(causal_edges)
+
+    ace_sum = np.sum(ace_values) + 1e-10
+    causal_weights = ace_values / ace_sum
+
+    candidate_scores = []
+    for i, formula in enumerate(valid_formulas):
+        feats = X_list[i]
+        causal_score_val = float(np.sum(causal_weights * feats))
+        tc_pred = y_list[i]
+        candidate_scores.append({
+            'formula': formula,
+            'predicted_tc': round(tc_pred, 2),
+            'causal_score': round(causal_score_val, 4),
+            'ace_avg_valence': round(float(ace_values[0]), 4),
+            'ace_avg_debye': round(float(ace_values[1]), 4),
+            'ace_avg_mass': round(float(ace_values[2]), 4),
+            'ace_num_elements': round(float(ace_values[3]), 4),
+            'ace_total_atoms': round(float(ace_values[4]), 4),
+        })
+
+    for cs in candidate_scores:
+        cs['combined_score'] = round(cs['predicted_tc'] * (1.0 + cs['causal_score']), 2)
+    candidate_scores.sort(key=lambda x: x['combined_score'], reverse=True)
+
+    export_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'causal_scores.json')
+    export_data = {
+        'causal_graph': W_opt.tolist(),
+        'feature_names': feature_names + ['Tc'],
+        'ace_scores': {name: float(ace_values[i]) for i, name in enumerate(feature_names)},
+        'causal_weights': {name: float(causal_weights[i]) for i, name in enumerate(feature_names)},
+        'candidate_scores': candidate_scores,
+        'method': 'NOTEARS (Fujitsu/Tohoku-inspired causal discovery); ref: Zheng et al. (2018) "DAGs with NO TEARS", Fujitsu Kozuchi platform (2025)',
+        'reference': 'Fujita et al. (2025) Scientific Reports, DOI: 10.1038/s41598-025-29687-8',
+    }
+    os.makedirs(os.path.dirname(export_path), exist_ok=True)
+    with open(export_path, 'w') as f:
+        json.dump(export_data, f, indent=2)
+    print(f"Causal scores exported to {export_path}")
+
+    return export_data
 
 
-def screen_candidates(candidates: List[str], model_path: str = None) -> List[Dict]:
+def screen_candidates(candidates: List[str], model_path: str = None, use_causal: bool = True) -> List[Dict]:
     """
     Given a list of candidate formulas (e.g., ['YBa2Cu3O7', 'MgB2']),
     compute features and use the trained RandomForest model to predict Tc.
-    Returns a list of dicts sorted by predicted Tc descending.
+    If use_causal is True, also computes causal scores using the Fujitsu/Tohoku
+    causal discovery methodology (NOTEARS) and ranks by combined score
+    (predicted_tc * (1 + causal_score)).
+    Returns a list of dicts sorted by combined score descending.
     """
     import numpy as np
     if model_path is None:
@@ -408,7 +558,28 @@ def screen_candidates(candidates: List[str], model_path: str = None) -> List[Dic
             results.append({'formula': formula, 'predicted_tc': round(tc_pred, 2)})
         except Exception as e:
             results.append({'formula': formula, 'error': str(e)})
-    results.sort(key=lambda x: x.get('predicted_tc', -1), reverse=True)
+
+    if use_causal and len(results) > 0:
+        try:
+            causal_result = causal_discovery(candidates)
+            causal_map = {cs['formula']: cs for cs in causal_result['candidate_scores']}
+            for r in results:
+                formula = r['formula']
+                if formula in causal_map:
+                    cs = causal_map[formula]
+                    r['causal_score'] = cs['causal_score']
+                    r['ace_scores'] = {k: cs[k] for k in cs if k.startswith('ace_')}
+                    r['combined_score'] = round(r['predicted_tc'] * (1.0 + cs['causal_score']), 2)
+                else:
+                    r['causal_score'] = 0.0
+                    r['combined_score'] = r['predicted_tc']
+            results.sort(key=lambda x: x.get('combined_score', x.get('predicted_tc', -1)), reverse=True)
+        except Exception as e:
+            print(f"Warning: Causal discovery failed ({e}), falling back to Tc-only ranking.")
+            results.sort(key=lambda x: x.get('predicted_tc', -1), reverse=True)
+    else:
+        results.sort(key=lambda x: x.get('predicted_tc', -1), reverse=True)
+
     return results
 
 
@@ -481,12 +652,15 @@ def predict_with_uncertainty(formula: str, gp_model_path: str = None) -> dict:
         return {'formula': formula, 'error': str(e)}
 
 
-def active_learning_loop(candidates: list, alpha: float = 1.0, top_n: int = 5, retrain: bool = False) -> list:
+def active_learning_loop(candidates: list, alpha: float = 1.0, top_n: int = 5, retrain: bool = False, causal_weight: float = 0.3) -> list:
     """
     Active learning loop that selects high-uncertainty, high-Tc candidates.
     Uses the GP model to predict Tc and uncertainty. Scores candidates as
-    predicted_tc + alpha * uncertainty, then returns the top_n candidates.
-    If retrain is True, the model is retrained on the full database before prediction.
+    predicted_tc + alpha * uncertainty + causal_weight * causal_score * 100.
+    The causal_score is derived from the Fujitsu/Tohoku causal discovery
+    methodology (NOTEARS), weighting features by their Average Causal Effect
+    on Tc. If retrain is True, the model is retrained on the full database
+    before prediction.
     """
     if retrain:
         train_gp_model()
@@ -498,6 +672,23 @@ def active_learning_loop(candidates: list, alpha: float = 1.0, top_n: int = 5, r
         score = res['predicted_tc'] + alpha * res['uncertainty']
         res['score'] = round(score, 2)
         results.append(res)
+
+    if causal_weight > 0 and len(results) > 0:
+        try:
+            causal_result = causal_discovery(candidates)
+            causal_map = {cs['formula']: cs for cs in causal_result['candidate_scores']}
+            for r in results:
+                formula = r['formula']
+                if formula in causal_map:
+                    cs = causal_map[formula]
+                    r['causal_score'] = cs['causal_score']
+                    r['ace_scores'] = {k: cs[k] for k in cs if k.startswith('ace_')}
+                    r['score'] = round(r['score'] + causal_weight * cs['causal_score'] * 100, 2)
+                else:
+                    r['causal_score'] = 0.0
+        except Exception as e:
+            print(f"Warning: Causal scoring failed in active learning loop ({e})")
+
     results.sort(key=lambda x: x['score'], reverse=True)
     return results[:top_n]
 
