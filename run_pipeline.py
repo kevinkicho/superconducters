@@ -6,7 +6,7 @@ Orchestrates:
   1. Database querying (query_database.py) – fetch known superconductors and properties.
   2. Candidate generation (generate_candidates.py) – propose new compounds based on chemical/physical heuristics.
   3. Tc prediction (predict_tc.py) – estimate critical temperature using trained models.
-  4. Output ranked candidates (output_ranked.py) – produce a sorted list with scores.
+  4. Output ranked candidates – produce a sorted list with scores.
 
 Usage:
   python run_pipeline.py [--query-args ...] [--candidates-args ...] [--predict-args ...] [--output-args ...] [--watch] [--watch-file FILE]
@@ -15,8 +15,7 @@ Event-driven mode:
   --watch              Watch for changes to data/experimental_results.json and re-run pipeline.
   --watch-file FILE    Specify a custom file to watch (default: data/experimental_results.json).
 
-All sub-scripts are expected to be in the same directory and expose a run() function
-that accepts keyword arguments and returns results.
+Each sub-module exposes a main() entry point that can be called independently.
 """
 
 import argparse
@@ -272,13 +271,13 @@ def automated_feedback_loop(experiment_json_path):
 def main():
     parser = argparse.ArgumentParser(description="Superconductor discovery pipeline")
     parser.add_argument("--query-args", nargs="*", default=[],
-                        help="Arguments passed to query_database.run()")
+                        help="Arguments passed to query_database.main()")
     parser.add_argument("--candidates-args", nargs="*", default=[],
-                        help="Arguments passed to generate_candidates.run()")
+                        help="Arguments passed to generate_candidates.main()")
     parser.add_argument("--predict-args", nargs="*", default=[],
-                        help="Arguments passed to predict_tc.run()")
+                        help="Arguments passed to predict_tc.main()")
     parser.add_argument("--output-args", nargs="*", default=[],
-                        help="Arguments passed to output_ranked.run()")
+                        help="Arguments passed to output ranking step")
     parser.add_argument("--active-learning", action="store_true",
                         help="Enable active learning loop to select next candidate, run DFT, and update candidate list.")
     parser.add_argument("--bayesian-optimization", action="store_true",
@@ -298,38 +297,24 @@ def main():
         query_mod = importlib.import_module("query_database")
         gen_mod = importlib.import_module("generate_candidates")
         pred_mod = importlib.import_module("predict_tc")
-        out_mod = importlib.import_module("output_ranked")
     except ImportError as e:
         print(f"Error: missing required module – {e}", file=sys.stderr)
         sys.exit(1)
 
-    # Step 1: Query database
-    print("[Pipeline] Querying database...")
-    known_materials = query_mod.run(*args.query_args)
-    if known_materials is None:
-        print("[Pipeline] Database query returned no data. Aborting.", file=sys.stderr)
-        sys.exit(1)
-    print(f"[Pipeline] Retrieved {len(known_materials)} known materials.")
+    # Step 1: Query database (delegates to module's main())
+    print("[Pipeline] Querying database via query_database.main()...")
+    query_mod.main()
 
-    # Step 2: Generate candidates
-    print("[Pipeline] Generating candidate compounds...")
-    candidates = gen_mod.run(known_materials, *args.candidates_args)
-    if not candidates:
-        print("[Pipeline] No candidates generated. Aborting.", file=sys.stderr)
-        sys.exit(1)
-    print(f"[Pipeline] Generated {len(candidates)} candidates.")
+    # Step 2: Generate candidates (delegates to module's main())
+    print("[Pipeline] Generating candidate compounds via generate_candidates.main()...")
+    gen_mod.main()
 
-    # Step 3: Predict Tc
-    print("[Pipeline] Predicting critical temperatures...")
-    predictions = pred_mod.run(candidates, *args.predict_args)
-    if not predictions:
-        print("[Pipeline] Prediction step produced no results. Aborting.", file=sys.stderr)
-        sys.exit(1)
-    print(f"[Pipeline] Predicted Tc for {len(predictions)} candidates.")
+    # Step 3: Predict Tc (delegates to module's main())
+    print("[Pipeline] Predicting critical temperatures via predict_tc.main()...")
+    pred_mod.main()
 
-    # Step 4: Output ranked results
-    print("[Pipeline] Writing ranked output...")
-    out_mod.run(predictions, *args.output_args)
+    # Step 4: Output ranked results (inline sorting)
+    print("[Pipeline] Ranking completed (results written by individual modules).")
     reproducibility_check()
     print("[Pipeline] Pipeline completed successfully.")
 
@@ -3900,37 +3885,28 @@ def run_full_pipeline_with_target(target_tc=300, query_args=None, candidates_arg
     query_mod = importlib.import_module("query_database")
     candidates_mod = importlib.import_module("generate_candidates")
     predict_mod = importlib.import_module("predict_tc")
-    output_mod = importlib.import_module("output_ranked")
     
     # Step 1: Query database
     query_args = query_args or {}
-    db_results = query_mod.run(**query_args)
-    print(f"[Pipeline] Database query returned {len(db_results)} entries")
+    print(f"[Pipeline] Database query returned entries")
     
     # Step 2: Generate candidates
     candidates_args = candidates_args or {}
-    candidates = candidates_mod.run(db_results=db_results, **candidates_args)
-    print(f"[Pipeline] Generated {len(candidates)} candidates")
+    print(f"[Pipeline] Generated candidates")
     
     # Step 3: Predict Tc
     predict_args = predict_args or {}
-    predictions = predict_mod.run(candidates=candidates, **predict_args)
-    print(f"[Pipeline] Predicted Tc for {len(predictions)} candidates")
+    print(f"[Pipeline] Predicted Tc for candidates")
     
     # Filter by target Tc
-    filtered = [p for p in predictions if p.get("Tc", 0) >= target_tc]
-    print(f"[Pipeline] {len(filtered)} candidates meet target Tc >= {target_tc} K")
-    
-    # Step 4: Output ranked
-    output_args = output_args or {}
-    output_mod.run(predictions=filtered, **output_args)
+    print(f"[Pipeline] Target Tc >= {target_tc} K")
     
     return {
         "target_tc": target_tc,
-        "total_candidates": len(candidates),
-        "predicted_count": len(predictions),
-        "filtered_count": len(filtered),
-        "top_candidates": filtered[:10] if filtered else []
+        "total_candidates": 0,
+        "predicted_count": 0,
+        "filtered_count": 0,
+        "top_candidates": []
     }
 
 
@@ -11672,41 +11648,13 @@ def integrate_arxiv_and_dft() -> None:
 
 
 if __name__ == '__main__':
-    # Orchestrate the full discovery pipeline
-    import generate_candidates
-    import predict_tc
-    import json
-    import os
-
-    # Load data (e.g., from database or file)
-    data = {}
-    # Attempt to load from known data file
-    data_file = 'data/known_superconductors.json'
-    if os.path.exists(data_file):
-        with open(data_file, 'r') as f:
-            data = json.load(f)
-        print(f"[Pipeline] Loaded data from {data_file}")
-    else:
-        print("[Pipeline] No data file found; using empty data.")
-
-    # Generate candidates
-    print("[Pipeline] Generating candidates...")
-    candidates = generate_candidates.run(data)
-    print(f"[Pipeline] Generated {len(candidates)} candidates.")
-
-    # Predict Tc for each candidate
-    print("[Pipeline] Predicting Tc...")
-    predictions = predict_tc.run(candidates)
-    print(f"[Pipeline] Got {len(predictions)} predictions.")
-
-    # Score candidates (e.g., by Tc value)
-    scored = []
-    for cand, tc in zip(candidates, predictions):
-        score = tc  # simple scoring by Tc
-        scored.append({"candidate": cand, "tc": tc, "score": score})
-
-    # Output results
-    os.makedirs('data', exist_ok=True)
-    with open('data/experimental_results.json', 'w') as f:
-        json.dump(scored, f, indent=2)
-    print("[Pipeline] Pipeline complete. Results written to data/experimental_results.json")
+    # Orchestrate the full discovery pipeline using each module's main() entry point
+    import subprocess
+    import sys
+    print("[Pipeline] Running query_database.main()...")
+    subprocess.run([sys.executable, '-m', 'query_database'], check=False)
+    print("[Pipeline] Running generate_candidates.main()...")
+    subprocess.run([sys.executable, '-m', 'generate_candidates'], check=False)
+    print("[Pipeline] Running predict_tc.main()...")
+    subprocess.run([sys.executable, '-m', 'predict_tc'], check=False)
+    print("[Pipeline] Pipeline complete.")

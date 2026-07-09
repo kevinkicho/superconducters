@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "9d551b13-7832-4910-a617-0b853fa9f072",
+  "writtenAt": 1783569919802,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Consolidate proposed_chemistry_physics.md: remove duplicate sections (## 2, ## 3, ## 4, ## 5 each appear 2-4 times), merge content into a single coherent structure, and add 2024-2025 breakthroughs: LaSc₂H₂₄ ternary clathrate (Tc ~298 K at 195-266 GPa, P6/mmm, dual H₂₄/H₃₀ cages, arXiv:2510.01273), deep-learning discovery of 144 ternary hydride superconductors (Wang et al., arXiv:2502.16558), Penn State zentropy theory (Liu & Shang, 2025), Max Planck direct superconducting gap measurement in H₃S (60 meV gap, 2025), pressure-quenching record of 151K at ambient pressure (University of Houston, 2026), ambient-pressure nickelates stabilized by epitaxial strain (SLAC/Stanford, Nature 2024), and Li-Na-H clathrate predictions (Advanced Functional Materials 2025). Add a consolidated 'Chemistry and Physics Framework' section synthesizing all mechanisms into an actionable strategy. Mark LaSc₂H₂₄ claim as requiring independent replication.",
+      "expectedFiles": [
+        "proposed_chemistry_physics.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update candidate_materials.md: add LaSc₂H₂₄ (Tc ~298-316K, P6/mmm, 195-266 GPa) with synthesis conditions and references; add low-pressure ternary hydride families (LiNaH₁₂, KMgH₁₀, CaSrH₁₄ with Tc > 300 K at < 10 GPa, ScAlH₆ with Tc ~365K at 25 GPa); add the 144 newly predicted ternary hydride superconductors from deep-learning screening; update the multi-criteria decision matrix to include these new candidates ranked by composite score of predicted Tc, synthesis pressure, elemental abundance, and manufacturing feasibility.",
+      "expectedFiles": [
+        "candidate_materials.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update theoretical_framework.md: add unified anharmonic Eliashberg + chemical precompression model predictions for low-pressure ternary hydride families (Li₂MgH₆, CaYH₆, ScAlH₆ with Tc > 300 K at pressures below 50 GPa); add zentropy theory bridging quantum mechanics and superconductivity (Liu & Shang, 2025); add plasmon-mediated pairing mechanism in doped Dirac semimetals; update the ternary hydride family table with latest 2024-2025 predictions.",
+      "expectedFiles": [
+        "theoretical_framework.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update literature_review.md: add 2024-2025 high-impact papers including LaSc₂H₂₄ (arXiv:2510.01273), deep-learning ternary hydride screening (arXiv:2502.16558), PNAS programmatic strategy paper (Prasankumar et al., 2026), zentropy theory (Liu & Shang, Superconductor Science and Technology, 2025), direct gap measurement in H₃S (Du et al., 2025), and the pressure-quenching record; deduplicate YH₆, LaH₁₀ entries that appear multiple times with conflicting Tc values.",
+      "expectedFiles": [
+        "literature_review.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update discovery_strategy.md: incorporate LaSc₂H₂₄ synthesis pathway (magnetron sputtering + DAC), deep-learning-driven crystal structure prediction for ternary hydride screening, and the 2024-2025 breakthroughs into the screening pipeline and experimental feedback loop sections; add LaSc₂H₂₄ as a priority candidate in the decision gates and candidate queue.",
+      "expectedFiles": [
+        "discovery_strategy.md"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}

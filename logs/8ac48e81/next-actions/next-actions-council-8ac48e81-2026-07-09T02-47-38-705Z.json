@@ -1,0 +1,23 @@
+{
+  "preset": "council",
+  "runId": "8ac48e81-1404-4802-8d9a-9e2366ad1bab",
+  "generatedAt": "2026-07-09T02:47:38.706Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Remove the duplicate FastAPI app from `run_pipeline.py` and consolidate all API endpoints into `app.py`. The pipeline script should be a CLI tool, not a second web server.\"",
+      "source": "Agent 3"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Refactor the file to have exactly one definition of each function. Remove all duplicate definitions and consolidate the logic into a single coherent module. The module-level call to load_database() (line ~210) that redefines TRAINING_DATA should also be fixed to not run on import.\"",
+      "source": "Agent 1"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Remove the duplicate FastAPI app from `run_pipeline.py` and consolidate all API endpoints into `app.py`. The pipeline script should be a CLI tool, not a second web server.\" _(from: Agent 3)_",
+      "source": "Next actions"
+    }
+  ]
+}
