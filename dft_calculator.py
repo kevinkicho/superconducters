@@ -1058,35 +1058,28 @@ def run_dft_pipeline(
     Returns:
         Dictionary with keys 'lambda', 'omega_log', 'tc' if successful, else None.
     """
-    # Run SCF calculation
-    scf_result = run_scf(
-        structure=structure,
-        prefix=prefix,
-        pseudo_dir=pseudo_dir,
-        ecutwfc=ecutwfc,
-        ecutrho=ecutrho,
-        kpoints=kpoints,
-    )
-    if scf_result is None:
-        print("SCF calculation failed.")
+    # Run full DFT calculation (SCF + phonon + electron-phonon coupling)
+    try:
+        result = run_full_dft_calculation(
+            structure=structure,
+            prefix=prefix,
+            ecutwfc=ecutwfc,
+            ecutrho=ecutrho,
+            kpoints=kpoints,
+            nq1=q_grid[0],
+            nq2=q_grid[1],
+            nq3=q_grid[2],
+        )
+    except Exception as e:
+        print(f"DFT calculation failed: {e}")
         return None
 
-    # Run phonon calculation
-    ph_result = run_phonon_calculation(
-        structure=structure,
-        prefix=prefix,
-        pseudo_dir=pseudo_dir,
-        ecutwfc=ecutwfc,
-        ecutrho=ecutrho,
-        kpoints=kpoints,
-        q_grid=q_grid,
-    )
-    if ph_result is None:
-        print("Phonon calculation failed.")
+    elph = result.get('elph', {})
+    lambda_val = elph.get('lambda')
+    omega_log = elph.get('omega_log')
+    if lambda_val is None or omega_log is None:
+        print("Could not extract lambda or omega_log from DFT result.")
         return None
-
-    lambda_val = ph_result['lambda']
-    omega_log = ph_result['omega_log']
 
     # Compute Tc
     tc = compute_tc(lambda_val, omega_log, mu_star)
