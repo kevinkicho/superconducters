@@ -366,141 +366,14 @@ if __name__ == "__main__":
     main()
 
 
-def allen_dynes_tc(lambda_ep, omega_log, mu_star=0.1):
-    """Compute Tc using the Allen-Dynes equation."""
-    numerator = 1.04 * (1.0 + lambda_ep)
-    denominator = lambda_ep - mu_star * (1.0 + 0.62 * lambda_ep)
-    if denominator <= 0:
-        return 0.0
-    tc = (omega_log / 1.2) * math.exp(-numerator / denominator)
-    return max(tc, 0.0)
 
 
-def train_model():
-    """Train a RandomForestRegressor on the superconductor database and save the model."""
-    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
-    try:
-        with open(db_path, 'r') as f:
-            entries = json.load(f)
-    except FileNotFoundError:
-        print(f"Error: Database file '{db_path}' not found.", file=sys.stderr)
-        sys.exit(1)
-    X = []
-    y = []
-    for entry in entries:
-        formula = entry.get('name', '')
-        tc = entry.get('Tc', 0)
-        if not formula or tc <= 0:
-            continue
-        try:
-            avg_valence = average_valence(formula)
-            avg_debye = average_debye(formula)
-        except Exception:
-            continue
-        X.append([avg_valence, avg_debye])
-        y.append(tc)
-    if len(X) < 10:
-        print("Not enough data to train model.", file=sys.stderr)
-        sys.exit(1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    rf = RandomForestRegressor(n_estimators=100, random_state=42)
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
-    r2 = r2_score(y_test, y_pred)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
-    print(f"Model trained. Test R² = {r2:.4f}, RMSE = {rmse:.4f} K")
-    if r2 < 0.8:
-        print("Warning: R² below 0.8. Consider adding more features or data.")
-    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
-    os.makedirs(os.path.dirname(model_path), exist_ok=True)
-    joblib.dump(rf, model_path)
-    print(f"Model saved to {model_path}")
 
-def screen_csv(csv_path):
-    """Read candidate compositions from CSV and predict Tc using trained model."""
-    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
-    if not os.path.exists(model_path):
-        print(f"Error: Model file '{model_path}' not found. Run --train first.", file=sys.stderr)
-        sys.exit(1)
-    rf = joblib.load(model_path)
-    try:
-        df = pd.read_csv(csv_path)
-    except Exception as e:
-        print(f"Error reading CSV: {e}", file=sys.stderr)
-        sys.exit(1)
-    if 'formula' not in df.columns:
-        print("CSV must contain a 'formula' column.", file=sys.stderr)
-        sys.exit(1)
-    print(f"{'Formula':<20} {'Predicted Tc (K)':<20}")
-    print("-" * 40)
-    for _, row in df.iterrows():
-        formula = row['formula'].strip()
-        try:
-            avg_valence = average_valence(formula)
-            avg_debye = average_debye(formula)
-            pred = rf.predict([[avg_valence, avg_debye]])[0]
-            print(f"{formula:<20} {pred:<20.2f}")
-        except Exception as e:
-            print(f"{formula:<20} Error: {e}")
 
-def average_valence(formula):
-    """Compute average valence electrons per atom from formula string."""
-    import re
-    pattern = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
-    total_valence = 0
-    total_atoms = 0
-    for elem, count in pattern:
-        if count == '':
-            count = 1
-        else:
-            count = int(count)
-        if elem in VALENCE:
-            total_valence += VALENCE[elem] * count
-            total_atoms += count
-        else:
-            raise ValueError(f"Unknown element {elem}")
-    if total_atoms == 0:
-        raise ValueError("No atoms parsed")
-    return total_valence / total_atoms
 
-def average_debye(formula):
-    """Compute average Debye temperature from formula string."""
-    import re
-    pattern = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
-    total_debye = 0
-    total_atoms = 0
-    for elem, count in pattern:
-        if count == '':
-            count = 1
-        else:
-            count = int(count)
-        if elem in DEBYE_TEMP:
-            total_debye += DEBYE_TEMP[elem] * count
-            total_atoms += count
-        else:
-            raise ValueError(f"Unknown element {elem}")
-    if total_atoms == 0:
-        raise ValueError("No atoms parsed")
-    return total_debye / total_atoms
 
-def average_atomic_mass(formula):
-    import re
-    pattern = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
-    total_mass = 0
-    total_atoms = 0
-    for elem, count in pattern:
-        if count == '':
-            count = 1
-        else:
-            count = int(count)
-        if elem in ATOMIC_MASS:
-            total_mass += ATOMIC_MASS[elem] * count
-            total_atoms += count
-        else:
-            raise ValueError(f"Unknown element {elem}")
-    if total_atoms == 0:
-        raise ValueError("No atoms parsed")
-    return total_mass / total_atoms
+
+
 
 DATABASE_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
 
@@ -508,74 +381,7 @@ def load_data():
     with open(DATABASE_PATH, 'r') as f:
         return json.load(f)
 
-def mcmillan_tc(lam, theta_D, mu_star=0.1):
-    if lam <= mu_star:
-        return 0.0
-    exponent = -1.04 * (1 + lam) / (lam - mu_star * (1 + 0.62 * lam))
-    return (theta_D / 1.2) * math.exp(exponent)
 
-def allen_dynes_tc(lam, theta_D, mu_star=0.1):
-    if lam <= mu_star:
-        return 0.0
-    f1 = (1 + (lam / (2.46 * (1 + 3.8 * mu_star)))**1.5)**(1/3)
-    f2 = 1 + (lam**2 * (1 - 0.1 * mu_star)) / (lam**2 + 1.5 * (1 + 0.5 * mu_star))
-    exponent = -1.04 * (1 + lam) / (lam - mu_star * (1 + 0.62 * lam))
-    return (theta_D / 1.2) * f1 * f2 * math.exp(exponent)
-
-def predict_tc(formula, pressure=0):
-    data = load_data()
-    for entry in data:
-        comp = entry.get('composition', entry.get('name', ''))
-        if comp == formula and entry.get('pressure', 0) == pressure:
-            return entry.get('Tc', 0)
-    avg_val = average_valence(formula)
-    avg_deb = average_debye(formula)
-    lam = 0.5 * avg_val + 0.001 * avg_deb - 0.5
-    if pressure > 0:
-        lam += 0.001 * pressure
-    return allen_dynes_tc(lam, avg_deb, mu_star=0.1)
-
-def train_model():
-    from sklearn.ensemble import RandomForestRegressor
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import r2_score, mean_squared_error
-    import numpy as np
-    import joblib
-    data = load_data()
-    X = []
-    y = []
-    for entry in data:
-        formula = entry.get('composition', entry.get('name', ''))
-        if not formula:
-            continue
-        try:
-            avg_val = average_valence(formula)
-            avg_deb = average_debye(formula)
-            avg_mass = average_atomic_mass(formula)
-            num_elements = len(set(re.findall(r'[A-Z][a-z]*', formula)))
-            tc = entry.get('Tc', None)
-            if tc is None:
-                continue
-            X.append([avg_val, avg_deb, avg_mass, num_elements])
-            y.append(tc)
-        except:
-            continue
-    if len(X) < 5:
-        raise ValueError("Not enough data to train model")
-    X = np.array(X)
-    y = np.array(y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    rf = RandomForestRegressor(n_estimators=100, random_state=42)
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
-    r2 = r2_score(y_test, y_pred)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
-    print(f"Model trained. Test R² = {r2:.4f}, RMSE = {rmse:.4f} K")
-    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'rf_model.pkl')
-    os.makedirs(os.path.dirname(model_path), exist_ok=True)
-    joblib.dump(rf, model_path)
-    print(f"Model saved to {model_path}")
-    return rf
 
 
 def screen_candidates(candidates: List[str], model_path: str = None) -> List[Dict]:
@@ -1035,19 +841,7 @@ def main():
         print(f"Predictions saved to {args.output}")
 
 
-# Embedded database of known A15 superconducting compounds (formula, Tc in K)
-DATABASE = [
-    {'formula': 'Nb3Sn', 'tc': 18.3},
-    {'formula': 'Nb3Al', 'tc': 18.9},
-    {'formula': 'Nb3Ge', 'tc': 23.2},
-    {'formula': 'V3Si', 'tc': 17.1},
-    {'formula': 'V3Ga', 'tc': 16.5},
-    {'formula': 'Nb3Ga', 'tc': 20.3},
-    {'formula': 'Nb3In', 'tc': 9.2},
-    {'formula': 'Mo3Os', 'tc': 12.0},
-    {'formula': 'Mo3Ir', 'tc': 8.0},
-    {'formula': 'Ta3Sn', 'tc': 8.4},
-]
+
 
 
 def generate_candidates(num_candidates=10):
