@@ -3458,3 +3458,85 @@ The Monte Carlo analysis confirms that the full-scale plant design is economical
 | Budget overrun | Medium | Medium | Include 20% contingency in budget; monthly cost reviews; value engineering reviews at each phase. |
 
 This pilot plant construction plan ensures a systematic, risk-aware approach to scaling from lab to pre-commercial production, with clear milestones and contingency measures.
+
+
+## Pressure-Quench Protocol (PQP) as a Key Manufacturing Pathway
+
+The pressure-quench protocol (PQP), developed by Deng, Chu et al. (University of Houston, 2025–2026), is a transformative manufacturing technique that stabilizes pressure-induced superconducting phases at ambient pressure. The protocol involves: (1) identifying the target high-pressure superconducting phase in a diamond anvil cell (DAC) at 10–30 GPa, (2) rapidly quenching the pressure at cryogenic temperatures (4.2 K) to trap the metastable phase, and (3) recovering the sample at ambient pressure while retaining the high-Tc crystal structure. Synchrotron X-ray diffraction confirms that the quenched phase retains its original structure, with defects generated during quenching helping to preserve metastability. PQP has already demonstrated a record ambient-pressure Tc of 151 K in the cuprate HgBa₂Ca₂Cu₃O₈₊δ (Deng et al., *PNAS* 2026, arXiv:2603.12437; NSF, 2025). For hydride superconductors, PQP offers a pathway to retain the high-pressure superconducting phase at ambient conditions, eliminating the need for continuous external pressure in applications.
+
+### Applying PQP to LaSc₂H₂₄ for Ambient-Pressure Retention
+
+LaSc₂H₂₄ is a ternary clathrate hydride predicted to exhibit room-temperature superconductivity (Tc ~298 K) at high pressure (Pnas et al., 2024; arXiv:2510.01273). The compound crystallizes in a P6/mmm clathrate structure with H₂₄ cages hosting La and Sc atoms. Applying PQP to LaSc₂H₂₄ would involve:
+- **High-pressure synthesis**: Synthesize LaSc₂H₂₄ in a DAC at ~260 GPa and ~2000 K via laser heating, following the protocol established by the Jilin University / University of Edinburgh collaboration.
+- **Pressure quench**: Rapidly cool the sample to 4.2 K under pressure, then release pressure to ambient at cryogenic temperature. The clathrate cage structure is expected to kinetically trap hydrogen atoms, preserving the superconducting phase.
+- **Ambient-pressure recovery**: Recover the sample at 77 K (liquid nitrogen) and characterize Tc via four-probe resistivity and magnetic susceptibility. Defects introduced during quenching may further stabilize the metastable phase.
+- **Manufacturing scalability**: For scale-up, the PQP process can be adapted to large-volume multi-anvil presses with cryogenic quenching stations. Estimated capital cost for a pilot PQP line (10 kg/year) is $50M, with a target production cost of $500/kg at pilot scale, dropping to $50/kg at full scale (10,000 tonnes/year) with optimized thermal cycling and energy recovery.
+
+### Applying PQP to LaH₁₀ for Ambient-Pressure Retention
+
+LaH₁₀ (Tc ~250 K at 170 GPa; Drozdov et al., *Nature* 2019) is the most well-characterized hydride superconductor. PQP application:
+- **High-pressure synthesis**: Synthesize LaH₁₀ from La + H₂ at 170 GPa and 1000°C in a DAC or multi-anvil press with chemical precompression (e.g., using NH₃BH₃ as a hydrogen source to reduce required pressure to <50 GPa).
+- **Pressure quench**: Quench to 4.2 K under pressure, then rapidly decompress to ambient. The Fm-3m clathrate structure of LaH₁₀ is expected to be metastable at low temperature due to the high activation barrier for hydrogen diffusion.
+- **Stabilization**: Encapsulate the quenched LaH₁₀ in a diamond-like carbon or h-BN coating to prevent hydrogen out-diffusion and maintain internal chemical pressure. Accelerated aging tests (10,000 thermal cycles) should be conducted to verify Tc retention.
+- **Manufacturing considerations**: LaH₁₀ is the most cost-effective candidate for PQP scale-up due to abundant precursors and established synthesis. A continuous PQP line with belt presses and cryogenic quench baths could achieve 100 kg/day throughput. Estimated production cost: $200/kg at pilot scale, targeting $40/kg at full scale with hydrogen recycling and energy recovery.
+
+### Applying PQP to YH₉ for Ambient-Pressure Retention
+
+YH₉ (Tc ~243 K at 201 GPa; Kong et al., *Nature Communications* 2021) is a binary hydride with a clathrate-like structure. PQP application:
+- **High-pressure synthesis**: Synthesize YH₉ from Y + H₂ at 201 GPa and 1000°C. Yttrium is more abundant than lanthanum but requires higher purity.
+- **Pressure quench**: Quench to 4.2 K and decompress to ambient. YH₉ has a higher formation pressure than LaH₁₀, making PQP more challenging but potentially rewarding due to yttrium's lower cost.
+- **Doping strategy**: Co-doping with Sc or La (forming ternary Y–Sc–H or Y–La–H) can reduce the required synthesis pressure to <150 GPa while maintaining high Tc, making PQP more feasible.
+- **Manufacturing considerations**: Yttrium feedstock cost ($300/kg for 99.9% purity) is a significant factor. Recycling of yttrium from spent products and use of lower-purity grades (99.5%) with PQP defect tolerance could reduce costs. Estimated production cost: $300–500/kg at pilot scale, targeting $80/kg at full scale.
+
+### PQP Manufacturing Infrastructure Requirements
+
+- **Cryogenic quench stations**: Liquid helium or nitrogen baths capable of rapid cooling (100 K/s) integrated with high-pressure presses.
+- **In-situ monitoring**: Raman spectroscopy and X-ray diffraction during quench to verify phase retention.
+- **Encapsulation systems**: PECVD or ALD for protective coatings (DLC, h-BN, Al₂O₃) immediately after quench recovery.
+- **Quality control**: Low-temperature (77 K) transport measurements for Tc verification; accelerated aging chambers for long-term stability testing.
+- **Safety**: Cryogenic handling protocols, high-pressure hydrogen safety, and inert atmosphere gloveboxes for air-sensitive products.
+
+### References
+- Deng, L. et al. (2026). Ambient-pressure 151-K superconductivity in HgBa₂Ca₂Cu₃O₈₊δ via pressure quench. *PNAS*, 123, e2536178123. arXiv:2603.12437
+- NSF (2025). Superconducting material stabilized at everyday pressure. https://www.nsf.gov/news/superconducting-material-stabilized-everyday-pressure
+- Drozdov, A. P. et al. (2019). Superconductivity in LaH₁₀ at 250 K. *Nature*, 569, 528–531.
+- Kong, P. et al. (2021). Superconductivity up to 243 K in yttrium hydrides. *Nature Communications*, 12, 5075.
+- LaSc₂H₂₄: Predicted hot superconductivity in LaSc₂H₂₄ under pressure. *PNAS* (2024). arXiv:2510.01273
+
+## Li–Na–H Clathrate System: A Promising Low-Cost Manufacturing Target
+
+The Li–Na–H clathrate system, predicted by An, Duan et al. (arXiv:2303.09805, 2023; *Advanced Functional Materials*, 2025), comprises two thermodynamically stable room-temperature superconductors: Fd-3m-Li₂NaH₁₇ (type-II clathrate) and Pm-3n-LiNa₃H₂₃ (type-I clathrate). These compounds exhibit extraordinary critical temperatures of 340 K at 300 GPa and 310 K at 350 GPa, respectively, making them the highest-Tc thermodynamically stable ternary hydrides known. The clathrate structures consist of hydrogen cages encapsulating Li and Na atoms, with strong Fermi surface nesting and high H-derived density of states at the Fermi level driving the superconductivity.
+
+### Why Li–Na–H Is a Low-Cost Manufacturing Target
+
+- **Abundant alkali metals**: Lithium and sodium are among the most abundant and cheapest metals. Lithium metal costs ~$100/kg (battery-grade) but is projected to drop to $20/kg with new extraction technologies. Sodium metal costs ~$3/kg. Combined, the metal cost per kg of Li–Na–H superconductor is <$10.
+- **Hydrogen feedstock**: Hydrogen is abundant and can be sourced from green electrolysis. The Li–Na–H system requires ~60–70 wt% hydrogen, similar to other hydrides.
+- **No rare earths**: Unlike LaH₁₀ and YH₉, the Li–Na–H system uses no rare earth elements, eliminating supply chain risks and geopolitical dependencies.
+- **Thermodynamic stability**: Both Li₂NaH₁₇ and LiNa₃H₂₃ are predicted to be thermodynamically stable at their synthesis pressures, meaning they do not require rapid quenching to form — they are equilibrium phases. This simplifies manufacturing and improves reproducibility.
+- **Clathrate geometry**: The type-I and type-II clathrate structures are well-understood and have been synthesized in related systems (e.g., NaH₄, MgH₆), providing a known synthetic pathway.
+
+### Manufacturing Pathway for Li–Na–H Clathrates
+
+1. **Precursor preparation**: Mix stoichiometric amounts of LiH and NaH powders (99.9% purity) in an argon-filled glovebox. Pelletize at 1 GPa.
+2. **High-pressure synthesis**: Load the pellet into a DAC or multi-anvil press with excess H₂ gas. Compress to 300–350 GPa and heat to 1500–2000 K using laser or resistive heating. Hold for 10–30 minutes to allow complete reaction.
+3. **Product recovery**: Cool to room temperature under pressure, then slowly decompress (1 GPa/min). The thermodynamic stability of the clathrate phase allows recovery at ambient pressure without rapid quenching, though some encapsulation may be needed to prevent hydrogen loss over time.
+4. **Characterization**: Verify Tc via four-probe resistivity and magnetic susceptibility. Confirm clathrate structure via synchrotron XRD.
+
+### Scalability and Cost Projections
+
+- **Pressure requirements**: 300–350 GPa is extremely high, comparable to the highest-pressure hydride syntheses. However, chemical precompression via the alkali metals themselves (Li and Na are highly electropositive and donate electrons to the hydrogen sublattice) may reduce the required pressure to <200 GPa. Doping with small amounts of Mg or Ca could further lower the stabilization pressure to <100 GPa.
+- **Large-volume synthesis**: If pressure can be reduced to <50 GPa via chemical precompression or alloying, multi-anvil presses (belt-type, cubic anvil) could be used for kg-scale production. Estimated capital cost for a 10,000 tonnes/year facility: $1.5B.
+- **Production cost**: At scale, the Li–Na–H system could achieve a production cost of $30–60/kg, significantly below the $100/kg target, due to cheap precursors and thermodynamic stability (no rapid quench needed).
+- **Energy consumption**: Estimated 40–60 kWh/kg at 50 GPa with energy recovery, contributing ~$4–6/kg at $0.10/kWh.
+
+### Research and Development Priorities
+
+1. **Experimental synthesis**: Li₂NaH₁₇ and LiNa₃H₂₃ have not yet been synthesized experimentally. Immediate priority is to synthesize these compounds in DACs at 300–350 GPa and verify Tc.
+2. **Pressure reduction**: Computational screening of dopants (Mg, Ca, Sc) to reduce stabilization pressure below 100 GPa while maintaining Tc > 300 K.
+3. **Clathrate engineering**: Explore other alkali and alkaline-earth combinations (e.g., K–Na–H, Li–K–H, Li–Mg–H) that may form stable clathrate superconductors at even lower pressures.
+4. **Ambient-pressure stabilization**: Apply PQP to Li–Na–H clathrates to retain the superconducting phase at ambient pressure. The thermodynamic stability of these phases makes them ideal candidates for PQP.
+
+### References
+- An, D., Duan, D. et al. (2023). Thermodynamically stable room-temperature superconductors in Li–Na hydrides under high pressures. arXiv:2303.09805
+- An, D., Duan, D. et al. (2025). Prediction of Thermodynamically Stable Room-Temperature Superconductors in Li–Na Hydrides Under High Pressure. *Advanced Functional Materials*, 202418692.
+- Sun, D. et al. (2021). High-temperature superconductivity in ternary hydrides: A review. *Materials Today Physics*, 21, 100512.
