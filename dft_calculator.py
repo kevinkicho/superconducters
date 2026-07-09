@@ -1008,3 +1008,91 @@ def compute_eph_coupling(structure: dict, prefix: str = "eph", q_grid: list = No
         return None
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def compute_tc(lambda_val: float, omega_log: float, mu_star: float = 0.1) -> float:
+    """
+    Compute the superconducting critical temperature Tc using the Allen-Dynes formula.
+
+    Args:
+        lambda_val: Electron-phonon coupling constant.
+        omega_log: Logarithmic average phonon frequency (K).
+        mu_star: Coulomb pseudopotential (default 0.1).
+
+    Returns:
+        Tc in Kelvin.
+    """
+    if lambda_val <= 0:
+        return 0.0
+    numerator = 1.04 * (1.0 + lambda_val)
+    denominator = lambda_val - mu_star * (1.0 + 0.62 * lambda_val)
+    if denominator <= 0:
+        return 0.0
+    exponent = - numerator / denominator
+    tc = (omega_log / 1.2) * math.exp(exponent)
+    return tc
+
+
+def run_dft_pipeline(
+    structure: Dict,
+    prefix: str = "hydride",
+    pseudo_dir: str = PSEUDO_DIR,
+    ecutwfc: float = 60.0,
+    ecutrho: float = 240.0,
+    kpoints: List[int] = [4, 4, 4, 0, 0, 0],
+    q_grid: Tuple[int, int, int] = (4, 4, 4),
+    mu_star: float = 0.1,
+) -> Optional[Dict]:
+    """
+    Run the full DFT pipeline: SCF, phonon calculation, and Tc computation.
+
+    Args:
+        structure: Dictionary with structure information (see generate_scf_input).
+        prefix: Calculation prefix.
+        pseudo_dir: Pseudopotential directory.
+        ecutwfc, ecutrho: Cutoffs.
+        kpoints: K-point grid.
+        q_grid: Q-point grid for phonon calculation.
+        mu_star: Coulomb pseudopotential.
+
+    Returns:
+        Dictionary with keys 'lambda', 'omega_log', 'tc' if successful, else None.
+    """
+    # Run SCF calculation
+    scf_result = run_scf(
+        structure=structure,
+        prefix=prefix,
+        pseudo_dir=pseudo_dir,
+        ecutwfc=ecutwfc,
+        ecutrho=ecutrho,
+        kpoints=kpoints,
+    )
+    if scf_result is None:
+        print("SCF calculation failed.")
+        return None
+
+    # Run phonon calculation
+    ph_result = run_phonon_calculation(
+        structure=structure,
+        prefix=prefix,
+        pseudo_dir=pseudo_dir,
+        ecutwfc=ecutwfc,
+        ecutrho=ecutrho,
+        kpoints=kpoints,
+        q_grid=q_grid,
+    )
+    if ph_result is None:
+        print("Phonon calculation failed.")
+        return None
+
+    lambda_val = ph_result['lambda']
+    omega_log = ph_result['omega_log']
+
+    # Compute Tc
+    tc = compute_tc(lambda_val, omega_log, mu_star)
+
+    return {
+        'lambda': lambda_val,
+        'omega_log': omega_log,
+        'tc': tc,
+    }
