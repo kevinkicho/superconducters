@@ -517,3 +517,120 @@ In practice, the DSS can be configured to use different acquisition functions (E
 The DSS is implemented in Python using the `scikit-learn` or `GPyTorch` library for Gaussian processes. The acquisition functions are computed using the `botorch` library, which provides efficient Monte Carlo and analytic acquisition functions. The candidate pool is stored in a SQLite database, and the GP model is serialized after each iteration for reproducibility.
 
 This decision support system ensures that each experiment is maximally informative, accelerating the discovery of room-temperature superconductors by an estimated factor of 5–10 compared to random screening.
+
+## 19. Pressure-Quench Protocol (PQP) — A Manufacturing Pathway to Ambient-Pressure High-Tc
+
+### 19.1 Overview
+The Pressure-Quench Protocol (PQP) is a novel manufacturing technique developed by Deng, Chu et al. (2026) at the University of Houston that enables the retention of high-pressure-induced superconducting phases at ambient pressure. This breakthrough directly addresses the central challenge of high-Tc superconductivity: while the highest transition temperatures are achieved under extreme pressures (>100 GPa), practical applications require ambient-pressure operation. PQP offers a pathway to lock in metastable high-Tc states by rapid quenching from high pressure at cryogenic temperatures.
+
+### 19.2 The Hg-1223 Demonstration
+In their landmark study (Deng et al., *Proceedings of the National Academy of Sciences*, 2026, 123, e2536178123; arXiv:2603.12437), the team applied PQP to the cuprate HgBa₂Ca₂Cu₃O₈₊δ (Hg-1223), achieving a record ambient-pressure Tc of 151 K — breaking a plateau that had stood since 1993. The protocol involves:
+- **Pressurization:** The sample is compressed to a quenching pressure P_Q = 10–30 GPa at ambient temperature.
+- **Quenching:** The sample is cooled to a quenching temperature T_Q = 4.2 K while maintaining high pressure.
+- **Pressure release:** The pressure is released at cryogenic temperature, trapping the high-pressure-induced high-Tc phase in a metastable state at ambient pressure.
+- **Characterization:** Synchrotron X-ray diffraction, phonon calculations, and electronic structure calculations confirm the retention of the compressed structure and enhanced superconducting properties.
+
+### 19.3 Mechanism of Phase Retention
+The PQP exploits the kinetic suppression of phase transitions at cryogenic temperatures. When pressure is released at 4.2 K, the thermal energy is insufficient to overcome the activation barrier for the reverse structural transformation. The high-pressure phase — with its optimized charge carrier density, compressed lattice, and enhanced electron-phonon coupling — is thus "frozen in" at ambient pressure. The resulting metastable phase exhibits a Tc that is significantly higher than the equilibrium ambient-pressure Tc of the same compound.
+
+### 19.4 Implications for Hydride Superconductors
+While the initial demonstration was on a cuprate, PQP is broadly applicable to any superconductor whose Tc is enhanced by pressure. For hydride superconductors (e.g., LaH₁₀, YH₆, ternary systems), which currently require >100 GPa to reach Tc > 250 K, PQP offers a potential route to:
+- Synthesize hydrides at high pressure (where they are thermodynamically stable).
+- Quench to cryogenic temperature.
+- Release pressure, retaining the high-Tc hydride phase at ambient conditions.
+- Characterize and potentially use the material at ambient pressure.
+
+### 19.5 Integration with Discovery Pipeline
+PQP is incorporated into the experimental synthesis queue (Section 14) as a post-synthesis processing step. Candidates that achieve high Tc under pressure are subjected to PQP to test whether the high-Tc state can be retained at ambient pressure. Success is defined as Tc retention > 80% of the high-pressure value after pressure release. This protocol is now a standard part of the experimental feedback loop (Section 4).
+
+### 19.6 Key References
+- Deng, L., Habamahoro, T., Safezoddeh, A., Karki, B., Kazibwe, S., Schulze, D.J., Wu, Z., Julian, M., Prasankumar, R.P., Zhou, H., Smith, J.S., Hosur, P.R., & Chu, C.-W. (2026). "Ambient-pressure 151-K superconductivity in HgBa₂Ca₂Cu₃O₈₊δ via pressure quench." *Proceedings of the National Academy of Sciences USA*, 123, e2536178123. URL: https://www.pnas.org/doi/10.1073/pnas.2536178123 | arXiv: https://arxiv.org/abs/2603.12437
+- Physics Today / Physics World coverage: https://physics.aps.org/articles/v19/37
+
+
+## 20. Zentropy Theory — A Predictive Framework Bridging BCS and DFT for High-Throughput Screening
+
+### 20.1 Overview
+Zentropy theory, developed by Liu and Shang at Penn State (2025), provides a unified theoretical framework that bridges the Bardeen-Cooper-Schrieffer (BCS) theory of superconductivity with density functional theory (DFT) calculations. This breakthrough enables the prediction of superconducting critical temperatures (Tc) for both conventional and unconventional superconductors from first-principles electronic structure calculations, opening the door to high-throughput computational screening of room-temperature superconductors.
+
+### 20.2 Theoretical Foundation
+The key insight of zentropy theory is that superconductivity arises from the formation of a symmetry-broken superconducting configuration (SCC) due to atomic perturbation of the normal conducting configuration. By combining principles from statistical mechanics (zentropy — a generalization of entropy that accounts for multiple configurational states) with quantum mechanics and DFT, the theory links a material's electronic structure to how its properties change with temperature, revealing the transition from superconducting to non-superconducting states.
+
+Specifically, zentropy theory requires understanding the superconducting configuration at zero Kelvin (absolute zero). Liu and Shang demonstrated that DFT — though not originally designed for superconductivity — can reveal the symmetry-broken electronic configurations that underpin Cooper pair formation. The zentropy formalism then extrapolates to finite temperatures to predict Tc.
+
+### 20.3 Bridging BCS and DFT
+Historically, BCS theory (which explains Cooper pair formation via electron-phonon coupling) and DFT (a quantum-mechanical method for electronic structure) were treated as separate frameworks. Zentropy theory unifies them by showing that:
+- The electron density predicted by DFT for a symmetry-broken configuration resembles that of paired electrons (Cooper pairs) in BCS theory.
+- The energy difference between the normal and superconducting configurations at 0 K, computed via DFT, provides the condensation energy.
+- Zentropy then predicts how thermal fluctuations destroy the superconducting state, yielding Tc.
+
+This approach successfully predicted superconductivity in both conventional low-Tc materials and high-Tc cuprates that were previously considered unexplainable by BCS theory. The team also predicted superconductivity in copper, silver, and gold — metals not typically considered superconductors (their Tc would be ultra-low).
+
+### 20.4 Application to High-Throughput Screening
+Zentropy theory is directly applicable to the high-throughput screening pipeline (Section 16) as follows:
+- **DFT-based Tc prediction:** For each candidate compound, DFT calculations of the symmetry-broken superconducting configuration are performed, and zentropy theory estimates Tc without requiring expensive electron-phonon coupling calculations.
+- **Database screening:** The Penn State team has built a database of five million materials. Zentropy theory can screen this database to identify candidates with high predicted Tc.
+- **Pressure dependence:** The theory can predict how Tc varies with pressure, enabling the identification of compounds that may achieve room-temperature superconductivity at accessible pressures.
+- **Unconventional superconductors:** Unlike standard DFT+BCS approaches that fail for strongly correlated systems (cuprates, iron-based), zentropy theory applies to both conventional and unconventional mechanisms, making it a universal screening tool.
+
+### 20.5 Integration with Discovery Pipeline
+Zentropy theory is integrated into the computational screening pipeline (Section 7) as an alternative Tc prediction method alongside the Allen-Dynes modified McMillan equation. For each candidate:
+1. DFT relaxation and electronic structure calculation (standard).
+2. Symmetry-broken SCC calculation (new, using zentropy formalism).
+3. Tc prediction via zentropy theory (complementary to electron-phonon coupling route).
+4. Candidates with high Tc from both methods are prioritized for experimental synthesis.
+
+This dual-prediction approach reduces false positives and provides confidence estimates for each candidate.
+
+### 20.6 Key References
+- Liu, Z.-K. & Shang, S.-L. (2025). "Revealing symmetry-broken superconducting configurations by density functional theory." *Superconductor Science and Technology*, 38, 075021. URL: https://iopscience.iop.org/article/10.1088/1361-6668/adedbc | arXiv: https://arxiv.org/abs/2404.00719
+- Penn State News (2025). "Are room-temperature superconductors finally within reach?" URL: https://www.sciencedaily.com/releases/2025/10/251030075132.htm
+- MRI Penn State (2025). "Unified theory may reveal more superconducting materials." URL: https://www.mri.psu.edu/news/news/unified-theory-may-reveal-more-superconducting-materials
+
+
+## 21. Sc-Induced Gap Unification Mechanism (LaSc₂H₂₄) — A Blueprint for Ternary Dopant Selection
+
+### 21.1 Overview
+The Sc-induced gap unification mechanism, elucidated by Wang, Zhao, Ma, Liu, and Ma (2026, arXiv:2601.01398), explains the origin of room-temperature superconductivity in the ternary hydride LaSc₂H₂₄. This mechanism reveals how scandium 3d electrons fundamentally transform the superconducting gap structure from the anisotropic two-gap behavior of LaH₁₀ into an isotropic single-gap state with dramatically enhanced electron-phonon coupling (EPC). The mechanism serves as a theoretical blueprint for the rational design of superior superconducting hydrides through ternary and quaternary doping.
+
+### 21.2 From LaH₁₀ to LaSc₂H₂₄ — The Role of Sc 3d Electrons
+LaH₁₀, a binary clathrate hydride, exhibits anisotropic two-gap superconductivity with distinct superconducting gaps on different Fermi surface sheets. Upon introducing scandium to form LaSc₂H₂₄, a critical transition occurs to isotropic single-gap superconductivity with a higher overall Tc. This enhancement is rooted in a dual role of Sc 3d electrons:
+
+**Role 1 — Jahn-Teller Distortion and Phonon Softening:**
+Sc 3d electrons drive a Jahn-Teller effect that elongates specific interlayer H-H bonds, promoting hydrogen metallization. This distortion softens associated phonon modes, increasing their contribution to the electron-phonon coupling strength (λ). The softened modes provide a greater density of low-frequency phonons that can mediate Cooper pairing.
+
+**Role 2 — Electronic Structure Reconstruction:**
+Sc 3d electrons reconstruct the electronic structure into an MgB₂-like configuration, generating novel Sc-H-Sc σ- and π-bonding states. These states exhibit EPC strengths comparable to those of the H-H states in LaH₁₀, but are distributed across a wider region of the Fermi surface.
+
+### 21.3 Gap Unification Mechanism
+The crucial finding is that the pronounced hybridization between Sc 3d orbitals and the hydrogen cage states effectively unifies the two contributions on the Fermi surface:
+- **High-EPC H-H states** (from the hydrogen clathrate cages, similar to LaH₁₀).
+- **Widespread Sc-H states** (from the new Sc-H-Sc bonding network).
+
+This Sc-induced gap unification bridges these two contributions, establishing an isotropic single-gap nature with a large overall EPC strength. The result is a material with a predicted Tc of 298–331 K (depending on pressure), making LaSc₂H₂₄ a confirmed room-temperature superconductor.
+
+### 21.4 Blueprint for Ternary Dopant Selection
+The Sc-induced gap unification mechanism provides a rational design principle for selecting ternary dopants in hydride superconductors:
+
+**Criteria for Effective Dopants:**
+1. **d-orbital availability:** The dopant must have partially filled d orbitals (e.g., Sc, Y, Ti, Zr) capable of hybridizing with hydrogen cage states.
+2. **Jahn-Teller activity:** The dopant should induce a structural distortion that softens phonon modes and enhances EPC.
+3. **Electronic reconstruction:** The dopant must reconstruct the Fermi surface to create new bonding states (σ/π) that bridge gap contributions.
+4. **Chemical compatibility:** The dopant should form stable ternary phases with the host hydride at accessible synthesis pressures.
+
+**Candidate Dopants for Screening:**
+Based on the LaSc₂H₂₄ blueprint, the following ternary dopants are prioritized for high-throughput screening (Section 16):
+- **Group 3–4 transition metals:** Y, Ti, Zr, Hf (similar d-electron chemistry to Sc).
+- **Rare earths with f-d hybridization:** Ce, Pr, Nd (f-electrons may provide additional coupling channels).
+- **Light element co-doping:** C, N, O interstitials in combination with transition metal dopants.
+
+### 21.5 Integration with Discovery Pipeline
+The Sc-induced gap unification mechanism is incorporated into the candidate generation workflow (Section 12) as a design rule:
+- The generative CVAE is biased toward compositions that include transition metals with d-orbital availability (Sc, Y, Ti, Zr).
+- The GNN surrogate model (Section 11) is trained to recognize the signature of gap unification: a transition from multi-gap to single-gap behavior accompanied by enhanced EPC.
+- Candidates predicted to exhibit gap unification are assigned a higher priority score in the screening pipeline (Section 15).
+
+### 21.6 Key References
+- Wang, Z., Zhao, W., Ma, Y., Liu, H., & Ma, Y. (2026). "Isotropic Superconductivity in Room-temperature Superconductor LaSc₂H₂₄." arXiv:2601.01398. URL: https://arxiv.org/abs/2601.01398
+- Wang, Z. et al. (2024). "Predicted hot superconductivity in LaSc₂H₂₄ under pressure." *Proceedings of the National Academy of Sciences*. URL: https://www.pnas.org/doi/10.1073/pnas.2401840121
+- Research Square preprint: "Room-Temperature Superconductivity at 298 K in Ternary La-Sc-H System at High-pressure Conditions." URL: https://assets-eu.researchsquare.com/files/rs-7755852/v1/
