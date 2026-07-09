@@ -294,7 +294,8 @@ def main():
                 pressure = st.slider("Pressure (GPa)", min_value=0.0, max_value=100.0, value=1.0, step=0.1)
                 doping = st.slider("Doping Level (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
                 if st.button("Run What-If"):
-                    result = what_if_analysis(temperature=temperature, pressure=pressure, doping=doping)
+                    parameters = {"temperature (K)": [temperature], "pressure (GPa)": [pressure], "doping level": [doping / 100.0]}
+                    result = what_if_analysis(parameters=parameters)
                     if result is not None:
                         if isinstance(result, pd.DataFrame):
                             st.dataframe(result, use_container_width=True)

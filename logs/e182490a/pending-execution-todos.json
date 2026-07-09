@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "e182490a-907b-439b-b0a5-2c7df9859734",
+  "writtenAt": 1783617291611,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Fix scripts/predict_tc.py module-level crash: (1) `load_database()` default path `\"superconductor_data.json\"` should be `\"../data/superconductor_database.json\"` (or the in-memory `TRAINING_DATA` list should be used instead of calling `load_database()`). (2) Remove the second `def main()` definition (around line 781) which shadows the first one (line 325), or rename/merge them.",
+      "expectedFiles": [
+        "scripts/predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Consolidate and rewrite proposed_chemistry_physics.md as the single authoritative document for room-temperature superconductor chemistry and physics. Merge content from root `proposed_chemistry_physics.md` and `docs/proposed_chemistry_physics.md`. Restructure with sections: (a) chemical systems and design principles including Sc-induced gap unification, chemical precompression, pressure-quench metastable retention; (b) physical mechanisms covering anharmonic electron-phonon coupling, zentropy theory, flat-band moiré engineering; (c) manufacturing roadmap with scalable multi-anvil press synthesis, pressure-quench protocol (PQP), thin-film epitaxial stabilization; (d) comparative analysis table of all candidate families with Tc, pressure, feasibility; (e) cross-reference table mapping each section to computational scripts and data files; (f) open challenges. Integrate all 2024-2026 breakthroughs: LaSc₂H₂₄ (271–298 K, first reproducible RTSC), zentropy theory, twisted WSe₂ moiré SC, H₃S tunneling gap (Du 2025), pressure-quenched Hg-1223 (151 K ambient-pressure record, Deng 2026), Li-Na-H clathrates (Li₂NaH₁₇, LiNa₃H₂₃), AI causal discovery for kagome superconductors, PNAS 2026 programmatic agenda.",
+      "expectedFiles": [
+        "proposed_chemistry_physics.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Fix streamlit_dashboard.py line 297: `what_if_analysis(temperature=temperature, pressure=pressure, doping=doping)` passes wrong keyword arguments. The function signature in run_pipeline.py is `def what_if_analysis(candidate_file, output_file, parameters)`. Either adapt the call to pass a `parameters` dict with those values, or refactor `what_if_analysis` to accept the simulation parameters directly.",
+      "expectedFiles": [
+        "streamlit_dashboard.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update candidate_materials.md with new top-priority candidates: LaSc₂H₂₄ (Tc 271–298 K at 195–266 GPa, first reproducible room-temperature superconductor, hexagonal P6/mmm clathrate), Li-Na-H clathrate systems (Li₂NaH₁₇ predicted Tc ~340 K, LiNa₃H₂₃ predicted Tc ~310 K), Mg₄Pt₃H₆ (ambient-pressure hydride superconductor), and pressure-quenched Hg-1223 (151 K ambient-pressure record holder). Include synthesis routes, precursor requirements, thermal/chemical stability data, and cross-references to proposed_chemistry_physics.md sections.",
+      "expectedFiles": [
+        "candidate_materials.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update docs/online_research_summary.md with findings from targeted web searches on 2024-2026 breakthroughs: LaSc₂H₂₄ reproducibility (Song et al., arXiv:2510.01273, 2025), UH pressure-quench protocol (Deng & Chu, PNAS 2026), PNAS programmatic research agenda (Prasankumar et al., 2026), LaH₁₀ long-term stability (>5 years at 170 GPa), Mg₄Pt₃H₆ ambient-pressure hydride, AI causal discovery for CsV₃Sb₅ (Tohoku/Fujitsu 2025), zentropy theory (Liu & Shang, Supercond. Sci. Technol. 2025), H₃S tunneling gap confirmation (Du et al., Nature 2025). Reorganize to clearly separate literature survey from code metrics.",
+      "expectedFiles": [
+        "docs/online_research_summary.md"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Update literature_review.md with citations for key breakthrough papers: LaSc₂H₂₄ (Song et al., arXiv:2510.01273, 2025), H₃S tunneling gap (Du et al., Nature 2025, DOI 10.1038/s41586-025-08895-2), pressure-quenched Hg-1223 (Deng et al., PNAS 2026, DOI 10.1073/pnas.2536178123), zentropy theory (Liu & Shang, Supercond. Sci. Technol. 2025, DOI 10.1088/1361-6668/adedbc), AI causal discovery for CsV₃Sb₅ (Tohoku/Fujitsu, Sci. Rep. 2025), Li-Na-H clathrate predictions (An et al., Adv. Funct. Mater. 2025), twisted WSe₂ moiré SC (Xia et al., Nature 2025; Guo et al., Nature 2025), PNAS programmatic agenda (Prasankumar et al., PNAS 2026). Also ensure the retraction notices for C-S-H (Nature 2022) and Lu-N-H (Nature 2024) are clearly marked.",
+      "expectedFiles": [
+        "literature_review.md"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}
