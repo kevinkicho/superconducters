@@ -200,7 +200,7 @@ def train_linear_regression(features: List[List[float]], targets: List[float]) -
         beta[i] = (aug[i][m] - sum_ax) / aug[i][i] if abs(aug[i][i]) > 1e-12 else 0.0
     return beta
 
-def load_database(path="superconductor_data.json"):
+def load_database(path="../data/superconductor_database.json"):
     """Load training data from a JSON file. Expected format: list of [formula, Tc]."""
     with open(path, 'r') as f:
         data = json.load(f)
@@ -212,8 +212,7 @@ def train_random_forest(features, targets):
     model.fit(features, targets)
     return model
 
-# Load database and train model once at module load
-TRAINING_DATA = load_database()
+# Use embedded training data for module-level model training
 _training_features = [extract_features(f) for f, _ in TRAINING_DATA]
 _training_targets = [tc for _, tc in TRAINING_DATA]
 _coefficients = train_linear_regression(_training_features, _training_targets)
@@ -778,7 +777,7 @@ def compute_features(formula: str) -> list:
     return [total_valence / total_atoms, total_debye / total_atoms]
 
 
-def main():
+def main_screening():
     import argparse
     parser = argparse.ArgumentParser(description='Predict Tc for candidate materials using a trained model.')
     parser.add_argument('--model', choices=['rf', 'gnn'], default='rf', help='Model type (default: rf)')
@@ -864,7 +863,7 @@ if __name__ == '__main__':
     if args.pinn:
         main_pinn(args)
     else:
-        main()
+        main_screening()
 
 
 def predict_tc(lambda_ep, omega_log, mu_star):
