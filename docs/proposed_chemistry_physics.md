@@ -4,33 +4,33 @@
 
 ## Cross-References to Root-Level Document
 
-The following breakthroughs are documented in full in the root-level `proposed_chemistry_physics.md`:
+The following breakthroughs are documented in full in the root-level `proposed_chemistry_physics.md` (Section 7, 2025–2026 Breakthroughs):
 
-1. **LaSc₂H₂₄ — First Reproducible Room-Temperature Superconductor** — Ternary clathrate hydride with Tc up to 298 K at ~260 GPa. See root-level document for synthesis, mechanism (Sc-induced gap unification), and implications.
-
----
-
-2. **Zentropy Theory for High-Tc Superconductor Design** — First-principles prediction of Tc without empirical fitting. See root-level document for theory, validation, and screening plans.
+1. **LaSc₂H₂₄ — First Reproducible Room-Temperature Superconductor** — Ternary clathrate hydride with Tc up to 298 K at ~260 GPa. See root-level §7.1 for synthesis, mechanism (Sc-induced gap unification), and implications.
 
 ---
 
-3. **Twisted WSe₂ Moiré Superconductivity** — Moiré flat-band superconductivity in TMD bilayers. See root-level document for mechanism and implications.
+2. **Zentropy Theory — First-Principles Tc Prediction Bridging BCS and DFT** — First-principles prediction of Tc without empirical fitting. See root-level §7.2 for theory, validation, and screening plans.
 
 ---
 
-4. **H₃S Tunneling Gap Anomaly — Direct Spectroscopic Confirmation** — First direct measurement of superconducting gap in a hydride. See root-level document for technique and results.
+3. **Pressure-Quench Protocol (PQP) — Hg-1223 Ambient-Pressure Tc Record 151 K** — Pressure-quench protocol for metastable phase retention. See root-level §7.3 for protocol and implications.
 
 ---
 
-5. **Pressure-Quenched Hg-1223 — Ambient-Pressure Tc Record of 151 K** — Pressure-quench protocol for metastable phase retention. See root-level document for protocol and implications.
+4. **H₃S Tunneling Gap — First Direct Microscopic Evidence** — First direct measurement of superconducting gap in a hydride. See root-level §7.4 for technique and results.
 
 ---
 
-6. **Li–Na–H Clathrate Room-Temperature Superconductor Predictions** — Thermodynamically stable ternary hydrides with predicted Tc > 300 K. See root-level document for predictions and analysis.
+5. **Deep-Learning Discovery of 144 Ternary Hydrides** — AI-driven high-throughput screening of ~36 million ternary hydride structures. See root-level §7.5 for methodology and candidate list.
 
 ---
 
-7. **AI Causal Discovery for Superconductor Screening** — Causal AI applied to ARPES data revealing hidden mechanisms. See root-level document for technique and future plans.
+6. **Nickelate Advances — Single Crystals (96 K) and Ambient-Pressure Thin Films (>40 K)** — Bilayer nickelate breakthroughs. See root-level §7.6 for synthesis and characterization.
+
+---
+
+7. **AI Causal Discovery — CsV₃Sb₅ Kagome Superconductor** — Causal AI applied to ARPES data revealing hidden mechanisms. See root-level §7.7 for technique and future plans.
 
 ---
 
