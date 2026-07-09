@@ -3274,22 +3274,34 @@ async def get_candidates(api_key: str = Depends(verify_api_key)):
 async def predict_tc(compound: str, api_key: str = Depends(verify_api_key)):
     """Predict Tc for a given compound using the trained model."""
     role_based_access("user")
-    # Placeholder: in real implementation, load model and predict
-    # For now, return a mock prediction
-    import random
-    predicted_tc = round(random.uniform(100, 300), 2)
-    return {"compound": compound, "predicted_Tc": predicted_tc, "unit": "K"}
+    try:
+        from scripts.predict_tc import predict_tc as predict_tc_model
+        predicted_tc = predict_tc_model(compound)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+    return {"compound": compound, "predicted_Tc": round(predicted_tc, 2), "unit": "K"}
 
 @app.post("/simulate-manufacturing")
 @limiter.limit("2/minute")
 async def simulate_manufacturing(compound: str, api_key: str = Depends(verify_api_key)):
     """Simulate manufacturing process for a given compound."""
     role_based_access("admin")
-    # Placeholder: in real implementation, run manufacturing simulation
-    # For now, return a mock simulation result
-    import random
-    success_prob = round(random.uniform(0.5, 0.95), 2)
-    estimated_cost = round(random.uniform(1000, 100000), 2)
+    try:
+        from scripts.predict_tc import predict_tc as predict_tc_model
+        predicted_tc = predict_tc_model(compound)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+    # Estimate success probability and cost based on predicted Tc
+    # Higher Tc materials typically require more extreme synthesis conditions
+    if predicted_tc > 200:
+        success_prob = round(max(0.1, min(0.9, 0.5 - 0.001 * (predicted_tc - 200))), 2)
+        estimated_cost = round(5000 + 200 * predicted_tc, 2)
+    elif predicted_tc > 100:
+        success_prob = round(max(0.2, min(0.95, 0.6 - 0.002 * (predicted_tc - 100))), 2)
+        estimated_cost = round(2000 + 100 * predicted_tc, 2)
+    else:
+        success_prob = round(max(0.3, min(0.95, 0.8 - 0.001 * predicted_tc)), 2)
+        estimated_cost = round(1000 + 50 * predicted_tc, 2)
     return {"compound": compound, "success_probability": success_prob, "estimated_cost": estimated_cost, "currency": "USD"}
 
 # ===== Data Package Generation =====
