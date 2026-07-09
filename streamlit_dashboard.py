@@ -313,26 +313,11 @@ def main():
                 else:
                     st.info("No research literature data available.")
 
-            with tab9:
-                st.subheader("Pareto Front: Tc vs. Synthesis Pressure/Cost")
-                df = fetch_pareto_front()
-                if df is not None and not df.empty:
-                    st.scatter_chart(df, x="pressure", y="tc", color="cost", use_container_width=True)
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No Pareto front data available.")
 
-            with tab10:
-                st.subheader("Uncertainty Intervals for Predicted Tc")
-                df = fetch_uncertainty_intervals()
-                if df is not None and not df.empty:
-                    st.line_chart(df, x="material", y=["predicted_tc", "lower_bound", "upper_bound"], use_container_width=True)
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No uncertainty interval data available.")
 
-            with tab11:
-                st.subheader("Status Panel")
+
+
+
 
             with st.expander("Synthesis Planner", expanded=False):
                 st.subheader("Synthesis Planner")
@@ -540,10 +525,7 @@ def collaboration_hub_tab():
         for i, resp in enumerate(st.session_state.feedback_responses):
             st.write(f"{i+1}. Rating: {resp['rating']}, Category: {resp['category']}, Feedback: {resp['text']}")
     
-    elif tab == "Plant Layout":
-        plant_layout_tab()
-    elif tab == "VR Tour":
-        vr_tour_tab()
+
     elif tab == "System Health":
         system_health_tab()
     elif tab == "Data Export":
@@ -1152,14 +1134,14 @@ def query_knowledge_graph(query: str) -> str:
         return f"Error querying knowledge graph: {e}"
 
 def display_candidate_materials():
-    import sqlite3
+    import json
     import pandas as pd
     st.markdown("## Candidate Materials")
-    db_path = "superconductor.db"
+    db_path = "data/superconductor_database.json"
     try:
-        conn = sqlite3.connect(db_path)
-        df = pd.read_sql_query("SELECT * FROM candidates", conn)
-        conn.close()
+        with open(db_path, 'r') as f:
+            data = json.load(f)
+        df = pd.DataFrame(data)
     except Exception as e:
         st.error(f"Could not load candidate materials: {e}")
         return
