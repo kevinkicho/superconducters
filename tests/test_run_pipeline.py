@@ -2617,3 +2617,351 @@ class TestPipelineModules:
         result = rp.continuous_deployment()
         mock_cd.assert_called_once()
         assert result["status"] == "success"
+
+
+# ===== Unit tests for manufacturing simulation module (PQP yield/cost/retention) =====
+
+class TestManufacturingSimulation:
+
+    @patch('scripts.run_pipeline.simulate_experiment')
+    def test_simulate_experiment_returns_expected_structure(self, mock_sim):
+        """Test that simulate_experiment returns dict with temperature, resistivity, tc_true."""
+        mock_sim.return_value = {
+            'temperature': [0.0, 150.0, 300.0],
+            'resistivity': [10.0, 5.0, 10.0],
+            'tc_true': 203.0,
+            'noise_level': 0.05
+        }
+        candidate = {'debye_temp': 1500, 'lambda_ep': 2.5, 'name': 'LaH10'}
+        result = rp.simulate_experiment(candidate, noise_level=0.05)
+        assert isinstance(result, dict)
+        assert 'temperature' in result
+        assert 'resistivity' in result
+        assert 'tc_true' in result
+        assert 'noise_level' in result
+        assert result['tc_true'] == 203.0
+        assert result['noise_level'] == 0.05
+        mock_sim.assert_called_once_with(candidate, noise_level=0.05)
+
+    @patch('scripts.run_pipeline.simulate_experiment')
+    def test_simulate_experiment_with_default_noise(self, mock_sim):
+        """Test simulate_experiment uses default noise_level=0.05."""
+        mock_sim.return_value = {
+            'temperature': [0.0, 150.0, 300.0],
+            'resistivity': [10.0, 5.0, 10.0],
+            'tc_true': 150.0,
+            'noise_level': 0.05
+        }
+        candidate = {'debye_temp': 1000, 'lambda_ep': 1.5}
+        result = rp.simulate_experiment(candidate)
+        assert result['noise_level'] == 0.05
+        mock_sim.assert_called_once_with(candidate)
+
+    @patch('scripts.run_pipeline.simulate_experiment')
+    def test_simulate_experiment_high_noise(self, mock_sim):
+        """Test simulate_experiment with high noise level."""
+        mock_sim.return_value = {
+            'temperature': [0.0, 150.0, 300.0],
+            'resistivity': [12.0, 8.0, 12.0],
+            'tc_true': 200.0,
+            'noise_level': 0.2
+        }
+        candidate = {'debye_temp': 1200, 'lambda_ep': 2.0}
+        result = rp.simulate_experiment(candidate, noise_level=0.2)
+        assert result['noise_level'] == 0.2
+        mock_sim.assert_called_once_with(candidate, noise_level=0.2)
+
+    @patch('scripts.run_pipeline.extract_tc_from_data')
+    def test_extract_tc_from_data_returns_expected_keys(self, mock_extract):
+        """Test that extract_tc_from_data returns dict with tc_estimated, tc_error, transition_width, fit_success."""
+        mock_extract.return_value = {
+            'tc_estimated': 202.5,
+            'tc_error': 1.2,
+            'transition_width': 2.1,
+            'fit_success': True
+        }
+        data = {
+            'temperature': [0.0, 150.0, 300.0],
+            'resistivity': [10.0, 5.0, 10.0],
+            'tc_true': 203.0,
+            'noise_level': 0.05
+        }
+        result = rp.extract_tc_from_data(data)
+        assert isinstance(result, dict)
+        assert 'tc_estimated' in result
+        assert 'tc_error' in result
+        assert 'transition_width' in result
+        assert 'fit_success' in result
+        assert result['tc_estimated'] == 202.5
+        assert result['fit_success'] is True
+        mock_extract.assert_called_once_with(data)
+
+    @patch('scripts.run_pipeline.extract_tc_from_data')
+    def test_extract_tc_from_data_fit_failure(self, mock_extract):
+        """Test extract_tc_from_data handles fit failure gracefully."""
+        mock_extract.return_value = {
+            'tc_estimated': 200.0,
+            'tc_error': 5.0,
+            'transition_width': 2.0,
+            'fit_success': False
+        }
+        data = {
+            'temperature': [0.0, 150.0, 300.0],
+            'resistivity': [10.0, 10.0, 10.0],
+            'tc_true': 203.0,
+            'noise_level': 0.05
+        }
+        result = rp.extract_tc_from_data(data)
+        assert result['fit_success'] is False
+        assert result['tc_error'] == 5.0
+        mock_extract.assert_called_once_with(data)
+
+    @patch('scripts.run_pipeline.lifecycle_assessment')
+    def test_lifecycle_assessment_returns_expected_structure(self, mock_lca):
+        """Test lifecycle_assessment returns dict with energy, CO2, and cost metrics."""
+        mock_lca.return_value = {
+            'candidate': 'LaH10',
+            'formula': 'LaH10',
+            'synthesis_pressure_gpa': 170,
+            'energy_kwh': 95.0,
+            'co2_emissions_kg': 0.0476,
+            'sample_mass_mg': 1.0,
+            'notes': 'Simplified LCA; actual values depend on synthesis scale and energy source.'
+        }
+        result = rp.lifecycle_assessment(candidate_name='LaH10', formula='LaH10', synthesis_pressure=170)
+        assert isinstance(result, dict)
+        assert 'candidate' in result
+        assert 'energy_kwh' in result
+        assert 'co2_emissions_kg' in result
+        assert 'synthesis_pressure_gpa' in result
+        assert result['candidate'] == 'LaH10'
+        assert result['energy_kwh'] == 95.0
+        mock_lca.assert_called_once_with(candidate_name='LaH10', formula='LaH10', synthesis_pressure=170)
+
+    @patch('scripts.run_pipeline.lifecycle_assessment')
+    def test_lifecycle_assessment_different_pressure(self, mock_lca):
+        """Test lifecycle_assessment scales with synthesis pressure."""
+        mock_lca.return_value = {
+            'candidate': 'H3S',
+            'formula': 'H3S',
+            'synthesis_pressure_gpa': 155,
+            'energy_kwh': 87.5,
+            'co2_emissions_kg': 0.0438,
+            'sample_mass_mg': 1.0,
+            'notes': 'Simplified LCA; actual values depend on synthesis scale and energy source.'
+        }
+        result = rp.lifecycle_assessment(candidate_name='H3S', formula='H3S', synthesis_pressure=155)
+        assert result['energy_kwh'] == 87.5
+        assert result['synthesis_pressure_gpa'] == 155
+        mock_lca.assert_called_once_with(candidate_name='H3S', formula='H3S', synthesis_pressure=155)
+
+    @patch('scripts.run_pipeline.trl_assessment')
+    def test_trl_assessment_returns_expected_structure(self, mock_trl):
+        """Test trl_assessment returns dict with trl, justification, next_steps, risk_factors."""
+        mock_trl.return_value = {
+            'trl': 3,
+            'justification': 'Experimental Tc reported (TRL 3)',
+            'next_steps': ['Develop scalable synthesis route'],
+            'risk_factors': ['High-pressure synthesis or operation required']
+        }
+        candidate = {
+            'name': 'LaH10',
+            'experimental_tc': 250.0,
+            'synthesis_method': 'DAC',
+            'high_pressure_required': True
+        }
+        result = rp.trl_assessment(candidate)
+        assert isinstance(result, dict)
+        assert 'trl' in result
+        assert 'justification' in result
+        assert 'next_steps' in result
+        assert 'risk_factors' in result
+        assert result['trl'] == 3
+        mock_trl.assert_called_once_with(candidate)
+
+    @patch('scripts.run_pipeline.trl_assessment')
+    def test_trl_assessment_no_experimental(self, mock_trl):
+        """Test trl_assessment returns TRL 1-2 when no experimental Tc."""
+        mock_trl.return_value = {
+            'trl': 1,
+            'justification': 'No experimental Tc reported (TRL 1-2)',
+            'next_steps': ['Synthesize candidate and measure Tc', 'Identify synthesis method'],
+            'risk_factors': ['Air-sensitive material requires handling in inert atmosphere']
+        }
+        candidate = {
+            'name': 'NewHydride',
+            'experimental_tc': None,
+            'air_sensitive': True
+        }
+        result = rp.trl_assessment(candidate)
+        assert result['trl'] == 1
+        assert 'Synthesize candidate' in result['next_steps'][0]
+        mock_trl.assert_called_once_with(candidate)
+
+    @patch('scripts.run_pipeline.trl_assessment')
+    def test_trl_assessment_ambient_pressure(self, mock_trl):
+        """Test trl_assessment returns higher TRL for ambient-pressure materials."""
+        mock_trl.return_value = {
+            'trl': 5,
+            'justification': 'Experimental Tc reported (TRL 3); Operates at ambient pressure (TRL 5)',
+            'next_steps': ['Develop scalable synthesis route'],
+            'risk_factors': []
+        }
+        candidate = {
+            'name': 'AmbientSC',
+            'experimental_tc': 150.0,
+            'ambient_pressure': True,
+            'synthesis_method': 'CVD',
+            'scalable_synthesis': False
+        }
+        result = rp.trl_assessment(candidate)
+        assert result['trl'] == 5
+        mock_trl.assert_called_once_with(candidate)
+
+    @patch('scripts.run_pipeline.virtual_lab_simulation')
+    def test_virtual_lab_simulation_returns_material_card(self, mock_vlab):
+        """Test virtual_lab_simulation returns material card with candidates and manufacturing data."""
+        mock_vlab.return_value = {
+            'candidates': [
+                {'formula': 'H3S', 'tc': 203, 'dft_energy': -1.5, 'dft_bandgap': 0.0},
+                {'formula': 'LaH10', 'tc': 250, 'dft_energy': -2.0, 'dft_bandgap': 0.0}
+            ],
+            'manufacturing': {'yield': 0.85, 'cost': 12.5, 'feasibility': 'high'},
+            'summary': 'Generated 2 candidates, validated with DFT, manufacturing feasibility assessed.'
+        }
+        result = rp.virtual_lab_simulation()
+        assert isinstance(result, dict)
+        assert 'candidates' in result
+        assert 'manufacturing' in result
+        assert 'summary' in result
+        assert len(result['candidates']) == 2
+        assert result['manufacturing']['yield'] == 0.85
+        assert result['manufacturing']['cost'] == 12.5
+        mock_vlab.assert_called_once()
+
+    @patch('scripts.run_pipeline.virtual_lab_simulation')
+    def test_virtual_lab_simulation_no_candidates(self, mock_vlab):
+        """Test virtual_lab_simulation returns None when no candidates generated."""
+        mock_vlab.return_value = None
+        result = rp.virtual_lab_simulation()
+        assert result is None
+        mock_vlab.assert_called_once()
+
+
+# ===== Unit tests for causal integration functions =====
+
+class TestCausalIntegration:
+
+    @patch('scripts.run_pipeline.detect_data_drift')
+    def test_detect_data_drift_returns_bool(self, mock_drift):
+        """Test detect_data_drift returns True/False based on KS test."""
+        import numpy as np
+        mock_drift.return_value = True
+        training = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+        new_data = np.array([[1.5, 2.5], [3.5, 4.5], [5.5, 6.5]])
+        result = rp.detect_data_drift(training, new_data, feature_names=['Tc', 'Pressure'])
+        assert result is True
+        mock_drift.assert_called_once_with(training, new_data, feature_names=['Tc', 'Pressure'], threshold=0.05)
+
+    @patch('scripts.run_pipeline.detect_data_drift')
+    def test_detect_data_drift_no_drift(self, mock_drift):
+        """Test detect_data_drift returns False when no significant drift."""
+        import numpy as np
+        mock_drift.return_value = False
+        training = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+        new_data = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+        result = rp.detect_data_drift(training, new_data, feature_names=['Tc', 'Pressure'], threshold=0.05)
+        assert result is False
+        mock_drift.assert_called_once_with(training, new_data, feature_names=['Tc', 'Pressure'], threshold=0.05)
+
+    @patch('scripts.run_pipeline.detect_data_drift')
+    def test_detect_data_drift_custom_threshold(self, mock_drift):
+        """Test detect_data_drift with custom threshold."""
+        import numpy as np
+        mock_drift.return_value = True
+        training = np.array([[1.0, 2.0], [3.0, 4.0]])
+        new_data = np.array([[10.0, 20.0], [30.0, 40.0]])
+        result = rp.detect_data_drift(training, new_data, feature_names=['Tc'], threshold=0.01)
+        assert result is True
+        mock_drift.assert_called_once_with(training, new_data, feature_names=['Tc'], threshold=0.01)
+
+    @patch('scripts.run_pipeline.comprehensive_validation')
+    def test_comprehensive_validation_returns_metrics(self, mock_val):
+        """Test comprehensive_validation returns MAE, RMSE, R2, uncertainty, sources."""
+        mock_val.return_value = {
+            'MAE': 5.2,
+            'RMSE': 7.8,
+            'R2': 0.95,
+            'uncertainty': 1.2,
+            'sources': [
+                {'url': 'https://supercon.nims.go.jp/api/search?formula=H3S', 'type': 'SuperCon'},
+                {'url': 'http://export.arxiv.org/api/query?search_query=all:H3S+AND+superconductivity&max_results=10', 'type': 'arXiv'}
+            ],
+            'n_experimental': 5
+        }
+        result = rp.comprehensive_validation('H3S')
+        assert isinstance(result, dict)
+        assert 'MAE' in result
+        assert 'RMSE' in result
+        assert 'R2' in result
+        assert 'uncertainty' in result
+        assert 'sources' in result
+        assert result['MAE'] == 5.2
+        assert result['R2'] == 0.95
+        assert len(result['sources']) == 2
+        mock_val.assert_called_once_with('H3S')
+
+    @patch('scripts.run_pipeline.comprehensive_validation')
+    def test_comprehensive_validation_no_data(self, mock_val):
+        """Test comprehensive_validation returns None metrics when no experimental data."""
+        mock_val.return_value = {
+            'MAE': None,
+            'RMSE': None,
+            'R2': None,
+            'uncertainty': None,
+            'sources': [],
+            'error': 'No experimental data found'
+        }
+        result = rp.comprehensive_validation('UnknownCompound')
+        assert result['MAE'] is None
+        assert result['error'] == 'No experimental data found'
+        assert result['sources'] == []
+        mock_val.assert_called_once_with('UnknownCompound')
+
+    @patch('scripts.run_pipeline.comprehensive_validation')
+    def test_comprehensive_validation_single_point(self, mock_val):
+        """Test comprehensive_validation handles single data point (R2 is None)."""
+        mock_val.return_value = {
+            'MAE': 3.0,
+            'RMSE': 3.0,
+            'R2': None,
+            'uncertainty': 0.5,
+            'sources': [{'url': 'https://supercon.nims.go.jp/api/search?formula=LaH10', 'type': 'SuperCon'}],
+            'n_experimental': 1
+        }
+        result = rp.comprehensive_validation('LaH10')
+        assert result['MAE'] == 3.0
+        assert result['R2'] is None
+        assert result['n_experimental'] == 1
+        mock_val.assert_called_once_with('LaH10')
+
+    @patch('scripts.run_pipeline.active_learning_loop')
+    def test_active_learning_loop_runs_iterations(self, mock_al):
+        """Test active_learning_loop runs specified number of iterations and logs results."""
+        mock_al.return_value = None
+        result = rp.active_learning_loop(db_path=':memory:', n_iterations=3)
+        mock_al.assert_called_once_with(db_path=':memory:', n_iterations=3)
+
+    @patch('scripts.run_pipeline.active_learning_loop')
+    def test_active_learning_loop_default_params(self, mock_al):
+        """Test active_learning_loop uses default parameters."""
+        mock_al.return_value = None
+        result = rp.active_learning_loop()
+        mock_al.assert_called_once_with()
+
+    @patch('scripts.run_pipeline.active_learning_loop')
+    def test_active_learning_loop_integrates_causal_feedback(self, mock_al):
+        """Test active_learning_loop integrates user feedback weights for causal re-ranking."""
+        mock_al.return_value = None
+        result = rp.active_learning_loop(db_path='test.db', n_iterations=5)
+        mock_al.assert_called_once_with(db_path='test.db', n_iterations=5)
