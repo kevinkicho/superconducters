@@ -1150,3 +1150,45 @@ def query_knowledge_graph(query: str) -> str:
     except Exception as e:
         logger.error(f"Query error: {e}")
         return f"Error querying knowledge graph: {e}"
+
+def display_candidate_materials():
+    import sqlite3
+    import pandas as pd
+    st.markdown("## Candidate Materials")
+    db_path = "superconductor.db"
+    try:
+        conn = sqlite3.connect(db_path)
+        df = pd.read_sql_query("SELECT * FROM candidates", conn)
+        conn.close()
+    except Exception as e:
+        st.error(f"Could not load candidate materials: {e}")
+        return
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        min_tc = st.slider("Min Predicted Tc (K)", 0.0, 300.0, 0.0, key="min_tc")
+    with col2:
+        max_tc = st.slider("Max Predicted Tc (K)", 0.0, 300.0, 300.0, key="max_tc")
+    with col3:
+        search = st.text_input("Search material name", key="search_mat")
+    if 'predicted_tc' in df.columns:
+        df = df[(df['predicted_tc'] >= min_tc) & (df['predicted_tc'] <= max_tc)]
+    if search:
+        df = df[df['material'].str.contains(search, case=False, na=False)]
+    st.dataframe(df, use_container_width=True)
+    if 'experimental_tc' in df.columns:
+        st.subheader("Experimental Results")
+        exp_df = df[df['experimental_tc'].notna()]
+        if not exp_df.empty:
+            st.dataframe(exp_df[['material', 'predicted_tc', 'experimental_tc', 'status']], use_container_width=True)
+        else:
+            st.info("No experimental results yet.")
+    if st.button("Run Pipeline Update"):
+        with st.spinner("Running pipeline..."):
+            try:
+                from run_pipeline import live_external_validation
+                live_external_validation()
+                st.success("Pipeline update complete. Refresh to see new data.")
+            except Exception as e:
+                st.error(f"Pipeline update failed: {e}")
+
+display_candidate_materials()
