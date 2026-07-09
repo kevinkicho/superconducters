@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
-from predict_tc import predict_tc
+from scripts.predict_tc import predict_tc
 
 # Paths
 DATA_DIR = "data"

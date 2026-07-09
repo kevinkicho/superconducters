@@ -1,0 +1,33 @@
+{
+  "preset": "council",
+  "runId": "004f2be0-8e92-4776-8dfd-dba5a462effa",
+  "generatedAt": "2026-07-09T19:36:30.283Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Refactor run_pipeline.py into separate modules by concern (e.g., pipeline_orchestrator.py, ml_models.py, dft_integration.py, api.py, reporting.py, sensitivity.py, simulation.py, etc.) and remove all duplicate function definitions. Each function should be defined exactly once.\"",
+      "source": "Agent 2"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Remove all duplicate function definitions. Each function should appear exactly once. Consolidate the two train_gp_model() variants, the two structure_to_graph() variants, etc.\"",
+      "source": "Agent 2"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Move the GNN and SHAP code into a separate ml_models.py module that is only imported when needed. Remove torch_geometric and shap imports from dft_calculator.py, which should only contain DFT/physics-based calculations.\"",
+      "source": "Agent 2"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Remove all duplicate function definitions. Each function should appear exactly once. Consolidate the two train_gp_model() variants, the two structure_to_graph() variants, etc.\" _(from: Agent 2)_",
+      "source": "Next actions"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Move the GNN and SHAP code into a separate ml_models.py module that is only imported when needed. Remove torch_geometric and shap imports from dft_calculator.py, which should only contain DFT/physics-based calculations.\" _(from: Agent 2)_",
+      "source": "Next actions"
+    }
+  ]
+}
