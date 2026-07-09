@@ -1,6 +1,8 @@
 # Online Research Summary: Room-Temperature Superconductivity
 
-## Key Findings from Literature and Web Research
+## Literature Survey
+
+### Key Findings from Literature and Web Research
 
 ### 1. High-Pressure Hydrides (Highest Confirmed Tc)
 - **LaH₁₀ (lanthanum decahydride)** under ~170 GPa shows Tc ~250 K (−23°C). This is the highest confirmed superconducting transition temperature to date.
@@ -58,7 +60,89 @@
 *This summary was compiled from online research (web_search + web_fetch) on 2025-03-28. Sources are cited with URLs.*
 
 
-## Implications for Project Discovery Strategy
+### 9. 2024–2026 Breakthrough Findings
+
+#### 9.1 LaSc₂H₂₄ — Room-Temperature Superconductivity at 298 K
+- **Paper**: Song et al., "Room-Temperature Superconductivity at 298 K in Ternary La-Sc-H System at High-pressure Conditions," arXiv:2510.01273 (September 2025).
+- **Claim**: First experimental realization of room-temperature superconductivity at 298 K in a ternary La-Sc-H system.
+- **Synthesis**: Diamond anvil cell at 250–260 GPa with pulsed laser heating of La-Sc alloy + ammonia borane.
+- **Structure**: Hexagonal LaSc₂H₂₄ confirmed by synchrotron X-ray diffraction.
+- **Evidence**: Zero electrical resistance and suppression of Tc under applied magnetic fields; 13 reproducible experimental runs.
+- **Pressure range**: Superconductivity observed at 195–266 GPa with onset Tc of 271–298 K.
+- **Significance**: First-ever room-temperature superconductor, marking a milestone in the field. However, still requires megabar pressures.
+- **Source**: [https://arxiv.org/abs/2510.01273](https://arxiv.org/abs/2510.01273)
+
+#### 9.2 UH Pressure-Quench Protocol (PQP) — Ambient-Pressure Tc Record
+- **Paper**: Deng & Chu, "Ambient-pressure 151-K superconductivity in HgBa₂Ca₂Cu₃O₈₊δ via pressure-quench protocol," *PNAS* 123, e2536178123 (March 2026).
+- **Technique**: Pressure-quench protocol (PQP) — apply high pressure to enhance Tc, cool under pressure, then rapidly release pressure to "lock in" enhanced superconducting state.
+- **Result**: HgBa₂Ca₂Cu₃O₈₊δ (Hg-1223) achieves Tc = 151 K at ambient pressure — new record for ambient-pressure superconductivity, surpassing the 1993 record of 133 K.
+- **Stability**: Enhanced Tc persisted for at least two weeks; reproduced in five independent samples.
+- **Significance**: Demonstrates a general pathway to retain high-pressure superconducting properties at ambient conditions.
+- **Sources**:
+  - [https://www.pnas.org/doi/10.1073/pnas.2536178123](https://www.pnas.org/doi/10.1073/pnas.2536178123)
+  - [https://www.uh.edu/nsm/news-events/stories/2026/0310-superconductivity-record.php](https://www.uh.edu/nsm/news-events/stories/2026/0310-superconductivity-record.php)
+  - [https://physics.aps.org/articles/v19/37](https://physics.aps.org/articles/v19/37)
+
+#### 9.3 PNAS Programmatic Research Agenda
+- **Paper**: Prasankumar et al., "The path to room-temperature superconductivity: A programmatic approach," *PNAS* 123, e2520324123 (March 2026). DOI: 10.1073/pnas.2520324123.
+- **Framework**: Lays out two grand challenges — the **Prediction Challenge** (improving computational models to predict not just superconductivity but synthesizability) and the **Engineering Challenge** (using pressure, doping, nanostructures, or light pulses to engineer superconducting states).
+- **Proposal**: Treat potential superconductors as **quantum metamaterials** — systems where properties are determined by nanoscale structure design, not just chemical composition.
+- **Call to action**: Close integration of theory, simulation (including AI/ML), and experiment; systematic search over large composition spaces.
+- **Sources**:
+  - [https://www.pnas.org/doi/10.1073/pnas.2520324123](https://www.pnas.org/doi/10.1073/pnas.2520324123)
+  - [https://phys.org/news/2026-03-room-temperature-superconductor-scientists-agenda.html](https://phys.org/news/2026-03-room-temperature-superconductor-scientists-agenda.html)
+
+#### 9.4 LaH₁₀ Long-Term Stability (>5 Years at 170 GPa)
+- **Paper**: Minkov et al., "Long-Term Stability of Superconducting Metal Superhydrides," arXiv:2507.08009 (July 2025).
+- **Claim**: Direct experimental evidence (XRD + four-probe electrical resistance) confirms Fm-3m LaH₁₀ remains stable and superconducting for more than 5 years at its formation pressure of 170 GPa.
+- **Context**: Contradicts Zhou et al. (*Nat. Commun.* 16, 1135, 2025), who claimed LaH₁₀ progressively decomposes into LaH₃ and H₂ within ~2 months.
+- **Supporting evidence**: Quantum chemistry calculations predict LaH₁₀ is thermodynamically more stable than LaH₃ + H₂ under formation conditions.
+- **Significance**: LaH₁₀ is a viable candidate for long-term applications (if pressure requirement can be reduced).
+- **Source**: [https://arxiv.org/abs/2507.08009](https://arxiv.org/abs/2507.08009)
+
+#### 9.5 Mg₄Pt₃H₆ — Ambient-Pressure Hydride Superconductor (New Class)
+- **Paper**: Lu et al., "Prediction and synthesis of Mg₄Pt₃H₆: A superconducting complex transition metal hydride stabilized at ambient pressure," *Physical Review B* 112, 094513 (2025); arXiv:2505.22546.
+- **Discovery**: First metallic complex transition metal hydride synthesized at moderate pressure (8–25 GPa) that remains stable upon quenching to ambient conditions.
+- **Structure**: Body-centered cubic; formal charge: 4[Mg]²⁺·3[PtH₂]²⁻.
+- **Superconductivity**: Ambient-pressure Tc(50%) = 2.9 K, in agreement with theory.
+- **Significance**: Establishes a new class of ambient-stable hydride superconductors (ternary transition-metal complex hydrides), enriching hydride chemistry beyond binary superhydrides.
+- **Source**: [https://arxiv.org/abs/2505.22546](https://arxiv.org/abs/2505.22546)
+
+#### 9.6 AI Causal Discovery for CsV₃Sb₅ Kagome Superconductor
+- **Paper**: Fujita et al., "Extracting Causality from Spectroscopy," *Scientific Reports* 15, 29687 (December 2025). DOI: 10.1038/s41598-025-29687-8.
+- **Collaboration**: Tohoku University (WPI-AIMR) and Fujitsu Limited.
+- **Technology**: Causal AI (Fujitsu Kozuchi platform) applied to ARPES measurement data of cesium vanadium antimonide (CsV₃Sb₅), a kagome superconducting material.
+- **Innovation**: New discovery intelligence technique compresses causal graph to <1/20 of conventional size, enabling efficient extraction of causal relationships.
+- **Key finding**: Superconductivity mechanism in CsV₃Sb₅ arises from interaction of vanadium, antimony, and cesium electrons.
+- **Significance**: Demonstrates AI's power to accelerate materials research without requiring prior human intuition about mechanisms.
+- **Sources**:
+  - [https://global.fujitsu/en-global/pr/news/2025/12/23-01](https://global.fujitsu/en-global/pr/news/2025/12/23-01)
+  - [https://www.nature.com/articles/s41598-025-29687-8](https://www.nature.com/articles/s41598-025-29687-8)
+
+#### 9.7 Zentropy Theory — Bridging BCS and DFT for Superconductor Prediction
+- **Paper**: Liu & Shang, "Revealing symmetry-broken superconducting configurations by density functional theory," *Superconductor Science and Technology* 38, 085001 (July 2025). DOI: 10.1088/1361-6668/adedbc.
+- **Concept**: "Zentropy theory" combines statistical mechanics, quantum physics (DFT), and computer modeling to predict superconducting configurations.
+- **Key insight**: Connects BCS theory (Cooper pair formation) with DFT predictions (electron density). DFT can reveal signs of superconductivity even though not originally designed for it.
+- **Successful predictions**: Applied to both conventional (BCS) and high-temperature superconductors; also predicted superconductivity in Cu, Ag, and Au (not usually considered superconductors).
+- **Next steps**: Use zentropy to predict Tc as a function of pressure; screen 5-million-material database for room-temperature candidates.
+- **Source**: [https://iopscience.iop.org/article/10.1088/1361-6668/adedbc](https://iopscience.iop.org/article/10.1088/1361-6668/adedbc)
+- **News**: [https://www.eurekalert.org/news-releases/1095395](https://www.eurekalert.org/news-releases/1095395)
+
+#### 9.8 H₃S Superconducting Gap Confirmed by Tunneling Spectroscopy
+- **Paper**: Du et al., "Superconducting gap of H₃S measured by tunnelling spectroscopy," *Nature* (April 2025). DOI: 10.1038/s41586-025-08895-2.
+- **Technique**: First application of high-pressure planar electron tunneling spectroscopy to hydride superconductors.
+- **Key results**:
+  - H₃S: fully open superconducting gap ≈ 60 meV.
+  - D₃S (deuterated): gap ≈ 44 meV.
+  - Isotope effect confirms phonon-mediated pairing mechanism.
+- **Significance**: First direct microscopic evidence of superconductivity in hydrogen-rich materials. Validates BCS-like mechanism for high-pressure hydrides.
+- **Impact**: Described by the late M. Eremets as "the most important work in the field of hydride superconductivity since the discovery of superconductivity in H₃S in 2015."
+- **Sources**:
+  - [https://www.nature.com/articles/s41586-025-08895-2](https://www.nature.com/articles/s41586-025-08895-2)
+  - [https://phys.org/news/2025-04-high-pressure-electron-tunneling-spectroscopy.html](https://phys.org/news/2025-04-high-pressure-electron-tunneling-spectroscopy.html)
+
+
+### Implications for Project Discovery Strategy
 
 - **Focus on ternary hydrides and clathrate structures** predicted by crystal structure prediction (USPEX, CALYPSO) to achieve high Tc at lower pressures. Use high-throughput DFT screening to identify promising candidates.
 - **Investigate chemical precompression** using rare-earth and alkaline-earth metals to stabilize hydrogen-rich phases at ambient or moderate pressures.
@@ -69,7 +153,7 @@
 - **Study cuprate analogs** to understand the role of strong correlations and d-wave pairing in achieving high Tc at ambient pressure, potentially guiding discovery of room-temperature compounds.
 
 
-## Chemistry and Physics for Discovery and Manufacturing of Room-Temperature Superconductors
+### Chemistry and Physics for Discovery and Manufacturing of Room-Temperature Superconductors
 
 ### Chemical Strategies
 - **Ternary and quaternary hydrides**: Use crystal structure prediction (USPEX, CALYPSO) to identify hydrides with high hydrogen content and strong electron-phonon coupling at lower pressures. Focus on systems with light elements (Li, Mg, Ca, Y) that can be synthesized via high-pressure reactions.
@@ -95,7 +179,7 @@
 This section synthesizes the research findings into a concrete plan for discovering and manufacturing room-temperature superconducting compounds, aligning with the project's goals.
 
 
-## Updated Research Findings (2020+)
+### Updated Research Findings (2020+)
 
 ### Hydride Superconductors
 
@@ -140,7 +224,9 @@ This section synthesizes the research findings into a concrete plan for discover
 
 This update incorporates findings from at least five recent papers (2020+) as required.
 
-## Automated Literature Mining Module
+## Code Metrics and Deliverables
+
+### Automated Literature Mining Module
 
 A Python script `scripts/arxiv_scraper.py` has been created to automate literature mining from arXiv. It fetches recent papers, parses abstracts to extract structured data (material names, Tc values, pressure values), and can update this summary file.
 
@@ -173,7 +259,7 @@ python scripts/arxiv_scraper.py --no-update
 - Schedule periodic runs via cron or GitHub Actions.
 
 
-## Validation of ML Predictions
+### Validation of ML Predictions
 
 To ensure the reliability of machine learning predictions for superconducting critical temperatures, a rigorous validation framework has been implemented. The model in `scripts/predict_tc.py` is trained on a curated subset of `data/superconductor_database.json` and evaluated against a held-out test set (20% of the data, stratified by material class).
 
@@ -197,7 +283,7 @@ These metrics indicate that the model can predict Tc within ~12 K on average, wh
 This validation framework ensures that ML predictions are trustworthy and that the model’s limitations are well understood before candidates are passed to DFT or experimental synthesis.
 
 
-## Pipeline Performance Evaluation
+### Pipeline Performance Evaluation
 
 The machine learning pipeline (scripts/predict_tc.py) has been evaluated against a held-out test set from the SuperCon database (data/superconductor_database.json). The following metrics were obtained:
 
@@ -237,7 +323,7 @@ These results indicate that the pipeline is reliable for screening candidate mat
 This section complements the "Validation of ML Predictions" section above by providing a more detailed breakdown of pipeline performance across material classes and a direct comparison with known superconductors.
 
 
-## Comparison with Competing Approaches
+### Comparison with Competing Approaches
 
 This section compares the pipeline's predictions (Tc, pressure, synthesizability) with results from other published methods, highlighting advantages, limitations, and areas for improvement.
 
@@ -305,7 +391,7 @@ DFT-based methods (USPEX, AIRSS, CALYPSO) are the gold standard for predicting n
 - "A comprehensive benchmark of machine learning methods for superconductor critical temperature prediction," *Scientific Reports* 13, 45678 (2023). [https://www.nature.com/articles/s41598-023-45678-9](https://www.nature.com/articles/s41598-023-45678-9)
 
 
-## Benchmarking Dashboard
+### Benchmarking Dashboard
 
 To ensure the pipeline's predictions remain accurate and relevant, a **continuous benchmarking dashboard** is maintained. This dashboard is updated weekly (or on-demand) by the `continuous_benchmarking()` function in `scripts/run_pipeline.py`. The dashboard tracks the following error metrics against the latest experimental literature data:
 
@@ -354,7 +440,7 @@ If the MAE or RMSE exceeds a predefined threshold (e.g., MAE > 20 K), the pipeli
 - "A comprehensive benchmark of machine learning methods for superconductor critical temperature prediction," *Scientific Reports* 13, 45678 (2023). [https://www.nature.com/articles/s41598-023-45678-9](https://www.nature.com/articles/s41598-023-45678-9)
 
 
-## Generative Model Comparison: Diffusion vs. cVAE for Materials Discovery
+### Generative Model Comparison: Diffusion vs. cVAE for Materials Discovery
 
 ### Overview
 Generative models are increasingly used to propose novel crystal structures and compositions for superconductor discovery. Two prominent families are **diffusion models** (e.g., CDVAE, DiffCSP) and **conditional variational autoencoders (cVAE)** (e.g., FTCP). Below we compare them on key metrics relevant to room-temperature superconductor discovery.
@@ -384,7 +470,7 @@ Generative models are increasingly used to propose novel crystal structures and 
 - "Diffusion models for crystal structure generation: a benchmark," arXiv:2306.12345 (2023). [https://arxiv.org/abs/2306.12345](https://arxiv.org/abs/2306.12345)
 
 
-## Live Validation Dashboard
+### Live Validation Dashboard
 
 This dashboard is updated weekly by `continuous_validation_pipeline()` and tracks the performance of our predictive models against newly reported experimental data.
 
@@ -409,7 +495,7 @@ This dashboard is updated weekly by `continuous_validation_pipeline()` and track
 - Predictions are generated by the ensemble model in `scripts/predict_tc.py`.
 - The pipeline is triggered every Monday at 00:00 UTC via GitHub Actions.
 
-## Comprehensive Validation Report
+### Comprehensive Validation Report
 
 This report compiles predicted vs. experimental critical temperatures for known room-temperature superconductors (high-pressure hydrides) to assess model accuracy and identify systematic biases.
 
@@ -456,7 +542,9 @@ This report compiles predicted vs. experimental critical temperatures for known 
 - Validation methodology follows the guidelines in `docs/validation_protocol.md`.
 
 
-### 6. Additional Recent Findings (2020–2024)
+### Archived: Additional Recent Findings (2020–2024)
+
+> **Note**: The content below has been retained for reference. See Section 9 above (subsection under Literature Survey) for the comprehensive 2024–2026 breakthrough findings.
 
 #### Hydrides
 - **Ternary hydride predictions**: Li₂MgH₁₆ and CaYH₁₂ are predicted to have Tc > 200 K at pressures below 100 GPa via chemical precompression (Sun et al., 2021, *Journal of Physical Chemistry Letters*). [https://doi.org/10.1021/acs.jpclett.0c03420](https://doi.org/10.1021/acs.jpclett.0c03420)
