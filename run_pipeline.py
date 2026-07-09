@@ -294,9 +294,9 @@ def main():
 
     # Import sub-modules (assumed to be in same package)
     try:
-        query_mod = importlib.import_module("query_database")
-        gen_mod = importlib.import_module("generate_candidates")
-        pred_mod = importlib.import_module("predict_tc")
+        query_mod = importlib.import_module("scripts.query_database")
+        gen_mod = importlib.import_module("scripts.generate_candidates")
+        pred_mod = importlib.import_module("scripts.predict_tc")
     except ImportError as e:
         print(f"Error: missing required module – {e}", file=sys.stderr)
         sys.exit(1)
