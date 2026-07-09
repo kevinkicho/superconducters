@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "sourceRunId": "443c6dc1-3550-4a21-b682-c4c210d09e21",
+  "writtenAt": 1783585944413,
+  "completedTodoHints": [],
+  "todos": [
+    {
+      "description": "Consolidate duplicate function definitions in scripts/predict_tc.py: remove 3+ redundant definitions of predict_tc, train_model, average_valence, average_debye, mcmillan_tc, allen_dynes_tc, main; remove the module-level 'TRAINING_DATA = load_database()' call that crashes on import (references non-existent 'superconductor_data.json'); remove duplicate DATABASE definition (A15 vs hydrides) keeping only the hydride database; fix load_database() to point to data/superconductor_database.json",
+      "expectedFiles": [
+        "scripts/predict_tc.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Fix streamlit_dashboard.py: remove references to tab9/tab10/tab11 (lines ~316-334) since only 8 tabs are created in st.tabs(); remove orphaned 'elif tab == \"Plant Layout\"' and 'elif tab == \"VR Tour\"' blocks where 'tab' is undefined; fix display_candidate_materials() to use data/superconductor_database.json instead of non-existent superconductor.db",
+      "expectedFiles": [
+        "streamlit_dashboard.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Fix shell injection vulnerability in dft_calculator.py: replace subprocess.run(' '.join(cmd), shell=True, check=True) with subprocess.run(cmd, shell=False, check=True, capture_output=True, text=True) in run_pw, run_ph, run_q2r, run_matdyn, run_lambda functions; remove '>' redirection from command lists and use stdout=subprocess.PIPE instead",
+      "expectedFiles": [
+        "dft_calculator.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Generate complete requirements.txt by scanning all import statements across the project: add all missing packages (torch, torch_geometric, pymatgen, fastapi, uvicorn, streamlit, stable-baselines3, gym, scikit-learn, GPy, simpy, SALib, networkx, pulp, cryptography, prometheus_client, slowapi, aiohttp, skopt, mp-api, paho-mqtt, reportlab, apscheduler, websockets, plotly, shap, ase, joblib, etc.) with appropriate version constraints",
+      "expectedFiles": [
+        "requirements.txt"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Deduplicate and standardize data/superconductor_database.json: remove duplicate entries for the same compound (YH6 appears 8+ times with Tc=200-224K, CaH6 5+ times, Li2MgH16 6+ times, La3Ni2O7 8+ times, Nd0.8Sr0.2NiO2 6+ times); standardize schema to use 'name'/'Tc' keys consistently; remove or flag entries with Tc=0 as non-superconducting; keep most reliable entry per compound (prefer experimental over predicted, peer-reviewed over arXiv)",
+      "expectedFiles": [
+        "data/superconductor_database.json"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Fix run_pipeline.py FastAPI endpoints: replace random mock predictions (random.uniform(200,300) and random.uniform(0.5,1.0)) in /predict-tc and /simulate-manufacturing endpoints with actual model inference calls to predict_tc from scripts/predict_tc.py or dft_calculator.py",
+      "expectedFiles": [
+        "run_pipeline.py"
+      ],
+      "createdBy": "council-synthesis"
+    },
+    {
+      "description": "Fix scripts/generate_candidates.py code organization: move ConditionalDenoisingDiffusion class, train_conditional_ddpm(), and generate_conditional_ddpm_candidates() definitions before the main() function that references them, to prevent NameError at runtime",
+      "expectedFiles": [
+        "scripts/generate_candidates.py"
+      ],
+      "createdBy": "council-synthesis"
+    }
+  ]
+}

@@ -206,32 +206,32 @@ def generate_elph_input(
 
 def run_pw(input_file: str, output_file: str, binary: str = PW_BIN) -> None:
     """Run pw.x calculation."""
-    cmd = [binary, "-in", input_file, ">", output_file]
-    subprocess.run(" ".join(cmd), shell=True, check=True)
+    cmd = [binary, "-in", input_file]
+    subprocess.run(cmd, shell=False, check=True, capture_output=True, text=True)
 
 
 def run_ph(input_file: str, output_file: str, binary: str = PH_BIN) -> None:
     """Run ph.x calculation."""
-    cmd = [binary, "-in", input_file, ">", output_file]
-    subprocess.run(" ".join(cmd), shell=True, check=True)
+    cmd = [binary, "-in", input_file]
+    subprocess.run(cmd, shell=False, check=True, capture_output=True, text=True)
 
 
 def run_q2r(input_file: str, output_file: str, binary: str = Q2R_BIN) -> None:
     """Run q2r.x to generate force constants."""
-    cmd = [binary, "-in", input_file, ">", output_file]
-    subprocess.run(" ".join(cmd), shell=True, check=True)
+    cmd = [binary, "-in", input_file]
+    subprocess.run(cmd, shell=False, check=True, capture_output=True, text=True)
 
 
 def run_matdyn(input_file: str, output_file: str, binary: str = MATDYN_BIN) -> None:
     """Run matdyn.x to compute phonon dispersion."""
-    cmd = [binary, "-in", input_file, ">", output_file]
-    subprocess.run(" ".join(cmd), shell=True, check=True)
+    cmd = [binary, "-in", input_file]
+    subprocess.run(cmd, shell=False, check=True, capture_output=True, text=True)
 
 
 def run_lambda(input_file: str, output_file: str, binary: str = LAMBDA_BIN) -> None:
     """Run lambda.x to compute electron-phonon coupling."""
-    cmd = [binary, "-in", input_file, ">", output_file]
-    subprocess.run(" ".join(cmd), shell=True, check=True)
+    cmd = [binary, "-in", input_file]
+    subprocess.run(cmd, shell=False, check=True, capture_output=True, text=True)
 
 
 def extract_phonon_frequencies(ph_output: str) -> List[float]:
