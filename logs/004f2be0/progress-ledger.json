@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "runId": "004f2be0-8e92-4776-8dfd-dba5a462effa",
-  "updatedAt": 1783625988930,
-  "lastCycle": 1,
+  "updatedAt": 1783626923013,
+  "lastCycle": 2,
   "observations": [
     {
       "kind": "commit",
@@ -48,6 +48,69 @@
         "scripts/__init__.py"
       ],
       "at": 1783625938444
+    },
+    {
+      "kind": "commit",
+      "text": "Add a header note at the top of docs/proposed_chemistry_physics.md stating that the root-level proposed_chemistry_physics.md is now the single source of truth, and remove all duplicated content (the seven breakthrough sections) from this file, replacing them with brief cross-references.",
+      "cycle": 2,
+      "files": [
+        "docs/proposed_chemistry_physics.md"
+      ],
+      "at": 1783626245302
+    },
+    {
+      "kind": "commit",
+      "text": "Add a subsection under '9. 2024–2026 Breakthrough Findings' in docs/online_research_summary.md covering the MIT magic-angle graphene tunneling gap results (direct spectroscopic measurement of the superconducting gap in magic-angle twisted bilayer graphene).",
+      "cycle": 2,
+      "files": [
+        "docs/online_research_summary.md"
+      ],
+      "at": 1783626432861
+    },
+    {
+      "kind": "commit",
+      "text": "Add a dedicated section on the pressure-quench protocol (PQP) to discovery_strategy.md, describing it as a manufacturing pathway for retaining high-Tc phases at ambient pressure and citing the Hg-1223 demonstration (Deng, Chu et al., 2026).\n\nAlso (auditor): Add a dedicated section on zentropy theory (Liu & Shang, 2025) to discovery_strategy.md, describing it as a predictive tool for high-throughpu",
+      "cycle": 2,
+      "files": [
+        "discovery_strategy.md"
+      ],
+      "at": 1783626530320
+    },
+    {
+      "kind": "fail",
+      "text": "Replace the entire content of proposed_chemistry_physics.md with the consolidated 2024–2026 breakthrough content from docs/proposed_chemistry_physics.md (LaSc₂H — all retries exhausted (last: hunk file \"scripts/screen_candidates.py\" not in expectedFiles); no failover model in chain",
+      "cycle": 2,
+      "files": [
+        "proposed_chemistry_physics.md"
+      ],
+      "at": 1783626552194
+    },
+    {
+      "kind": "commit",
+      "text": "Add a dedicated LaSc₂H₂₄ synthesis protocol to synthesis_methods.md covering La–Sc alloy + NH₃BH₃ precursor loading in DAC, compression >195 GPa, pulsed laser heating, and characterization steps.\n\nAlso (auditor): Add a dedicated pressure-quench protocol (PQP) section to synthesis_methods.md describing the method for retaining metastable high-Tc phases at ambient pressure, citing the Hg-1223 demons",
+      "cycle": 2,
+      "files": [
+        "synthesis_methods.md"
+      ],
+      "at": 1783626600643
+    },
+    {
+      "kind": "commit",
+      "text": "Add a dedicated section on the pressure-quench protocol (PQP) as a key manufacturing pathway in docs/manufacturing_scalability.md, with subsections applying PQP to hydride superconductors (LaSc₂H₂₄, LaH₁₀, YH₉) for ambient-pressure retention.\n\nAlso (auditor): Add a section on the Li–Na–H clathrate system to docs/manufacturing_scalability.md, describing it as a promising low-cost manufacturing targ",
+      "cycle": 2,
+      "files": [
+        "docs/manufacturing_scalability.md"
+      ],
+      "at": 1783626679647
+    },
+    {
+      "kind": "commit",
+      "text": "Add a subsection on zentropy theory (Liu & Shang, 2025) to theoretical_framework.md, explaining how it bridges BCS theory with DFT for first-principles Tc prediction without empirical fitting.\n\nAlso (auditor): Add a subsection on the Sc-induced gap unification mechanism to theoretical_framework.md, explaining how Sc 3d electrons enhance electron-phonon coupling in ternary clathrate hydrides via Ja",
+      "cycle": 2,
+      "files": [
+        "theoretical_framework.md"
+      ],
+      "at": 1783626680395
     }
   ]
 }

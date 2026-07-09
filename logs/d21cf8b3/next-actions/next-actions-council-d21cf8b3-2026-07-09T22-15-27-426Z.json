@@ -1,0 +1,58 @@
+{
+  "preset": "council",
+  "runId": "d21cf8b3-3f41-4241-910e-29a2bfe52214",
+  "generatedAt": "2026-07-09T22:15:27.428Z",
+  "schemaVersion": 1,
+  "actions": [
+    {
+      "priority": "medium",
+      "text": "Consolidate to a single `predict_tc(formula, pressure)` function",
+      "source": "6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug"
+    },
+    {
+      "priority": "medium",
+      "text": "Rename database-printing version to `predict_tc_from_db()`",
+      "source": "6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug"
+    },
+    {
+      "priority": "medium",
+      "text": "Fix `screen_candidates()` to call `parse_formula()` first",
+      "source": "6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug"
+    },
+    {
+      "priority": "medium",
+      "text": "Remove placeholder `HYDRIDE_DATABASE` values or replace with real literature values",
+      "source": "6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Refactor into separate modules: one for the FastAPI app (app.py already exists but is empty), one for pipeline orchestration, one for ML models, one for utility functions, one for document generation, etc. Each module should have a single responsibility.\"",
+      "source": "Agent 3"
+    },
+    {
+      "priority": "medium",
+      "text": "\"suggestion\": \"Refactor run_pipeline.py into separate modules (e.g., pipeline_core.py, sensitivity.py, reporting.py, cloud_lab.py, simulation.py, etc.) with no duplicate function definitions. Each function should be defined exactly once.\"",
+      "source": "Agent 1"
+    },
+    {
+      "priority": "medium",
+      "text": "Consolidate to a single `predict_tc(formula, pressure)` function _(from: 6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug)_",
+      "source": "Next actions"
+    },
+    {
+      "priority": "medium",
+      "text": "Rename database-printing version to `predict_tc_from_db()` _(from: 6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug)_",
+      "source": "Next actions"
+    },
+    {
+      "priority": "medium",
+      "text": "Fix `screen_candidates()` to call `parse_formula()` first _(from: 6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug)_",
+      "source": "Next actions"
+    },
+    {
+      "priority": "medium",
+      "text": "Remove placeholder `HYDRIDE_DATABASE` values or replace with real literature values _(from: 6. Consolidate `scripts/predict_tc.py` — Fix Multiple `predict_tc()` Definitions and `screen_candidates()` Bug)_",
+      "source": "Next actions"
+    }
+  ]
+}
