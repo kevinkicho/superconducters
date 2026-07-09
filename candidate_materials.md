@@ -20,6 +20,172 @@ Hydrides under high pressure have exhibited the highest Tc values to date, appro
 Synthesis notes: All hydrides require extreme pressures (>100 GPa) and often laser heating to form. Ternary hydrides are predicted to be stable under similar conditions. Samples are microscopic and metastable at ambient conditions.
 - **Li2MgH6 (lithium-magnesium hexahydride)**: Measured Tc ~165 K at 85 GPa. Synthesized by laser heating Li and Mg with NH3BH3 in a diamond anvil cell at Carnegie Institution for Science. Validation status: confirmed via in situ XRD and resistivity drop. Discrepancies with predictions: DFT predicted Tc ~180 K, ML predicted ~170 K. The lower measured Tc may be due to incomplete hydrogenation or pressure calibration differences. Further optimization of synthesis conditions is ongoing.
 
+## Top-Priority Candidates (2025–2026 Breakthroughs)
+
+The following four candidate systems represent the most significant breakthroughs in room-temperature and high-Tc superconductivity reported during 2025–2026. Each entry includes synthesis routes, precursor requirements, thermal/chemical stability data, and cross-references to the detailed chemistry-physics discussion in docs/proposed_chemistry_physics.md.
+
+---
+
+### 1. LaSc₂H₂₄ — First Reproducible Room-Temperature Superconductor
+
+**Composition**: Ternary clathrate hydride LaSc₂H₂₄  
+**Tc**: 271–298 K (onset 298 K at ~260 GPa)  
+**Pressure**: 195–266 GPa  
+**Crystal structure**: Hexagonal P6/mmm (MgB₂-type metal sublattice) with La@H₃₀ and Sc@H₂₄ cages  
+**Status**: Experimentally confirmed by thirteen independent runs (Song, Ma, Wang et al., 2025). This is the first independently reproducible room-temperature superconductor.
+
+**Synthesis Route**:  
+1. Prepare precursor mixture of La–Sc alloy (1:2 molar ratio) with NH₃BH₃ (ammonia borane) as hydrogen source.  
+2. Load into diamond anvil cell (DAC) and compress to >195 GPa.  
+3. Heat with pulsed laser (1000–2000 K) to drive reaction and hydrogen incorporation.  
+4. Confirm phase formation via in situ synchrotron XRD and Raman spectroscopy.  
+5. Measure Tc via four-probe resistivity and magnetic susceptibility (diamagnetic shielding).
+
+**Precursor Requirements**:  
+- La metal (99.9% purity, foil or powder)  
+- Sc metal (99.9% purity, foil or powder)  
+- NH₃BH₃ (ammonia borane, 97% purity) — provides hydrogen and facilitates reaction  
+- Alternatively, H₂ gas can be used instead of NH₃BH₃
+
+**Thermal/Chemical Stability**:  
+- Stable under compression >195 GPa at cryogenic to room temperature  
+- Decomposes upon decompression below ~150 GPa at ambient temperature  
+- Metastable when quenched to ambient pressure; no retention of superconductivity outside DAC  
+- Requires extreme pressure (195–266 GPa) for stabilization, currently limiting practical applications
+
+**Key References**:  
+- Song et al., arXiv:2510.01273 (2025) — experimental synthesis and characterization  
+- Wang et al., arXiv:2601.01398 (2026) — Sc-induced gap unification mechanism  
+- Liu et al., *PNAS* 121, e2401840121 (2024) — theoretical prediction
+
+**Cross-Reference**: See section 1 (LaSc₂H₂₄) in docs/proposed_chemistry_physics.md for detailed chemistry, physics, and mechanism.
+
+---
+
+### 2. Li–Na–H Clathrate Systems — Thermodynamically Stable Room-Temperature Superconductors
+
+These are the first thermodynamically stable ternary hydrides predicted to exhibit room-temperature Tc.
+
+**Composition 1**: Li₂NaH₁₇ (type-II clathrate, Fd-3m)  
+**Predicted Tc**: ~340 K at 300 GPa (later refined to 357 K at 220 GPa, Adv. Funct. Mater. 2025)  
+
+**Composition 2**: LiNa₃H₂₃ (type-I clathrate, Pm-3n)  
+**Predicted Tc**: ~310 K at 350 GPa  
+
+**Status**: Theoretical predictions by An, Duan, et al. (2023–2025). Not yet synthesized experimentally.
+
+**Synthesis Route (Proposed)**:  
+1. Prepare Li–Na alloy of appropriate stoichiometry (2:1 for Li₂NaH₁₇, 1:3 for LiNa₃H₂₃) in inert atmosphere.  
+2. Load alloy with excess H₂ gas into DAC and compress to target pressure (220–350 GPa).  
+3. Laser heat to 1500–2000 K to promote hydrogen incorporation and clathrate formation.  
+4. Characterize structure via synchrotron XRD; confirm Tc via resistivity/susceptibility.
+
+**Precursor Requirements**:  
+- Li metal (99.9%, stored under oil or inert gas)  
+- Na metal (99.9%, freshly cut to remove oxide layer)  
+- H₂ gas (99.999%) — high purity essential to avoid oxygen contamination  
+- All handling in Ar-filled glovebox due to extreme air sensitivity of Li and Na
+
+**Thermal/Chemical Stability**:  
+- Predicted to be thermodynamically stable at synthesis pressures (220–350 GPa)  
+- Li₂NaH₁₇ predicted stable at 300 GPa with convex hull energy <0 meV/atom  
+- LiNa₃H₂₃ predicted stable at 350 GPa  
+- Both compounds likely metastable or decompose upon decompression to ambient pressure  
+- Li and Na are highly reactive with air/moisture; samples must be handled under inert atmosphere
+
+**Key References**:  
+- An et al., *Adv. Funct. Mater.* 35, 2418692 (2025). DOI: 10.1002/adfm.202418692  
+- An et al., arXiv:2303.09805 (2023) — original prediction  
+- Ma et al., arXiv:2412.13431 (2024) — high-throughput discovery of ternary clathrate hydrides
+
+**Cross-Reference**: See section 6 (Li–Na–H Clathrate Predictions) in docs/proposed_chemistry_physics.md.
+
+---
+
+### 3. Mg₄Pt₃H₆ — Ambient-Pressure Hydride Superconductor
+
+**Composition**: Mg₄Pt₃H₆ (body-centered cubic, Im-3m)  
+**Tc**: ~2.9 K (50% resistivity drop) at ambient pressure  
+**Pressure**: Synthesized at 8–25 GPa, recoverable to ambient pressure  
+**Status**: Experimentally confirmed (Lu, Strobel et al., 2025). First metallic complex transition-metal hydride stabilized at ambient pressure.
+
+**Synthesis Route**:  
+1. Mix Mg and Pt powders (4:3 molar ratio) with excess NH₃BH₃ or H₂.  
+2. Load into DAC, compress to 8–25 GPa.  
+3. Laser heat to 1200–1800 K to form Mg₄Pt₃H₆.  
+4. Decompress slowly to ambient pressure; compound remains intact (confirmed by XRD).  
+5. Measure electrical transport: metallic conductivity with superconducting transition at ~2.9 K.
+
+**Precursor Requirements**:  
+- Mg powder (99.9%)  
+- Pt powder (99.9%, expensive but catalytic)  
+- NH₃BH₃ (hydrogen source) or H₂ gas  
+- DAC with large culet diamonds to accommodate synthesis volume
+
+**Thermal/Chemical Stability**:  
+- Recoverable to ambient pressure — does not decompose upon decompression  
+- Metallic conductivity retained at ambient conditions  
+- Superconductivity persists at ambient pressure (Tc ~2.9 K)  
+- Formal charge: 4[Mg]²⁺·3[PtH₂]²⁻ — linear [PtH₂]²⁻ complex anions  
+- Provides a structural prototype for ambient-pressure hydride superconductors
+
+**Key References**:  
+- Lu et al., *Phys. Rev. B* 112, 094513 (2025). DOI: 10.1103/hkx1-lytx  
+- arXiv:2505.22546 (2025) — full preprint  
+- Heil group announcement: cheil.github.io/blog/2025/new-preprint-mg4pt3h6/
+
+**Cross-Reference**: See section 8 (Synthesis Implications) in docs/proposed_chemistry_physics.md for discussion of ambient-pressure recovery strategies.
+
+---
+
+### 4. Pressure-Quenched Hg-1223 — Ambient-Pressure Tc Record of 151 K
+
+**Composition**: HgBa₂Ca₂Cu₃O₈₊δ (Hg-1223) after pressure-quench protocol (PQP)  
+**Tc**: 151 K at ambient pressure (previous record was 133–135 K)  
+**Quench Conditions**: Compressed to 10–30 GPa, cooled to 4.2 K, then rapid decompression to ambient  
+**Status**: Reported by Deng, Chu, et al. (2026, PNAS). Supported by synchrotron XRD and phonon calculations. Independent replication pending.
+
+**Synthesis Route (Pressure-Quench Protocol)**:  
+1. Synthesize high-quality Hg-1223 polycrystal via sealed-quartz-tube method (HgO + BaO + CaO + CuO at 950 °C, 10 kbar).  
+2. Load into DAC and compress to 10–30 GPa at room temperature.  
+3. Cool to liquid helium temperature (4.2 K) while maintaining pressure.  
+4. Rapidly release pressure (quench) to ambient in milliseconds.  
+5. Warm sample gradually while measuring electrical resistance; record Tc at 151 K.
+
+**Precursor Requirements**:  
+- HgO (red, 99.99%) — highly toxic, requires fume hood  
+- BaO or BaCO₃ (99.99%)  
+- CaO (99.99%)  
+- CuO (99.99%)  
+- Au or Pt capsule for sealed-tube synthesis  
+- DAC with cryogenic loading capability
+
+**Thermal/Chemical Stability**:  
+- The metastable high-Tc phase persists for days in liquid nitrogen (77 K)  
+- Stability at room temperature: not yet fully characterized; gradual relaxation to 133 K phase suspected  
+- Requires encapsulation or cryogenic storage for prolonged retention of the 151 K state  
+- The quenched phase is a metastable variant of the ambient-pressure Hg-1223 structure, with modified Cu–O bond lengths and oxygen ordering
+
+**Key References**:  
+- Deng et al., *PNAS* 123, e2536178123 (2026). DOI: 10.1073/pnas.2536178123  
+- arXiv:2603.12437 (2026) — full manuscript  
+- Chu group press release: University of Houston, March 2026
+
+**Cross-Reference**: See section 5 (Pressure-Quenched Hg-1223) in docs/proposed_chemistry_physics.md for protocol details and implications for hydride quenching.
+
+---
+
+## Summary of Top-Priority Candidates
+
+| Candidate | Tc (K) | Pressure | Key Advantage | Key Challenge |
+|-----------|--------|----------|---------------|---------------|
+| LaSc₂H₂₄ | 271–298 | 195–266 GPa | First reproducible RT superconductor | Extreme pressure |
+| Li₂NaH₁₇ / LiNa₃H₂₃ | 340 / 310 (pred.) | 220–350 GPa | Highest predicted Tc; thermodynamically stable | Extreme pressure; not yet synthesized |
+| Mg₄Pt₃H₆ | 2.9 | 8–25 GPa → 0 GPa | Ambient-pressure hydride prototype | Very low Tc |
+| Hg-1223 (PQP) | 151 | 10–30 → 0 GPa | Record ambient Tc; PQP concept | Replication pending; metastable |
+
+These four candidates represent the vanguard of current superconductor research. LaSc₂H₂₄ is the first independently confirmed room-temperature superconductor (albeit at extreme pressure). The Li–Na–H clathrates offer the highest predicted Tc among thermodynamically stable ternary hydrides. Mg₄Pt₃H₆ demonstrates that hydride superconductivity can be retained at ambient pressure, opening a pathway to practical materials. The pressure-quench protocol applied to Hg-1223 has broken the 30-year ambient-pressure Tc record and offers a route to stabilize high-pressure phases at ambient conditions. Future efforts should focus on (a) applying the PQP to LaSc₂H₂₄ and other high-Tc hydrides, (b) synthesizing Li–Na–H clathrates, and (c) discovering new complex hydrides with ambient-pressure Tc > 77 K.
+
 ## Cuprates
 
 Cuprate high-temperature superconductors operate at ambient pressure but have Tc below 200 K.
