@@ -11,70 +11,85 @@ Rows **551-600** (newest-first global order). [Hub + TOC](../CHANGELOG.md#table-
 
 [Prev](page-11.md) | [1](../CHANGELOG.md#activity-log) | ... | [10](page-10.md) | [11](page-11.md) | **12** | [13](page-13.md) | [14](page-14.md) | [Next](page-13.md)
 
-**Page 12/14** | rows **551-600** of **690** | newest first
+**Page 12/14** | rows **551-600** of **691** | newest first
 
 ## Activity log
 
 | # | When | Who | Summary | +/- | Dur | more |
 |--:|:----:|:--:|:--------|----:|:--:|:---:|
-| 551 | `07-07 13:34` | `a2` | t115: data: paper_2025_data.json [2f/1log] | `+82/-42` | `7m19s` | [...](#c-7648881) |
-| 552 | `07-07 13:30` | `a3` | t112: docs: online_research_summary.md [2... | `+257/-184` | `2m52s` | [...](#c-f4d602d) |
-| 553 | `07-07 13:28` | `a3` | t110: docs: manufacturing_scalability.md... | `+258/-231` | `1m` | [...](#c-08e43ae) |
-| 554 | `07-07 13:27` | `a4` | t108: docs: README.md [1f] | `+34/-0` | `15s` | [...](#c-f0b78c1) |
-| 555 | `07-07 13:27` | `a2` | t102: code: run_pipeline.py [1f] | `+113/-0` | `1m27s` | [...](#c-13b3ce3) |
-| 556 | `07-07 13:27` | `a3` | t105: docs: theoretical_framework.md [1f] | `+33/-0` | `3m35s` | [...](#c-fde8a68) |
-| 557 | `07-07 13:26` | `a4` | t107: docs: candidate_materials.md [1f] | `+33/-0` | `11s` | [...](#c-ae532e9) |
-| 558 | `07-07 13:26` | `a4` | t106: docs: experimental_feedback_loop.md... | `+275/-193` | `3m30s` | [...](#c-4328f74) |
-| 559 | `07-07 13:25` | `a2` | t99: code: predict_tc.py [2f/1log] | `+248/-12` | `1m18s` | [...](#c-9406df7) |
-| 560 | `07-07 13:24` | `a2` | t98: docs: README.md [2f/1log] | `+308/-224` | `1m` | [...](#c-d70fe88) |
-| 561 | `07-07 13:23` | `a3` | t95: docs: theoretical_framework.md [1f] | `+4/-0` | `4m21s` | [...](#c-a1238f7) |
-| 562 | `07-07 13:23` | `a2` | t92: code: run_pipeline.py [1f] | `+102/-0` | `6m06s` | [...](#c-45e2f89) |
-| 563 | `07-07 13:23` | `a4` | t94: docs: experimental_feedback_loop.md... | `+611/-557` | `4m11s` | [...](#c-e7a32a8) |
-| 564 | `07-07 13:19` | `a3` | t89: docs: experimental_feedback_loop.md... | `+12/-0` | `11s` | [...](#c-08428f3) |
-| 565 | `07-07 13:19` | `a4` | t88: docs: manufacturing_scalability.md [... | `+104/-0` | `1m01s` | [...](#c-6ff5cb6) |
-| 566 | `07-07 13:19` | `a3` | t87: tests: test_run_pipeline.py [2f/1log] | `+257/-233` | `1m48s` | [...](#c-2232258) |
-| 567 | `07-07 13:18` | `a4` | t85: docs: online_research_summary.md [1f] | `+40/-0` | `13m04s` | [...](#c-10ac682) |
-| 568 | `07-07 13:17` | `a2` | t84: docs: roadmap.md [1f] | `+40/-0` | `5m04s` | [...](#c-aba359d) |
-| 569 | `07-07 13:17` | `a3` | t82: docs: candidate_materials.md [1f] | `+17/-0` | `44s` | [...](#c-6d8fc85) |
-| 570 | `07-07 13:16` | `a3` | t80: tests: test_run_pipeline.py [2f/1log] | `+49/-22` | `24m19s` | [...](#c-03e5df6) |
-| 571 | `07-07 13:12` | `a2` | t77: code: predict_tc.py [2f/1log] | `+324/-196` | `1m` | [...](#c-70275a4) |
-| 572 | `07-07 13:11` | `a2` | t74: code: run_pipeline.py [2f/1log] | `+305/-15` | `2m08s` | [...](#c-8150ecb) |
-| 573 | `07-07 13:09` | `a2` | t73: tests: test_run_pipeline.py [2f/1log] | `+277/-220` | `6m07s` | [...](#c-12511cf) |
-| 574 | `07-07 13:05` | `a4` | t70: docs: experimental_feedback_loop.md... | `+39/-0` | `12s` | [...](#c-ea05d19) |
-| 575 | `07-07 13:04` | `a4` | t69: docs: manufacturing_scalability.md [... | `+124/-52` | `3m04s` | [...](#c-eb5cf10) |
-| 576 | `07-07 13:03` | `a2` | t62: code: generate_candidates.py [2f/1lo... | `+289/-116` | `3m30s` | [...](#c-3f716da) |
-| 577 | `07-07 13:01` | `a4` | t60: docs: manufacturing_scalability.md [... | `+612/-571` | `2m41s` | [...](#c-55ad037) |
-| 578 | `07-07 12:59` | `a2` | t53: docs: roadmap.md [1f] | `+29/-0` | `5m48s` | [...](#c-8da0b81) |
-| 579 | `07-07 12:59` | `a4` | t50: docs: online_research_summary.md [2f... | `+237/-219` | `6m21s` | [...](#c-8ee8cad) |
-| 580 | `07-07 12:53` | `a2` | t43: code: query_database.py [2f/1log] | `+271/-204` | `8m26s` | [...](#c-5bb8484) |
-| 581 | `07-07 12:52` | `a4` | t41: docs: experimental_feedback_loop.md;... | `+80/-17` | `7m18s` | [...](#c-28d1223) |
-| 582 | `07-07 12:52` | `a3` | t40: code: query_database.py [2f/1log] | `+297/-29` | `2m51s` | [...](#c-7797a51) |
-| 583 | `07-07 12:49` | `a3` | t38: docs: experimental_feedback_loop.md... | `+423/-2` | `2m23s` | [...](#c-f168ddf) |
-| 584 | `07-07 12:46` | `a3` | t32: docs: online_research_summary.md; co... | `+296/-0` | `45s` | [...](#c-11386de) |
-| 585 | `07-07 12:46` | `a3` | t30: tests: test_run_pipeline.py [2f/1log] | `+177/-2` | `1m05s` | [...](#c-20c32d8) |
-| 586 | `07-07 12:45` | `a4` | t28: docs: candidate_materials.md; code:... | `+89/-0` | `1m07s` | [...](#c-ced362c) |
-| 587 | `07-07 12:45` | `a2` | t26: code: predict_tc.py [1f] | `+15/-4` | `36s` | [...](#c-96328a3) |
-| 588 | `07-07 12:45` | `a3` | t27: tests: test_predict_tc.py [2f/1log] | `+232/-2` | `9m23s` | [...](#c-1e3bb2b) |
-| 589 | `07-07 12:44` | `a2` | t25: docs: experimental_feedback_loop.md... | `+53/-0` | `10m49s` | [...](#c-b8e52fa) |
-| 590 | `07-07 12:44` | `a4` | t24: docs: manufacturing_scalability.md [... | `+255/-6` | `9m08s` | [...](#c-728835c) |
-| 591 | `07-07 12:35` | `a3` | t21: docs: experimental_feedback_loop.md... | `+58/-0` | `1m24s` | [...](#c-bd7a227) |
-| 592 | `07-07 12:35` | `a4` | t18: docs: manufacturing_scalability.md [... | `+107/-2` | `1m22s` | [...](#c-ab715d6) |
-| 593 | `07-07 12:34` | `a3` | t13: docs: literature_review.md [1f] | `+81/-0` | `52s` | [...](#c-5788273) |
-| 594 | `07-07 12:33` | `a2` | t15: docs: characterization_techniques.md... | `+7/-0` | `10s` | [...](#c-8710921) |
-| 595 | `07-07 12:33` | `a4` | t14: docs: synthesis_methods.md [1f] | `+24/-0` | `36m22s` | [...](#c-770a9d4) |
-| 596 | `07-07 12:33` | `a2` | t12: docs: theoretical_framework.md [1f] | `+28/-0` | `20s` | [...](#c-7a5c649) |
-| 597 | `07-07 12:33` | `a3` | t8: docs: proposed_chemistry_physics.md [... | `+47/-0` | `2m04s` | [...](#c-b028eab) |
-| 598 | `07-07 12:33` | `a2` | t10: docs: roadmap.md [2f/1log] | `+77/-0` | `59s` | [...](#c-354cbd5) |
-| 599 | `07-07 12:32` | `a2` | t6: docs: online_research_summary.md [1f] | `+46/-0` | `45s` | [...](#c-d4b846a) |
-| 600 | `07-07 12:31` | `a2` | t1: data: superconductor_database.json [1... | `+20/-0` | `23m21s` | [...](#c-2308aee) |
+| 551 | `07-07 13:36` | `a2` | t117: tests: test_run_pipeline.py [2f/1lo... | `+112/-22` | `2m15s` | [...](#c-9d49754) |
+| 552 | `07-07 13:34` | `a2` | t115: data: paper_2025_data.json [2f/1log] | `+82/-42` | `7m19s` | [...](#c-7648881) |
+| 553 | `07-07 13:30` | `a3` | t112: docs: online_research_summary.md [2... | `+257/-184` | `2m52s` | [...](#c-f4d602d) |
+| 554 | `07-07 13:28` | `a3` | t110: docs: manufacturing_scalability.md... | `+258/-231` | `1m` | [...](#c-08e43ae) |
+| 555 | `07-07 13:27` | `a4` | t108: docs: README.md [1f] | `+34/-0` | `15s` | [...](#c-f0b78c1) |
+| 556 | `07-07 13:27` | `a2` | t102: code: run_pipeline.py [1f] | `+113/-0` | `1m27s` | [...](#c-13b3ce3) |
+| 557 | `07-07 13:27` | `a3` | t105: docs: theoretical_framework.md [1f] | `+33/-0` | `3m35s` | [...](#c-fde8a68) |
+| 558 | `07-07 13:26` | `a4` | t107: docs: candidate_materials.md [1f] | `+33/-0` | `11s` | [...](#c-ae532e9) |
+| 559 | `07-07 13:26` | `a4` | t106: docs: experimental_feedback_loop.md... | `+275/-193` | `3m30s` | [...](#c-4328f74) |
+| 560 | `07-07 13:25` | `a2` | t99: code: predict_tc.py [2f/1log] | `+248/-12` | `1m18s` | [...](#c-9406df7) |
+| 561 | `07-07 13:24` | `a2` | t98: docs: README.md [2f/1log] | `+308/-224` | `1m` | [...](#c-d70fe88) |
+| 562 | `07-07 13:23` | `a3` | t95: docs: theoretical_framework.md [1f] | `+4/-0` | `4m21s` | [...](#c-a1238f7) |
+| 563 | `07-07 13:23` | `a2` | t92: code: run_pipeline.py [1f] | `+102/-0` | `6m06s` | [...](#c-45e2f89) |
+| 564 | `07-07 13:23` | `a4` | t94: docs: experimental_feedback_loop.md... | `+611/-557` | `4m11s` | [...](#c-e7a32a8) |
+| 565 | `07-07 13:19` | `a3` | t89: docs: experimental_feedback_loop.md... | `+12/-0` | `11s` | [...](#c-08428f3) |
+| 566 | `07-07 13:19` | `a4` | t88: docs: manufacturing_scalability.md [... | `+104/-0` | `1m01s` | [...](#c-6ff5cb6) |
+| 567 | `07-07 13:19` | `a3` | t87: tests: test_run_pipeline.py [2f/1log] | `+257/-233` | `1m48s` | [...](#c-2232258) |
+| 568 | `07-07 13:18` | `a4` | t85: docs: online_research_summary.md [1f] | `+40/-0` | `13m04s` | [...](#c-10ac682) |
+| 569 | `07-07 13:17` | `a2` | t84: docs: roadmap.md [1f] | `+40/-0` | `5m04s` | [...](#c-aba359d) |
+| 570 | `07-07 13:17` | `a3` | t82: docs: candidate_materials.md [1f] | `+17/-0` | `44s` | [...](#c-6d8fc85) |
+| 571 | `07-07 13:16` | `a3` | t80: tests: test_run_pipeline.py [2f/1log] | `+49/-22` | `24m19s` | [...](#c-03e5df6) |
+| 572 | `07-07 13:12` | `a2` | t77: code: predict_tc.py [2f/1log] | `+324/-196` | `1m` | [...](#c-70275a4) |
+| 573 | `07-07 13:11` | `a2` | t74: code: run_pipeline.py [2f/1log] | `+305/-15` | `2m08s` | [...](#c-8150ecb) |
+| 574 | `07-07 13:09` | `a2` | t73: tests: test_run_pipeline.py [2f/1log] | `+277/-220` | `6m07s` | [...](#c-12511cf) |
+| 575 | `07-07 13:05` | `a4` | t70: docs: experimental_feedback_loop.md... | `+39/-0` | `12s` | [...](#c-ea05d19) |
+| 576 | `07-07 13:04` | `a4` | t69: docs: manufacturing_scalability.md [... | `+124/-52` | `3m04s` | [...](#c-eb5cf10) |
+| 577 | `07-07 13:03` | `a2` | t62: code: generate_candidates.py [2f/1lo... | `+289/-116` | `3m30s` | [...](#c-3f716da) |
+| 578 | `07-07 13:01` | `a4` | t60: docs: manufacturing_scalability.md [... | `+612/-571` | `2m41s` | [...](#c-55ad037) |
+| 579 | `07-07 12:59` | `a2` | t53: docs: roadmap.md [1f] | `+29/-0` | `5m48s` | [...](#c-8da0b81) |
+| 580 | `07-07 12:59` | `a4` | t50: docs: online_research_summary.md [2f... | `+237/-219` | `6m21s` | [...](#c-8ee8cad) |
+| 581 | `07-07 12:53` | `a2` | t43: code: query_database.py [2f/1log] | `+271/-204` | `8m26s` | [...](#c-5bb8484) |
+| 582 | `07-07 12:52` | `a4` | t41: docs: experimental_feedback_loop.md;... | `+80/-17` | `7m18s` | [...](#c-28d1223) |
+| 583 | `07-07 12:52` | `a3` | t40: code: query_database.py [2f/1log] | `+297/-29` | `2m51s` | [...](#c-7797a51) |
+| 584 | `07-07 12:49` | `a3` | t38: docs: experimental_feedback_loop.md... | `+423/-2` | `2m23s` | [...](#c-f168ddf) |
+| 585 | `07-07 12:46` | `a3` | t32: docs: online_research_summary.md; co... | `+296/-0` | `45s` | [...](#c-11386de) |
+| 586 | `07-07 12:46` | `a3` | t30: tests: test_run_pipeline.py [2f/1log] | `+177/-2` | `1m05s` | [...](#c-20c32d8) |
+| 587 | `07-07 12:45` | `a4` | t28: docs: candidate_materials.md; code:... | `+89/-0` | `1m07s` | [...](#c-ced362c) |
+| 588 | `07-07 12:45` | `a2` | t26: code: predict_tc.py [1f] | `+15/-4` | `36s` | [...](#c-96328a3) |
+| 589 | `07-07 12:45` | `a3` | t27: tests: test_predict_tc.py [2f/1log] | `+232/-2` | `9m23s` | [...](#c-1e3bb2b) |
+| 590 | `07-07 12:44` | `a2` | t25: docs: experimental_feedback_loop.md... | `+53/-0` | `10m49s` | [...](#c-b8e52fa) |
+| 591 | `07-07 12:44` | `a4` | t24: docs: manufacturing_scalability.md [... | `+255/-6` | `9m08s` | [...](#c-728835c) |
+| 592 | `07-07 12:35` | `a3` | t21: docs: experimental_feedback_loop.md... | `+58/-0` | `1m24s` | [...](#c-bd7a227) |
+| 593 | `07-07 12:35` | `a4` | t18: docs: manufacturing_scalability.md [... | `+107/-2` | `1m22s` | [...](#c-ab715d6) |
+| 594 | `07-07 12:34` | `a3` | t13: docs: literature_review.md [1f] | `+81/-0` | `52s` | [...](#c-5788273) |
+| 595 | `07-07 12:33` | `a2` | t15: docs: characterization_techniques.md... | `+7/-0` | `10s` | [...](#c-8710921) |
+| 596 | `07-07 12:33` | `a4` | t14: docs: synthesis_methods.md [1f] | `+24/-0` | `36m22s` | [...](#c-770a9d4) |
+| 597 | `07-07 12:33` | `a2` | t12: docs: theoretical_framework.md [1f] | `+28/-0` | `20s` | [...](#c-7a5c649) |
+| 598 | `07-07 12:33` | `a3` | t8: docs: proposed_chemistry_physics.md [... | `+47/-0` | `2m04s` | [...](#c-b028eab) |
+| 599 | `07-07 12:33` | `a2` | t10: docs: roadmap.md [2f/1log] | `+77/-0` | `59s` | [...](#c-354cbd5) |
+| 600 | `07-07 12:32` | `a2` | t6: docs: online_research_summary.md [1f] | `+46/-0` | `45s` | [...](#c-d4b846a) |
 
 ### Commit details
 
 Expand an item for full task text, paths, author, and commit link. The table above stays short so you can scan many rows without scrolling past wrapped cells.
 
+<a id="c-9d49754"></a>
+<details>
+<summary>#551 | agent-2: t117</summary>
+
+- **When:** `2026-07-07 13:36:44-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t117
+- **What:** t117: tests: test_run_pipeline.py [2f/1log]
+- **LOC:** +112 / -22
+- **Duration (est.):** 2m15s
+- **SHA:** [`9d49754`](https://github.com/kevinkicho/superconducters/commit/9d49754013f3a021bde8e9535f12eb2bfbb5c562)
+- **Files:** `logs/e0660fdb/progress-ledger.json`, `tests/test_run_pipeline.py`
+
+</details>
+
 <a id="c-7648881"></a>
 <details>
-<summary>#551 | agent-2: t115</summary>
+<summary>#552 | agent-2: t115</summary>
 
 - **When:** `2026-07-07 13:34:29-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -89,7 +104,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-f4d602d"></a>
 <details>
-<summary>#552 | agent-3: t112</summary>
+<summary>#553 | agent-3: t112</summary>
 
 - **When:** `2026-07-07 13:30:59-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -104,7 +119,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-08e43ae"></a>
 <details>
-<summary>#553 | agent-3: t110</summary>
+<summary>#554 | agent-3: t110</summary>
 
 - **When:** `2026-07-07 13:28:07-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -119,7 +134,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-f0b78c1"></a>
 <details>
-<summary>#554 | agent-4: t108</summary>
+<summary>#555 | agent-4: t108</summary>
 
 - **When:** `2026-07-07 13:27:14-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -134,7 +149,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-13b3ce3"></a>
 <details>
-<summary>#555 | agent-2: t102</summary>
+<summary>#556 | agent-2: t102</summary>
 
 - **When:** `2026-07-07 13:27:10-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -149,7 +164,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-fde8a68"></a>
 <details>
-<summary>#556 | agent-3: t105</summary>
+<summary>#557 | agent-3: t105</summary>
 
 - **When:** `2026-07-07 13:27:07-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -164,7 +179,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-ae532e9"></a>
 <details>
-<summary>#557 | agent-4: t107</summary>
+<summary>#558 | agent-4: t107</summary>
 
 - **When:** `2026-07-07 13:26:59-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -179,7 +194,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-4328f74"></a>
 <details>
-<summary>#558 | agent-4: t106</summary>
+<summary>#559 | agent-4: t106</summary>
 
 - **When:** `2026-07-07 13:26:48-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -194,7 +209,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-9406df7"></a>
 <details>
-<summary>#559 | agent-2: t99</summary>
+<summary>#560 | agent-2: t99</summary>
 
 - **When:** `2026-07-07 13:25:43-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -209,7 +224,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-d70fe88"></a>
 <details>
-<summary>#560 | agent-2: t98</summary>
+<summary>#561 | agent-2: t98</summary>
 
 - **When:** `2026-07-07 13:24:25-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -224,7 +239,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-a1238f7"></a>
 <details>
-<summary>#561 | agent-3: t95</summary>
+<summary>#562 | agent-3: t95</summary>
 
 - **When:** `2026-07-07 13:23:32-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -239,7 +254,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-45e2f89"></a>
 <details>
-<summary>#562 | agent-2: t92</summary>
+<summary>#563 | agent-2: t92</summary>
 
 - **When:** `2026-07-07 13:23:25-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -254,7 +269,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-e7a32a8"></a>
 <details>
-<summary>#563 | agent-4: t94</summary>
+<summary>#564 | agent-4: t94</summary>
 
 - **When:** `2026-07-07 13:23:18-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -269,7 +284,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-08428f3"></a>
 <details>
-<summary>#564 | agent-3: t89</summary>
+<summary>#565 | agent-3: t89</summary>
 
 - **When:** `2026-07-07 13:19:11-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -284,7 +299,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-6ff5cb6"></a>
 <details>
-<summary>#565 | agent-4: t88</summary>
+<summary>#566 | agent-4: t88</summary>
 
 - **When:** `2026-07-07 13:19:07-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -299,7 +314,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-2232258"></a>
 <details>
-<summary>#566 | agent-3: t87</summary>
+<summary>#567 | agent-3: t87</summary>
 
 - **When:** `2026-07-07 13:19:00-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -314,7 +329,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-10ac682"></a>
 <details>
-<summary>#567 | agent-4: t85</summary>
+<summary>#568 | agent-4: t85</summary>
 
 - **When:** `2026-07-07 13:18:06-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -329,7 +344,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-aba359d"></a>
 <details>
-<summary>#568 | agent-2: t84</summary>
+<summary>#569 | agent-2: t84</summary>
 
 - **When:** `2026-07-07 13:17:19-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -344,7 +359,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-6d8fc85"></a>
 <details>
-<summary>#569 | agent-3: t82</summary>
+<summary>#570 | agent-3: t82</summary>
 
 - **When:** `2026-07-07 13:17:12-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -359,7 +374,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-03e5df6"></a>
 <details>
-<summary>#570 | agent-3: t80</summary>
+<summary>#571 | agent-3: t80</summary>
 
 - **When:** `2026-07-07 13:16:28-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -374,7 +389,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-70275a4"></a>
 <details>
-<summary>#571 | agent-2: t77</summary>
+<summary>#572 | agent-2: t77</summary>
 
 - **When:** `2026-07-07 13:12:15-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -389,7 +404,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-8150ecb"></a>
 <details>
-<summary>#572 | agent-2: t74</summary>
+<summary>#573 | agent-2: t74</summary>
 
 - **When:** `2026-07-07 13:11:15-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -404,7 +419,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-12511cf"></a>
 <details>
-<summary>#573 | agent-2: t73</summary>
+<summary>#574 | agent-2: t73</summary>
 
 - **When:** `2026-07-07 13:09:07-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -419,7 +434,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-ea05d19"></a>
 <details>
-<summary>#574 | agent-4: t70</summary>
+<summary>#575 | agent-4: t70</summary>
 
 - **When:** `2026-07-07 13:05:02-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -434,7 +449,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-eb5cf10"></a>
 <details>
-<summary>#575 | agent-4: t69</summary>
+<summary>#576 | agent-4: t69</summary>
 
 - **When:** `2026-07-07 13:04:50-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -449,7 +464,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-3f716da"></a>
 <details>
-<summary>#576 | agent-2: t62</summary>
+<summary>#577 | agent-2: t62</summary>
 
 - **When:** `2026-07-07 13:03:00-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -464,7 +479,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-55ad037"></a>
 <details>
-<summary>#577 | agent-4: t60</summary>
+<summary>#578 | agent-4: t60</summary>
 
 - **When:** `2026-07-07 13:01:46-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -479,7 +494,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-8da0b81"></a>
 <details>
-<summary>#578 | agent-2: t53</summary>
+<summary>#579 | agent-2: t53</summary>
 
 - **When:** `2026-07-07 12:59:30-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -494,7 +509,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-8ee8cad"></a>
 <details>
-<summary>#579 | agent-4: t50</summary>
+<summary>#580 | agent-4: t50</summary>
 
 - **When:** `2026-07-07 12:59:05-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -509,7 +524,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-5bb8484"></a>
 <details>
-<summary>#580 | agent-2: t43</summary>
+<summary>#581 | agent-2: t43</summary>
 
 - **When:** `2026-07-07 12:53:42-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -524,7 +539,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-28d1223"></a>
 <details>
-<summary>#581 | agent-4: t41</summary>
+<summary>#582 | agent-4: t41</summary>
 
 - **When:** `2026-07-07 12:52:44-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -539,7 +554,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-7797a51"></a>
 <details>
-<summary>#582 | agent-3: t40</summary>
+<summary>#583 | agent-3: t40</summary>
 
 - **When:** `2026-07-07 12:52:09-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -554,7 +569,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-f168ddf"></a>
 <details>
-<summary>#583 | agent-3: t38</summary>
+<summary>#584 | agent-3: t38</summary>
 
 - **When:** `2026-07-07 12:49:18-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -569,7 +584,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-11386de"></a>
 <details>
-<summary>#584 | agent-3: t32</summary>
+<summary>#585 | agent-3: t32</summary>
 
 - **When:** `2026-07-07 12:46:55-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -584,7 +599,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-20c32d8"></a>
 <details>
-<summary>#585 | agent-3: t30</summary>
+<summary>#586 | agent-3: t30</summary>
 
 - **When:** `2026-07-07 12:46:10-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -599,7 +614,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-ced362c"></a>
 <details>
-<summary>#586 | agent-4: t28</summary>
+<summary>#587 | agent-4: t28</summary>
 
 - **When:** `2026-07-07 12:45:26-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -614,7 +629,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-96328a3"></a>
 <details>
-<summary>#587 | agent-2: t26</summary>
+<summary>#588 | agent-2: t26</summary>
 
 - **When:** `2026-07-07 12:45:16-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -629,7 +644,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-1e3bb2b"></a>
 <details>
-<summary>#588 | agent-3: t27</summary>
+<summary>#589 | agent-3: t27</summary>
 
 - **When:** `2026-07-07 12:45:05-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -644,7 +659,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-b8e52fa"></a>
 <details>
-<summary>#589 | agent-2: t25</summary>
+<summary>#590 | agent-2: t25</summary>
 
 - **When:** `2026-07-07 12:44:40-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -659,7 +674,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-728835c"></a>
 <details>
-<summary>#590 | agent-4: t24</summary>
+<summary>#591 | agent-4: t24</summary>
 
 - **When:** `2026-07-07 12:44:19-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -674,7 +689,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-bd7a227"></a>
 <details>
-<summary>#591 | agent-3: t21</summary>
+<summary>#592 | agent-3: t21</summary>
 
 - **When:** `2026-07-07 12:35:42-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -689,7 +704,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-ab715d6"></a>
 <details>
-<summary>#592 | agent-4: t18</summary>
+<summary>#593 | agent-4: t18</summary>
 
 - **When:** `2026-07-07 12:35:11-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -704,7 +719,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-5788273"></a>
 <details>
-<summary>#593 | agent-3: t13</summary>
+<summary>#594 | agent-3: t13</summary>
 
 - **When:** `2026-07-07 12:34:18-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -719,7 +734,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-8710921"></a>
 <details>
-<summary>#594 | agent-2: t15</summary>
+<summary>#595 | agent-2: t15</summary>
 
 - **When:** `2026-07-07 12:33:51-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -734,7 +749,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-770a9d4"></a>
 <details>
-<summary>#595 | agent-4: t14</summary>
+<summary>#596 | agent-4: t14</summary>
 
 - **When:** `2026-07-07 12:33:49-07:00`
 - **Who:** `agent-4` (`a4`)
@@ -749,7 +764,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-7a5c649"></a>
 <details>
-<summary>#596 | agent-2: t12</summary>
+<summary>#597 | agent-2: t12</summary>
 
 - **When:** `2026-07-07 12:33:41-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -764,7 +779,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-b028eab"></a>
 <details>
-<summary>#597 | agent-3: t8</summary>
+<summary>#598 | agent-3: t8</summary>
 
 - **When:** `2026-07-07 12:33:26-07:00`
 - **Who:** `agent-3` (`a3`)
@@ -779,7 +794,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-354cbd5"></a>
 <details>
-<summary>#598 | agent-2: t10</summary>
+<summary>#599 | agent-2: t10</summary>
 
 - **When:** `2026-07-07 12:33:21-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -794,7 +809,7 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 <a id="c-d4b846a"></a>
 <details>
-<summary>#599 | agent-2: t6</summary>
+<summary>#600 | agent-2: t6</summary>
 
 - **When:** `2026-07-07 12:32:22-07:00`
 - **Who:** `agent-2` (`a2`)
@@ -807,24 +822,9 @@ Expand an item for full task text, paths, author, and commit link. The table abo
 
 </details>
 
-<a id="c-2308aee"></a>
-<details>
-<summary>#600 | agent-2: t1</summary>
-
-- **When:** `2026-07-07 12:31:37-07:00`
-- **Who:** `agent-2` (`a2`)
-- **Task:** agent-2: t1
-- **What:** t1: data: superconductor_database.json [1f]
-- **LOC:** +20 / -0
-- **Duration (est.):** 23m21s
-- **SHA:** [`2308aee`](https://github.com/kevinkicho/superconducters/commit/2308aeea359a9a2e2e3c767e171a56dd6f62a2ad)
-- **Files:** `data/superconductor_database.json`
-
-</details>
-
 
 [Prev](page-11.md) | [1](../CHANGELOG.md#activity-log) | ... | [10](page-10.md) | [11](page-11.md) | **12** | [13](page-13.md) | [14](page-14.md) | [Next](page-13.md)
 
-**Page 12/14** | rows **551-600** of **690** | newest first
+**Page 12/14** | rows **551-600** of **691** | newest first
 
-*Generated `2026-07-10T01:15:14-07:00`*
+*Generated `2026-07-10T01:16:48-07:00`*

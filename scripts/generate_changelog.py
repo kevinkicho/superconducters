@@ -445,12 +445,11 @@ def build(page_size: int, repo_url: str, dry_run: bool = False) -> None:
     hub.append("- [Activity log (page 1)](#activity-log)")
     hub.append("- [Commit details (page 1)](#commit-details)")
     hub.append("- [All pages index](changelog/README.md)")
-    for p in range(2, min(total_pages, 6) + 1):
-        hub.append(f"- [Page {p}](changelog/page-{p:02d}.md)")
-    if total_pages > 6:
-        hub.append(
-            f"- ... [Page {total_pages} (oldest)](changelog/page-{total_pages:02d}.md)"
-        )
+    for p in range(2, total_pages + 1):
+        label = f"Page {p}"
+        if p == total_pages:
+            label += " (oldest)"
+        hub.append(f"- [{label}](changelog/page-{p:02d}.md)")
     hub.append("")
     hub.append("---")
     hub.append("")

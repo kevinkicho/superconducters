@@ -18,17 +18,17 @@ It is an **AI-generated scaffold**. Treat predictions, protocols, and business l
 2. [Navigation](#navigation)
 3. [Architecture](#architecture)
 4. [Repository layout](#repository-layout)
-5. [User manual](#user-manual)
+5. [User manual](#user-manual) | [full guide](docs/user_manual.md)
 6. [Quickstart tutorial](#quickstart-tutorial)
 7. [Testing](#testing)
 8. [Dashboard and API](#dashboard-and-api)
 9. [Cloud lab integration](#cloud-lab-integration)
-10. [Reproducibility](#reproducibility)
-11. [Chemistry and physics summary](#chemistry-and-physics-of-room-temperature-superconductivity)
-12. [Funding and grant materials](#funding-and-grant-materials)
+10. [Reproducibility](#reproducibility) | [package](reproducibility/)
+11. [Chemistry and physics summary](#chemistry-and-physics-of-room-temperature-superconductivity) | [full writeup](docs/proposed_chemistry_physics.md)
+12. [Funding and grant materials](#funding-and-grant-materials) | [grant proposal](docs/grant_proposal.md)
 13. [Access control (scaffold)](#user-management-and-role-based-access-control-rbac)
 14. [All documents (catalog)](#all-documents)
-15. [Changelog](#changelog)
+15. [**Changelog (open document)**](CHANGELOG.md) | [pages index](changelog/README.md)
 16. [How to contribute](#how-to-contribute)
 17. [Disclaimer](#disclaimer)
 
@@ -685,11 +685,15 @@ This repository intentionally has **no** GitHub Actions workflows (see [`.github
 
 ## Changelog
 
-Agent and maintainer activity is logged in a **paginated** changelog (newest first), with LOC deltas and expanders for long text:
+**Open the full log:** [**CHANGELOG.md**](CHANGELOG.md) (paginated, newest first; TOC, agent guide, compact table).
 
-- Hub + agent regen instructions: [`CHANGELOG.md`](CHANGELOG.md)
-- Page index: [`changelog/README.md`](changelog/README.md)
-- Regenerate after new work: `python scripts/generate_changelog.py`
+| Link | What you get |
+|------|----------------|
+| [CHANGELOG.md](CHANGELOG.md) | Hub: TOC, instructions, page 1 (latest commits) |
+| [changelog/README.md](changelog/README.md) | All pages index (page 2 … oldest) |
+| [changelog/page-02.md](changelog/page-02.md) | Next page of history |
+
+Regenerate after new work: `python scripts/generate_changelog.py`
 
 ## How to contribute
 
