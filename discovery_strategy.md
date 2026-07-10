@@ -27,6 +27,7 @@ This document outlines a systematic approach to discover and manufacture room-te
   - *npj Computational Materials* (2022) – "Machine learning accelerated discovery of high-temperature superconductors" – screened 10,000+ compounds using crystal graph neural networks. URL: https://www.nature.com/articles/s41524-022-00823-4
   - *Journal of the American Chemical Society* (2023) – "High-throughput computational search for hydride superconductors under pressure" – used DFT + electron-phonon coupling to rank 200+ binary hydrides. URL: https://pubs.acs.org/doi/10.1021/jacs.3c04567
   - *Materials Horizons* (2024) – "Active learning for superconductor discovery: balancing exploration and exploitation" – iterative DFT + experiment loop. URL: https://pubs.rsc.org/en/content/articlelanding/2024/mh/d4mh00123a
+  - Wang, X., Zhang, C., Wang, Z., Liu, H., Lv, J., Wang, H., E, W., & Ma, Y. (2025). "Deep-learning discovery of 144 high-Tc ternary hydride superconductors." arXiv:2502.16558. URL: https://arxiv.org/abs/2502.16558
 - **Critical Analysis:** ML models are only as good as training data (mostly cuprates and BCS-type). They struggle with unconventional mechanisms. High-throughput screening is powerful for hydrides under pressure but requires expensive DFT calculations. Active learning reduces computational cost but still needs experimental validation.
 
 ### 2.4 Experimental Feedback Loop – Design-Build-Test-Learn Cycle
@@ -40,6 +41,14 @@ This document outlines a systematic approach to discover and manufacture room-te
 - **Search:** `unconventional superconductivity room temperature theory BCS beyond electron-phonon coupling`
 - **Key Source:** Norman et al., "Unconventional superconductivity in cuprates and iron-based superconductors," *Reviews of Modern Physics* 2020, 92, 025002. URL: https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.92.025002
 - **Critical Analysis:** While BCS theory explains conventional hydrides, cuprates and iron-based superconductors require different mechanisms (e.g., spin fluctuations). Room-temperature superconductivity may require a hybrid or entirely new mechanism.
+
+### 2.6 Recent Advances in Nickelate and Hydride Superconductors (2025-2026)
+- **Search:** nickelate superconductor 2025 2026 high Tc ambient pressure thin film
+- **Key Sources:**
+  - Li, Xing, Peng et al. (2026). "Bilayer Ruddlesden-Popper nickelate single crystals with 96 K superconductivity." *Nature*, 649, 871. URL: https://www.nature.com/articles/s41586-025-09954-4
+  - Zhou, Lv, Wang et al. (2025). "Ambient-pressure 45 K superconductivity in (La,Pr)2Ni2O7 epitaxial thin films." *Nature*, 640, 8059. URL: https://www.nature.com/articles/s41586-025-08755-z | arXiv: https://arxiv.org/abs/2412.16622
+  - Wang, X., Zhang, C., Wang, Z., Liu, H., Lv, J., Wang, H., E, W., & Ma, Y. (2025). "Deep-learning discovery of 144 high-Tc ternary hydride superconductors." arXiv:2502.16558. URL: https://arxiv.org/abs/2502.16558
+- **Critical Analysis:** These three advances represent major milestones. The nickelate single-crystal work (96 K under pressure) solves the ambient-pressure growth bottleneck for nickelates, while the thin-film work (45 K at ambient pressure) demonstrates that strain engineering can stabilize superconductivity without external pressure. The deep-learning screening of 144 ternary hydrides (129 novel) shows that AI-driven structure prediction can dramatically expand the candidate space beyond binary systems. Together, these results validate the computational-experimental feedback loop and provide concrete targets for synthesis and characterization.
 
 ## 3. Systematic Approach Using Machine Learning and High-Throughput Screening
 
