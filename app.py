@@ -1,3 +1,5 @@
+import json
+import os
 from fastapi import FastAPI, HTTPException, Header, Query
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
@@ -7,8 +9,40 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Superconductivity Pipeline API", version="0.1.0")
 
-# In-memory storage for candidates and submissions
-candidates_db: List[Dict[str, Any]] = []
+DATABASE_PATH = os.path.join(os.path.dirname(__file__), "data", "superconductor_database.json")
+
+def _load_candidates() -> List[Dict[str, Any]]:
+    if not os.path.exists(DATABASE_PATH):
+        return []
+    with open(DATABASE_PATH, "r") as f:
+        data = json.load(f)
+    return [
+        {
+            "id": i + 1,
+            "formula": entry.get("name", entry.get("composition", "")),
+            "pressure": entry.get("pressure"),
+            "temperature": entry.get("Tc"),
+        }
+        for i, entry in enumerate(data)
+    ]
+
+def _append_candidate(candidate: Dict[str, Any]) -> None:
+    os.makedirs(os.path.dirname(DATABASE_PATH), exist_ok=True)
+    try:
+        with open(DATABASE_PATH, "r") as f:
+            data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = []
+    data.append({
+        "name": candidate["formula"],
+        "Tc": candidate.get("temperature"),
+        "pressure": candidate.get("pressure"),
+    })
+    with open(DATABASE_PATH, "w") as f:
+        json.dump(data, f, indent=2)
+
+# Persistent JSON-file-backed storage for candidates
+candidates_db: List[Dict[str, Any]] = _load_candidates()
 submissions_db: List[Dict[str, Any]] = []
 
 class CandidateRequest(BaseModel):
@@ -51,6 +85,7 @@ def create_candidate(req: CandidateRequest, api_key: str = Header(None)):
         "temperature": req.temperature,
     }
     candidates_db.append(candidate)
+    _append_candidate(candidate)
     logger.info(f"Created candidate {candidate['id']}: {req.formula}")
     return candidate
 
@@ -75,21 +110,77 @@ def submit_prediction(req: SubmitRequest, api_key: str = Header(None)):
 
 @app.post("/batch_predict", response_model=BatchPredictResponse)
 def batch_predict(req: BatchPredictRequest, api_key: str = Header(None)):
-    """Batch predict Tc for a list of formulas using a simple empirical model."""
+    """Batch predict Tc for a list of formulas using the Eliashberg (Allen-Dynes) model."""
     if not api_key:
         raise HTTPException(status_code=401, detail="Missing API key")
+    from scripts.predict_tc import eliashberg_tc
     predictions = []
     for formula in req.formulas:
-        # Simple heuristic: higher hydrogen fraction -> higher predicted Tc (placeholder)
-        h_count = formula.count('H') + formula.count('h')
-        predicted_tc = min(300, 20 + 10 * h_count)  # Dummy model
+        try:
+            predicted_tc = eliashberg_tc(formula)
+            confidence = 0.7
+        except Exception:
+            predicted_tc = 0.0
+            confidence = 0.0
         predictions.append({
             "formula": formula,
-            "predicted_tc": predicted_tc,
-            "confidence": 0.5,
+            "predicted_tc": round(predicted_tc, 2),
+            "confidence": confidence,
         })
     return {"predictions": predictions}
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+# --- Consolidated endpoints from run_pipeline.py ---
+
+@app.post("/login")
+def login(username: str = None, password: str = None):
+    """Simple login endpoint returning an API key (demo purposes)."""
+    if username == "admin" and password == "admin123":
+        return {"api_key": "admin-demo-key", "role": "admin"}
+    elif username == "researcher" and password == "researcher123":
+        return {"api_key": "researcher-demo-key", "role": "researcher"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
+
+@app.post("/feedback")
+def submit_feedback(formula: str, rating: int, comment: str = ""):
+    """Submit feedback/rating for a candidate formula."""
+    if rating < 1 or rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+    logger.info(f"Feedback: formula={formula}, rating={rating}, comment={comment}")
+    return {"status": "ok", "formula": formula, "rating": rating}
+
+@app.get("/predict-tc")
+def predict_tc_endpoint(compound: str, api_key: str = Header(None)):
+    """Predict Tc for a given compound using the trained model."""
+    if not api_key:
+        raise HTTPException(status_code=401, detail="Missing API key")
+    from scripts.predict_tc import eliashberg_tc
+    try:
+        predicted_tc = eliashberg_tc(compound)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+    return {"compound": compound, "predicted_Tc": round(predicted_tc, 2), "unit": "K"}
+
+@app.post("/simulate-manufacturing")
+def simulate_manufacturing(compound: str, api_key: str = Header(None)):
+    """Simulate manufacturing process for a given compound."""
+    if not api_key:
+        raise HTTPException(status_code=401, detail="Missing API key")
+    from scripts.predict_tc import eliashberg_tc
+    try:
+        predicted_tc = eliashberg_tc(compound)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+    if predicted_tc > 200:
+        success_prob = round(max(0.1, min(0.9, 0.5 - 0.001 * (predicted_tc - 200))), 2)
+        estimated_cost = round(5000 + 200 * predicted_tc, 2)
+    elif predicted_tc > 100:
+        success_prob = round(max(0.2, min(0.95, 0.6 - 0.002 * (predicted_tc - 100))), 2)
+        estimated_cost = round(2000 + 100 * predicted_tc, 2)
+    else:
+        success_prob = round(max(0.3, min(0.95, 0.8 - 0.001 * predicted_tc)), 2)
+        estimated_cost = round(1000 + 50 * predicted_tc, 2)
+    return {"compound": compound, "success_probability": success_prob, "estimated_cost": estimated_cost, "currency": "USD"}
