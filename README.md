@@ -28,8 +28,9 @@ It is an **AI-generated scaffold**. Treat predictions, protocols, and business l
 12. [Funding and grant materials](#funding-and-grant-materials)
 13. [Access control (scaffold)](#user-management-and-role-based-access-control-rbac)
 14. [All documents (catalog)](#all-documents)
-15. [How to contribute](#how-to-contribute)
-16. [Disclaimer](#disclaimer)
+15. [Changelog](#changelog)
+16. [How to contribute](#how-to-contribute)
+17. [Disclaimer](#disclaimer)
 
 ---
 
@@ -681,6 +682,14 @@ This repository intentionally has **no** GitHub Actions workflows (see [`.github
 - [`scripts/`](scripts/) · [`tests/`](tests/) · [`reproducibility/`](reproducibility/) · [`requirements.txt`](requirements.txt)  
 
 ---
+
+## Changelog
+
+Agent and maintainer activity is logged in a **paginated** changelog (newest first), with LOC deltas and expanders for long text:
+
+- Hub + agent regen instructions: [`CHANGELOG.md`](CHANGELOG.md)
+- Page index: [`changelog/README.md`](changelog/README.md)
+- Regenerate after new work: `python scripts/generate_changelog.py`
 
 ## How to contribute
 
