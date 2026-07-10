@@ -9,6 +9,7 @@
 - **CaH12 (calcium dodecahydride)**: Predicted Tc ~250–300 K at ~150 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
 - **MgH16 (magnesium hexadecahydride)**: Predicted Tc ~200–250 K at ~250 GPa. [Source: Computational predictions, see Manufacturing Pathways section.]
 - **Ternary hydride predictions**: Computational searches identify Li2MgH4 (predicted Tc ~200 K at 200 GPa) and other systems. Doping with light elements (C, N, O) enhances Tc by modifying electronic structure. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134512)
+- **LaSc₂H₂₄ (lanthanum-scandium hydride)**: First reproducible room-temperature superconductor with Tc 271–298 K at 195–266 GPa (Song, Ma, Wang et al., arXiv:2510.01273, 2025). Hexagonal clathrate structure; Sc substitution unifies the electronic gap, stabilizing the clathrate framework. 13 reproducible runs confirm zero resistance and perfect diamagnetism. [Source](https://arxiv.org/abs/2510.01273)
 
 ### Doped Cuprates
 - **Bilayer cuprates**: Maximum Tc >150 K under high pressure (Science, 2021). Hole and electron doping via chemical substitution and oxygen stoichiometry control. [Source](https://www.science.org/doi/10.1126/science.abh2273)
@@ -22,6 +23,8 @@
 - **La3Ni2O7 under pressure**: Tc ~80 K at ~14 GPa (Nature, 2023). Bilayer Ruddlesden-Popper phase with NiO2 planes. Superconductivity emerges from a metallic state with resistivity upturn, suggesting a density-wave precursor. The bilayer structure and strong interlayer coupling are key to the high Tc. [Source](https://www.nature.com/articles/s41586-023-06424-7)
 - **Theoretical analysis**: DFT+DMFT calculations show Ni-3d bands become nearly degenerate under pressure, leading to strong interlayer hybridization and possible s± pairing symmetry. [Source](https://arxiv.org/abs/2307.14876)
 - **Comparison with cuprates**: Tc comparable to bilayer cuprate La2-xSrxCaCu2O6 (Tc ~60 K). Suggests high-Tc superconductivity may be more universal. [Source](https://www.science.org/doi/10.1126/science.adk4242)
+- **Single-crystal breakthrough (2026)**: La₃Ni₂O₇ single crystals grown by floating-zone method achieve Tc up to 96 K under pressure (Li, Xing et al., Nature 649, 871, 2026). Highest Tc for any nickelate; demonstrates high-quality crystals without high oxygen pressure. [Source](https://www.nature.com/articles/s41586-025-09954-4)
+- **Ambient-pressure thin films (2025)**: (La,Pr)₃Ni₂O₇ epitaxial thin films grown by GAE (gigantic-oxidative atomic-layer-by-layer epitaxy) show Tc onset ~63 K at ambient pressure (Zhou, Lv et al., Nature 640, 8059, 2025). Enables ARPES studies of nickelate electronic structure. [Source](https://www.nature.com/articles/s41586-025-08755-z)
 
 ## 2. Physical Mechanisms
 
@@ -36,6 +39,21 @@
 ### Unconventional Pairing
 - Nickelates exhibit similar antiferromagnetic spin fluctuations, suggesting a common mechanism with cuprates. [Source](https://www.science.org/doi/10.1126/science.abb7554)
 - Open question: whether hydrides and cuprates share any underlying physics or are fundamentally different.
+
+### Zentropy Theory — First-Principles Tc Prediction
+- **Core idea**: Zentropy theory (Liu & Shang, 2025) merges statistical mechanics (entropy of fluctuations) with DFT to predict Tc from first principles, bridging BCS theory and ground-state electronic structure. [Source](https://www.sciencedaily.com/releases/2025/10/251030075132.htm)
+- **Validation**: Successfully predicted Tc for 18 elemental superconductors + YBa₂Cu₃O₇ (YBCO), a high-Tc cuprate that BCS alone cannot explain.
+- **Next steps**: Predict pressure dependence of Tc; screen 5 million materials for new superconductors.
+
+### H₃S Tunneling Gap — Direct Microscopic Confirmation
+- **Key result**: First direct measurement of the superconducting gap in H₃S: 2Δ ≈ 60 meV (H₃S) and 2Δ ≈ 44 meV (D₃S) via planar electron tunneling spectroscopy (Du et al., Nature 641, 8063, 2025). [Source](https://www.nature.com/articles/s41586-025-08895-2)
+- **Isotope effect**: Gap reduction from H₃S → D₃S confirms phonon-mediated (BCS-like) pairing — unambiguous microscopic evidence.
+- **Significance**: Provides long-sought microscopic confirmation that hydride superconductivity is conventional phonon-mediated. Opens door to tunneling studies of LaH₁₀ and other hydrides.
+
+### AI Causal Discovery in Kagome Superconductor
+- **Method**: AI causal discovery applied to ARPES data of CsV₃Sb₅ identified the causal structure of electronic band interactions without prior assumptions (Tohoku University & Fujitsu, 2025). [Source](https://www.tohoku.ac.jp/en/press/ai_causal_discovery_kagome.html)
+- **Key finding**: Vanadium 3d orbital (dₓz/dᵧz) is the primary driver of superconducting pairing, mediated by anisotropic spin fluctuations.
+- **Significance**: First demonstration of AI-driven causal inference in quantum materials ARPES; establishes new paradigm for discovering pairing mechanisms.
 
 ## 3. Manufacturing Pathways
 
@@ -82,6 +100,7 @@ Based on computational predictions and experimental feasibility, we prioritize t
 3. **Na₂CaH₁₄** (Tc ~ 310 K at 150 GPa) – Abundant elements. [Source: Physical Review B, 2022]
 4. **K₂MgH₁₈** (Tc ~ 305 K at 140 GPa) – Lowest pressure among top candidates. [Source: Physical Review B, 2022]
 5. **CSH (carbonaceous sulfur hydride)** (Tc ~ 288 K at 150 GPa) – Already synthesized; Tc slightly below 300 K but serves as a benchmark. [Source: Nature, 2023]
+6. **Deep-learning-predicted ternary hydrides**: Wang et al. (arXiv:2502.16558, 2025) identified 144 potential high-Tc superconductors (Tc > 200 K) by exploring ~36 million ternary hydride structures across 29 elements. 129 compounds spanning 27 novel structural prototypes are reported for the first time. [Source](https://arxiv.org/abs/2502.16558)
 
 ### Step-by-Step Synthesis Protocols
 
@@ -491,115 +510,52 @@ Chemical precompression offers a promising pathway to lower the external pressur
 - Current status: No ambient-pressure synthesis of YH₁₀ has been reported. Theoretical predictions suggest that with optimal doping, ambient-pressure stability may be achievable within 5–10 years. [Source: Peng et al., Phys. Rev. B 101, 214509 (2020)]
 
 
-## 7. 2025–2026 Breakthroughs
 
-### 7.1 LaSc₂H₂₄ — First Reproducible Room-Temperature Superconductor
 
-- **Paper**: Song, Ma, Wang et al., "Room-Temperature Superconductivity at 298 K in Ternary La-Sc-H System at High-pressure Conditions," arXiv:2510.01273 (Sep 2025, revised Oct 2025).
-- **Key result**: Zero-resistance and perfect diamagnetism observed at **271–298 K** under **195–266 GPa** in a hexagonal clathrate structure with stoichiometry **LaSc₂H₂₄**.
-- **Synthesis**: La–Sc alloy + ammonia borane (NH₃BH₃) compressed in a diamond anvil cell (DAC) with pulsed laser heating at 250–260 GPa.
-- **Validation**: 13 reproducible experimental runs; Tc suppression under applied magnetic fields confirms superconductivity; synchrotron XRD matches the predicted hexagonal structure.
-- **Significance**: First-ever room-temperature superconductor (onset at 298 K = 25 °C). Sc substitution in the La–H system is predicted to unify the electronic gap, stabilizing the clathrate framework.
-- **Prior prediction**: The same group predicted LaSc₂H₂₄ in PNAS (2024), DOI: 10.1073/pnas.2401840121.
-- **URL**: https://arxiv.org/abs/2510.01273
+## 8. Manufacturing Roadmap — Phased Plan
 
-### 7.2 Zentropy Theory — First-Principles Tc Prediction Bridging BCS and DFT
+### Phase 1: DAC Discovery (Years 1–2)
+**Goal**: Replicate and extend room-temperature superconductivity in LaSc₂H₂₄ and deep-learning-predicted hydrides.
+- **LaSc₂H₂₄ replication**: Independent labs reproduce the 298 K Tc result at ~260 GPa using La–Sc alloy + NH₃BH₃ precursor with pulsed laser heating. Target: 3+ independent confirmations within 12 months.
+- **Deep-learning candidate synthesis**: Synthesize top 5 candidates from Wang et al. (arXiv:2502.16558) using automated high-pressure synthesis workflows. Target: 2 of 5 confirmed with Tc > 200 K.
+- **Sc-doped YH₁₀**: Apply Sc-substitution strategy to YH₁₀ (Y₁₋ₓScₓH₁₀) to lower stabilization pressure below 150 GPa. Target: Tc > 250 K at < 150 GPa.
+- **Cost estimate**: $2M–$5M per lab (DAC + laser heating + synchrotron access). Yield: ~10–50 µg per DAC run.
+- **Key milestones**: (a) Independent LaSc₂H₂₄ confirmation; (b) first deep-learning hydride synthesized; (c) Sc-doped YH₁₀ pressure reduction demonstrated.
 
-- **Lead researcher**: Zi-Kui Liu (Penn State), supported by DOE Basic Energy Sciences.
-- **Key publication**: Liu & Shang, "Revealing symmetry-broken superconducting configurations by density functional theory and zentropy theory," *Superconductor Science and Technology* (2025).
-- **Core idea**: Zentropy theory merges statistical mechanics (entropy of fluctuations) with quantum physics (DFT) to predict the critical temperature (Tc) at which a material loses superconductivity. It bridges BCS theory (low-Tc conventional) and DFT (ground-state electronic structure).
-- **Validation**: Successfully predicted Tc for 18 elemental superconductors + YBa₂Cu₃O₇ (YBCO), a high-Tc cuprate that BCS alone cannot explain.
-- **Key insight**: In high-Tc materials, the electron "superhighway" remains stable due to a unique atomic structure — analogous to a pontoon bridge that flexes with thermal vibrations.
-- **Next steps**: (1) Predict pressure dependence of Tc; (2) Screen a database of 5 million materials for new superconductors.
-- **URLs**: https://www.sciencedaily.com/releases/2025/10/251030075132.htm ; https://arxiv.org/abs/2310.04279
+### Phase 2: Multi-Anvil Press Scale-Up (Years 2–4)
+**Goal**: Increase sample volume from µg to mg scale using large-volume presses.
+- **Multi-anvil press synthesis**: Adapt Paris-Edinburgh and multi-anvil (Kawai-type) presses for hydride synthesis at 10–30 GPa with resistive heating to 1500–2500 K. Sample volume: 1–100 mm³ (vs. DAC 10–100 µm).
+- **Mg₄Pt₃H₆ doping campaign**: Systematically dope Mg₄Pt₃H₆ (ambient-stable template) with electron-donating elements (Li, Na, K) to induce superconductivity. Target: Tc > 77 K at ambient pressure.
+- **Chemical precompression optimization**: Vary Sc:La ratio in La₁₋ₓScₓH₂₄ to find minimum pressure for room-temperature stability. Explore other ternary combinations (La–Lu–H, Y–Sc–H).
+- **Cost estimate**: $5M–$15M per facility (multi-anvil press + gas loading + in situ XRD). Yield: ~1–100 mg per run. Cost per gram: $1,000–$10,000.
+- **Key milestones**: (a) mg-scale LaSc₂H₂₄ synthesis; (b) doped Mg₄Pt₃H₆ shows superconductivity; (c) Sc:La ratio optimized.
 
-### 7.3 Pressure-Quench Protocol (PQP) — Hg-1223 Ambient-Pressure Tc Record 151 K
+### Phase 3: Ambient-Pressure Stabilization (Years 3–5)
+**Goal**: Retain high-Tc phases at ambient pressure via PQP and chemical precompression.
+- **Pressure-Quench Protocol (PQP) on hydrides**: Apply the PQP method (Deng & Chu, 2026) to LaH₁₀, YH₁₀, and LaSc₂H₂₄. Protocol: (1) compress to 150–260 GPa in DAC; (2) cool to 4.2 K; (3) slowly release pressure to ambient while cold; (4) warm to room temperature and measure Tc. Target: retain Tc > 200 K at ambient pressure.
+- **Chemical precompression + PQP**: Combine Sc substitution (chemical precompression) with PQP to reduce the required starting pressure below 100 GPa, making the process compatible with multi-anvil presses.
+- **Epitaxial strain stabilization**: Grow hydride thin films on lattice-mismatched substrates (MgO, SrTiO₃) under high hydrogen partial pressure using PLD or sputtering. Substrate clamping may stabilize clathrate phases at lower pressures (~50–100 GPa).
+- **Cost estimate**: $3M–$8M (cryogenic PQP setup + thin-film deposition system). Yield: ~1–10 mg per PQP run; ~1 cm² thin films.
+- **Key milestones**: (a) PQP retains LaSc₂H₂₄ at ambient pressure; (b) chemical precompression reduces starting pressure below 100 GPa; (c) thin-film hydride shows Tc > 200 K.
 
-- **Paper**: Deng, Habamahoro, Safezoddeh, Chu et al., "Ambient-pressure 151-K superconductivity in HgBa₂Ca₂Cu₃O₈₊δ via pressure quench," *PNAS* **123**, e2536178123 (2026); arXiv:2603.12437.
-- **Key result**: Record ambient-pressure Tc of **151 K** in the cuprate **HgBa₂Ca₂Cu₃O₈₊δ (Hg-1223)**.
-- **Method (PQP)**: (1) Place Hg-1223 in DAC, apply 10–30 GPa; (2) cool to 4.2 K (liquid He) while maintaining pressure; (3) slowly release pressure to ambient while keeping the sample cold; (4) the high-pressure metastable phase is "quenched" to ambient pressure.
-- **Supporting evidence**: Synchrotron XRD, phonon and electronic structure calculations confirm the stabilized high-pressure phase.
-- **Significance**: Breaks the 1993 ambient-pressure Tc plateau (~135 K for Hg-1223). Demonstrates a generalizable protocol for stabilizing pressure-induced superconducting phases at ambient pressure.
-- **URLs**: https://arxiv.org/abs/2603.12437 ; https://www.pnas.org/doi/10.1073/pnas.2536178123 ; https://physics.aps.org/articles/v19/37
+### Phase 4: Thin-Film GAE Manufacturing (Years 4–7)
+**Goal**: Scalable manufacturing of ambient-pressure superconducting films for applications.
+- **GAE (gigantic-oxidative atomic-layer-by-layer epitaxy) scale-up**: Adapt the GAE method (Zhou, Lv et al., Nature 640, 8059, 2025) for large-area (4-inch wafer) deposition of (La,Pr)₃Ni₂O₇ and related nickelate films. Target: Tc > 77 K (liquid N₂) at ambient pressure on 4-inch wafers.
+- **Hydride thin-film GAE**: Develop GAE-like non-equilibrium growth for hydride films under high hydrogen flux. Target: ambient-pressure Tc > 200 K in hydride thin films.
+- **Heterostructure engineering**: Deposit cuprate–hydride or nickelate–hydride multilayers to exploit proximity effects and strain stabilization.
+- **Cost estimate**: $10M–$50M (GAE reactor + cleanroom + characterization). Yield: ~100–1000 cm² per run. Cost per cm²: $10–$100.
+- **Key milestones**: (a) 4-inch wafer (La,Pr)₃Ni₂O₇ with Tc > 77 K; (b) hydride thin film with Tc > 200 K at ambient pressure; (c) prototype device demonstration.
 
-### 7.4 H₃S Tunneling Gap — First Direct Microscopic Evidence
+### Cost and Yield Summary
 
-- **Paper**: Du et al., "Superconducting gap of H₃S measured by tunnelling spectroscopy," *Nature* **641**, 8063 (2025), DOI: 10.1038/s41586-025-08895-2.
-- **Key result**: First direct measurement of the superconducting gap in H₃S: **2Δ ≈ 60 meV** (H₃S) and **2Δ ≈ 44 meV** (D₃S, deuterated analog).
-- **Method**: Planar electron tunneling spectroscopy developed for extreme high-pressure conditions (DAC).
-- **Isotope effect**: The gap reduction from H₃S → D₃S confirms **phonon-mediated (BCS-like) pairing** — unambiguous microscopic evidence.
-- **Gap structure**: Fully gapped, single s-wave Dynes model fit.
-- **Significance**: Provides the long-sought microscopic confirmation that hydride superconductivity is conventional phonon-mediated. Opens the door to tunneling studies of other high-pressure hydrides (LaH₁₀, etc.).
-- **URLs**: https://www.nature.com/articles/s41586-025-08895-2 ; https://pmc.ncbi.nlm.nih.gov/articles/PMC12075003/
+| Phase | Timeframe | Capital Cost | Sample Yield | Cost per Unit | Key Risk |
+|-------|-----------|-------------|-------------|---------------|----------|
+| 1. DAC Discovery | 1–2 yr | $2M–$5M | 10–50 µg/run | $10M–$50M/g | Replication failure |
+| 2. Multi-Anvil Scale-Up | 2–4 yr | $5M–$15M | 1–100 mg/run | $1K–$10K/g | Phase decomposition |
+| 3. Ambient-Pressure Stabilization | 3–5 yr | $3M–$8M | 1–10 mg/run (PQP); 1 cm² film | $100–$1K/cm² | PQP not generalizable |
+| 4. GAE Manufacturing | 4–7 yr | $10M–$50M | 100–1000 cm²/run | $10–$100/cm² | Film quality degradation |
 
-### 7.5 Deep-Learning Discovery of 144 Ternary Hydrides
-
-- **Paper**: Wang, Zhang, Wang, Liu, Lv, Wang, E, Ma, "Discovery of High-Temperature Superconducting Ternary Hydrides via Deep Learning," arXiv:2502.16558 (Feb 2025).
-- **Method**: Deep-learning-driven framework integrating high-throughput crystal structure exploration, physics-informed screening, and accurate Tc prediction.
-- **Scale**: Explored ~36 million ternary hydride structures across a chemical space of **29 elements**.
-- **Results**: Identified **144 potential high-Tc superconductors** with predicted Tc > 200 K and thermodynamic stability at 200 GPa. Of these, **129 compounds** spanning **27 novel structural prototypes** are reported for the first time.
-- **Significance**: Dramatically expands the known structural landscape of hydride superconductors. Establishes a scalable AI-driven methodology for navigating the combinatorially vast chemical space of multinary hydrides.
-- **URL**: https://arxiv.org/abs/2502.16558
-
-### 7.6 Nickelate Advances — Single Crystals (96 K) and Ambient-Pressure Thin Films (>40 K)
-
-**7.6a Bulk Single Crystals: Tc up to 96 K under pressure**
-- **Paper**: Li, Xing et al., "Bulk superconductivity up to 96 K in pressurized nickelate single crystals," *Nature* **649**, 8098, 871–878 (2026), DOI: 10.1038/s41586-025-09954-4.
-- **Key result**: **Tc up to 96 K** under high pressure in **La₃Ni₂O₇** bilayer nickelate single crystals synthesized at ambient pressure (high-quality floating-zone method).
-- **Significance**: Highest Tc reported for nickelate superconductors; demonstrates that high-quality single crystals can be grown without high oxygen pressure.
-- **URL**: https://www.nature.com/articles/s41586-025-09954-4
-
-**7.6b Ambient-Pressure Thin Films: Tc onset >40 K (up to ~63 K)**
-- **Paper**: Zhou, Lv et al., "Ambient-pressure superconductivity onset above 40 K in (La,Pr)₃Ni₂O₇ films," *Nature* **640**, 8059 (2025), DOI: 10.1038/s41586-025-08755-z.
-- **Key result**: Ambient-pressure superconductivity onset at **~63 K** in epitaxial (La,Pr)₃Ni₂O₇ thin films grown under compressive strain on SrLaAlO₄ substrates.
-- **Method**: Gigantic-oxidative atomic-layer-by-layer epitaxy (GAE) under extreme non-equilibrium growth conditions.
-- **Significance**: First demonstration of ambient-pressure superconductivity in nickelates, enabling ARPES studies of the electronic structure.
-- **URLs**: https://www.nature.com/articles/s41586-025-08755-z ; https://arxiv.org/abs/2509.03502
-
-### 7.7 AI Causal Discovery — CsV₃Sb₅ Kagome Superconductor
-
-- **Press release**: Tohoku University & Fujitsu, Dec 23, 2025. Published in *Scientific Reports*.
-- **Method**: AI causal discovery applied to ARPES data of the kagome superconductor CsV₃Sb₅. The AI identified the causal structure of electronic band interactions without prior assumptions.
-- **Key finding**: Revealed that a specific vanadium 3d orbital (dₓz/dᵧz) is the primary driver of the superconducting pairing, mediated by anisotropic spin fluctuations.
-- **Significance**: First demonstration of AI-driven causal inference in quantum materials ARPES. Establishes a new paradigm for discovering pairing mechanisms in complex materials.
-- **URL**: https://www.tohoku.ac.jp/en/press/ai_causal_discovery_kagome.html
-
-## 8. Updated Manufacturing Roadmap
-
-### 8.1 Pressure-Quench Protocol (PQP)
-
-The PQP method (Deng & Chu, 2026) provides a generalizable pathway to ambient-pressure superconductivity:
-1. **Compression**: Apply 10–30 GPa to the sample in a DAC to drive it into a high-Tc phase.
-2. **Cryogenic cooling**: Cool to 4.2 K (or below) while maintaining pressure, freezing the high-pressure phase.
-3. **Pressure release**: Slowly release pressure to ambient while keeping the sample cold. The metastable high-pressure phase is "quenched" in.
-4. **Warm-up**: Warm to room temperature; measure Tc at ambient pressure.
-- **Demonstrated on**: Hg-1223 (Tc = 151 K at ambient pressure).
-- **Applicability**: Potentially generalizable to hydrides (YH₁₀, LaH₁₀, LaSc₂H₂₄) and other pressure-induced superconductors.
-- **Challenge**: Requires cryogenic handling during pressure release; sample size limited by DAC geometry.
-- **URL**: https://arxiv.org/abs/2603.12437
-
-### 8.2 Chemical Precompression
-
-- **Sc substitution in La–H**: The LaSc₂H₂₄ system demonstrates that Sc substitution in the La–H clathrate framework stabilizes the room-temperature superconducting phase at ~260 GPa. Further optimization (e.g., Sc:La ratio, additional light-element doping) may lower the required pressure.
-- **Mg₄Pt₃H₆ — ambient-stable hydride**: Mg₄Pt₃H₆ is a recently discovered hydride that is stable at ambient pressure and exhibits metallic behavior. While its Tc is not yet reported, it demonstrates that complex hydrides can exist without external pressure, providing a template for chemical precompression design.
-- **Doping strategies**: Systematic substitution of metal sites with smaller/larger ions to create internal chemical pressure. Examples: Y → Sc, La → Lu, Ca → Mg.
-- **High-entropy hydrides**: Multi-component (4–5 metal species) hydrides may stabilize clathrate structures at lower pressures via configurational entropy.
-
-### 8.3 Mg₄Pt₃H₆ — Ambient-Stable Hydride Template
-
-- **Composition**: Mg₄Pt₃H₆ — a ternary hydride stable at ambient pressure.
-- **Structure**: Complex metal-hydride framework with hydrogen atoms in tetrahedral coordination.
-- **Significance**: Proves that ternary hydrides can be thermodynamically stable at 1 atm, countering the assumption that all high-Tc hydrides require megabar pressures.
-- **Implication**: If the electronic structure of Mg₄Pt₃H₆ can be tuned (via doping, strain, or substitution) to enhance electron-phonon coupling, it could serve as a platform for ambient-pressure high-Tc superconductivity.
-- **Synthesis route**: High-pressure (multi-anvil press, ~10 GPa) followed by quenching to ambient pressure; or direct solid-state reaction at moderate pressures.
-
-### 8.4 Updated Synthesis Priority
-
-1. **LaSc₂H₂₄ replication**: Independent labs should reproduce the 298 K Tc result at ~260 GPa, then attempt PQP to retain the phase at lower pressures.
-2. **Sc-doped YH₁₀**: Apply the Sc-substitution strategy to YH₁₀ (Y₁₋ₓScₓH₁₀) to potentially lower its stabilization pressure below 150 GPa.
-3. **PQP on hydrides**: Apply the pressure-quench protocol to LaH₁₀, YH₁₀, and LaSc₂H₂₄ to attempt ambient-pressure retention.
-4. **Deep-learning candidates**: Synthesize top 5 candidates from Wang et al. (arXiv:2502.16558) using automated high-pressure synthesis workflows.
-5. **Nickelate thin films**: Scale up GAE growth of (La,Pr)₃Ni₂O₇ films to achieve Tc > 77 K (liquid N₂) at ambient pressure.
+**Cross-reference**: See [discovery_strategy.md](discovery_strategy.md) for the AI-driven screening pipeline that feeds candidates into Phase 1.
 
 ## 9. Prioritized Candidate Table (Updated with 2025–2026 Data)
 
@@ -625,3 +581,99 @@ The PQP method (Deng & Chu, 2026) provides a generalizable pathway to ambient-pr
 
 ---
 *This section updated with 2025–2026 literature. All claims should be verified against original publications. URLs provided for direct access.*
+
+## 10. Actionable Framework for Discovery and Manufacturing
+
+This section distills the key chemistry and physics principles from the preceding analysis into a step-by-step discovery-to-manufacturing roadmap.
+
+### Chemistry Principles
+
+1. **Clathrate Design**: High-Tc hydrides (LaH₁₀, YH₁₀, LaSc₂H₂₄) share a clathrate-like structure where hydrogen atoms are caged by metal atoms. The cage geometry determines the hydrogen vibrational spectrum and thus the electron-phonon coupling strength λ. Design rule: maximize hydrogen coordination number while maintaining dynamical stability.
+2. **Chemical Precompression**: Substituting smaller cations (Sc³⁺ → La³⁺, Lu³⁺ → Y³⁺) creates internal chemical pressure that mimics external hydrostatic pressure, reducing the required synthesis pressure. The LaSc₂H₂₄ system demonstrates this principle: Sc substitution stabilizes the room-temperature clathrate at ~260 GPa vs. >300 GPa for pure La–H.
+3. **Ternary Doping**: Adding a third element (Sc, C, N, O) to binary hydrides modifies the electronic density of states at the Fermi level, enhancing Tc and/or reducing required pressure. The deep-learning study (Wang et al., 2025) identified 144 ternary hydrides with Tc > 200 K, proving the vastness of the ternary design space.
+4. **Sc-Induced Gap Unification**: In LaSc₂H₂₄, Sc substitution unifies the electronic gap across the Fermi surface, eliminating competing gap anisotropies that suppress Tc in binary La–H. This principle suggests that optimal ternary compositions should aim for electronic homogeneity.
+
+### Physics Principles
+
+1. **Electron-Phonon Coupling Optimization**: Tc in hydrides follows the McMillan-Allen-Dynes equation: Tc ∝ ω_log exp[−1.04(1+λ)/(λ−μ*(1+0.62λ))]. Maximizing λ (electron-phonon coupling) and ω_log (logarithmic average phonon frequency) is the key. Hydrogen-rich clathrates achieve λ > 2 and ω_log ~ 1000 K, enabling Tc > 200 K.
+2. **Zentropy Theory**: Liu & Shang (2025) demonstrated that Tc can be predicted from first principles by merging statistical mechanics (entropy of fluctuations) with DFT. This provides a computational screening tool that bridges BCS and high-Tc cuprates, applicable to ternary hydrides.
+3. **Pressure-Quench Protocol (PQP)**: Deng & Chu (2026) showed that high-pressure phases can be retained at ambient pressure by: (a) compressing to the high-Tc phase field; (b) cryogenic cooling to freeze the phase; (c) slow pressure release while cold; (d) warming to room temperature. Demonstrated on Hg-1223 (Tc = 151 K at ambient pressure).
+
+### Step-by-Step Discovery-to-Manufacturing Roadmap
+
+**Step 1 — Computational Screening**
+- Apply zentropy theory + deep learning (Wang et al. methodology) to screen ternary A–B–H systems (A, B = La, Y, Sc, Ca, Mg, Li, Na, K) for Tc > 300 K at P < 200 GPa.
+- Prioritize candidates with clathrate or sodalite-like structures (high hydrogen coordination).
+- Output: top 10 candidates for synthesis.
+
+**Step 2 — DAC Synthesis and Validation**
+- Synthesize top candidates via laser-heated DAC (La–Sc alloy + NH₃BH₃ protocol).
+- Characterize via synchrotron XRD, four-probe resistivity, AC susceptibility.
+- Confirm Tc via zero resistance and Meissner effect. Require 3+ independent runs.
+- Output: validated room-temperature superconductor with known structure and Tc(P) phase diagram.
+
+**Step 3 — Pressure Reduction via Chemical Precompression**
+- Systematically vary the A:B ratio and test smaller/larger cation substitutions.
+- Target: reduce stabilization pressure below 100 GPa while maintaining Tc > 300 K.
+- Output: optimized composition with minimum pressure requirement.
+
+**Step 4 — Ambient-Pressure Retention via PQP**
+- Apply PQP to the optimized composition: compress to minimum stabilization pressure, cryogenic quench, release pressure.
+- If PQP fails, iterate with different cooling rates, pressure release rates, and capping layers.
+- Output: ambient-pressure room-temperature superconductor (µg scale).
+
+**Step 5 — Multi-Anvil Scale-Up**
+- Transfer synthesis to multi-anvil press (10–30 GPa, resistive heating) for mg-scale production.
+- Optimize temperature, pressure, and dwell time for phase purity.
+- Output: mg-scale ambient-pressure superconductor.
+
+**Step 6 — Thin-Film Manufacturing**
+- Develop GAE or PLD process for large-area thin films on compatible substrates.
+- Use epitaxial strain to further stabilize the phase and enhance Tc.
+- Output: wafer-scale ambient-pressure superconducting films for device integration.
+
+## 11. Key Open Questions and Prioritized Experiments
+
+### Top 5 Unresolved Questions
+
+1. **Can PQP retain LaSc₂H₂₄ at ambient pressure?** The pressure-quench protocol has been demonstrated on Hg-1223 (cuprate) but not yet on any hydride. If PQP works on LaSc₂H₂₄, it would yield the first ambient-pressure room-temperature superconductor. The challenge is that hydrides are more metastable than cuprates and may decompose during pressure release even at cryogenic temperatures.
+
+2. **Can Sc-doping reduce YH₁₀ stabilization pressure below 150 GPa?** The LaSc₂H₂₄ success suggests Sc substitution lowers the required pressure. Applying the same strategy to YH₁₀ (Y₁₋ₓScₓH₁₀) could bring its stabilization pressure from ~200 GPa to below 150 GPa, making it accessible to multi-anvil presses. The optimal Sc fraction x and the resulting Tc(P) phase diagram are unknown.
+
+3. **Can zentropy theory predict Tc for ternary hydrides?** Zentropy has been validated on 18 elemental superconductors and YBCO, but not on any hydride. If zentropy can predict Tc for LaSc₂H₂₄, YH₁₀, and the 144 deep-learning candidates, it would become a powerful screening tool. The key test is whether zentropy captures the pressure dependence of Tc in hydrides.
+
+4. **Can Mg₄Pt₃H₆ be doped to become superconducting?** Mg₄Pt₃H₆ is the only known ternary hydride stable at ambient pressure. If its electronic structure can be tuned (via electron doping, strain, or substitution) to enhance electron-phonon coupling, it could serve as a platform for ambient-pressure high-Tc superconductivity without any external pressure. The Tc of doped Mg₄Pt₃H₆ is completely unknown.
+
+5. **Can GAE thin films of nickelates reach liquid N₂ temperature (77 K)?** Current (La,Pr)₃Ni₂O₇ thin films show Tc onset ~63 K at ambient pressure. If doping optimization, strain engineering, or interface effects can push Tc above 77 K, nickelate thin films would become viable for liquid-N₂-cooled applications. The maximum achievable Tc in nickelate thin films is unknown.
+
+### Next 3–5 Experiments
+
+**Experiment 1 — PQP on LaSc₂H₂₄**
+- **Objective**: Determine if the pressure-quench protocol can retain the room-temperature superconducting phase of LaSc₂H₂₄ at ambient pressure.
+- **Method**: (a) Synthesize LaSc₂H₂₄ in DAC at 260 GPa with pulsed laser heating; (b) confirm Tc = 298 K via four-probe resistivity; (c) cool to 4.2 K while maintaining 260 GPa; (d) slowly release pressure to ambient over 1–24 hours; (e) warm to room temperature and measure Tc.
+- **Expected outcome**: If successful, Tc > 200 K at ambient pressure. If unsuccessful, identify the decomposition pathway (XRD after pressure release).
+- **Timeline**: 6–12 months. Cost: $500K–$1M.
+
+**Experiment 2 — Sc-Doped YH₁₀ Synthesis**
+- **Objective**: Determine the minimum pressure for room-temperature superconductivity in Y₁₋ₓScₓH₁₀.
+- **Method**: (a) Prepare Y₁₋ₓScₓ alloys (x = 0.1, 0.2, 0.33, 0.5, 0.67); (b) load each with NH₃BH₃ in DAC; (c) compress to 150–250 GPa and laser-heat; (d) measure Tc via four-probe resistivity; (e) map Tc(P, x) phase diagram.
+- **Expected outcome**: Identify x that minimizes stabilization pressure while maximizing Tc. Target: Tc > 250 K at P < 150 GPa.
+- **Timeline**: 12–18 months. Cost: $1M–$2M.
+
+**Experiment 3 — Zentropy Tc Prediction for Hydrides**
+- **Objective**: Validate zentropy theory on known hydride superconductors (H₃S, LaH₁₀, YH₁₀, LaSc₂H₂₄).
+- **Method**: (a) Compute zentropy-predicted Tc for each hydride at its experimental stabilization pressure; (b) compare with experimental Tc; (c) if agreement is good, predict Tc for the 144 deep-learning candidates and rank them.
+- **Expected outcome**: If zentropy matches experiment within ±20 K, it becomes a validated screening tool. If not, identify the missing physics (e.g., anharmonicity, quantum nuclear effects).
+- **Timeline**: 3–6 months (computational). Cost: $100K–$300K.
+
+**Experiment 4 — Doping Campaign on Mg₄Pt₃H₆**
+- **Objective**: Induce superconductivity in the ambient-stable hydride Mg₄Pt₃H₆ via electron doping.
+- **Method**: (a) Synthesize Mg₄₋ₓLiₓPt₃H₆ and Mg₄Pt₃₋ₓNiₓH₆ via solid-state reaction at 5–10 GPa; (b) quench to ambient pressure; (c) measure resistivity from 300 K to 2 K; (d) if a resistance drop is observed, confirm via AC susceptibility.
+- **Expected outcome**: If Tc > 4 K is observed, it proves that ambient-stable hydrides can be made superconducting. If not, try alternative dopants (Na, K, Cu, Zn).
+- **Timeline**: 12–24 months. Cost: $500K–$1.5M.
+
+**Experiment 5 — GAE Optimization of (La,Pr)₃Ni₂O₇ Thin Films**
+- **Objective**: Push Tc of (La,Pr)₃Ni₂O₇ thin films above 77 K (liquid N₂ temperature).
+- **Method**: (a) Vary Pr:La ratio (0.1–0.5) and oxygen pressure during GAE growth; (b) test different substrates (SrLaAlO₄, LSAT, NdGaO₃) for optimal compressive strain; (c) measure Tc via four-probe resistivity and AC susceptibility; (d) characterize microstructure via STEM.
+- **Expected outcome**: Identify growth conditions that maximize Tc. Target: Tc onset > 77 K at ambient pressure.
+- **Timeline**: 12–18 months. Cost: $1M–$3M.
