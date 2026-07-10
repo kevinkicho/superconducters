@@ -89,7 +89,32 @@ Superconductivity — the flow of electric current with zero resistance — has 
 - **Controversy:** The Meissner effect was not clearly observed, leading to some skepticism. Further studies are ongoing.
 - **Cross-reference:** This paper directly follows the prediction by Zhang et al. (2021) and demonstrates the power of theory-guided synthesis.
 
-## Theoretical Advances
+### 12. The path to room-temperature superconductivity: A programmatic approach (2026)
+- **Authors:** Prasankumar, R.P., Julian, M.N., Hutcheon, M. et al.
+- **Journal:** *Proceedings of the National Academy of Sciences* (2026)
+- **Summary:** Published March 9, 2026, this perspective paper argues there is no fundamental physical law forbidding superconductivity at ambient temperature. It identifies two Grand Challenges: the Prediction Challenge (predicting synthesizable materials) and the Engineering Challenge (controlling superconductivity via external knobs). The paper proposes treating potential superconductors as quantum metamaterials and calls for tight theory-experiment feedback loops with AI/ML acceleration.
+- **Significance:** Provides a strategic roadmap for the field, emphasizing that under the right conditions, superconductivity is an "almost universal property of non-magnetic metals." The companion study in the same PNAS issue reports pressure-quenching of Hg-1223 achieving Tc = 151 K at ambient pressure.
+- **URL:** https://www.pnas.org/doi/10.1073/pnas.2520324123
+- **DOI:** 10.1073/pnas.2520324123
+
+### 13. Machine-learning-guided discovery of kagome superconductors YRu₃B₂ and LuRu₃B₂ (2026)
+- **Authors:** Mustaf, R.A. et al. (SuperC consortium)
+- **Journal:** *Physical Review Research* (2026)
+- **Summary:** Published June 29, 2026. Using machine-learning-based pre-screening of elemental combinations followed by targeted first-principles calculations and experimental synthesis, the SuperC consortium discovered two new kagome superconductors: YRu₃B₂ (Tc = 0.81 K) and LuRu₃B₂ (Tc = 0.95 K). The kagome lattice produces flat bands via quantum geometry effects, enhancing electron pairing.
+- **Significance:** Demonstrates a scalable ML-driven pipeline that can screen billions of candidates. Over 7,000 superconductors have been discovered serendipitously, but only ~20 were theoretically predicted before synthesis. The SuperC consortium aims to find a room-temperature superconductor by 2033.
+- **URL:** https://link.aps.org/doi/10.1103/lpqj-7hyg
+- **DOI:** 10.1103/lpqj-7hyg
+
+### 14. Developing a complete AI-accelerated workflow for superconductor discovery (2026)
+- **Authors:** Gibson, J.B., Hire, A.C., Prakash, P. et al.
+- **Journal:** *npj Computational Materials* (2026)
+- **Summary:** Presents BEE-NET (Bootstrapped Ensemble of Equivariant Graph Neural Networks), an ML model trained to predict the Eliashberg spectral function and superconducting critical temperature. The multi-stage pipeline reduced over 1.3 million candidate structures to 741 dynamically and thermodynamically stable compounds with DFT-confirmed Tc > 5 K. Two previously unreported compounds were synthesized and confirmed as superconductors.
+- **Significance:** First complete AI-accelerated workflow that goes from computational screening all the way to experimental synthesis and validation. Mean absolute error of 0.87 K relative to DFT-based Allen-Dynes calculations, with a true-negative rate of 99.4%.
+- **URL:** https://www.nature.com/articles/s41524-026-01964-8
+- **DOI:** 10.1038/s41524-026-01964-8
+- **arXiv:** https://arxiv.org/abs/2503.20005
+
+## Theoretical Advances## Theoretical Advances## Theoretical Advances
 - **Crystal structure prediction:** Advances in DFT and evolutionary algorithms have enabled the prediction of new hydride phases with high Tc, such as ternary hydrides (e.g., Li-Mg-H, Ca-Y-H) that may stabilize at lower pressures.
 - **Electron-phonon coupling:** Calculations suggest that hydrogen-rich compounds can achieve Tc above 300 K under moderate pressures, guiding experimental efforts.
 - **Nickelate theory:** Theoretical models for bilayer nickelates propose that the high Tc arises from strong electron correlations and spin fluctuations, similar to cuprates.
@@ -753,7 +778,9 @@ The pursuit of room-temperature superconductivity has seen remarkable progress i
 15. Mao et al., *Journal of Applied Physics* 120, 165101 (2016). [DOI: 10.1063/1.4965707](https://doi.org/10.1063/1.4965707)
 16. Bozovic et al., *Nature* 422, 873–875 (2003). [DOI: 10.1038/nature01581](https://doi.org/10.1038/nature01581)
 17. Needs et al., *Journal of Physics: Condensed Matter* 34, 153001 (2022). [DOI: 10.1088/1361-648X/ac4c8f](https://doi.org/10.1088/1361-648X/ac4c8f)
-
+18. Prasankumar, R.P. et al., *Proceedings of the National Academy of Sciences* 123(11), e2520324123 (2026). [DOI: 10.1073/pnas.2520324123](https://www.pnas.org/doi/10.1073/pnas.2520324123)
+19. Mustaf, R.A. et al., *Physical Review Research* (2026). [DOI: 10.1103/lpqj-7hyg](https://link.aps.org/doi/10.1103/lpqj-7hyg)
+20. Gibson, J.B. et al., *npj Computational Materials* 12, 95 (2026). [DOI: 10.1038/s41524-026-01964-8](https://www.nature.com/articles/s41524-026-01964-8)
 *This section was generated by generate_research_paper().*
 
 
