@@ -1089,3 +1089,19 @@ def run_dft_pipeline(
         'omega_log': omega_log,
         'tc': tc,
     }
+
+
+def run(compound: Dict, **kwargs) -> Optional[Dict]:
+    """
+    Top-level entry point for DFT calculations on a compound.
+    Delegates to run_dft_pipeline() which performs SCF, phonon, and
+    electron-phonon coupling calculations, then computes Tc.
+
+    Args:
+        compound: Dictionary with structure information (see run_dft_pipeline).
+        **kwargs: Additional keyword arguments forwarded to run_dft_pipeline.
+
+    Returns:
+        Dictionary with keys 'lambda', 'omega_log', 'tc' if successful, else None.
+    """
+    return run_dft_pipeline(compound, **kwargs)
