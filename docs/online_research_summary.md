@@ -161,7 +161,40 @@
   - [https://news.mit.edu/2025/physicists-observe-evidence-unconventional-superconductivity-graphene-1106](https://news.mit.edu/2025/physicists-observe-evidence-unconventional-superconductivity-graphene-1106)
   - [https://scitechdaily.com/mits-magic-angle-graphene-just-changed-superconductivity/](https://scitechdaily.com/mits-magic-angle-graphene-just-changed-superconductivity/)
 
-### Implications for Project Discovery Strategy
+#### 9.10 SuperC Consortium: ML-Guided Kagome Superconductor Discovery (YRu₃B₂, LuRu₃B₂)
+- **Consortium**: SuperC (founded 2023, led by Prof. Päivi Törmä, Aalto University) — first coordinated global collaboration aiming to find a room-temperature superconductor by 2033.
+- **Paper**: Published in *Physical Review Research* (2026) by the SuperC consortium.
+- **Method**: Machine-learning-accelerated high-throughput screening combined with first-principles calculations (quantum geometry) to predict and experimentally confirm new kagome-lattice superconductors.
+- **New compounds discovered**:
+  - **YRu₃B₂** — Tc = **0.81 K**
+  - **LuRu₃B₂** — Tc = **0.95 K**
+- **Structure**: Both crystallize in the hexagonal CeCo₃B₂-type structure with planar Ru kagome networks. Superconductivity arises from **flat-band physics** in the kagome lattice.
+- **Bulk superconductivity**: ~100% superconducting volume fractions confirmed by magnetization, specific heat, and electrical transport.
+- **Key insight**: The dominant real-space electron-phonon coupling between Ru local dₓ²₋ᵧ² states and low-frequency Ru in-plane local x branch remains nearly unchanged; the λ reduction in these compounds comes from DOS reduction and phonon hardening, not a change in coupling mechanism.
+- **Superfluid weight calculations**: Conventional contributions dominate over quantum geometric effects due to dispersive bands near EF.
+- **Significance**: The ML method can screen **billions** of candidate materials, compared to the ~20 materials theoretically predicted before. Demonstrates the power of AI-guided discovery for novel superconductors.
+- **Sources**:
+  - [https://www.aalto.fi/en/news/researchers-identify-new-superconductors-unlocking-process-that-could-yield-thousands-more](https://www.aalto.fi/en/news/researchers-identify-new-superconductors-unlocking-process-that-could-yield-thousands-more)
+  - [https://superc2033.com/superconductivity-in-yru3b2-and-luru3b2/](https://superc2033.com/superconductivity-in-yru3b2-and-luru3b2/)
+  - [https://arxiv.org/abs/2512.16945](https://arxiv.org/abs/2512.16945)
+  - [https://journals.aps.org/prresearch/pdf/10.1103/lpqj-7hyg](https://journals.aps.org/prresearch/pdf/10.1103/lpqj-7hyg)
+
+#### 9.11 Nature Computational Science 2026: AI-Accelerated Workflow (92% Precision, 741 Predicted Stable Superconductors)
+- **Paper**: Gibson, Hire, Prakash et al., *npj Computational Materials* 12, 95 (2026); arXiv:2503.20005.
+- **Method**: BEE-NET (Bootstrapped Ensemble of Equivariant Graph Neural Networks) to predict the Eliashberg spectral function and superconducting critical temperature.
+- **Performance**:
+  - Mean absolute error of **0.87 K** relative to DFT-based Allen-Dynes calculations.
+  - **True-negative rate of 99.4%** (highly efficient screening for the rare property of superconductivity).
+- **Multi-stage AI-accelerated pipeline**: Screened **>1.3 million candidate structures**, reduced to **741 dynamically and thermodynamically stable compounds** with DFT-confirmed Tc > 5 K.
+- **Precision**: 92% for existing materials, 76% for generated candidates, **86% overall**.
+- **Experimental validation**: Two previously unreported compounds were successfully synthesized and confirmed superconducting.
+- **Significance**: Demonstrates that AI-driven high-throughput screening can achieve both high precision and experimental validation, dramatically accelerating the discovery of new superconductors.
+- **Sources**:
+  - [https://arxiv.org/abs/2503.20005](https://arxiv.org/abs/2503.20005)
+  - [https://www.nature.com/articles/s41524-026-01964-8](https://www.nature.com/articles/s41524-026-01964-8)
+  - [https://www.emergentmind.com/papers/2503.20005](https://www.emergentmind.com/papers/2503.20005)
+
+### Implications for Project Discovery Strategy### Implications for Project Discovery Strategy### Implications for Project Discovery Strategy
 
 - **Focus on ternary hydrides and clathrate structures** predicted by crystal structure prediction (USPEX, CALYPSO) to achieve high Tc at lower pressures. Use high-throughput DFT screening to identify promising candidates.
 - **Investigate chemical precompression** using rare-earth and alkaline-earth metals to stabilize hydrogen-rich phases at ambient or moderate pressures.
