@@ -369,6 +369,11 @@ def main():
         sim_results = digital_twin_simulation(candidates)
         print(f"[Pipeline] Digital twin simulation completed for {len(sim_results)} candidates.")
 
+    # Step 11: Study superconducting materials and generate chemistry/physics report
+    print("[Pipeline] Studying superconducting materials...")
+    study_superconducting_materials()
+    print("[Pipeline] Superconducting materials study completed.")
+
 if __name__ == "__main__":
     main()
 
@@ -3206,106 +3211,7 @@ if __name__ == "__main__":
     integrate_arxiv_scraper()
     print("Pipeline complete.")
 
-# ===== FastAPI REST API =====
-app = FastAPI(title="Superconductor Discovery API")
-
-# API Key authentication
-API_KEY_NAME = "X-API-Key"
-api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
-
-# Rate limiting
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-
-# Role-based access using environment variables
-def role_based_access(required_role: str):
-    """Check if the current user has the required role based on environment variables."""
-    api_key = os.environ.get("API_KEY", "")
-    admin_key = os.environ.get("ADMIN_API_KEY", "")
-    user_role = os.environ.get("USER_ROLE", "viewer")
-    # Simple role check: if API key matches admin key, role is admin; else if matches user key, role is user; else viewer
-    if api_key == admin_key:
-        role = "admin"
-    elif api_key == os.environ.get("USER_API_KEY", ""):
-        role = "user"
-    else:
-        role = "viewer"
-    if role not in ["admin", "user", "viewer"]:
-        role = "viewer"
-    # Check if required role is satisfied
-    role_hierarchy = {"viewer": 0, "user": 1, "admin": 2}
-    if role_hierarchy.get(role, 0) < role_hierarchy.get(required_role, 0):
-        raise HTTPException(status_code=403, detail="Insufficient permissions")
-    return role
-
-def verify_api_key(api_key: str = Depends(api_key_header)):
-    """Verify the API key from the header."""
-    if api_key is None:
-        raise HTTPException(status_code=401, detail="API key missing")
-    expected_key = os.environ.get("API_KEY", "")
-    if not expected_key:
-        raise HTTPException(status_code=500, detail="API_KEY not configured")
-    if not hmac.compare_digest(api_key, expected_key):
-        raise HTTPException(status_code=401, detail="Invalid API key")
-    return api_key
-
-@app.get("/candidates")
-@limiter.limit("10/minute")
-async def get_candidates(api_key: str = Depends(verify_api_key)):
-    """Return list of candidate materials."""
-    role_based_access("viewer")
-    # Load candidates from candidate_materials.md
-    candidates = []
-    try:
-        with open("candidate_materials.md", "r") as f:
-            for line in f:
-                if line.startswith("- [") and " - " in line:
-                    parts = line.split(" - ")
-                    compound = parts[0].replace("- [x] ", "").replace("- [ ] ", "").strip()
-                    tc = parts[1].replace("computed Tc: ", "").replace(" K", "").strip() if len(parts) > 1 else "N/A"
-                    candidates.append({"compound": compound, "Tc": tc})
-    except FileNotFoundError:
-        pass
-    return {"candidates": candidates}
-
-@app.get("/predict-tc")
-@limiter.limit("5/minute")
-async def predict_tc(compound: str, api_key: str = Depends(verify_api_key)):
-    """Predict Tc for a given compound using the trained model."""
-    role_based_access("user")
-    try:
-        from scripts.predict_tc import predict_tc as predict_tc_model
-        predicted_tc = predict_tc_model(compound)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
-    return {"compound": compound, "predicted_Tc": round(predicted_tc, 2), "unit": "K"}
-
-@app.post("/simulate-manufacturing")
-@limiter.limit("2/minute")
-async def simulate_manufacturing(compound: str, api_key: str = Depends(verify_api_key)):
-    """Simulate manufacturing process for a given compound."""
-    role_based_access("admin")
-    try:
-        from scripts.predict_tc import predict_tc as predict_tc_model
-        predicted_tc = predict_tc_model(compound)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
-    # Estimate success probability and cost based on predicted Tc
-    # Higher Tc materials typically require more extreme synthesis conditions
-    if predicted_tc > 200:
-        success_prob = round(max(0.1, min(0.9, 0.5 - 0.001 * (predicted_tc - 200))), 2)
-        estimated_cost = round(5000 + 200 * predicted_tc, 2)
-    elif predicted_tc > 100:
-        success_prob = round(max(0.2, min(0.95, 0.6 - 0.002 * (predicted_tc - 100))), 2)
-        estimated_cost = round(2000 + 100 * predicted_tc, 2)
-    else:
-        success_prob = round(max(0.3, min(0.95, 0.8 - 0.001 * predicted_tc)), 2)
-        estimated_cost = round(1000 + 50 * predicted_tc, 2)
-    return {"compound": compound, "success_probability": success_prob, "estimated_cost": estimated_cost, "currency": "USD"}
-
-# ===== Data Package Generation =====
-def generate_data_package(candidate: Dict[str, Any]) -> Dict[str, Any]:
+# ===== FastAPI REST API (removed — all endpoints exist in app.py) =====def generate_data_package(candidate: Dict[str, Any]) -> Dict[str, Any]:
     """Generate a JSON data package for a candidate material."""
     package = {
         "compound": candidate.get("compound", ""),

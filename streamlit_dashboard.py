@@ -234,91 +234,84 @@ def main():
     with placeholder.container():
         with tab1:
             st.subheader("Pipeline Status")
-                df = fetch_pipeline_status()
-                if df is not None and not df.empty:
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No pipeline status data available.")
+            df = fetch_pipeline_status()
+            if df is not None and not df.empty:
+                st.dataframe(df, use_container_width=True)
+            else:
+                st.info("No pipeline status data available.")
 
         with tab2:
             st.subheader("Top Candidate Metrics")
-                df = fetch_top_candidates()
-                if df is not None and not df.empty:
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No top candidate data available.")
+            df = fetch_top_candidates()
+            if df is not None and not df.empty:
+                st.dataframe(df, use_container_width=True)
+            else:
+                st.info("No top candidate data available.")
 
         with tab3:
             st.subheader("Experimental Results")
-                df = fetch_experimental_results()
-                if df is not None and not df.empty:
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No experimental results data available.")
+            df = fetch_experimental_results()
+            if df is not None and not df.empty:
+                st.dataframe(df, use_container_width=True)
+            else:
+                st.info("No experimental results data available.")
 
         with tab4:
             st.subheader("Manufacturing Progress")
-                df = fetch_manufacturing_progress()
-                if df is not None and not df.empty:
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No manufacturing progress data available.")
+            df = fetch_manufacturing_progress()
+            if df is not None and not df.empty:
+                st.dataframe(df, use_container_width=True)
+            else:
+                st.info("No manufacturing progress data available.")
 
         with tab5:
             st.subheader("Experiment Status")
-                df = fetch_experiment_status()
-                if df is not None and not df.empty:
-                    required_cols = ["timestamp", "current_step", "errors"]
-                    for col in required_cols:
-                        if col not in df.columns:
-                            df[col] = "N/A"
-                    st.dataframe(df[required_cols], use_container_width=True)
-                else:
-                    st.info("No experiment data available.")
+            df = fetch_experiment_status()
+            if df is not None and not df.empty:
+                required_cols = ["timestamp", "current_step", "errors"]
+                for col in required_cols:
+                    if col not in df.columns:
+                        df[col] = "N/A"
+                st.dataframe(df[required_cols], use_container_width=True)
+            else:
+                st.info("No experiment data available.")
 
         with tab6:
             st.subheader("Live Monitoring")
-                validation_data = live_external_validation()
-                if validation_data is not None:
-                    if isinstance(validation_data, pd.DataFrame):
-                        st.dataframe(validation_data, use_container_width=True)
-                    else:
-                        st.json(validation_data)
+            validation_data = live_external_validation()
+            if validation_data is not None:
+                if isinstance(validation_data, pd.DataFrame):
+                    st.dataframe(validation_data, use_container_width=True)
                 else:
-                    st.info("No live validation data available.")
+                    st.json(validation_data)
+            else:
+                st.info("No live validation data available.")
 
         with tab7:
             st.subheader("What-If Analysis")
-                temperature = st.slider("Temperature (K)", min_value=0, max_value=500, value=300, step=1)
-                pressure = st.slider("Pressure (GPa)", min_value=0.0, max_value=100.0, value=1.0, step=0.1)
-                doping = st.slider("Doping Level (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
-                if st.button("Run What-If"):
-                    parameters = {"temperature (K)": [temperature], "pressure (GPa)": [pressure], "doping level": [doping / 100.0]}
-                    result = what_if_analysis()
-                    if result is not None:
-                        if isinstance(result, pd.DataFrame):
-                            st.dataframe(result, use_container_width=True)
-                        else:
-                            st.json(result)
+            temperature = st.slider("Temperature (K)", min_value=0, max_value=500, value=300, step=1)
+            pressure = st.slider("Pressure (GPa)", min_value=0.0, max_value=100.0, value=1.0, step=0.1)
+            doping = st.slider("Doping Level (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
+            if st.button("Run What-If"):
+                parameters = {"temperature (K)": [temperature], "pressure (GPa)": [pressure], "doping level": [doping / 100.0]}
+                result = what_if_analysis()
+                if result is not None:
+                    if isinstance(result, pd.DataFrame):
+                        st.dataframe(result, use_container_width=True)
                     else:
-                        st.error("What-if analysis failed.")
+                        st.json(result)
+                else:
+                    st.error("What-if analysis failed.")
         with tab8:
             st.subheader("Research Literature")
-                df = fetch_research_literature()
-                if df is not None and not df.empty:
-                    st.dataframe(df, use_container_width=True)
-                    st.markdown("**Sources:**")
-                    for _, row in df.iterrows():
-                        st.markdown(f"- [{row['Reference']}]({row['URL']})")
-                else:
-                    st.info("No research literature data available.")
-
-
-
-
-
-
-
+            df = fetch_research_literature()
+            if df is not None and not df.empty:
+                st.dataframe(df, use_container_width=True)
+                st.markdown("**Sources:**")
+                for _, row in df.iterrows():
+                    st.markdown(f"- [{row['Reference']}]({row['URL']})")
+            else:
+                st.info("No research literature data available.")
         with st.expander("Synthesis Planner", expanded=False):
             st.subheader("Synthesis Planner")
             col_a, col_b, col_c, col_d = st.columns(4)

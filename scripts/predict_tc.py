@@ -1114,6 +1114,7 @@ HYDRIDE_DATABASE = [
     {'formula': 'PrH9', 'tc': 200.0, 'debye': 1600, 'lambda_ep': 2.0, 'mu_star': 0.1},
     {'formula': 'CeH9', 'tc': 190.0, 'debye': 1550, 'lambda_ep': 1.9, 'mu_star': 0.1},
     {'formula': 'NdH9', 'tc': 195.0, 'debye': 1580, 'lambda_ep': 1.95, 'mu_star': 0.1},
+    {'formula': 'LaSc2H24', 'tc': 298.0, 'debye': 1500, 'lambda_ep': 2.8, 'mu_star': 0.1},
 ]
 
 class BCSPINN(nn.Module):
