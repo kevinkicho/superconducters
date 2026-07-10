@@ -2453,5 +2453,37 @@
       "prediction_method": "first-principles structure prediction + BCS",
       "confidence_score": 0.65
     }
+  },
+  {
+    "name": "LaSc2H24",
+    "Tc": 298,
+    "pressure": 260,
+    "structure": "hexagonal, P6/mmm",
+    "reference": "arXiv:2510.01273",
+    "doi": "10.48550/arXiv.2510.01273",
+    "synthesis_method": "diamond anvil cell, laser heating",
+    "synthesis_parameters": "pressure 250-260 GPa, temperature 2000 K",
+    "lambda": 2.6,
+    "omega_log": 1800,
+    "mu_star": 0.1,
+    "Tc_error": 10,
+    "pressure_error": 10,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": [
+        "La",
+        "Sc",
+        "NH3BH3"
+      ],
+      "sample_quality": "polycrystalline"
+    },
+    "external_database": {
+      "source_database": "arXiv",
+      "database_id": "2510.01273",
+      "predicted_Tc": 316,
+      "prediction_method": "first-principles + Eliashberg",
+      "confidence_score": 0.85
+    }
   }
 ]
