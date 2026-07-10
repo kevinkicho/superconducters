@@ -1,69 +1,89 @@
 # Changelog
 
-Paginated activity log for **superconducters** (newest first). Built mainly by **Ollama Swarm** (DeepSeek V4 Flash agents) with human maintainer commits.
+Paginated agent/human activity for **superconducters** (newest first). Optimized for the GitHub README viewport: **compact table** + **details below** + **TOC links**.
 
-## Agent instructions (read before editing this changelog)
+## Table of contents
 
-This changelog is **machine-generated** and **paginated** for GitHub viewing. Do not hand-edit hundreds of table rows.
+- [Agent instructions](#agent-instructions)
+  - [Layout](#layout)
+  - [Why the table looks like this](#why-the-table-looks-like-this)
+  - [Table columns](#table-columns)
+  - [After you upgrade the app](#after-you-upgrade-the-app)
+  - [Generator flags](#generator-flags)
+- [Summary](#summary)
+- [Jump to page](#jump-to-page)
+- [Activity log (page 1)](#activity-log)
+- [Commit details (page 1)](#commit-details)
+- [All pages index](changelog/README.md)
+- [Page 2](changelog/page-02.md)
+- [Page 3](changelog/page-03.md)
+- [Page 4](changelog/page-04.md)
+- [Page 5](changelog/page-05.md)
+- [Page 6](changelog/page-06.md)
+- ... [Page 14 (oldest)](changelog/page-14.md)
+
+---
+
+## Agent instructions
+
+This changelog is **machine-generated** and **paginated**. Do not hand-edit table rows.
 
 ### Layout
 
 | Path | Role |
 |------|------|
-| [`CHANGELOG.md`](CHANGELOG.md) | Hub: this guide, summary stats, **page 1** (latest 80 commits) |
-| [`changelog/README.md`](changelog/README.md) | Page index + regen cheat-sheet |
-| [`changelog/page-NN.md`](changelog/) | Older pages (`page-02`, `page-03`, ...), same table schema |
+| [`CHANGELOG.md`](CHANGELOG.md) | Hub: TOC, this guide, summary, **page 1** (latest 50 commits) |
+| [`changelog/README.md`](changelog/README.md) | Page index |
+| [`changelog/page-NN.md`](changelog/) | Older pages (`page-02`, ...), same compact schema |
+| [`scripts/generate_changelog.py`](scripts/generate_changelog.py) | Only supported way to refresh |
 
-Commit order in tables is always **newest -> oldest**. Global row `#` is stable across pages (1 = newest commit).
+**Order:** newest -> oldest. Global `#` is stable (1 = tip of `main`).
+
+### Why the table looks like this
+
+GitHub's README viewport is **narrow and scrolls vertically**. Wide cells and in-table expanders force huge row heights. So:
+
+1. **Compact table only** -- short time (`MM-DD HH:MM`), short who (`a2`/`human`), hard-truncated summary (~42 chars), combined `+/-` LOC, short duration.
+2. **No `<details>` inside table cells.**
+3. **Full text** under [Commit details](#commit-details) on each page; jump via the `...` column (`#c-<sha>`).
+4. **Pagination** (50 commits/page) so one page does not dominate the scroll.
 
 ### Table columns
 
-| Column | Source |
-|--------|--------|
-| `#` | Rank in newest-first history (1 = tip of `main`) |
-| When | `git` author date (`--date=iso-strict`) |
-| Who | `git` author (`agent-2` / `agent-3` / `agent-4` / human) |
-| Task | Commit subject; long text uses `<details>` expanders |
-| What | Inferred from paths (`--numstat`); expanders for long text |
-| +LOC / -LOC | `git log --numstat` line counts |
-| Duration | Wall-clock gap since **same author's** previous commit (not model runtime). `>`6h marks idle gaps. `--` if first commit by that author |
-| SHA | Link to commit on GitHub |
+| Col | Meaning |
+|-----|---------|
+| `#` | Newest-first rank |
+| When | Author time, compact |
+| Who | `a2`/`a3`/`a4`/`human`/`swarm` |
+| Summary | Truncated task/paths |
+| `+/-` | Insertions/deletions (`git numstat`) |
+| Dur | Est. gap since same author's previous commit (`6h+` => idle) |
+| `...` | Link to full detail block on this page |
 
-### When you upgrade the app / finish a task
-
-1. Commit your work with a **descriptive subject** (avoid empty `agent-N: tK` if you can name the change).
-2. From the repo root, regenerate:
+### After you upgrade the app
 
 ```bash
+# 1) commit your feature/fix first
+git add -A && git commit -m "describe your change"
+
+# 2) regenerate changelog (from repo root)
 python scripts/generate_changelog.py
-# optional:
-python scripts/generate_changelog.py --page-size 80
-```
+# optional: python scripts/generate_changelog.py --page-size 50
 
-3. Stage and commit generated files only:
-
-```bash
+# 3) commit generated docs only
 git add CHANGELOG.md changelog/
-git commit -m "docs: refresh changelog after <your change> [skip ci]"
+git commit -m "docs: refresh changelog after <change> [skip ci]"
 ```
 
-4. **Do not**:
-   - Manually insert rows into the middle of a page (regen will overwrite)
-   - Delete `scripts/generate_changelog.py`
-   - Put full history only in `CHANGELOG.md` without pagination (GitHub UI becomes unusable)
-   - Change column meanings without updating this guide and the generator together
+**Do not:** insert rows by hand, delete this generator, or dump full history into one unpaginated table.
 
-### Optional flags
+### Generator flags
 
 ```text
---page-size N     Rows per page (default 80)
---repo-url URL    Base URL for commit links
---dry-run         Print plan only, write nothing
+--page-size N     Rows per page (default 50, min 10)
+--repo-url URL    Commit link base
+--dry-run         Print plan only
 ```
-
-### Duration caveat
-
-Duration is **estimated** from commit timestamps, not token/inference time. Parallel agents and overnight gaps produce large durations; treat `>6h` as session boundaries, not continuous work.
 
 
 ---
@@ -72,119 +92,842 @@ Duration is **estimated** from commit timestamps, not token/inference time. Para
 
 | Metric | Value |
 |--------|-------|
-| Commits listed | 689 |
-| Pages (`80` per page) | 9 |
-| Agent commits | 680 |
-| Human / other | 9 |
-| Total +LOC | +146,343 |
-| Total -LOC | -99,343 |
-| Net LOC | +47,000 |
-| Order | Newest -> oldest |
-| Generated | `2026-07-10T01:02:03-07:00` |
+| Commits | 690 |
+| Pages | 14 x 50/page |
+| Agents | 680 |
+| Human/other | 10 |
+| +LOC / -LOC | +147,869 / -99,345 |
+| Net | +48,524 |
+| Generated | `2026-07-10T01:15:14-07:00` |
 
-### Jump to page
+## Jump to page
 
-[1 (latest)](CHANGELOG.md#activity-log-page-1-latest) | [2](changelog/page-02.md) | [3](changelog/page-03.md) | [4](changelog/page-04.md) | [5](changelog/page-05.md) | [6](changelog/page-06.md) | [7](changelog/page-07.md) | [8](changelog/page-08.md) | [9](changelog/page-09.md)
+[**1 (latest)**](#activity-log) | [2](changelog/page-02.md) | [3](changelog/page-03.md) | [4](changelog/page-04.md) | [5](changelog/page-05.md) | [6](changelog/page-06.md) | [7](changelog/page-07.md) | [8](changelog/page-08.md) | [9](changelog/page-09.md) | [10](changelog/page-10.md) | [11](changelog/page-11.md) | [12](changelog/page-12.md) | [13](changelog/page-13.md) | [14](changelog/page-14.md)
 
-Full index: [`changelog/README.md`](changelog/README.md)
+Index: [`changelog/README.md`](changelog/README.md)
 
 ---
 
-## Activity log (page 1, latest)
+## Activity log
 
-<- Previous | **1** [2](changelog/page-02.md) [3](changelog/page-03.md) ... [9](changelog/page-09.md) | [Next ->](changelog/page-02.md)
+Prev | **1** | [2](changelog/page-02.md) | [3](changelog/page-03.md) | ... | [14](changelog/page-14.md) | [Next](changelog/page-02.md)
 
-Page **1** of **9** | commits **1-80** of **689** (newest first)
+**Page 1/14** | rows **1-50** of **690** | newest first
 
-> Click a truncated **Task** / **What** cell (summary ends with `...`) to expand.
+Tip: keep the table collapsed in mind -- use the `...` column for full text instead of hoping cells wrap. Prefer Next page over endless scroll.
 
-| # | When | Who | Task | What | +LOC | -LOC | Duration | SHA |
-|--:|------|-----|------|------|-----:|-----:|----------|-----|
-| 1 | `2026-07-10 00:50:35-07:00` | `Kevinkicho` | <details><summary>Fix GitHub homepage showing .github/README over...</summary><code>Fix GitHub homepage showing .github/README over root README</code></details> | <details><summary>Fix GitHub homepage showing .github/README over root README --...</summary><code>Fix GitHub homepage showing .github/README over root README -- docs/md: README.md (1 files)</code></details> | +0 | -8 | 1m 23s | [`7edaa780`](https://github.com/kevinkicho/superconducters/commit/7edaa780468ec0f0e594aab759479c16e75dde29) |
-| 2 | `2026-07-10 00:49:12-07:00` | `Kevinkicho` | <details><summary>Restore fuller README with accurate document ca...</summary><code>Restore fuller README with accurate document catalog</code></details> | <details><summary>Restore fuller README with accurate document catalog -- docs/md...</summary><code>Restore fuller README with accurate document catalog -- docs/md: README.md (1 files)</code></details> | +610 | -147 | >6h (8h 11m) | [`8b5a37de`](https://github.com/kevinkicho/superconducters/commit/8b5a37dedb83841ab6b7e4431c6880e382b90f12) |
-| 3 | `2026-07-09 16:37:22-07:00` | `Kevinkicho` | <details><summary>Clean up docs, logs, and README; dedupe materia...</summary><code>Clean up docs, logs, and README; dedupe materials DB</code></details> | <details><summary>Clean up docs, logs, and README; dedupe materials DB -- docs/md...</summary><code>Clean up docs, logs, and README; dedupe materials DB -- docs/md: README.md, candidate_materials.md, characterization_techniques.md, discovery_strategy.md, experimental_feedback_loop.md; tests: tests_predict_tc.py; data: superconductor_database.json (135 files, 109 logs)</code></details> | +3,780 | -34,133 | >6h (27h 15m) | [`d1457a7a`](https://github.com/kevinkicho/superconducters/commit/d1457a7aee087a388a5918aca4dedcb32e1479c7) |
-| 4 | `2026-07-09 15:39:39-07:00` | `agent-2` | agent-2: t11 | Task t11: tests: test_run_pipeline.py (2 files, 1 logs) | +539 | -2 | 4m 7s | [`38e702c5`](https://github.com/kevinkicho/superconducters/commit/38e702c5c9aefc594d9594f0cfc1ade546db6ba5) |
-| 5 | `2026-07-09 15:36:33-07:00` | `agent-3` | agent-3: t10 | Task t10: docs/md: theoretical_framework.md (1 files) | +41 | -0 | 10m 59s | [`81824f11`](https://github.com/kevinkicho/superconducters/commit/81824f11d78e7146cbef0b15a0eb4fcb05336e5b) |
-| 6 | `2026-07-09 15:35:32-07:00` | `agent-2` | agent-2: t9 | Task t9: docs/md: experimental_feedback_loop.md (1 files) | +91 | -0 | 2h 44m | [`285f0c69`](https://github.com/kevinkicho/superconducters/commit/285f0c69c2cc7768966714df601976c2ef6f4d66) |
-| 7 | `2026-07-09 15:25:34-07:00` | `agent-3` | agent-3: t5 | Task t5: code: predict_tc.py (2 files, 1 logs) | +232 | -6 | 4m 53s | [`676c3f38`](https://github.com/kevinkicho/superconducters/commit/676c3f38de0c55b278ceb5b9204ff4b1b6f31243) |
-| 8 | `2026-07-09 15:20:41-07:00` | `agent-3` | agent-3: t3 | Task t3: docs/md: proposed_chemistry_physics.md (1 files) | +8 | -8 | 3m 15s | [`8d8b2c06`](https://github.com/kevinkicho/superconducters/commit/8d8b2c064df6c9e45a3699e3a254532605a66302) |
-| 9 | `2026-07-09 15:17:26-07:00` | `agent-3` | agent-3: t2 | <details><summary>Task t2: docs/md: proposed_chemistry_physics.md (7 files, 5 log...</summary><code>Task t2: docs/md: proposed_chemistry_physics.md (7 files, 5 logs)</code></details> | +2,690 | -2,361 | 2h 26m | [`e4b39c4d`](https://github.com/kevinkicho/superconducters/commit/e4b39c4df4c10bc1b9edf14584a1f03027ecd0f4) |
-| 10 | `2026-07-09 12:51:20-07:00` | `agent-2` | agent-2: t11 | Task t11: docs/md: theoretical_framework.md (1 files) | +50 | -0 | 12m 24s | [`634124e7`](https://github.com/kevinkicho/superconducters/commit/634124e743ec55b04701224832988c470054a8ad) |
-| 11 | `2026-07-09 12:51:19-07:00` | `agent-3` | agent-3: t12 | Task t12: docs/md: manufacturing_scalability.md (1 files) | +82 | -0 | 1m 19s | [`f1e939d3`](https://github.com/kevinkicho/superconducters/commit/f1e939d31478bd02a8ca3e0abf904ec2777f6047) |
-| 12 | `2026-07-09 12:50:00-07:00` | `agent-3` | agent-3: t10 | Task t10: docs/md: synthesis_methods.md (1 files) | +83 | -0 | 1m 10s | [`061a8c9f`](https://github.com/kevinkicho/superconducters/commit/061a8c9fbb2a0237ebb0943915e7d022f33ef04f) |
-| 13 | `2026-07-09 12:48:50-07:00` | `agent-3` | agent-3: t9 | Task t9: docs/md: discovery_strategy.md (1 files) | +117 | -0 | 1m 38s | [`dd5a7d31`](https://github.com/kevinkicho/superconducters/commit/dd5a7d31064a3399053d69c03a63eb6de6176f69) |
-| 14 | `2026-07-09 12:47:12-07:00` | `agent-3` | agent-3: t8 | Task t8: docs/md: online_research_summary.md (1 files) | +19 | -0 | 3m 7s | [`85d74084`](https://github.com/kevinkicho/superconducters/commit/85d740848ca954b81fe70700f662706f22146849) |
-| 15 | `2026-07-09 12:44:05-07:00` | `agent-3` | agent-3: t7 | <details><summary>Task t7: docs/md: proposed_chemistry_physics.md (2 files, 1 log...</summary><code>Task t7: docs/md: proposed_chemistry_physics.md (2 files, 1 logs)</code></details> | +63 | -186 | 6m 31s | [`e0e653ce`](https://github.com/kevinkicho/superconducters/commit/e0e653cebe7900f412572873d5c7384e908534a4) |
-| 16 | `2026-07-09 12:38:56-07:00` | `agent-2` | agent-2: t4 | Task t4: code: streamlit_dashboard.py (1 files) | +4 | -7 | 1m 23s | [`56f2372f`](https://github.com/kevinkicho/superconducters/commit/56f2372f7399e8cea65e3cef164573a13f525f5a) |
-| 17 | `2026-07-09 12:37:34-07:00` | `agent-3` | agent-3: t3 | Task t3: code: run_pipeline.py (1 files) | +3 | -3 | 56s | [`fb5e4fde`](https://github.com/kevinkicho/superconducters/commit/fb5e4fde8110d470c2ea3d052065fff77304b781) |
-| 18 | `2026-07-09 12:37:33-07:00` | `agent-2` | agent-2: t1 | Task t1: code: dft_calculator.py (1 files) | +19 | -26 | 2h 8m | [`84fde38b`](https://github.com/kevinkicho/superconducters/commit/84fde38b7c0825b0de0f04e25be4f242f9e23471) |
-| 19 | `2026-07-09 12:36:38-07:00` | `agent-3` | agent-3: t2 | Task t2: code: generate_candidates.py (6 files, 4 logs) | +2,821 | -1,491 | >6h (11h 1m) | [`2a96a04d`](https://github.com/kevinkicho/superconducters/commit/2a96a04dbff6371230af0c076743d907763c1253) |
-| 20 | `2026-07-09 10:29:25-07:00` | `agent-2` | agent-2: t5 | Task t5: docs/md: online_research_summary.md (1 files) | +101 | -13 | 10m 53s | [`525e8149`](https://github.com/kevinkicho/superconducters/commit/525e8149a42891e4e78a9bc66c7c116095604562) |
-| 21 | `2026-07-09 10:20:54-07:00` | `agent-4` | agent-4: t4 | Task t4: docs/md: candidate_materials.md (1 files) | +166 | -0 | 4m 42s | [`f69c30a8`](https://github.com/kevinkicho/superconducters/commit/f69c30a8f04cbb2b94809e8106a6b981a6215178) |
-| 22 | `2026-07-09 10:18:32-07:00` | `agent-2` | agent-2: t1 | Task t1: code: predict_tc.py (1 files) | +4 | -5 | >6h (8h 41m) | [`f3abb7ee`](https://github.com/kevinkicho/superconducters/commit/f3abb7ee39ccbfe1aeee3d9a94c346694826c6f9) |
-| 23 | `2026-07-09 10:16:12-07:00` | `agent-4` | agent-4: t3 | Task t3: code: streamlit_dashboard.py (6 files, 5 logs) | +1,917 | -1,732 | >6h (8h 38m) | [`cdc06de3`](https://github.com/kevinkicho/superconducters/commit/cdc06de37bafde74fe551265c008dfd476c9cdb3) |
-| 24 | `2026-07-09 01:37:57-07:00` | `agent-4` | agent-4: t7 | Task t7: code: generate_candidates.py (1 files) | +79 | -77 | 1m 19s | [`1d8d5d2a`](https://github.com/kevinkicho/superconducters/commit/1d8d5d2a9af5614279073ade305139d4583b97ca) |
-| 25 | `2026-07-09 01:36:45-07:00` | `agent-2` | agent-2: t1 | Task t1: code: predict_tc.py (1 files) | +3 | -209 | 35m 58s | [`daf7ae3f`](https://github.com/kevinkicho/superconducters/commit/daf7ae3f402d93c30dbb3ebb160dc9ee81c9cf72) |
-| 26 | `2026-07-09 01:36:38-07:00` | `agent-4` | agent-4: t6 | Task t6: code: run_pipeline.py (1 files) | +22 | -10 | 1m 32s | [`1373ccbe`](https://github.com/kevinkicho/superconducters/commit/1373ccbe6399460c9229066a37e88a1ec294106c) |
-| 27 | `2026-07-09 01:35:06-07:00` | `agent-4` | agent-4: t4 | Task t4: 1 path(s) (1 files) | +43 | -6 | 2m 12s | [`dfeaddda`](https://github.com/kevinkicho/superconducters/commit/dfeaddda6e296c551826febc94cccdec138f9865) |
-| 28 | `2026-07-09 01:34:51-07:00` | `agent-3` | agent-3: t2 | Task t2: code: streamlit_dashboard.py (1 files) | +9 | -27 | >6h (7h 46m) | [`168a8294`](https://github.com/kevinkicho/superconducters/commit/168a8294c928f21f1b1378a55cdee0405c24b6cb) |
-| 29 | `2026-07-09 01:32:54-07:00` | `agent-4` | agent-4: t3 | Task t3: code: dft_calculator.py (4 files, 3 logs) | +360 | -10 | 27m 57s | [`d3d469af`](https://github.com/kevinkicho/superconducters/commit/d3d469af1a9b11be46bf960042537c5f3614a6dc) |
-| 30 | `2026-07-09 01:04:57-07:00` | `agent-4` | agent-4: t5 | <details><summary>Task t5: docs/md: proposed_chemistry_physics.md (2 files, 1 log...</summary><code>Task t5: docs/md: proposed_chemistry_physics.md (2 files, 1 logs)</code></details> | +2,998 | -241 | 9m 21s | [`5657faff`](https://github.com/kevinkicho/superconducters/commit/5657fafff274b6bcfe28f871b1db6a6cc7b40587) |
-| 31 | `2026-07-09 01:00:47-07:00` | `agent-2` | agent-2: t1 | Task t1: data: superconductor_database.json (1 files) | +8 | -222 | >6h (6h 2m) | [`b1e02261`](https://github.com/kevinkicho/superconducters/commit/b1e02261ccfb4a5bc77f9965989ba07d513fe8d0) |
-| 32 | `2026-07-09 00:55:36-07:00` | `agent-4` | agent-4: t4 | Task t4: tests: test_api_client.py (1 files) | +5 | -6 | 3m 19s | [`dc616535`](https://github.com/kevinkicho/superconducters/commit/dc616535e6a537564dc9a09f06fa4d8c595332a4) |
-| 33 | `2026-07-09 00:52:17-07:00` | `agent-4` | agent-4: t3 | Task t3: code: run_pipeline.py (19 files, 17 logs) | +1,758 | -1,528 | >6h (8h 42m) | [`50c99261`](https://github.com/kevinkicho/superconducters/commit/50c99261b59f7783ec4d0a10cdeee3cb2b7aaa5e) |
-| 34 | `2026-07-08 18:58:23-07:00` | `agent-2` | agent-2: t5 | Task t5: tests: test_api_client.py (1 files) | +8 | -8 | 42s | [`1bab57ae`](https://github.com/kevinkicho/superconducters/commit/1bab57ae40df6e6cf0d5c3cb8a6c4cf2f861586d) |
-| 35 | `2026-07-08 18:57:41-07:00` | `agent-2` | agent-2: t1 | Task t1: code: predict_tc.py (7 files, 5 logs) | +1,789 | -533 | 2h 47m | [`a25d0957`](https://github.com/kevinkicho/superconducters/commit/a25d095788328cb3561c72035b0a7be0fa4c9f29) |
-| 36 | `2026-07-08 17:48:15-07:00` | `agent-3` | agent-3: t4 | Task t4: code: streamlit_dashboard.py (1 files) | +43 | -1 | 23s | [`36ab4c30`](https://github.com/kevinkicho/superconducters/commit/36ab4c30b99dee70d9211282d74af8f36bb544f7) |
-| 37 | `2026-07-08 17:47:52-07:00` | `agent-3` | agent-3: t2 | Task t2: code: dft_calculator.py (7 files, 5 logs) | +953 | -263 | 1h 37m | [`f8d9383f`](https://github.com/kevinkicho/superconducters/commit/f8d9383f215220ae0aa98fb9ed82f3eb043bf42a) |
-| 38 | `2026-07-08 16:10:41-07:00` | `agent-3` | agent-3: t8 | Task t8: docs/md: proposed_chemistry_physics.md (1 files) | +22 | -0 | 1m 8s | [`9fb6c7e7`](https://github.com/kevinkicho/superconducters/commit/9fb6c7e795b6239c7d06be141afc21d673d3b037) |
-| 39 | `2026-07-08 16:10:21-07:00` | `agent-2` | agent-2: t7 | Task t7: docs/md: discovery_strategy.md (1 files) | +1 | -33 | 31s | [`599ff418`](https://github.com/kevinkicho/superconducters/commit/599ff41826f465bf813f790ca461e60bcb8c3e37) |
-| 40 | `2026-07-08 16:09:50-07:00` | `agent-2` | agent-2: t1 | Task t1: code: dft_calculator.py (1 files) | +130 | -3 | 18m 8s | [`c358f6aa`](https://github.com/kevinkicho/superconducters/commit/c358f6aafb78f2649415482f5d138fee6be4f882) |
-| 41 | `2026-07-08 16:09:33-07:00` | `agent-3` | agent-3: t4 | Task t4: code: run_pipeline.py (1 files) | +38 | -2 | 18m 31s | [`7b6276ef`](https://github.com/kevinkicho/superconducters/commit/7b6276ef3b2526c1c5bada470a3d909d7c262b6f) |
-| 42 | `2026-07-08 16:09:28-07:00` | `agent-4` | agent-4: t3 | Task t3: code: predict_tc.py (6 files, 4 logs) | +429 | -0 | 22m 52s | [`175ea67a`](https://github.com/kevinkicho/superconducters/commit/175ea67abbb20e63508dd80484db8f7db6dee26c) |
-| 43 | `2026-07-08 15:51:42-07:00` | `agent-2` | agent-2: t4 | <details><summary>Task t4: code: app.py; tests: test_api_client.py (4 files, 2 lo...</summary><code>Task t4: code: app.py; tests: test_api_client.py (4 files, 2 logs)</code></details> | +404 | -420 | 5m 11s | [`92abaad1`](https://github.com/kevinkicho/superconducters/commit/92abaad10369dbc3a1ec7ce9532ef45ed5a76982) |
-| 44 | `2026-07-08 15:51:02-07:00` | `agent-3` | agent-3: t2 | <details><summary>Task t2: code: arxiv_scraper.py, run_pipeline.py (6 files, 4 lo...</summary><code>Task t2: code: arxiv_scraper.py, run_pipeline.py (6 files, 4 logs)</code></details> | +911 | -66 | 4m 7s | [`ecd37fae`](https://github.com/kevinkicho/superconducters/commit/ecd37fae63df7137f2aa707bc7e8db8cfcb5d357) |
-| 45 | `2026-07-08 15:46:55-07:00` | `agent-3` | agent-3: t6 | Task t6: docs/md: README.md (1 files) | +1 | -3 | 28s | [`0f4bd688`](https://github.com/kevinkicho/superconducters/commit/0f4bd688263e911e87549421ca6456b1790ed8d3) |
-| 46 | `2026-07-08 15:46:36-07:00` | `agent-4` | agent-4: t5 | Task t5: docs/md: proposed_chemistry_physics.md (1 files) | +4 | -3 | 32s | [`821f8452`](https://github.com/kevinkicho/superconducters/commit/821f84522a3863bb6088f614de576f10a8405e34) |
-| 47 | `2026-07-08 15:46:31-07:00` | `agent-2` | agent-2: t1 | Task t1: code: api_client.py (1 files) | +107 | -0 | 38m 51s | [`5e2b936b`](https://github.com/kevinkicho/superconducters/commit/5e2b936bea986eea483932d5472d92e0ea600bfb) |
-| 48 | `2026-07-08 15:46:27-07:00` | `agent-3` | agent-3: t2 | Task t2: code: run_pipeline.py (1 files) | +54 | -1 | >6h (7h 35m) | [`acdcdce7`](https://github.com/kevinkicho/superconducters/commit/acdcdce7c9043d9f62f8c5cb53a093830bec45ea) |
-| 49 | `2026-07-08 15:46:04-07:00` | `agent-4` | agent-4: t4 | Task t4: docs/md: discovery_strategy.md (6 files, 4 logs) | +510 | -203 | >6h (7h 20m) | [`0a5554e1`](https://github.com/kevinkicho/superconducters/commit/0a5554e16a8e7b8f8bdc29dc4750c9301dbe7163) |
-| 50 | `2026-07-08 15:07:40-07:00` | `agent-2` | agent-2: t4 | <details><summary>Task t4: docs/md: proposed_chemistry_physics.md (7 files, 5 log...</summary><code>Task t4: docs/md: proposed_chemistry_physics.md (7 files, 5 logs)</code></details> | +1,144 | -10,526 | >6h (6h 54m) | [`ade641db`](https://github.com/kevinkicho/superconducters/commit/ade641db6b7a3a4168810ea2742946cf76b4edd3) |
-| 51 | `2026-07-08 13:21:33-07:00` | `Kevinkicho` | <details><summary>Remove GitHub Actions workflows to disable all...</summary><code>Remove GitHub Actions workflows to disable all CI</code></details> | <details><summary>Remove GitHub Actions workflows to disable all CI -- 2 path(s)...</summary><code>Remove GitHub Actions workflows to disable all CI -- 2 path(s) (2 files)</code></details> | +0 | -280 | 2h 13m | [`e98d4fce`](https://github.com/kevinkicho/superconducters/commit/e98d4fce6517f9e07a9d227a1a67641a577b8970) |
-| 52 | `2026-07-08 11:07:43-07:00` | `Kevinkicho` | <details><summary>Add LaH10 protocol doc to README, remove remain...</summary><code>Add LaH10 protocol doc to README, remove remaining broken links</code></details> | <details><summary>Add LaH10 protocol doc to README, remove remaining broken links...</summary><code>Add LaH10 protocol doc to README, remove remaining broken links -- docs/md: README.md (1 files)</code></details> | +8 | -11 | >6h (12h 57m) | [`52abe6f5`](https://github.com/kevinkicho/superconducters/commit/52abe6f527f9fce51bfefd77f92f2042e5e5f10b) |
-| 53 | `2026-07-08 08:25:43-07:00` | `agent-4` | agent-4: t340 | Task t340: docs/md: technology_transfer_plan.md (1 files) | +24 | -0 | 22s | [`08992332`](https://github.com/kevinkicho/superconducters/commit/08992332b505e4889a9fd1157ea4805c7efd0521) |
-| 54 | `2026-07-08 08:25:21-07:00` | `agent-4` | agent-4: t339 | Task t339: docs/md: manufacturing_scalability.md (1 files) | +38 | -0 | 15s | [`f8c6c0a9`](https://github.com/kevinkicho/superconducters/commit/f8c6c0a9ed823bdac58478075f2ff7073b3a5902) |
-| 55 | `2026-07-08 08:25:06-07:00` | `agent-4` | agent-4: t338 | Task t338: docs/md: challenges_and_mitigations.md (1 files) | +38 | -0 | 17s | [`6e3f12b0`](https://github.com/kevinkicho/superconducters/commit/6e3f12b01ef868ebc64b06c40ad2758df52242b9) |
-| 56 | `2026-07-08 08:24:49-07:00` | `agent-4` | agent-4: t337 | Task t337: docs/md: candidate_materials.md (1 files) | +21 | -0 | 20s | [`7191a59e`](https://github.com/kevinkicho/superconducters/commit/7191a59e76e96e5bff8274175d073c09cc52c302) |
-| 57 | `2026-07-08 08:24:29-07:00` | `agent-4` | agent-4: t336 | Task t336: docs/md: theoretical_framework.md (2 files, 1 logs) | +256 | -224 | 11m 35s | [`ce94318c`](https://github.com/kevinkicho/superconducters/commit/ce94318c51c94aa1d3bbd9f7a82c4fa62dacde3b) |
-| 58 | `2026-07-08 08:13:06-07:00` | `agent-2` | agent-2: t332 | <details><summary>Task t332: docs/md: final_report.md, public_outreach_summary.md...</summary><code>Task t332: docs/md: final_report.md, public_outreach_summary.md (2 files)</code></details> | +47 | -3 | 31s | [`8d135619`](https://github.com/kevinkicho/superconducters/commit/8d135619380c1d294b8848b23bf6cf79f32d9771) |
-| 59 | `2026-07-08 08:12:54-07:00` | `agent-4` | agent-4: t331 | Task t331: docs/md: manufacturing_scalability.md (1 files) | +101 | -0 | 30s | [`bdf629fb`](https://github.com/kevinkicho/superconducters/commit/bdf629fb0ac7ac801ea3806546b082e31040c269) |
-| 60 | `2026-07-08 08:12:35-07:00` | `agent-2` | agent-2: t330 | <details><summary>Task t330: docs/md: experimental_protocol_new_compound.md (1 fi...</summary><code>Task t330: docs/md: experimental_protocol_new_compound.md (1 files)</code></details> | +117 | -0 | 16s | [`e05c94ff`](https://github.com/kevinkicho/superconducters/commit/e05c94ff2f152b21601b36357d0d4c65fc13565e) |
-| 61 | `2026-07-08 08:12:24-07:00` | `agent-4` | agent-4: t329 | <details><summary>Task t329: docs/md: candidate_materials.md; data: experimental_...</summary><code>Task t329: docs/md: candidate_materials.md; data: experimental_results.json (2 files)</code></details> | +39 | -3 | 1m 52s | [`6323e0f7`](https://github.com/kevinkicho/superconducters/commit/6323e0f755d4f5d0a2cffe3cea00d58bda26eaa5) |
-| 62 | `2026-07-08 08:12:19-07:00` | `agent-2` | agent-2: t327 | Task t327: code: run_pipeline.py (2 files, 1 logs) | +370 | -277 | 2m 9s | [`becf6fa3`](https://github.com/kevinkicho/superconducters/commit/becf6fa364fe3fc4d17efac5c4407f48fe0e0f9c) |
-| 63 | `2026-07-08 08:10:39-07:00` | `agent-3` | agent-3: t318 | Task t318: tests: test_run_pipeline.py (1 files) | +52 | -0 | 8m 21s | [`2eda0d1b`](https://github.com/kevinkicho/superconducters/commit/2eda0d1b1a15dcc691f7c7e42f70cbca606c2568) |
-| 64 | `2026-07-08 08:10:32-07:00` | `agent-4` | agent-4: t322 | Task t322: tests: test_generate_candidates.py (1 files) | +28 | -0 | 12s | [`a1d19012`](https://github.com/kevinkicho/superconducters/commit/a1d190128b329e9c068b7765d9b48a0ed8914eef) |
-| 65 | `2026-07-08 08:10:20-07:00` | `agent-4` | agent-4: t317 | Task t317: code: run_pipeline.py (1 files) | +74 | -0 | 1m 53s | [`f9326f91`](https://github.com/kevinkicho/superconducters/commit/f9326f91b931dbc8f7a24f419211acf6e88c7561) |
-| 66 | `2026-07-08 08:10:10-07:00` | `agent-2` | agent-2: t315 | Task t315: code: generate_report.py (2 files, 1 logs) | +231 | -227 | 1m 27s | [`97f20917`](https://github.com/kevinkicho/superconducters/commit/97f2091796a27eb853d7e3e7876d019ce26e24cf) |
-| 67 | `2026-07-08 08:08:43-07:00` | `agent-2` | agent-2: t310 | Task t310: tests: test_run_pipeline.py (1 files) | +311 | -0 | 6m 45s | [`0c777642`](https://github.com/kevinkicho/superconducters/commit/0c777642bbb42f1f84254519368d4926b1049d88) |
-| 68 | `2026-07-08 08:08:27-07:00` | `agent-4` | agent-4: t312 | <details><summary>Task t312: docs/md: experimental_feedback_loop.md (2 files, 1 l...</summary><code>Task t312: docs/md: experimental_feedback_loop.md (2 files, 1 logs)</code></details> | +326 | -273 | 6m 37s | [`dae65601`](https://github.com/kevinkicho/superconducters/commit/dae65601687ef44d66e90cd0b59b3fe09a42f8f1) |
-| 69 | `2026-07-08 08:02:18-07:00` | `agent-3` | agent-3: t309 | Task t309: docs/md: manufacturing_scalability.md (1 files) | +24 | -0 | 16s | [`f06d3be8`](https://github.com/kevinkicho/superconducters/commit/f06d3be8350aa131776fb9c81adabfcec4c97dbb) |
-| 70 | `2026-07-08 08:02:02-07:00` | `agent-3` | agent-3: t300 | Task t300: code: generate_report.py (1 files) | +36 | -2 | 1m 47s | [`39f85a85`](https://github.com/kevinkicho/superconducters/commit/39f85a85c16ea305f214563dfdb02346fd0d2abe) |
-| 71 | `2026-07-08 08:01:58-07:00` | `agent-2` | agent-2: t304 | Task t304: tests: test_api_client.py (1 files) | +25 | -0 | 12s | [`0f0e19d0`](https://github.com/kevinkicho/superconducters/commit/0f0e19d0db12b5d3c3d41bc5c1da26ded1176c0e) |
-| 72 | `2026-07-08 08:01:50-07:00` | `agent-4` | agent-4: t302 | Task t302: tests: test_run_pipeline.py (1 files) | +100 | -0 | 5m | [`ceb24076`](https://github.com/kevinkicho/superconducters/commit/ceb240764b428e22a0fdfb3cbdcfbdeb0a12a495) |
-| 73 | `2026-07-08 08:01:46-07:00` | `agent-2` | agent-2: t303 | Task t303: tests: test_generate_report.py (1 files) | +25 | -0 | 13s | [`aa4715d3`](https://github.com/kevinkicho/superconducters/commit/aa4715d378a5db49b80618b3b074c9ba7c5108e4) |
-| 74 | `2026-07-08 08:01:33-07:00` | `agent-2` | agent-2: t299 | Task t299: code: run_pipeline.py (2 files, 1 logs) | +343 | -238 | 2m 37s | [`ee8e48b8`](https://github.com/kevinkicho/superconducters/commit/ee8e48b851b953166c24ca6bde41a334352d1104) |
-| 75 | `2026-07-08 08:00:15-07:00` | `agent-3` | agent-3: t293 | Task t293: code: run_pipeline.py (1 files) | +38 | -52 | 3m 7s | [`f012219d`](https://github.com/kevinkicho/superconducters/commit/f012219d7506f398068588739668d8d64a3b30aa) |
-| 76 | `2026-07-08 07:58:56-07:00` | `agent-2` | agent-2: t296 | Task t296: docs/md: discovery_strategy.md (2 files, 1 logs) | +239 | -205 | 3m 11s | [`c896f081`](https://github.com/kevinkicho/superconducters/commit/c896f08174b110a8eb194e7d1b2c11542b0c351f) |
-| 77 | `2026-07-08 07:57:08-07:00` | `agent-3` | agent-3: t289 | Task t289: code: run_pipeline.py (1 files) | +104 | -0 | 19m 34s | [`1f1cf9fc`](https://github.com/kevinkicho/superconducters/commit/1f1cf9fc645148a8aad40cb616c33d0a7f979e4c) |
-| 78 | `2026-07-08 07:56:50-07:00` | `agent-4` | agent-4: t290 | <details><summary>Task t290: docs/md: challenges_and_mitigations.md (2 files, 1 l...</summary><code>Task t290: docs/md: challenges_and_mitigations.md (2 files, 1 logs)</code></details> | +14 | -13 | 25m 39s | [`c02c0c20`](https://github.com/kevinkicho/superconducters/commit/c02c0c2034121defdaef7536e5d4fc8e98736844) |
-| 79 | `2026-07-08 07:55:45-07:00` | `agent-2` | agent-2: t287 | Task t287: code: streamlit_dashboard.py (2 files, 1 logs) | +277 | -270 | 7m 39s | [`9eefde0f`](https://github.com/kevinkicho/superconducters/commit/9eefde0ff60e75d647d5b939353424be0337550e) |
-| 80 | `2026-07-08 07:48:06-07:00` | `agent-2` | agent-2: t277 | Task t277: code: run_pipeline.py (2 files, 1 logs) | +273 | -233 | 17m 45s | [`0dc1efa5`](https://github.com/kevinkicho/superconducters/commit/0dc1efa5a1fde504a8eafda98ae4cfa4a8f06cb0) |
+| # | When | Who | Summary | +/- | Dur | more |
+|--:|:----:|:--:|:--------|----:|:--:|:---:|
+| 1 | `07-10 01:09` | `human` | docs: add paginated changelog with agent... | `+1526/-2` | `19m01s` | [...](#c-610bcbb) |
+| 2 | `07-10 00:50` | `human` | Fix GitHub homepage showing .github/READM... | `+0/-8` | `1m23s` | [...](#c-7edaa78) |
+| 3 | `07-10 00:49` | `human` | Restore fuller README with accurate docum... | `+610/-147` | `>8h+` | [...](#c-8b5a37d) |
+| 4 | `07-09 16:37` | `human` | Clean up docs, logs, and README; dedupe m... | `+4k/-34k` | `>27h+` | [...](#c-d1457a7) |
+| 5 | `07-09 15:39` | `a2` | t11: tests: test_run_pipeline.py [2f/1log] | `+539/-2` | `4m07s` | [...](#c-38e702c) |
+| 6 | `07-09 15:36` | `a3` | t10: docs: theoretical_framework.md [1f] | `+41/-0` | `10m59s` | [...](#c-81824f1) |
+| 7 | `07-09 15:35` | `a2` | t9: docs: experimental_feedback_loop.md [... | `+91/-0` | `2h44m` | [...](#c-285f0c6) |
+| 8 | `07-09 15:25` | `a3` | t5: code: predict_tc.py [2f/1log] | `+232/-6` | `4m53s` | [...](#c-676c3f3) |
+| 9 | `07-09 15:20` | `a3` | t3: docs: proposed_chemistry_physics.md [... | `+8/-8` | `3m15s` | [...](#c-8d8b2c0) |
+| 10 | `07-09 15:17` | `a3` | t2: docs: proposed_chemistry_physics.md [... | `+2690/-2361` | `2h26m` | [...](#c-e4b39c4) |
+| 11 | `07-09 12:51` | `a2` | t11: docs: theoretical_framework.md [1f] | `+50/-0` | `12m24s` | [...](#c-634124e) |
+| 12 | `07-09 12:51` | `a3` | t12: docs: manufacturing_scalability.md [... | `+82/-0` | `1m19s` | [...](#c-f1e939d) |
+| 13 | `07-09 12:50` | `a3` | t10: docs: synthesis_methods.md [1f] | `+83/-0` | `1m10s` | [...](#c-061a8c9) |
+| 14 | `07-09 12:48` | `a3` | t9: docs: discovery_strategy.md [1f] | `+117/-0` | `1m38s` | [...](#c-dd5a7d3) |
+| 15 | `07-09 12:47` | `a3` | t8: docs: online_research_summary.md [1f] | `+19/-0` | `3m07s` | [...](#c-85d7408) |
+| 16 | `07-09 12:44` | `a3` | t7: docs: proposed_chemistry_physics.md [... | `+63/-186` | `6m31s` | [...](#c-e0e653c) |
+| 17 | `07-09 12:38` | `a2` | t4: code: streamlit_dashboard.py [1f] | `+4/-7` | `1m23s` | [...](#c-56f2372) |
+| 18 | `07-09 12:37` | `a3` | t3: code: run_pipeline.py [1f] | `+3/-3` | `56s` | [...](#c-fb5e4fd) |
+| 19 | `07-09 12:37` | `a2` | t1: code: dft_calculator.py [1f] | `+19/-26` | `2h08m` | [...](#c-84fde38) |
+| 20 | `07-09 12:36` | `a3` | t2: code: generate_candidates.py [6f/4log] | `+2821/-1491` | `>11h+` | [...](#c-2a96a04) |
+| 21 | `07-09 10:29` | `a2` | t5: docs: online_research_summary.md [1f] | `+101/-13` | `10m53s` | [...](#c-525e814) |
+| 22 | `07-09 10:20` | `a4` | t4: docs: candidate_materials.md [1f] | `+166/-0` | `4m42s` | [...](#c-f69c30a) |
+| 23 | `07-09 10:18` | `a2` | t1: code: predict_tc.py [1f] | `+4/-5` | `>8h+` | [...](#c-f3abb7e) |
+| 24 | `07-09 10:16` | `a4` | t3: code: streamlit_dashboard.py [6f/5log] | `+1917/-1732` | `>8h+` | [...](#c-cdc06de) |
+| 25 | `07-09 01:37` | `a4` | t7: code: generate_candidates.py [1f] | `+79/-77` | `1m19s` | [...](#c-1d8d5d2) |
+| 26 | `07-09 01:36` | `a2` | t1: code: predict_tc.py [1f] | `+3/-209` | `35m58s` | [...](#c-daf7ae3) |
+| 27 | `07-09 01:36` | `a4` | t6: code: run_pipeline.py [1f] | `+22/-10` | `1m32s` | [...](#c-1373ccb) |
+| 28 | `07-09 01:35` | `a4` | t4: 1 paths [1f] | `+43/-6` | `2m12s` | [...](#c-dfeaddd) |
+| 29 | `07-09 01:34` | `a3` | t2: code: streamlit_dashboard.py [1f] | `+9/-27` | `>7h+` | [...](#c-168a829) |
+| 30 | `07-09 01:32` | `a4` | t3: code: dft_calculator.py [4f/3log] | `+360/-10` | `27m57s` | [...](#c-d3d469a) |
+| 31 | `07-09 01:04` | `a4` | t5: docs: proposed_chemistry_physics.md [... | `+2998/-241` | `9m21s` | [...](#c-5657faf) |
+| 32 | `07-09 01:00` | `a2` | t1: data: superconductor_database.json [1... | `+8/-222` | `>6h+` | [...](#c-b1e0226) |
+| 33 | `07-09 00:55` | `a4` | t4: tests: test_api_client.py [1f] | `+5/-6` | `3m19s` | [...](#c-dc61653) |
+| 34 | `07-09 00:52` | `a4` | t3: code: run_pipeline.py [19f/17log] | `+1758/-1528` | `>8h+` | [...](#c-50c9926) |
+| 35 | `07-08 18:58` | `a2` | t5: tests: test_api_client.py [1f] | `+8/-8` | `42s` | [...](#c-1bab57a) |
+| 36 | `07-08 18:57` | `a2` | t1: code: predict_tc.py [7f/5log] | `+1789/-533` | `2h47m` | [...](#c-a25d095) |
+| 37 | `07-08 17:48` | `a3` | t4: code: streamlit_dashboard.py [1f] | `+43/-1` | `23s` | [...](#c-36ab4c3) |
+| 38 | `07-08 17:47` | `a3` | t2: code: dft_calculator.py [7f/5log] | `+953/-263` | `1h37m` | [...](#c-f8d9383) |
+| 39 | `07-08 16:10` | `a3` | t8: docs: proposed_chemistry_physics.md [... | `+22/-0` | `1m08s` | [...](#c-9fb6c7e) |
+| 40 | `07-08 16:10` | `a2` | t7: docs: discovery_strategy.md [1f] | `+1/-33` | `31s` | [...](#c-599ff41) |
+| 41 | `07-08 16:09` | `a2` | t1: code: dft_calculator.py [1f] | `+130/-3` | `18m08s` | [...](#c-c358f6a) |
+| 42 | `07-08 16:09` | `a3` | t4: code: run_pipeline.py [1f] | `+38/-2` | `18m31s` | [...](#c-7b6276e) |
+| 43 | `07-08 16:09` | `a4` | t3: code: predict_tc.py [6f/4log] | `+429/-0` | `22m52s` | [...](#c-175ea67) |
+| 44 | `07-08 15:51` | `a2` | t4: code: app.py; tests: test_api_client.... | `+404/-420` | `5m11s` | [...](#c-92abaad) |
+| 45 | `07-08 15:51` | `a3` | t2: code: arxiv_scraper.py, run_pipeline.... | `+911/-66` | `4m07s` | [...](#c-ecd37fa) |
+| 46 | `07-08 15:46` | `a3` | t6: docs: README.md [1f] | `+1/-3` | `28s` | [...](#c-0f4bd68) |
+| 47 | `07-08 15:46` | `a4` | t5: docs: proposed_chemistry_physics.md [... | `+4/-3` | `32s` | [...](#c-821f845) |
+| 48 | `07-08 15:46` | `a2` | t1: code: api_client.py [1f] | `+107/-0` | `38m51s` | [...](#c-5e2b936) |
+| 49 | `07-08 15:46` | `a3` | t2: code: run_pipeline.py [1f] | `+54/-1` | `>7h+` | [...](#c-acdcdce) |
+| 50 | `07-08 15:46` | `a4` | t4: docs: discovery_strategy.md [6f/4log] | `+510/-203` | `>7h+` | [...](#c-0a5554e) |
 
-<- Previous | **1** [2](changelog/page-02.md) [3](changelog/page-03.md) ... [9](changelog/page-09.md) | [Next ->](changelog/page-02.md)
+### Commit details
 
-Page **1** of **9** | commits **1-80** of **689** (newest first)
+Expand an item for full task text, paths, author, and commit link. The table above stays short so you can scan many rows without scrolling past wrapped cells.
+
+<a id="c-610bcbb"></a>
+<details>
+<summary>#1 | docs: add paginated changelog with agent regen guide</summary>
+
+- **When:** `2026-07-10 01:09:36-07:00`
+- **Who:** `Kevinkicho` (`human`)
+- **Task:** docs: add paginated changelog with agent regen guide
+- **What:** docs: add paginated changelog with agent regen guide: docs: CHANGELOG.md, README.md, page-02.md, page-03.md; code: generate_changelog.py [12f]
+- **LOC:** +1,526 / -2
+- **Duration (est.):** 19m01s
+- **SHA:** [`610bcbb`](https://github.com/kevinkicho/superconducters/commit/610bcbb27c002d1a135364462d3c01508c79c76b)
+- **Files:** `CHANGELOG.md`, `README.md`, `changelog/README.md`, `changelog/page-02.md`, `changelog/page-03.md`, `changelog/page-04.md`, `changelog/page-05.md`, `changelog/page-06.md`, `changelog/page-07.md`, `changelog/page-08.md`, `changelog/page-09.md`, `scripts/generate_changelog.py`
+
+</details>
+
+<a id="c-7edaa78"></a>
+<details>
+<summary>#2 | Fix GitHub homepage showing .github/README over root README</summary>
+
+- **When:** `2026-07-10 00:50:35-07:00`
+- **Who:** `Kevinkicho` (`human`)
+- **Task:** Fix GitHub homepage showing .github/README over root README
+- **What:** Fix GitHub homepage showing .github/README over root README: docs: README.md [1f]
+- **LOC:** +0 / -8
+- **Duration (est.):** 1m23s
+- **SHA:** [`7edaa78`](https://github.com/kevinkicho/superconducters/commit/7edaa780468ec0f0e594aab759479c16e75dde29)
+- **Files:** `.github/README.md`
+
+</details>
+
+<a id="c-8b5a37d"></a>
+<details>
+<summary>#3 | Restore fuller README with accurate document catalog</summary>
+
+- **When:** `2026-07-10 00:49:12-07:00`
+- **Who:** `Kevinkicho` (`human`)
+- **Task:** Restore fuller README with accurate document catalog
+- **What:** Restore fuller README with accurate document catalog: docs: README.md [1f]
+- **LOC:** +610 / -147
+- **Duration (est.):** >8h+
+- **SHA:** [`8b5a37d`](https://github.com/kevinkicho/superconducters/commit/8b5a37dedb83841ab6b7e4431c6880e382b90f12)
+- **Files:** `README.md`
+
+</details>
+
+<a id="c-d1457a7"></a>
+<details>
+<summary>#4 | Clean up docs, logs, and README; dedupe materials DB</summary>
+
+- **When:** `2026-07-09 16:37:22-07:00`
+- **Who:** `Kevinkicho` (`human`)
+- **Task:** Clean up docs, logs, and README; dedupe materials DB
+- **What:** Clean up docs, logs, and README; dedupe materials DB: docs: README.md, candidate_materials.md, characterization_techniques.md, discovery_strategy.md; tests: tests_predict_tc.py; data: superconductor_database.json [135f/109log]
+- **LOC:** +3,780 / -34,133
+- **Duration (est.):** >27h+
+- **SHA:** [`d1457a7`](https://github.com/kevinkicho/superconducters/commit/d1457a7aee087a388a5918aca4dedcb32e1479c7)
+- **Files:** `.github/README.md`, `.gitignore`, `README.md`, `characterization_techniques.md`, `data/superconductor_database.json`, `docs/_site/index.html`, `docs/candidate_materials.md`, `docs/characterization_techniques.md`, `docs/discovery_strategy.md`, `docs/experimental_feedback_loop.md`, `docs/final_report.md`, `docs/literature_review.md`, `docs/project_health_report.md`, `docs/proposed_chemistry_physics.md`, `docs/roadmap.md`, `docs/slide_deck.md`, `docs/synthesis_methods.md`, `docs/theoretical_framework.md`, `docs/weekly_digest.md`, `experimental_feedback_loop.md`, `literature_review.md`, `logs/004f2be0/deliverable/deliverable-council-004f2be0-2026-07-09T19-36-30-282Z.md`, `logs/004f2be0/next-actions/next-actions-council-004f2be0-2026-07-09T19-36-30-282Z.json`, `logs/004f2be0/pending-execution-todos.json`, `logs/004f2be0/progress-ledger.json`, `logs/1bda2f9c/deliverable/deliverable-blackboard-1bda2f9c-2026-07-07T05-58-25-638Z.md`, `logs/1bda2f9c/deliverable/deliverable-blackboard-1bda2f9c-2026-07-07T05-58-27-322Z.md`, `logs/1bda2f9c/next-actions/next-actions-blackboard-1bda2f9c-2026-07-07T05-58-25-638Z.json`, `logs/1bda2f9c/next-actions/next-actions-blackboard-1bda2f9c-2026-07-07T05-58-27-322Z.json`, `logs/1bda2f9c/summary-1bda2f9c-2026-07-07T05-50-16-388Z.json`, `logs/1bda2f9c/summary.json`, `logs/1dcfefdc/deliverable/deliverable-council-1dcfefdc-2026-07-08T05-44-09-386Z.md`, `logs/1dcfefdc/next-actions/next-actions-council-1dcfefdc-2026-07-08T05-44-09-386Z.json`, `logs/1dcfefdc/pending-execution-todos.json`, `logs/1dcfefdc/progress-ledger.json`, `logs/1ebc5352/deliverable/deliverable-council-1ebc5352-2026-07-07T07-34-56-392Z.md`, `logs/1ebc5352/next-actions/next-actions-council-1ebc5352-2026-07-07T07-34-56-392Z.json`, `logs/2283ae8d/deliverable/deliverable-council-2283ae8d-2026-07-08T23-09-20-510Z.md`, `logs/2283ae8d/next-actions/next-actions-council-2283ae8d-2026-07-08T23-09-20-510Z.json`, `logs/2283ae8d/pending-execution-todos.json`, ... +95 more
+
+</details>
+
+<a id="c-38e702c"></a>
+<details>
+<summary>#5 | agent-2: t11</summary>
+
+- **When:** `2026-07-09 15:39:39-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t11
+- **What:** t11: tests: test_run_pipeline.py [2f/1log]
+- **LOC:** +539 / -2
+- **Duration (est.):** 4m07s
+- **SHA:** [`38e702c`](https://github.com/kevinkicho/superconducters/commit/38e702c5c9aefc594d9594f0cfc1ade546db6ba5)
+- **Files:** `logs/d21cf8b3/progress-ledger.json`, `tests/test_run_pipeline.py`
+
+</details>
+
+<a id="c-81824f1"></a>
+<details>
+<summary>#6 | agent-3: t10</summary>
+
+- **When:** `2026-07-09 15:36:33-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t10
+- **What:** t10: docs: theoretical_framework.md [1f]
+- **LOC:** +41 / -0
+- **Duration (est.):** 10m59s
+- **SHA:** [`81824f1`](https://github.com/kevinkicho/superconducters/commit/81824f11d78e7146cbef0b15a0eb4fcb05336e5b)
+- **Files:** `docs/theoretical_framework.md`
+
+</details>
+
+<a id="c-285f0c6"></a>
+<details>
+<summary>#7 | agent-2: t9</summary>
+
+- **When:** `2026-07-09 15:35:32-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t9
+- **What:** t9: docs: experimental_feedback_loop.md [1f]
+- **LOC:** +91 / -0
+- **Duration (est.):** 2h44m
+- **SHA:** [`285f0c6`](https://github.com/kevinkicho/superconducters/commit/285f0c69c2cc7768966714df601976c2ef6f4d66)
+- **Files:** `docs/experimental_feedback_loop.md`
+
+</details>
+
+<a id="c-676c3f3"></a>
+<details>
+<summary>#8 | agent-3: t5</summary>
+
+- **When:** `2026-07-09 15:25:34-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t5
+- **What:** t5: code: predict_tc.py [2f/1log]
+- **LOC:** +232 / -6
+- **Duration (est.):** 4m53s
+- **SHA:** [`676c3f3`](https://github.com/kevinkicho/superconducters/commit/676c3f38de0c55b278ceb5b9204ff4b1b6f31243)
+- **Files:** `logs/d21cf8b3/progress-ledger.json`, `scripts/predict_tc.py`
+
+</details>
+
+<a id="c-8d8b2c0"></a>
+<details>
+<summary>#9 | agent-3: t3</summary>
+
+- **When:** `2026-07-09 15:20:41-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t3
+- **What:** t3: docs: proposed_chemistry_physics.md [1f]
+- **LOC:** +8 / -8
+- **Duration (est.):** 3m15s
+- **SHA:** [`8d8b2c0`](https://github.com/kevinkicho/superconducters/commit/8d8b2c064df6c9e45a3699e3a254532605a66302)
+- **Files:** `docs/proposed_chemistry_physics.md`
+
+</details>
+
+<a id="c-e4b39c4"></a>
+<details>
+<summary>#10 | agent-3: t2</summary>
+
+- **When:** `2026-07-09 15:17:26-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t2
+- **What:** t2: docs: proposed_chemistry_physics.md [7f/5log]
+- **LOC:** +2,690 / -2,361
+- **Duration (est.):** 2h26m
+- **SHA:** [`e4b39c4`](https://github.com/kevinkicho/superconducters/commit/e4b39c4df4c10bc1b9edf14584a1f03027ecd0f4)
+- **Files:** `.swarm-memory.jsonl`, `logs/004f2be0/progress-ledger.json`, `logs/d21cf8b3/deliverable/deliverable-council-d21cf8b3-2026-07-09T22-15-27-426Z.md`, `logs/d21cf8b3/next-actions/next-actions-council-d21cf8b3-2026-07-09T22-15-27-426Z.json`, `logs/d21cf8b3/pending-execution-todos.json`, `logs/summary.json`, `proposed_chemistry_physics.md`
+
+</details>
+
+<a id="c-634124e"></a>
+<details>
+<summary>#11 | agent-2: t11</summary>
+
+- **When:** `2026-07-09 12:51:20-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t11
+- **What:** t11: docs: theoretical_framework.md [1f]
+- **LOC:** +50 / -0
+- **Duration (est.):** 12m24s
+- **SHA:** [`634124e`](https://github.com/kevinkicho/superconducters/commit/634124e743ec55b04701224832988c470054a8ad)
+- **Files:** `theoretical_framework.md`
+
+</details>
+
+<a id="c-f1e939d"></a>
+<details>
+<summary>#12 | agent-3: t12</summary>
+
+- **When:** `2026-07-09 12:51:19-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t12
+- **What:** t12: docs: manufacturing_scalability.md [1f]
+- **LOC:** +82 / -0
+- **Duration (est.):** 1m19s
+- **SHA:** [`f1e939d`](https://github.com/kevinkicho/superconducters/commit/f1e939d31478bd02a8ca3e0abf904ec2777f6047)
+- **Files:** `docs/manufacturing_scalability.md`
+
+</details>
+
+<a id="c-061a8c9"></a>
+<details>
+<summary>#13 | agent-3: t10</summary>
+
+- **When:** `2026-07-09 12:50:00-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t10
+- **What:** t10: docs: synthesis_methods.md [1f]
+- **LOC:** +83 / -0
+- **Duration (est.):** 1m10s
+- **SHA:** [`061a8c9`](https://github.com/kevinkicho/superconducters/commit/061a8c9fbb2a0237ebb0943915e7d022f33ef04f)
+- **Files:** `synthesis_methods.md`
+
+</details>
+
+<a id="c-dd5a7d3"></a>
+<details>
+<summary>#14 | agent-3: t9</summary>
+
+- **When:** `2026-07-09 12:48:50-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t9
+- **What:** t9: docs: discovery_strategy.md [1f]
+- **LOC:** +117 / -0
+- **Duration (est.):** 1m38s
+- **SHA:** [`dd5a7d3`](https://github.com/kevinkicho/superconducters/commit/dd5a7d31064a3399053d69c03a63eb6de6176f69)
+- **Files:** `discovery_strategy.md`
+
+</details>
+
+<a id="c-85d7408"></a>
+<details>
+<summary>#15 | agent-3: t8</summary>
+
+- **When:** `2026-07-09 12:47:12-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t8
+- **What:** t8: docs: online_research_summary.md [1f]
+- **LOC:** +19 / -0
+- **Duration (est.):** 3m07s
+- **SHA:** [`85d7408`](https://github.com/kevinkicho/superconducters/commit/85d740848ca954b81fe70700f662706f22146849)
+- **Files:** `docs/online_research_summary.md`
+
+</details>
+
+<a id="c-e0e653c"></a>
+<details>
+<summary>#16 | agent-3: t7</summary>
+
+- **When:** `2026-07-09 12:44:05-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t7
+- **What:** t7: docs: proposed_chemistry_physics.md [2f/1log]
+- **LOC:** +63 / -186
+- **Duration (est.):** 6m31s
+- **SHA:** [`e0e653c`](https://github.com/kevinkicho/superconducters/commit/e0e653cebe7900f412572873d5c7384e908534a4)
+- **Files:** `docs/proposed_chemistry_physics.md`, `logs/004f2be0/progress-ledger.json`
+
+</details>
+
+<a id="c-56f2372"></a>
+<details>
+<summary>#17 | agent-2: t4</summary>
+
+- **When:** `2026-07-09 12:38:56-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t4
+- **What:** t4: code: streamlit_dashboard.py [1f]
+- **LOC:** +4 / -7
+- **Duration (est.):** 1m23s
+- **SHA:** [`56f2372`](https://github.com/kevinkicho/superconducters/commit/56f2372f7399e8cea65e3cef164573a13f525f5a)
+- **Files:** `streamlit_dashboard.py`
+
+</details>
+
+<a id="c-fb5e4fd"></a>
+<details>
+<summary>#18 | agent-3: t3</summary>
+
+- **When:** `2026-07-09 12:37:34-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t3
+- **What:** t3: code: run_pipeline.py [1f]
+- **LOC:** +3 / -3
+- **Duration (est.):** 56s
+- **SHA:** [`fb5e4fd`](https://github.com/kevinkicho/superconducters/commit/fb5e4fde8110d470c2ea3d052065fff77304b781)
+- **Files:** `run_pipeline.py`
+
+</details>
+
+<a id="c-84fde38"></a>
+<details>
+<summary>#19 | agent-2: t1</summary>
+
+- **When:** `2026-07-09 12:37:33-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: code: dft_calculator.py [1f]
+- **LOC:** +19 / -26
+- **Duration (est.):** 2h08m
+- **SHA:** [`84fde38`](https://github.com/kevinkicho/superconducters/commit/84fde38b7c0825b0de0f04e25be4f242f9e23471)
+- **Files:** `dft_calculator.py`
+
+</details>
+
+<a id="c-2a96a04"></a>
+<details>
+<summary>#20 | agent-3: t2</summary>
+
+- **When:** `2026-07-09 12:36:38-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t2
+- **What:** t2: code: generate_candidates.py [6f/4log]
+- **LOC:** +2,821 / -1,491
+- **Duration (est.):** >11h+
+- **SHA:** [`2a96a04`](https://github.com/kevinkicho/superconducters/commit/2a96a04dbff6371230af0c076743d907763c1253)
+- **Files:** `.swarm-memory.jsonl`, `logs/004f2be0/deliverable/deliverable-council-004f2be0-2026-07-09T19-36-30-282Z.md`, `logs/004f2be0/next-actions/next-actions-council-004f2be0-2026-07-09T19-36-30-282Z.json`, `logs/004f2be0/pending-execution-todos.json`, `logs/summary.json`, `scripts/generate_candidates.py`
+
+</details>
+
+<a id="c-525e814"></a>
+<details>
+<summary>#21 | agent-2: t5</summary>
+
+- **When:** `2026-07-09 10:29:25-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t5
+- **What:** t5: docs: online_research_summary.md [1f]
+- **LOC:** +101 / -13
+- **Duration (est.):** 10m53s
+- **SHA:** [`525e814`](https://github.com/kevinkicho/superconducters/commit/525e8149a42891e4e78a9bc66c7c116095604562)
+- **Files:** `docs/online_research_summary.md`
+
+</details>
+
+<a id="c-f69c30a"></a>
+<details>
+<summary>#22 | agent-4: t4</summary>
+
+- **When:** `2026-07-09 10:20:54-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t4
+- **What:** t4: docs: candidate_materials.md [1f]
+- **LOC:** +166 / -0
+- **Duration (est.):** 4m42s
+- **SHA:** [`f69c30a`](https://github.com/kevinkicho/superconducters/commit/f69c30a8f04cbb2b94809e8106a6b981a6215178)
+- **Files:** `candidate_materials.md`
+
+</details>
+
+<a id="c-f3abb7e"></a>
+<details>
+<summary>#23 | agent-2: t1</summary>
+
+- **When:** `2026-07-09 10:18:32-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: code: predict_tc.py [1f]
+- **LOC:** +4 / -5
+- **Duration (est.):** >8h+
+- **SHA:** [`f3abb7e`](https://github.com/kevinkicho/superconducters/commit/f3abb7ee39ccbfe1aeee3d9a94c346694826c6f9)
+- **Files:** `scripts/predict_tc.py`
+
+</details>
+
+<a id="c-cdc06de"></a>
+<details>
+<summary>#24 | agent-4: t3</summary>
+
+- **When:** `2026-07-09 10:16:12-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t3
+- **What:** t3: code: streamlit_dashboard.py [6f/5log]
+- **LOC:** +1,917 / -1,732
+- **Duration (est.):** >8h+
+- **SHA:** [`cdc06de`](https://github.com/kevinkicho/superconducters/commit/cdc06de37bafde74fe551265c008dfd476c9cdb3)
+- **Files:** `logs/443c6dc1/progress-ledger.json`, `logs/e182490a/deliverable/deliverable-council-e182490a-2026-07-09T17-14-51-613Z.md`, `logs/e182490a/next-actions/next-actions-council-e182490a-2026-07-09T17-14-51-613Z.json`, `logs/e182490a/pending-execution-todos.json`, `logs/summary.json`, `streamlit_dashboard.py`
+
+</details>
+
+<a id="c-1d8d5d2"></a>
+<details>
+<summary>#25 | agent-4: t7</summary>
+
+- **When:** `2026-07-09 01:37:57-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t7
+- **What:** t7: code: generate_candidates.py [1f]
+- **LOC:** +79 / -77
+- **Duration (est.):** 1m19s
+- **SHA:** [`1d8d5d2`](https://github.com/kevinkicho/superconducters/commit/1d8d5d2a9af5614279073ade305139d4583b97ca)
+- **Files:** `scripts/generate_candidates.py`
+
+</details>
+
+<a id="c-daf7ae3"></a>
+<details>
+<summary>#26 | agent-2: t1</summary>
+
+- **When:** `2026-07-09 01:36:45-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: code: predict_tc.py [1f]
+- **LOC:** +3 / -209
+- **Duration (est.):** 35m58s
+- **SHA:** [`daf7ae3`](https://github.com/kevinkicho/superconducters/commit/daf7ae3f402d93c30dbb3ebb160dc9ee81c9cf72)
+- **Files:** `scripts/predict_tc.py`
+
+</details>
+
+<a id="c-1373ccb"></a>
+<details>
+<summary>#27 | agent-4: t6</summary>
+
+- **When:** `2026-07-09 01:36:38-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t6
+- **What:** t6: code: run_pipeline.py [1f]
+- **LOC:** +22 / -10
+- **Duration (est.):** 1m32s
+- **SHA:** [`1373ccb`](https://github.com/kevinkicho/superconducters/commit/1373ccbe6399460c9229066a37e88a1ec294106c)
+- **Files:** `run_pipeline.py`
+
+</details>
+
+<a id="c-dfeaddd"></a>
+<details>
+<summary>#28 | agent-4: t4</summary>
+
+- **When:** `2026-07-09 01:35:06-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t4
+- **What:** t4: 1 paths [1f]
+- **LOC:** +43 / -6
+- **Duration (est.):** 2m12s
+- **SHA:** [`dfeaddd`](https://github.com/kevinkicho/superconducters/commit/dfeaddda6e296c551826febc94cccdec138f9865)
+- **Files:** `requirements.txt`
+
+</details>
+
+<a id="c-168a829"></a>
+<details>
+<summary>#29 | agent-3: t2</summary>
+
+- **When:** `2026-07-09 01:34:51-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t2
+- **What:** t2: code: streamlit_dashboard.py [1f]
+- **LOC:** +9 / -27
+- **Duration (est.):** >7h+
+- **SHA:** [`168a829`](https://github.com/kevinkicho/superconducters/commit/168a8294c928f21f1b1378a55cdee0405c24b6cb)
+- **Files:** `streamlit_dashboard.py`
+
+</details>
+
+<a id="c-d3d469a"></a>
+<details>
+<summary>#30 | agent-4: t3</summary>
+
+- **When:** `2026-07-09 01:32:54-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t3
+- **What:** t3: code: dft_calculator.py [4f/3log]
+- **LOC:** +360 / -10
+- **Duration (est.):** 27m57s
+- **SHA:** [`d3d469a`](https://github.com/kevinkicho/superconducters/commit/d3d469af1a9b11be46bf960042537c5f3614a6dc)
+- **Files:** `dft_calculator.py`, `logs/443c6dc1/deliverable/deliverable-council-443c6dc1-2026-07-09T08-32-24-415Z.md`, `logs/443c6dc1/next-actions/next-actions-council-443c6dc1-2026-07-09T08-32-24-415Z.json`, `logs/443c6dc1/pending-execution-todos.json`
+
+</details>
+
+<a id="c-5657faf"></a>
+<details>
+<summary>#31 | agent-4: t5</summary>
+
+- **When:** `2026-07-09 01:04:57-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t5
+- **What:** t5: docs: proposed_chemistry_physics.md [2f/1log]
+- **LOC:** +2,998 / -241
+- **Duration (est.):** 9m21s
+- **SHA:** [`5657faf`](https://github.com/kevinkicho/superconducters/commit/5657fafff274b6bcfe28f871b1db6a6cc7b40587)
+- **Files:** `docs/proposed_chemistry_physics.md`, `logs/summary.json`
+
+</details>
+
+<a id="c-b1e0226"></a>
+<details>
+<summary>#32 | agent-2: t1</summary>
+
+- **When:** `2026-07-09 01:00:47-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: data: superconductor_database.json [1f]
+- **LOC:** +8 / -222
+- **Duration (est.):** >6h+
+- **SHA:** [`b1e0226`](https://github.com/kevinkicho/superconducters/commit/b1e02261ccfb4a5bc77f9965989ba07d513fe8d0)
+- **Files:** `data/superconductor_database.json`
+
+</details>
+
+<a id="c-dc61653"></a>
+<details>
+<summary>#33 | agent-4: t4</summary>
+
+- **When:** `2026-07-09 00:55:36-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t4
+- **What:** t4: tests: test_api_client.py [1f]
+- **LOC:** +5 / -6
+- **Duration (est.):** 3m19s
+- **SHA:** [`dc61653`](https://github.com/kevinkicho/superconducters/commit/dc616535e6a537564dc9a09f06fa4d8c595332a4)
+- **Files:** `tests/test_api_client.py`
+
+</details>
+
+<a id="c-50c9926"></a>
+<details>
+<summary>#34 | agent-4: t3</summary>
+
+- **When:** `2026-07-09 00:52:17-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t3
+- **What:** t3: code: run_pipeline.py [19f/17log]
+- **LOC:** +1,758 / -1,528
+- **Duration (est.):** >8h+
+- **SHA:** [`50c9926`](https://github.com/kevinkicho/superconducters/commit/50c99261b59f7783ec4d0a10cdeee3cb2b7aaa5e)
+- **Files:** `.swarm-memory.jsonl`, `logs/8ac48e81/deliverable/deliverable-council-8ac48e81-2026-07-09T02-47-38-705Z.md`, `logs/8ac48e81/next-actions/next-actions-council-8ac48e81-2026-07-09T02-47-38-705Z.json`, `logs/8ac48e81/pending-execution-todos.json`, `logs/90782872/deliverable/deliverable-council-90782872-2026-07-09T04-51-14-876Z.md`, `logs/90782872/next-actions/next-actions-council-90782872-2026-07-09T04-51-14-876Z.json`, `logs/9d551b13/deliverable/deliverable-council-9d551b13-2026-07-09T04-05-19-804Z.md`, `logs/9d551b13/next-actions/next-actions-council-9d551b13-2026-07-09T04-05-19-804Z.json`, `logs/9d551b13/pending-execution-todos.json`, `logs/bd77d846/progress-ledger.json`, `logs/c2723144/progress-ledger.json`, `logs/cc226058/deliverable/deliverable-council-cc226058-2026-07-09T07-50-14-403Z.md`, `logs/cc226058/next-actions/next-actions-council-cc226058-2026-07-09T07-50-14-403Z.json`, `logs/cc226058/pending-execution-todos.json`, `logs/ce0b96aa/deliverable/deliverable-council-ce0b96aa-2026-07-09T07-15-49-420Z.md`, `logs/ce0b96aa/next-actions/next-actions-council-ce0b96aa-2026-07-09T07-15-49-420Z.json`, `logs/ce0b96aa/progress-ledger.json`, `logs/summary.json`, `run_pipeline.py`
+
+</details>
+
+<a id="c-1bab57a"></a>
+<details>
+<summary>#35 | agent-2: t5</summary>
+
+- **When:** `2026-07-08 18:58:23-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t5
+- **What:** t5: tests: test_api_client.py [1f]
+- **LOC:** +8 / -8
+- **Duration (est.):** 42s
+- **SHA:** [`1bab57a`](https://github.com/kevinkicho/superconducters/commit/1bab57ae40df6e6cf0d5c3cb8a6c4cf2f861586d)
+- **Files:** `tests/test_api_client.py`
+
+</details>
+
+<a id="c-a25d095"></a>
+<details>
+<summary>#36 | agent-2: t1</summary>
+
+- **When:** `2026-07-08 18:57:41-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: code: predict_tc.py [7f/5log]
+- **LOC:** +1,789 / -533
+- **Duration (est.):** 2h47m
+- **SHA:** [`a25d095`](https://github.com/kevinkicho/superconducters/commit/a25d095788328cb3561c72035b0a7be0fa4c9f29)
+- **Files:** `.swarm-memory.jsonl`, `logs/7b0bc638/progress-ledger.json`, `logs/c2723144/deliverable/deliverable-council-c2723144-2026-07-09T01-48-44-749Z.md`, `logs/c2723144/next-actions/next-actions-council-c2723144-2026-07-09T01-48-44-749Z.json`, `logs/c2723144/pending-execution-todos.json`, `logs/summary.json`, `scripts/predict_tc.py`
+
+</details>
+
+<a id="c-36ab4c3"></a>
+<details>
+<summary>#37 | agent-3: t4</summary>
+
+- **When:** `2026-07-08 17:48:15-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t4
+- **What:** t4: code: streamlit_dashboard.py [1f]
+- **LOC:** +43 / -1
+- **Duration (est.):** 23s
+- **SHA:** [`36ab4c3`](https://github.com/kevinkicho/superconducters/commit/36ab4c30b99dee70d9211282d74af8f36bb544f7)
+- **Files:** `streamlit_dashboard.py`
+
+</details>
+
+<a id="c-f8d9383"></a>
+<details>
+<summary>#38 | agent-3: t2</summary>
+
+- **When:** `2026-07-08 17:47:52-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t2
+- **What:** t2: code: dft_calculator.py [7f/5log]
+- **LOC:** +953 / -263
+- **Duration (est.):** 1h37m
+- **SHA:** [`f8d9383`](https://github.com/kevinkicho/superconducters/commit/f8d9383f215220ae0aa98fb9ed82f3eb043bf42a)
+- **Files:** `.swarm-memory.jsonl`, `dft_calculator.py`, `logs/2283ae8d/progress-ledger.json`, `logs/ea7c962d/deliverable/deliverable-council-ea7c962d-2026-07-09T00-47-34-044Z.md`, `logs/ea7c962d/next-actions/next-actions-council-ea7c962d-2026-07-09T00-47-34-044Z.json`, `logs/ea7c962d/pending-execution-todos.json`, `logs/summary.json`
+
+</details>
+
+<a id="c-9fb6c7e"></a>
+<details>
+<summary>#39 | agent-3: t8</summary>
+
+- **When:** `2026-07-08 16:10:41-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t8
+- **What:** t8: docs: proposed_chemistry_physics.md [1f]
+- **LOC:** +22 / -0
+- **Duration (est.):** 1m08s
+- **SHA:** [`9fb6c7e`](https://github.com/kevinkicho/superconducters/commit/9fb6c7e795b6239c7d06be141afc21d673d3b037)
+- **Files:** `proposed_chemistry_physics.md`
+
+</details>
+
+<a id="c-599ff41"></a>
+<details>
+<summary>#40 | agent-2: t7</summary>
+
+- **When:** `2026-07-08 16:10:21-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t7
+- **What:** t7: docs: discovery_strategy.md [1f]
+- **LOC:** +1 / -33
+- **Duration (est.):** 31s
+- **SHA:** [`599ff41`](https://github.com/kevinkicho/superconducters/commit/599ff41826f465bf813f790ca461e60bcb8c3e37)
+- **Files:** `docs/discovery_strategy.md`
+
+</details>
+
+<a id="c-c358f6a"></a>
+<details>
+<summary>#41 | agent-2: t1</summary>
+
+- **When:** `2026-07-08 16:09:50-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: code: dft_calculator.py [1f]
+- **LOC:** +130 / -3
+- **Duration (est.):** 18m08s
+- **SHA:** [`c358f6a`](https://github.com/kevinkicho/superconducters/commit/c358f6aafb78f2649415482f5d138fee6be4f882)
+- **Files:** `dft_calculator.py`
+
+</details>
+
+<a id="c-7b6276e"></a>
+<details>
+<summary>#42 | agent-3: t4</summary>
+
+- **When:** `2026-07-08 16:09:33-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t4
+- **What:** t4: code: run_pipeline.py [1f]
+- **LOC:** +38 / -2
+- **Duration (est.):** 18m31s
+- **SHA:** [`7b6276e`](https://github.com/kevinkicho/superconducters/commit/7b6276ef3b2526c1c5bada470a3d909d7c262b6f)
+- **Files:** `run_pipeline.py`
+
+</details>
+
+<a id="c-175ea67"></a>
+<details>
+<summary>#43 | agent-4: t3</summary>
+
+- **When:** `2026-07-08 16:09:28-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t3
+- **What:** t3: code: predict_tc.py [6f/4log]
+- **LOC:** +429 / -0
+- **Duration (est.):** 22m52s
+- **SHA:** [`175ea67`](https://github.com/kevinkicho/superconducters/commit/175ea67abbb20e63508dd80484db8f7db6dee26c)
+- **Files:** `.swarm-memory.jsonl`, `logs/2283ae8d/deliverable/deliverable-council-2283ae8d-2026-07-08T23-09-20-510Z.md`, `logs/2283ae8d/next-actions/next-actions-council-2283ae8d-2026-07-08T23-09-20-510Z.json`, `logs/2283ae8d/pending-execution-todos.json`, `logs/43e79fa7/progress-ledger.json`, `scripts/predict_tc.py`
+
+</details>
+
+<a id="c-92abaad"></a>
+<details>
+<summary>#44 | agent-2: t4</summary>
+
+- **When:** `2026-07-08 15:51:42-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t4
+- **What:** t4: code: app.py; tests: test_api_client.py [4f/2log]
+- **LOC:** +404 / -420
+- **Duration (est.):** 5m11s
+- **SHA:** [`92abaad`](https://github.com/kevinkicho/superconducters/commit/92abaad10369dbc3a1ec7ce9532ef45ed5a76982)
+- **Files:** `app.py`, `logs/43e79fa7/pending-execution-todos.json`, `logs/summary.json`, `tests/test_api_client.py`
+
+</details>
+
+<a id="c-ecd37fa"></a>
+<details>
+<summary>#45 | agent-3: t2</summary>
+
+- **When:** `2026-07-08 15:51:02-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t2
+- **What:** t2: code: arxiv_scraper.py, run_pipeline.py [6f/4log]
+- **LOC:** +911 / -66
+- **Duration (est.):** 4m07s
+- **SHA:** [`ecd37fa`](https://github.com/kevinkicho/superconducters/commit/ecd37fae63df7137f2aa707bc7e8db8cfcb5d357)
+- **Files:** `logs/43e79fa7/deliverable/deliverable-council-43e79fa7-2026-07-08T22-49-52-135Z.md`, `logs/43e79fa7/next-actions/next-actions-council-43e79fa7-2026-07-08T22-49-52-135Z.json`, `logs/43e79fa7/pending-execution-todos.json`, `logs/summary.json`, `run_pipeline.py`, `scripts/arxiv_scraper.py`
+
+</details>
+
+<a id="c-0f4bd68"></a>
+<details>
+<summary>#46 | agent-3: t6</summary>
+
+- **When:** `2026-07-08 15:46:55-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t6
+- **What:** t6: docs: README.md [1f]
+- **LOC:** +1 / -3
+- **Duration (est.):** 28s
+- **SHA:** [`0f4bd68`](https://github.com/kevinkicho/superconducters/commit/0f4bd688263e911e87549421ca6456b1790ed8d3)
+- **Files:** `README.md`
+
+</details>
+
+<a id="c-821f845"></a>
+<details>
+<summary>#47 | agent-4: t5</summary>
+
+- **When:** `2026-07-08 15:46:36-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t5
+- **What:** t5: docs: proposed_chemistry_physics.md [1f]
+- **LOC:** +4 / -3
+- **Duration (est.):** 32s
+- **SHA:** [`821f845`](https://github.com/kevinkicho/superconducters/commit/821f84522a3863bb6088f614de576f10a8405e34)
+- **Files:** `proposed_chemistry_physics.md`
+
+</details>
+
+<a id="c-5e2b936"></a>
+<details>
+<summary>#48 | agent-2: t1</summary>
+
+- **When:** `2026-07-08 15:46:31-07:00`
+- **Who:** `agent-2` (`a2`)
+- **Task:** agent-2: t1
+- **What:** t1: code: api_client.py [1f]
+- **LOC:** +107 / -0
+- **Duration (est.):** 38m51s
+- **SHA:** [`5e2b936`](https://github.com/kevinkicho/superconducters/commit/5e2b936bea986eea483932d5472d92e0ea600bfb)
+- **Files:** `scripts/api_client.py`
+
+</details>
+
+<a id="c-acdcdce"></a>
+<details>
+<summary>#49 | agent-3: t2</summary>
+
+- **When:** `2026-07-08 15:46:27-07:00`
+- **Who:** `agent-3` (`a3`)
+- **Task:** agent-3: t2
+- **What:** t2: code: run_pipeline.py [1f]
+- **LOC:** +54 / -1
+- **Duration (est.):** >7h+
+- **SHA:** [`acdcdce`](https://github.com/kevinkicho/superconducters/commit/acdcdce7c9043d9f62f8c5cb53a093830bec45ea)
+- **Files:** `run_pipeline.py`
+
+</details>
+
+<a id="c-0a5554e"></a>
+<details>
+<summary>#50 | agent-4: t4</summary>
+
+- **When:** `2026-07-08 15:46:04-07:00`
+- **Who:** `agent-4` (`a4`)
+- **Task:** agent-4: t4
+- **What:** t4: docs: discovery_strategy.md [6f/4log]
+- **LOC:** +510 / -203
+- **Duration (est.):** >7h+
+- **SHA:** [`0a5554e`](https://github.com/kevinkicho/superconducters/commit/0a5554e16a8e7b8f8bdc29dc4750c9301dbe7163)
+- **Files:** `.swarm-memory.jsonl`, `docs/discovery_strategy.md`, `logs/6dd54a8b/deliverable/deliverable-council-6dd54a8b-2026-07-08T22-45-42-899Z.md`, `logs/6dd54a8b/next-actions/next-actions-council-6dd54a8b-2026-07-08T22-45-42-899Z.json`, `logs/6dd54a8b/pending-execution-todos.json`, `logs/summary.json`
+
+</details>
+
+
+Prev | **1** | [2](changelog/page-02.md) | [3](changelog/page-03.md) | ... | [14](changelog/page-14.md) | [Next](changelog/page-02.md)
+
+**Page 1/14** | rows **1-50** of **690** | newest first
 
 ---
 
-*Regenerate: `python scripts/generate_changelog.py` | page size 80 | 689 commits | 9 pages*
+*Regen: `python scripts/generate_changelog.py` | 690 commits | 14 pages | size 50*

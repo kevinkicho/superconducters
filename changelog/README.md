@@ -1,30 +1,32 @@
 # Changelog pages
 
-Paginated views of repository activity. **Start at the hub:** [`../CHANGELOG.md`](../CHANGELOG.md) (includes agent instructions).
+**Start here:** [`../CHANGELOG.md`](../CHANGELOG.md#table-of-contents) (TOC, agent guide, latest page).
 
 ## Pages
 
-| Page | Commits (global #) | File |
-|-----:|--------------------|------|
-| 1 (latest) | 1-80 | [CHANGELOG.md](../CHANGELOG.md#activity-log-page-1-latest) |
-| 2 | 81-160 | [page-02.md](page-02.md) |
-| 3 | 161-240 | [page-03.md](page-03.md) |
-| 4 | 241-320 | [page-04.md](page-04.md) |
-| 5 | 321-400 | [page-05.md](page-05.md) |
-| 6 | 401-480 | [page-06.md](page-06.md) |
-| 7 | 481-560 | [page-07.md](page-07.md) |
-| 8 | 561-640 | [page-08.md](page-08.md) |
-| 9 | 641-689 | [page-09.md](page-09.md) |
+| Page | Rows | Link |
+|-----:|------|------|
+| 1 (latest) | 1-50 | [latest](../CHANGELOG.md#activity-log) |
+| 2 | 51-100 | [page-02.md](page-02.md) |
+| 3 | 101-150 | [page-03.md](page-03.md) |
+| 4 | 151-200 | [page-04.md](page-04.md) |
+| 5 | 201-250 | [page-05.md](page-05.md) |
+| 6 | 251-300 | [page-06.md](page-06.md) |
+| 7 | 301-350 | [page-07.md](page-07.md) |
+| 8 | 351-400 | [page-08.md](page-08.md) |
+| 9 | 401-450 | [page-09.md](page-09.md) |
+| 10 | 451-500 | [page-10.md](page-10.md) |
+| 11 | 501-550 | [page-11.md](page-11.md) |
+| 12 | 551-600 | [page-12.md](page-12.md) |
+| 13 | 601-650 | [page-13.md](page-13.md) |
+| 14 | 651-690 | [page-14.md](page-14.md) |
 
-## Regenerate (for agents)
+## Regenerate
 
 ```bash
 python scripts/generate_changelog.py
-python scripts/generate_changelog.py --page-size 80
 git add CHANGELOG.md changelog/
 git commit -m "docs: refresh changelog [skip ci]"
 ```
 
-Do not hand-merge pages. Always re-run the generator after new commits.
-
-*Generated `2026-07-10T01:02:03-07:00` | 689 commits | 9 pages*
+*690 commits | 14 pages | `2026-07-10T01:15:14-07:00`*

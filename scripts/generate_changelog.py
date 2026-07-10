@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 """
-Generate paginated CHANGELOG pages from git history.
+Generate paginated, GitHub-viewport-friendly CHANGELOG pages from git history.
 
-Output layout
--------------
-  CHANGELOG.md              # Hub: agent guide, summary, page 1 (newest commits)
-  changelog/README.md       # Index of all pages + regen instructions
-  changelog/page-NN.md      # Additional pages (older commits), newest-first overall
+Layout
+------
+  CHANGELOG.md              Hub: TOC, agent guide, summary, page 1 (compact table)
+  changelog/README.md       Page index
+  changelog/page-NN.md      Older pages (same compact schema)
+
+UX principles (GitHub README viewport)
+-------------------------------------
+  * Tables stay narrow: short time, short who, single Delta column, hard-truncated summary.
+  * No <details> inside table cells (they explode row height when expanded / wrap badly).
+  * Full text lives under "Commit details" as one-line <details> blocks with anchors.
+  * TOC links jump to sections and other pages.
 
 Usage
 -----
   python scripts/generate_changelog.py
-  python scripts/generate_changelog.py --page-size 75
-  python scripts/generate_changelog.py --repo-url https://github.com/owner/repo
+  python scripts/generate_changelog.py --page-size 50
 
-Agents: after finishing work and committing, re-run this script and commit the
-updated CHANGELOG.md + changelog/** files so the log stays current.
+Agents: after commits, re-run this script and commit CHANGELOG.md + changelog/.
 """
 from __future__ import annotations
 
@@ -28,8 +33,9 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PAGE_SIZE = 80
+DEFAULT_PAGE_SIZE = 50  # fewer rows = less vertical scroll per page on GitHub
 DEFAULT_REPO = "https://github.com/kevinkicho/superconducters"
+SUMMARY_LEN = 42  # hard cap so table cells rarely wrap on desktop GitHub
 
 
 def parse_iso(s: str) -> datetime:
@@ -43,25 +49,39 @@ def fmt_duration(seconds: float | None) -> str:
         return f"{int(seconds)}s"
     if seconds < 3600:
         m, s = int(seconds // 60), int(seconds % 60)
-        return f"{m}m {s}s" if s else f"{m}m"
+        return f"{m}m{s:02d}s" if s else f"{m}m"
     h, m = int(seconds // 3600), int((seconds % 3600) // 60)
-    return f"{h}h {m}m" if m else f"{h}h"
+    if seconds > 6 * 3600:
+        return f">{h}h+"
+    return f"{h}h{m:02d}m" if m else f"{h}h"
 
 
-def truncate(text: str, limit: int = 72) -> tuple[str, str | None]:
+def compact_when(ad: str) -> str:
+    """2026-07-10T00:50:35-07:00 -> 07-10 00:50"""
+    try:
+        dt = parse_iso(ad)
+        return dt.strftime("%m-%d %H:%M")
+    except ValueError:
+        return ad[5:16].replace("T", " ")
+
+
+def short_who(an: str) -> str:
+    m = re.match(r"agent-(\d+)", an, re.I)
+    if m:
+        return f"a{m.group(1)}"
+    if an.lower() in {"ollama-swarm", "swarm"}:
+        return "swarm"
+    if "evin" in an.lower() or an == "Kevinkicho":
+        return "human"
+    # keep short
+    return an[:12]
+
+
+def truncate(text: str, limit: int = SUMMARY_LEN) -> str:
     text = " ".join(text.split())
     if len(text) <= limit:
-        return text, None
-    return text[: limit - 1].rstrip() + "...", text
-
-
-def one_line_details(short: str, full: str | None) -> str:
-    if not full:
-        return html.escape(short).replace("|", "\\|")
-    return (
-        f"<details><summary>{html.escape(short)}</summary>"
-        f"<code>{html.escape(full)}</code></details>"
-    ).replace("|", "\\|")
+        return text
+    return text[: max(1, limit - 1)].rstrip() + "..."
 
 
 def git_entries() -> list[dict]:
@@ -86,7 +106,7 @@ def git_entries() -> list[dict]:
                 entries.append(cur)
             _, h, ad, an, subj = line.split("|", 4)
             cur = {
-                "h": h[:8],
+                "h": h[:7],
                 "full": h,
                 "ad": ad,
                 "an": an,
@@ -121,7 +141,6 @@ def git_entries() -> list[dict]:
 
 
 def attach_duration(entries: list[dict]) -> None:
-    """entries newest-first; duration = gap since same author's previous commit."""
     last_by_author: dict[str, datetime] = {}
     for e in reversed(entries):
         t = parse_iso(e["ad"])
@@ -137,7 +156,7 @@ def describe(e: dict) -> str:
     task = m.group(2) if m else e["subj"]
 
     if log_only:
-        base = "Session/logging artifacts only"
+        base = "logs only"
     elif not e["files"]:
         base = e["subj"]
     else:
@@ -153,106 +172,51 @@ def describe(e: dict) -> str:
         parts: list[str] = []
         if docs:
             parts.append(
-                "docs/md: " + ", ".join(sorted({Path(f).name for f in docs})[:5])
+                "docs: " + ", ".join(sorted({Path(f).name for f in docs})[:4])
             )
         if pys:
             parts.append(
-                "code: " + ", ".join(sorted({Path(f).name for f in pys})[:5])
+                "code: " + ", ".join(sorted({Path(f).name for f in pys})[:4])
             )
         if tests:
             parts.append(
-                "tests: " + ", ".join(sorted({Path(f).name for f in tests})[:4])
+                "tests: " + ", ".join(sorted({Path(f).name for f in tests})[:3])
             )
         if data:
             parts.append(
-                "data: " + ", ".join(sorted({Path(f).name for f in data})[:4])
+                "data: " + ", ".join(sorted({Path(f).name for f in data})[:3])
             )
         if not parts:
-            parts.append(f"{len(files)} path(s)")
+            parts.append(f"{len(files)} paths")
         joined = "; ".join(parts)
         if re.match(r"^(agent-\d+:\s*)?t\d+\s*$", e["subj"]):
-            base = f"Task {task}: {joined}"
-        elif not e["subj"].startswith("agent-"):
-            base = f"{e['subj']} -- {joined}"
+            base = f"{task}: {joined}"
         else:
             base = f"{e['subj']}: {joined}"
 
-    if e["files"]:
-        nlog = sum(1 for f in e["files"] if f.startswith("logs/"))
-        n = len(e["files"])
-        extra = f" ({n} files"
+    n = len(e["files"])
+    nlog = sum(1 for f in e["files"] if f.startswith("logs/"))
+    if n:
+        base += f" [{n}f"
         if nlog:
-            extra += f", {nlog} logs"
-        extra += ")"
-        base += extra
+            base += f"/{nlog}log"
+        base += "]"
     return base
 
 
-def duration_cell(e: dict, cap: float = 6 * 3600) -> str:
-    dur_s = e.get("duration_s")
-    if dur_s is None:
-        return "--"
-    if dur_s > cap:
-        return f">6h ({fmt_duration(dur_s)})"
-    return fmt_duration(dur_s)
-
-
-def table_header() -> list[str]:
-    return [
-        "| # | When | Who | Task | What | +LOC | -LOC | Duration | SHA |",
-        "|--:|------|-----|------|------|-----:|-----:|----------|-----|",
-    ]
-
-
-def table_rows(
-    slice_entries: list[dict],
-    start_index: int,
-    repo_url: str,
-) -> list[str]:
-    """start_index is 1-based global rank among newest-first list."""
-    rows: list[str] = []
-    for i, e in enumerate(slice_entries):
-        rank = start_index + i
-        when = e["ad"].replace("T", " ")
-        who = e["an"]
-        task_short, task_full = truncate(e["subj"], 48)
-        what_short, what_full = truncate(describe(e), 64)
-        task_cell = one_line_details(task_short, task_full)
-        what_cell = one_line_details(what_short, what_full)
-        dur = duration_cell(e)
-        sha_url = f"{repo_url}/commit/{e['full']}"
-        rows.append(
-            f"| {rank} | `{when}` | `{who}` | {task_cell} | {what_cell} | "
-            f"+{e['ins']:,} | -{e['del']:,} | {dur} | "
-            f"[`{e['h']}`]({sha_url}) |"
-        )
-    return rows
-
-
 def page_href(p: int, *, hub: bool) -> str:
-    """Href to page p. hub=True: paths as seen from repo-root CHANGELOG.md."""
     if p <= 1:
-        return "CHANGELOG.md#activity-log-page-1-latest" if hub else "../CHANGELOG.md"
+        return "CHANGELOG.md#activity-log" if hub else "../CHANGELOG.md#activity-log"
     return f"changelog/page-{p:02d}.md" if hub else f"page-{p:02d}.md"
 
 
-def nav_bar(
-    page: int,
-    total_pages: int,
-    page_size: int,
-    total: int,
-    *,
-    hub: bool,
-) -> str:
-    """Markdown navigation between paginated changelog pages."""
-    parts: list[str] = []
-
+def nav_bar(page: int, total_pages: int, page_size: int, total: int, *, hub: bool) -> str:
+    bits: list[str] = []
     if page > 1:
-        parts.append(f"[<- Previous]({page_href(page - 1, hub=hub)})")
+        bits.append(f"[Prev]({page_href(page - 1, hub=hub)})")
     else:
-        parts.append("<- Previous")
+        bits.append("Prev")
 
-    # Compact page list with ellipses
     window: list[int] = []
     for p in range(1, total_pages + 1):
         if p == 1 or p == total_pages or abs(p - page) <= 2:
@@ -260,102 +224,179 @@ def nav_bar(
         elif window and window[-1] != -1:
             window.append(-1)
 
-    num_bits: list[str] = []
     for p in window:
         if p == -1:
-            num_bits.append("...")
-            continue
-        if p == page:
-            num_bits.append(f"**{p}**")
+            bits.append("...")
+        elif p == page:
+            bits.append(f"**{p}**")
         else:
-            num_bits.append(f"[{p}]({page_href(p, hub=hub)})")
-    parts.append(" ".join(num_bits))
+            bits.append(f"[{p}]({page_href(p, hub=hub)})")
 
     if page < total_pages:
-        parts.append(f"[Next ->]({page_href(page + 1, hub=hub)})")
+        bits.append(f"[Next]({page_href(page + 1, hub=hub)})")
     else:
-        parts.append("Next ->")
+        bits.append("Next")
 
     start = (page - 1) * page_size + 1
     end = min(page * page_size, total)
-    meta = (
-        f"Page **{page}** of **{total_pages}** | "
-        f"commits **{start}-{end}** of **{total}** (newest first)"
+    return (
+        " | ".join(bits)
+        + f"\n\n**Page {page}/{total_pages}** | rows **{start}-{end}** of **{total}** | newest first"
     )
-    return f"{' | '.join(parts)}\n\n{meta}"
 
 
-def agent_guide_md(page_size: int) -> str:
-    return f"""## Agent instructions (read before editing this changelog)
+def esc_cell(s: str) -> str:
+    return s.replace("|", "\\|").replace("\n", " ")
 
-This changelog is **machine-generated** and **paginated** for GitHub viewing. Do not hand-edit hundreds of table rows.
+
+def table_block(
+    slice_entries: list[dict],
+    start_index: int,
+    repo_url: str,
+    *,
+    detail_prefix: str,
+) -> list[str]:
+    """
+    Compact markdown table + separate detail anchors.
+    detail_prefix: relative path prefix for #c-SHA links from this file.
+      hub page 1: "" or "#"
+      subpages: ""
+    """
+    lines: list[str] = []
+    lines.append(
+        "| # | When | Who | Summary | +/- | Dur | more |"
+    )
+    lines.append("|--:|:----:|:--:|:--------|----:|:--:|:---:|")
+
+    for i, e in enumerate(slice_entries):
+        rank = start_index + i
+        when = compact_when(e["ad"])
+        who = short_who(e["an"])
+        # Prefer short subject for summary column
+        if re.match(r"^agent-\d+:\s*t\d+\s*$", e["subj"]):
+            summary_src = describe(e)
+        else:
+            summary_src = e["subj"]
+        summary = esc_cell(truncate(summary_src, SUMMARY_LEN))
+        delta = f"+{e['ins']}/-{e['del']}"
+        # tighten huge numbers
+        if e["ins"] >= 10000 or e["del"] >= 10000:
+            delta = f"+{e['ins']/1000:.0f}k/-{e['del']/1000:.0f}k"
+        dur = fmt_duration(e.get("duration_s"))
+        anchor = f"c-{e['h']}"
+        more = f"[...]({detail_prefix}#{anchor})"
+        lines.append(
+            f"| {rank} | `{when}` | `{who}` | {summary} | `{delta}` | `{dur}` | {more} |"
+        )
+
+    lines.append("")
+    lines.append("### Commit details")
+    lines.append("")
+    lines.append(
+        "Expand an item for full task text, paths, author, and commit link. "
+        "The table above stays short so you can scan many rows without scrolling past wrapped cells."
+    )
+    lines.append("")
+
+    for i, e in enumerate(slice_entries):
+        rank = start_index + i
+        when_full = e["ad"].replace("T", " ")
+        who_full = e["an"]
+        what = describe(e)
+        files = e["files"][:40]
+        more_files = len(e["files"]) - len(files)
+        file_list = ", ".join(f"`{html.escape(f)}`" for f in files)
+        if more_files > 0:
+            file_list += f", ... +{more_files} more"
+        if not file_list:
+            file_list = "_(none)_"
+        dur = fmt_duration(e.get("duration_s"))
+        title = html.escape(truncate(f"#{rank} | {e['subj']}", 72))
+        body_subj = html.escape(e["subj"])
+        body_what = html.escape(what)
+        lines.append(
+            f'<a id="c-{e["h"]}"></a>\n'
+            f"<details>\n"
+            f"<summary>{title}</summary>\n\n"
+            f"- **When:** `{when_full}`\n"
+            f"- **Who:** `{html.escape(who_full)}` (`{short_who(who_full)}`)\n"
+            f"- **Task:** {body_subj}\n"
+            f"- **What:** {body_what}\n"
+            f"- **LOC:** +{e['ins']:,} / -{e['del']:,}\n"
+            f"- **Duration (est.):** {dur}\n"
+            f"- **SHA:** [`{e['h']}`]({repo_url}/commit/{e['full']})\n"
+            f"- **Files:** {file_list}\n\n"
+            f"</details>\n"
+        )
+
+    return lines
+
+
+def agent_guide(page_size: int) -> str:
+    return f"""## Agent instructions
+
+This changelog is **machine-generated** and **paginated**. Do not hand-edit table rows.
 
 ### Layout
 
 | Path | Role |
 |------|------|
-| [`CHANGELOG.md`](CHANGELOG.md) | Hub: this guide, summary stats, **page 1** (latest {page_size} commits) |
-| [`changelog/README.md`](changelog/README.md) | Page index + regen cheat-sheet |
-| [`changelog/page-NN.md`](changelog/) | Older pages (`page-02`, `page-03`, ...), same table schema |
+| [`CHANGELOG.md`](CHANGELOG.md) | Hub: TOC, this guide, summary, **page 1** (latest {page_size} commits) |
+| [`changelog/README.md`](changelog/README.md) | Page index |
+| [`changelog/page-NN.md`](changelog/) | Older pages (`page-02`, ...), same compact schema |
+| [`scripts/generate_changelog.py`](scripts/generate_changelog.py) | Only supported way to refresh |
 
-Commit order in tables is always **newest -> oldest**. Global row `#` is stable across pages (1 = newest commit).
+**Order:** newest -> oldest. Global `#` is stable (1 = tip of `main`).
+
+### Why the table looks like this
+
+GitHub's README viewport is **narrow and scrolls vertically**. Wide cells and in-table expanders force huge row heights. So:
+
+1. **Compact table only** -- short time (`MM-DD HH:MM`), short who (`a2`/`human`), hard-truncated summary (~{SUMMARY_LEN} chars), combined `+/-` LOC, short duration.
+2. **No `<details>` inside table cells.**
+3. **Full text** under [Commit details](#commit-details) on each page; jump via the `...` column (`#c-<sha>`).
+4. **Pagination** ({page_size} commits/page) so one page does not dominate the scroll.
 
 ### Table columns
 
-| Column | Source |
-|--------|--------|
-| `#` | Rank in newest-first history (1 = tip of `main`) |
-| When | `git` author date (`--date=iso-strict`) |
-| Who | `git` author (`agent-2` / `agent-3` / `agent-4` / human) |
-| Task | Commit subject; long text uses `<details>` expanders |
-| What | Inferred from paths (`--numstat`); expanders for long text |
-| +LOC / -LOC | `git log --numstat` line counts |
-| Duration | Wall-clock gap since **same author's** previous commit (not model runtime). `>`6h marks idle gaps. `--` if first commit by that author |
-| SHA | Link to commit on GitHub |
+| Col | Meaning |
+|-----|---------|
+| `#` | Newest-first rank |
+| When | Author time, compact |
+| Who | `a2`/`a3`/`a4`/`human`/`swarm` |
+| Summary | Truncated task/paths |
+| `+/-` | Insertions/deletions (`git numstat`) |
+| Dur | Est. gap since same author's previous commit (`6h+` => idle) |
+| `...` | Link to full detail block on this page |
 
-### When you upgrade the app / finish a task
-
-1. Commit your work with a **descriptive subject** (avoid empty `agent-N: tK` if you can name the change).
-2. From the repo root, regenerate:
+### After you upgrade the app
 
 ```bash
+# 1) commit your feature/fix first
+git add -A && git commit -m "describe your change"
+
+# 2) regenerate changelog (from repo root)
 python scripts/generate_changelog.py
-# optional:
-python scripts/generate_changelog.py --page-size {page_size}
-```
+# optional: python scripts/generate_changelog.py --page-size {page_size}
 
-3. Stage and commit generated files only:
-
-```bash
+# 3) commit generated docs only
 git add CHANGELOG.md changelog/
-git commit -m "docs: refresh changelog after <your change> [skip ci]"
+git commit -m "docs: refresh changelog after <change> [skip ci]"
 ```
 
-4. **Do not**:
-   - Manually insert rows into the middle of a page (regen will overwrite)
-   - Delete `scripts/generate_changelog.py`
-   - Put full history only in `CHANGELOG.md` without pagination (GitHub UI becomes unusable)
-   - Change column meanings without updating this guide and the generator together
+**Do not:** insert rows by hand, delete this generator, or dump full history into one unpaginated table.
 
-### Optional flags
+### Generator flags
 
 ```text
---page-size N     Rows per page (default {page_size})
---repo-url URL    Base URL for commit links
---dry-run         Print plan only, write nothing
+--page-size N     Rows per page (default {page_size}, min 10)
+--repo-url URL    Commit link base
+--dry-run         Print plan only
 ```
-
-### Duration caveat
-
-Duration is **estimated** from commit timestamps, not token/inference time. Parallel agents and overnight gaps produce large durations; treat `>6h` as session boundaries, not continuous work.
 """
 
 
-def build(
-    page_size: int,
-    repo_url: str,
-    dry_run: bool = False,
-) -> None:
+def build(page_size: int, repo_url: str, dry_run: bool = False) -> None:
     entries = git_entries()
     attach_duration(entries)
     total = len(entries)
@@ -366,35 +407,54 @@ def build(
     total_ins = sum(e["ins"] for e in entries)
     total_del = sum(e["del"] for e in entries)
 
-    pages: list[list[dict]] = []
-    for p in range(total_pages):
-        start = p * page_size
-        pages.append(entries[start : start + page_size])
-
+    pages = [
+        entries[p * page_size : (p + 1) * page_size] for p in range(total_pages)
+    ]
     gen_at = datetime.now().astimezone().isoformat(timespec="seconds")
 
     if dry_run:
         print(f"commits={total} pages={total_pages} page_size={page_size}")
-        print(f"+LOC={total_ins} -LOC={total_del}")
         return
 
     out_dir = ROOT / "changelog"
-    # remove old page-*.md to avoid stale pages when history shrinks
     if out_dir.exists():
         for old in out_dir.glob("page-*.md"):
             old.unlink()
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # --- CHANGELOG.md hub + page 1 ---
+    # ----- Hub -----
     hub: list[str] = []
     hub.append("# Changelog")
     hub.append("")
     hub.append(
-        "Paginated activity log for **superconducters** (newest first). "
-        "Built mainly by **Ollama Swarm** (DeepSeek V4 Flash agents) with human maintainer commits."
+        "Paginated agent/human activity for **superconducters** "
+        "(newest first). Optimized for the GitHub README viewport: "
+        "**compact table** + **details below** + **TOC links**."
     )
     hub.append("")
-    hub.append(agent_guide_md(page_size))
+    hub.append("## Table of contents")
+    hub.append("")
+    hub.append("- [Agent instructions](#agent-instructions)")
+    hub.append("  - [Layout](#layout)")
+    hub.append("  - [Why the table looks like this](#why-the-table-looks-like-this)")
+    hub.append("  - [Table columns](#table-columns)")
+    hub.append("  - [After you upgrade the app](#after-you-upgrade-the-app)")
+    hub.append("  - [Generator flags](#generator-flags)")
+    hub.append("- [Summary](#summary)")
+    hub.append("- [Jump to page](#jump-to-page)")
+    hub.append("- [Activity log (page 1)](#activity-log)")
+    hub.append("- [Commit details (page 1)](#commit-details)")
+    hub.append("- [All pages index](changelog/README.md)")
+    for p in range(2, min(total_pages, 6) + 1):
+        hub.append(f"- [Page {p}](changelog/page-{p:02d}.md)")
+    if total_pages > 6:
+        hub.append(
+            f"- ... [Page {total_pages} (oldest)](changelog/page-{total_pages:02d}.md)"
+        )
+    hub.append("")
+    hub.append("---")
+    hub.append("")
+    hub.append(agent_guide(page_size))
     hub.append("")
     hub.append("---")
     hub.append("")
@@ -402,139 +462,149 @@ def build(
     hub.append("")
     hub.append("| Metric | Value |")
     hub.append("|--------|-------|")
-    hub.append(f"| Commits listed | {total} |")
-    hub.append(f"| Pages (`{page_size}` per page) | {total_pages} |")
-    hub.append(f"| Agent commits | {agent_n} |")
-    hub.append(f"| Human / other | {other_n} |")
-    hub.append(f"| Total +LOC | +{total_ins:,} |")
-    hub.append(f"| Total -LOC | -{total_del:,} |")
-    hub.append(f"| Net LOC | {total_ins - total_del:+,} |")
-    hub.append("| Order | Newest -> oldest |")
+    hub.append(f"| Commits | {total} |")
+    hub.append(f"| Pages | {total_pages} x {page_size}/page |")
+    hub.append(f"| Agents | {agent_n} |")
+    hub.append(f"| Human/other | {other_n} |")
+    hub.append(f"| +LOC / -LOC | +{total_ins:,} / -{total_del:,} |")
+    hub.append(f"| Net | {total_ins - total_del:+,} |")
     hub.append(f"| Generated | `{gen_at}` |")
     hub.append("")
-    hub.append("### Jump to page")
+    hub.append("## Jump to page")
     hub.append("")
-    jump = ["[1 (latest)](CHANGELOG.md#activity-log-page-1-latest)"]
+    jump = [f"[**1 (latest)**](#activity-log)"]
     for p in range(2, total_pages + 1):
         jump.append(f"[{p}](changelog/page-{p:02d}.md)")
     hub.append(" | ".join(jump))
     hub.append("")
-    hub.append(f"Full index: [`changelog/README.md`](changelog/README.md)")
+    hub.append(f"Index: [`changelog/README.md`](changelog/README.md)")
     hub.append("")
     hub.append("---")
     hub.append("")
-    hub.append("## Activity log (page 1, latest)")
+    hub.append("## Activity log")
     hub.append("")
     hub.append(nav_bar(1, total_pages, page_size, total, hub=True))
     hub.append("")
     hub.append(
-        "> Click a truncated **Task** / **What** cell (summary ends with `...`) to expand."
+        "Tip: keep the table collapsed in mind -- use the `...` column for full text "
+        "instead of hoping cells wrap. Prefer Next page over endless scroll."
     )
     hub.append("")
-    hub.extend(table_header())
-    hub.extend(table_rows(pages[0], start_index=1, repo_url=repo_url))
+    hub.extend(
+        table_block(pages[0], start_index=1, repo_url=repo_url, detail_prefix="")
+    )
     hub.append("")
     hub.append(nav_bar(1, total_pages, page_size, total, hub=True))
     hub.append("")
     hub.append("---")
     hub.append("")
     hub.append(
-        f"*Regenerate: `python scripts/generate_changelog.py` | "
-        f"page size {page_size} | {total} commits | {total_pages} pages*"
+        f"*Regen: `python scripts/generate_changelog.py` | "
+        f"{total} commits | {total_pages} pages | size {page_size}*"
     )
     hub.append("")
 
     (ROOT / "CHANGELOG.md").write_text("\n".join(hub), encoding="utf-8", newline="\n")
 
-    # --- additional pages ---
+    # ----- Other pages -----
     for p in range(2, total_pages + 1):
         start_index = (p - 1) * page_size + 1
         end_index = min(p * page_size, total)
         body: list[str] = []
-        body.append(f"# Changelog -- page {p} of {total_pages}")
+        body.append(f"# Changelog -- page {p}/{total_pages}")
         body.append("")
         body.append(
-            f"Older commits (global rows **{start_index}-{end_index}**, newest-first overall). "
-            f"Hub + agent guide: [`../CHANGELOG.md`](../CHANGELOG.md)."
+            f"Rows **{start_index}-{end_index}** (newest-first global order). "
+            f"[Hub + TOC](../CHANGELOG.md#table-of-contents) | "
+            f"[Agent instructions](../CHANGELOG.md#agent-instructions)"
         )
+        body.append("")
+        body.append("## On this page")
+        body.append("")
+        body.append("- [Activity table](#activity-log)")
+        body.append("- [Commit details](#commit-details)")
+        body.append(
+            f"- [Prev page]({page_href(p - 1, hub=False)})" if p > 1 else "- Prev"
+        )
+        if p < total_pages:
+            body.append(f"- [Next page]({page_href(p + 1, hub=False)})")
         body.append("")
         body.append(nav_bar(p, total_pages, page_size, total, hub=False))
         body.append("")
-        body.append(
-            "> Click truncated **Task** / **What** cells to expand full text."
-        )
+        body.append("## Activity log")
         body.append("")
-        body.extend(table_header())
         body.extend(
-            table_rows(pages[p - 1], start_index=start_index, repo_url=repo_url)
+            table_block(
+                pages[p - 1],
+                start_index=start_index,
+                repo_url=repo_url,
+                detail_prefix="",
+            )
         )
         body.append("")
         body.append(nav_bar(p, total_pages, page_size, total, hub=False))
         body.append("")
-        body.append(
-            f"*Generated `{gen_at}` | `python scripts/generate_changelog.py`*"
-        )
+        body.append(f"*Generated `{gen_at}`*")
         body.append("")
-        path = out_dir / f"page-{p:02d}.md"
-        path.write_text("\n".join(body), encoding="utf-8", newline="\n")
+        (out_dir / f"page-{p:02d}.md").write_text(
+            "\n".join(body), encoding="utf-8", newline="\n"
+        )
 
-    # --- changelog/README.md index ---
+    # ----- Index -----
     idx: list[str] = []
     idx.append("# Changelog pages")
     idx.append("")
     idx.append(
-        "Paginated views of repository activity. "
-        "**Start at the hub:** [`../CHANGELOG.md`](../CHANGELOG.md) (includes agent instructions)."
+        "**Start here:** [`../CHANGELOG.md`](../CHANGELOG.md#table-of-contents) "
+        "(TOC, agent guide, latest page)."
     )
     idx.append("")
     idx.append("## Pages")
     idx.append("")
-    idx.append("| Page | Commits (global #) | File |")
-    idx.append("|-----:|--------------------|------|")
+    idx.append("| Page | Rows | Link |")
+    idx.append("|-----:|------|------|")
     for p in range(1, total_pages + 1):
-        start_index = (p - 1) * page_size + 1
-        end_index = min(p * page_size, total)
+        a, b = (p - 1) * page_size + 1, min(p * page_size, total)
         if p == 1:
-            link = f"[CHANGELOG.md](../CHANGELOG.md#activity-log-page-1-latest)"
+            link = "[latest](../CHANGELOG.md#activity-log)"
             label = "1 (latest)"
         else:
             link = f"[page-{p:02d}.md](page-{p:02d}.md)"
             label = str(p)
-        idx.append(f"| {label} | {start_index}-{end_index} | {link} |")
+        idx.append(f"| {label} | {a}-{b} | {link} |")
     idx.append("")
-    idx.append("## Regenerate (for agents)")
+    idx.append("## Regenerate")
     idx.append("")
     idx.append("```bash")
     idx.append("python scripts/generate_changelog.py")
-    idx.append(f"python scripts/generate_changelog.py --page-size {page_size}")
     idx.append("git add CHANGELOG.md changelog/")
     idx.append('git commit -m "docs: refresh changelog [skip ci]"')
     idx.append("```")
     idx.append("")
-    idx.append(
-        "Do not hand-merge pages. Always re-run the generator after new commits."
-    )
-    idx.append("")
-    idx.append(f"*Generated `{gen_at}` | {total} commits | {total_pages} pages*")
+    idx.append(f"*{total} commits | {total_pages} pages | `{gen_at}`*")
     idx.append("")
     (out_dir / "README.md").write_text("\n".join(idx), encoding="utf-8", newline="\n")
 
     print(
-        f"Wrote CHANGELOG.md + changelog/ ({total_pages} pages, "
-        f"{page_size}/page, {total} commits)"
+        f"Wrote CHANGELOG.md + changelog/ "
+        f"({total_pages} pages, {page_size}/page, {total} commits)"
     )
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--page-size", type=int, default=DEFAULT_PAGE_SIZE)
-    parser.add_argument("--repo-url", default=DEFAULT_REPO)
-    parser.add_argument("--dry-run", action="store_true")
-    args = parser.parse_args(argv)
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--page-size", type=int, default=DEFAULT_PAGE_SIZE)
+    ap.add_argument("--repo-url", default=DEFAULT_REPO)
+    ap.add_argument("--dry-run", action="store_true")
+    args = ap.parse_args(argv)
     if args.page_size < 10:
         print("page-size must be >= 10", file=sys.stderr)
         return 2
-    build(page_size=args.page_size, repo_url=args.repo_url.rstrip("/"), dry_run=args.dry_run)
+    build(
+        page_size=args.page_size,
+        repo_url=args.repo_url.rstrip("/"),
+        dry_run=args.dry_run,
+    )
     return 0
 
 
