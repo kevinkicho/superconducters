@@ -53,6 +53,41 @@ This document outlines a systematic approach to discover and manufacture room-te
   - Wang, X., Zhang, C., Wang, Z., Liu, H., Lv, J., Wang, H., E, W., & Ma, Y. (2025). "Deep-learning discovery of 144 high-Tc ternary hydride superconductors." arXiv:2502.16558. URL: https://arxiv.org/abs/2502.16558
 - **Critical Analysis:** These three advances represent major milestones. The nickelate single-crystal work (96 K under pressure) solves the ambient-pressure growth bottleneck for nickelates, while the thin-film work (45 K at ambient pressure) demonstrates that strain engineering can stabilize superconductivity without external pressure. The deep-learning screening of 144 ternary hydrides (129 novel) shows that AI-driven structure prediction can dramatically expand the candidate space beyond binary systems. Together, these results validate the computational-experimental feedback loop and provide concrete targets for synthesis and characterization.
 
+## 2.7 Validated Workflows: PNAS 2026 Programmatic Approach and SuperC Consortium
+
+### 2.7.1 PNAS 2026 Programmatic Approach — Prediction Challenge and Engineering Challenge
+- **Source:** Prasankumar, R.P., Pickett, W., Heil, C. et al. (2026). "The path to room-temperature superconductivity: A programmatic approach." *Proceedings of the National Academy of Sciences*, 123(11), e2520324123. URL: https://www.pnas.org/doi/10.1073/pnas.2520324123
+- **Overview:** An international team of 16 authors (including Warren Pickett, UC Davis; Christoph Heil, TU Graz; and Rohit Prasankumar, LANL) published a perspectives article in PNAS (March 2026) laying out a systematic, programmatic roadmap to room-temperature superconductivity. The paper argues that there are no fundamental physical laws preventing room-temperature superconductivity and that the field must transition from an Edisonian trial-and-error approach to a coordinated, multi-disciplinary strategy.
+- **The Prediction Challenge:** The first grand challenge is to significantly improve computer-aided models so they can predict not only whether a material can become superconducting, but also whether it can actually be synthesized. Key elements include:
+  - Harnessing leading-edge computational modeling (machine learning, ab initio DFT, crystal structure prediction) to screen vast chemical spaces.
+  - Combining thermodynamic stability screening with Tc prediction to prioritize synthesizable candidates.
+  - Creating a bidirectional feedback loop between theorists and experimentalists, where experimental failures refine computational models.
+  - Building materials databases that can accurately predict properties like Tc and formation energies, along with viable synthesis recipes.
+- **The Engineering Challenge:** The second grand challenge is the purposive manipulation of materials through external "knobs" to artificially generate or amplify superconducting states. Key elements include:
+  - Pressure/strain engineering (including the Pressure-Quench Protocol, Section 19) to retain high-pressure phases at ambient conditions.
+  - Doping as a tunable variable in computational models, allowing theorists to simulate doping effects before synthesis.
+  - Nanostructuring and ultrashort light pulses to engineer superconducting properties.
+  - Treating potential superconductors as "quantum metamaterials" — designed material systems where properties emerge from nanoscale structure rather than composition alone.
+- **Validation Context:** The PNAS perspective was published alongside an experimental breakthrough (Deng et al., same issue) demonstrating 151 K ambient-pressure superconductivity in Hg-1223 via pressure quenching, exemplifying the Engineering Challenge in action. The paper calls for a global, coordinated effort combining theory, simulation, AI, and experiment.
+
+### 2.7.2 SuperC Consortium — ML-Guided Discovery of Kagome Superconductors
+- **Source:** SuperC consortium, led by Prof. Päivi Törmä, Aalto University. Published in *Physical Review Research* (2026). URL: https://www.aalto.fi/en/news/researchers-identify-new-superconductors-unlocking-process-that-could-yield-thousands-more
+- **Overview:** The SuperC consortium, launched in 2023 with the goal of discovering a room-temperature superconductor by 2033, demonstrated the first end-to-end machine-learning-guided discovery of new superconductors. The consortium identified and experimentally confirmed two previously unknown kagome-lattice superconductors: YRu₃B₂ and LuRu₃B₂.
+- **Methodology — ML-Guided Screening Pipeline:**
+  1. **Machine-learning pre-screening:** A unique algorithm was used to narrow down promising elemental combinations from a practically infinite space of possible materials, filtering candidates based on electronic structure features correlated with superconductivity.
+  2. **Targeted quantum-geometry calculations:** Promising candidates were subjected to detailed first-principles calculations, focusing on flat-band physics in kagome lattices — a quantum-geometric origin of superconductivity identified by the Törmä group.
+  3. **Experimental synthesis:** Collaborators at Rice University (Prof. Emilia Morosan) synthesized the predicted compounds from raw elements.
+  4. **Characterization:** The materials were confirmed to be superconductors (Tc < 1 K) through resistivity and magnetic susceptibility measurements.
+- **Key Innovation — Quantum Geometry + ML:** The SuperC approach uniquely combines machine-learning-based pre-screening with quantum-geometric analysis of flat-band structures. This is a departure from traditional electron-phonon coupling screening, targeting instead the kagome lattice geometry that gives rise to flat electronic bands and enhanced superconducting correlations.
+- **Validation as a Workflow:** This proof-of-concept demonstrates that ML-guided screening can successfully identify new superconductors that would be missed by serendipitous discovery. The consortium estimates that this approach can scale to screen billions of candidates, dramatically accelerating the path to room-temperature superconductivity.
+
+### 2.7.3 Integration with Discovery Pipeline
+Both the PNAS programmatic approach and the SuperC consortium's ML-guided methodology validate and inform the discovery strategy outlined in this document:
+- **Prediction Challenge alignment:** Our computational screening pipeline (Sections 7, 15) directly addresses the Prediction Challenge by combining ML surrogate models (GNN, Section 11) with DFT-based Tc prediction and thermodynamic stability screening.
+- **Engineering Challenge alignment:** Our experimental feedback loop (Section 4) and manufacturing pathways (PQP, Section 19; GAE, Section 22) directly address the Engineering Challenge by developing techniques to stabilize and enhance superconducting states.
+- **SuperC methodology alignment:** Our active learning pipeline (Sections 10, 17) and candidate generation workflow (Section 12) mirror the SuperC approach of ML pre-screening followed by targeted DFT calculations and experimental validation.
+- **Bidirectional feedback:** Both the PNAS roadmap and the SuperC consortium emphasize the critical importance of a closed-loop feedback system where experimental results (including failures) continuously refine computational models — a principle embedded throughout our pipeline (Sections 4.4, 14.3).
+
 ## 3. Systematic Approach Using Machine Learning and High-Throughput Screening
 
 ### 3.1 Data Curation
