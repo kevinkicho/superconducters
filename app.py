@@ -119,7 +119,8 @@ def batch_predict(req: BatchPredictRequest, api_key: str = Header(None)):
         try:
             predicted_tc = eliashberg_tc(formula)
             confidence = 0.7
-        except Exception:
+        except Exception as e:
+            logger.error(f"Eliashberg Tc prediction failed for {formula}: {e}")
             predicted_tc = 0.0
             confidence = 0.0
         predictions.append({

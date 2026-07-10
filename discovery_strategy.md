@@ -19,6 +19,7 @@ This document outlines a systematic approach to discover and manufacture room-te
   - Drozdov et al., "Conventional superconductivity at 203 kelvin at high pressures in the sulfur hydride system," *Nature* 2015, 525, 73–76. URL: https://www.nature.com/articles/nature14964
   - Drozdov et al., "Superconductivity at 250 K in lanthanum hydride," *Nature* 2019, 569, 528–531. URL: https://www.nature.com/articles/s41586-019-1201-8
   - *Reviews of Modern Physics* (2021) – "Ab initio theory of superconductivity: from phonons to spin fluctuations" – comprehensive review of DFT for Tc prediction. URL: https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.93.025008
+  - Du, F., Drozdov, A., Minkov, V. et al. (2025). "Superconducting gap of H₃S measured by tunnelling spectroscopy." *Nature*, 641, 8063. URL: https://www.nature.com/articles/s41586-025-08895-2 – First direct microscopic measurement of the superconducting gap in H₃S via planar electron tunneling spectroscopy under high pressure. Reports 2Δ ≈ 60 meV (H₃S) and 44 meV (D₃S), confirming a fully gapped s-wave structure and providing definitive evidence of phonon-mediated pairing in hydride superconductors.
 - **Critical Analysis:** All confirmed high-Tc hydrides require >100 GPa. The "chemical pre-compression" concept (clathrate structures) offers a path to lower pressures, but experimental realization remains challenging. DFT-based methods work well for conventional superconductors but fail for strongly correlated systems.
 
 ### 2.3 Machine Learning and High-Throughput Screening for Superconductor Discovery
@@ -39,7 +40,9 @@ This document outlines a systematic approach to discover and manufacture room-te
 
 ### 2.5 Theoretical Approaches – Beyond BCS and Unconventional Mechanisms
 - **Search:** `unconventional superconductivity room temperature theory BCS beyond electron-phonon coupling`
-- **Key Source:** Norman et al., "Unconventional superconductivity in cuprates and iron-based superconductors," *Reviews of Modern Physics* 2020, 92, 025002. URL: https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.92.025002
+- **Key Sources:**
+  - Norman et al., "Unconventional superconductivity in cuprates and iron-based superconductors," *Reviews of Modern Physics* 2020, 92, 025002. URL: https://journals.aps.org/rmp/abstract/10.1103/RevModPhys.92.025002
+  - Fujita, K., Nakayama, K., Fujiki, Y. et al. (2025). "Extracting Causality from Spectroscopy." *Scientific Reports*, 15, 29687. DOI: 10.1038/s41598-025-29687-8. URL: https://www.nature.com/articles/s41598-025-29687-8 – Tohoku University and Fujitsu applied causal AI to ARPES measurement data of the kagome superconductor CsV₃Sb₅, discovering that the chemical bonding state of Cs atoms strongly influences the electronic state of the V₃Sb₅ layer responsible for superconductivity. This demonstrates a new paradigm: AI-driven causal discovery can reveal pairing mechanisms from experimental data without prior theoretical assumptions.
 - **Critical Analysis:** While BCS theory explains conventional hydrides, cuprates and iron-based superconductors require different mechanisms (e.g., spin fluctuations). Room-temperature superconductivity may require a hybrid or entirely new mechanism.
 
 ### 2.6 Recent Advances in Nickelate and Hydride Superconductors (2025-2026)
@@ -86,6 +89,7 @@ This document outlines a systematic approach to discover and manufacture room-te
 - Characterize structure (XRD, TEM) and composition (EDS, XPS).
 - For high-pressure samples, use synchrotron-based techniques (diamond anvil cell, X-ray diffraction).
 - Perform specific heat and Hall effect measurements to confirm bulk superconductivity.
+- For hydride samples, perform planar electron tunneling spectroscopy under high pressure to directly measure the superconducting gap (2Δ). Du et al. (Nature 641, 8063, 2025) demonstrated this technique on H₃S, measuring 2Δ ≈ 60 meV and confirming a fully gapped s-wave structure — the first direct microscopic evidence of phonon-mediated pairing in hydride superconductors. This technique should be extended to all candidate hydrides to validate the pairing mechanism.
 - Publish negative results to avoid duplication.
 
 ### 4.4 Learn Phase
@@ -643,3 +647,40 @@ The Sc-induced gap unification mechanism is incorporated into the candidate gene
 - Wang, Z., Zhao, W., Ma, Y., Liu, H., & Ma, Y. (2026). "Isotropic Superconductivity in Room-temperature Superconductor LaSc₂H₂₄." arXiv:2601.01398. URL: https://arxiv.org/abs/2601.01398
 - Wang, Z. et al. (2024). "Predicted hot superconductivity in LaSc₂H₂₄ under pressure." *Proceedings of the National Academy of Sciences*. URL: https://www.pnas.org/doi/10.1073/pnas.2401840121
 - Research Square preprint: "Room-Temperature Superconductivity at 298 K in Ternary La-Sc-H System at High-pressure Conditions." URL: https://assets-eu.researchsquare.com/files/rs-7755852/v1/
+
+
+## 22. Gigantic-Oxidative Atomic-Layer-by-Layer Epitaxy (GAE) — A Thin-Film Manufacturing Pathway for Ambient-Pressure Superconductors
+
+### 22.1 Overview
+Gigantic-Oxidative Atomic-Layer-by-Layer Epitaxy (GAE), also referred to as GOALL-Epitaxy, is a thin-film growth technique developed by Zhou, Lv, Wang, Chen et al. (2025) at Southern University of Science and Technology (SUSTech) that enables the synthesis of ambient-pressure superconducting nickelate thin films. GAE operates in an extreme non-equilibrium oxidation regime, allowing precise layer-by-layer control of oxygen stoichiometry and epitaxial stabilization of metastable phases that cannot be achieved by conventional pulsed laser deposition or molecular beam epitaxy. This technique opens a new manufacturing pathway for ambient-pressure superconductors, with potential applicability to hydride thin films.
+
+### 22.2 The (La,Pr)₂Ni₂O₇ Demonstration
+In their landmark study (Zhou, Lv, Wang et al., *Nature* 640, 8059, 2025; arXiv:2412.16622), the team used GAE to grow three-unit-cell-thick La₂.₈₅Pr₀.₁₅Ni₂O₇ pure-phase single-crystal epitaxial thin films on SrLaAlO₄ substrates. Key results:
+- **Ambient-pressure superconductivity onset:** Tc_onset = 45 K, exceeding the McMillan limit (40 K) for the first time in a nickelate at ambient pressure.
+- **BKT transition:** The zero-resistance state follows a Berezinskii-Kosterlitz-Thouless (BKT)-like behavior with T_BKT = 9 K, and Meissner diamagnetism is observed at T_M = 8.5 K.
+- **Strain engineering:** Coherent epitaxial compressive strain of ~2% in the NiO₂ planes (relative to bulk) stabilizes the tetragonal phase and enhances superconductivity.
+- **Layer precision:** The GAE method achieves atomic-level control over the number of perovskite layers (3 UC), enabling the isolation of the bilayer Ruddlesden-Popper phase without impurity intergrowths.
+
+### 22.3 Mechanism of GAE
+GAE exploits an extreme oxidative environment during atomic-layer-by-layer deposition, pushing the growth into a non-equilibrium regime where:
+- **Oxygen fugacity:** The oxygen partial pressure is precisely modulated at each atomic layer to achieve the exact oxygen stoichiometry required for the superconducting phase, avoiding the oxygen vacancies that plague conventional growth methods.
+- **Substrate templating:** The SrLaAlO₄ substrate provides a lattice-matched template that imposes compressive strain, stabilizing the tetragonal structure and suppressing competing phases (e.g., the 1313 superstructure).
+- **Interfacial buffering:** A monolayer nickelate buffer layer at the film-substrate interface accommodates the lattice mismatch and prevents interfacial reactions.
+
+### 22.4 Potential for Hydride Thin-Film Manufacturing
+While GAE was developed for oxide nickelates, the underlying principles are directly transferable to hydride thin-film manufacturing:
+- **Atomic-layer control:** GAE's layer-by-layer precision could be adapted to deposit metal-hydride layers with controlled hydrogen stoichiometry, using metal-organic precursors and hydrogen plasma as the reactive species.
+- **Epitaxial stabilization:** Compressive strain from a lattice-matched substrate could stabilize metastable hydride phases (e.g., clathrate structures) at ambient pressure, analogous to the nickelate case.
+- **Non-equilibrium conditions:** The extreme non-equilibrium regime of GAE could enable the incorporation of hydrogen at concentrations exceeding thermodynamic solubility limits, accessing hydrogen-rich phases that are otherwise only stable under high pressure.
+- **Integration with PQP:** GAE-grown thin films could be subjected to the Pressure-Quench Protocol (Section 19) to further enhance Tc, or used as seed layers for bulk hydride synthesis.
+
+### 22.5 Integration with Discovery Pipeline
+GAE is incorporated into the experimental synthesis queue (Section 14) as a thin-film manufacturing capability:
+- **Nickelate candidates:** GAE is the primary method for synthesizing ambient-pressure nickelate superconductors identified by the screening pipeline (Section 15).
+- **Hydride thin films:** A dedicated GAE-hydride module is under development, adapting the technique to hydrogen-rich systems using metal-hydride precursors and hydrogen plasma.
+- **Combinatorial screening:** GAE can be combined with composition-spread techniques to rapidly screen dopant concentrations (e.g., Pr fraction in (La,Pr)₂Ni₂O₇) and strain states (via substrate selection).
+
+### 22.6 Key References
+- Zhou, G., Lv, W., Wang, H. et al. (2025). "Ambient-pressure superconductivity onset above 40 K in (La,Pr)₂Ni₂O₇ epitaxial thin films." *Nature*, 640, 8059, 641–646. URL: https://www.nature.com/articles/s41586-025-08755-z | arXiv: https://arxiv.org/abs/2412.16622
+- Zhou, G. et al. (2025). "Superconductivity onset above 60 K in ambient-pressure nickelate films." *National Science Review*, 13, nwag151. URL: https://academic.oup.com/nsr/article/13/9/nwag151/8512895
+- Chen, Z. et al. (2025). "Gigantic-oxidative atomic-layer-by-layer epitaxy of nickelate superconductors." SUSTech technical report.

@@ -273,7 +273,7 @@ def eliashberg_tc(formula: str) -> float:
     Estimates electron-phonon coupling lambda from average valence and Debye temperature.
     """
     features = extract_features(formula)
-    avg_valence, avg_debye = features
+    avg_valence, avg_debye, avg_mass = features
     # Estimate lambda: simple heuristic based on valence electrons
     lambda_ep = 0.5 + 0.1 * (avg_valence - 4.0)
     # Coulomb pseudopotential (typical value for simple metals)
@@ -296,7 +296,7 @@ def mcmillan_tc(formula: str) -> float:
     Uses Debye temperature and estimated electron-phonon coupling lambda.
     """
     features = extract_features(formula)
-    avg_valence, avg_debye = features
+    avg_valence, avg_debye, avg_mass = features
     # Estimate lambda: simple heuristic based on valence electrons
     lambda_ep = 0.5 + 0.1 * (avg_valence - 4.0)
     # Coulomb pseudopotential (typical value for simple metals)
@@ -369,7 +369,10 @@ def main():
             print(f"Predicted Tc for {formula}:")
             print(f"  BCS (McMillan): {tc_bcs:.2f} K")
             print(f"  Eliashberg (Allen-Dynes): {tc_eliashberg:.2f} K")
-            print(f"  Machine Learning (Linear Regression): {tc_ml_linear:.2f} K")
+            if tc_ml_linear is not None:
+                print(f"  Machine Learning (Linear Regression): {tc_ml_linear:.2f} K")
+            else:
+                print(f"  Machine Learning (Linear Regression): N/A (not in database)")
             print(f"  Machine Learning (Random Forest): {tc_ml_rf:.2f} K")
         except Exception as e:
             print(f"Error for {formula}: {e}", file=sys.stderr)
@@ -594,48 +597,6 @@ def screen_candidates(candidates: List[str], model_path: str = None, use_causal:
         results.sort(key=lambda x: x.get('predicted_tc', -1), reverse=True)
 
     return results
-
-
-def train_gp_model():
-    """
-    Train a Gaussian Process regressor on the embedded database.
-    Returns the trained GP model and the feature scaler (if any).
-    """
-    from sklearn.preprocessing import StandardScaler
-    data = load_data()
-    X = []
-    y = []
-    for entry in data:
-        formula = entry.get('composition', entry.get('name', ''))
-        if not formula:
-            continue
-        try:
-            avg_val = average_valence(formula)
-            avg_deb = average_debye(formula)
-            avg_mass = average_atomic_mass(formula)
-            num_elements = len(set(re.findall(r'[A-Z][a-z]*', formula)))
-            tc = entry.get('Tc', None)
-            if tc is None:
-                continue
-            X.append([avg_val, avg_deb, avg_mass, num_elements])
-            y.append(tc)
-        except:
-            continue
-    if len(X) < 5:
-        raise ValueError("Not enough data to train GP model")
-    X = np.array(X)
-    y = np.array(y)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-    kernel = C(1.0, (1e-3, 1e3)) * RBF(1.0, (1e-2, 1e2))
-    gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10, alpha=1e-6, normalize_y=True)
-    gp.fit(X_scaled, y)
-    print(f"GP model trained. Kernel: {gp.kernel_}")
-    model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'gp_model.pkl')
-    os.makedirs(os.path.dirname(model_path), exist_ok=True)
-    joblib.dump({'gp': gp, 'scaler': scaler}, model_path)
-    print(f"GP model saved to {model_path}")
-    return gp, scaler
 
 
 def predict_with_uncertainty(formula: str, gp_model_path: str = None) -> dict:
@@ -905,41 +866,6 @@ def set_model(model_type: str):
     _current_model = model_type
     print(f"Model set to {model_type}")
 
-def structure_to_graph(structure: Structure) -> Data:
-    """Convert a pymatgen Structure to a PyTorch Geometric graph.
-
-    Args:
-        structure: pymatgen Structure object.
-
-    Returns:
-        Data object with node features (valence, debye temp, atomic mass)
-        and edge indices based on Voronoi neighbor analysis.
-    """
-    # Node features: valence, debye temp, atomic mass (same as formula_to_graph)
-    node_features = []
-    for site in structure.sites:
-        elem = site.specie.symbol
-        valence = VALENCE.get(elem, 0)
-        debye = DEBYE_TEMP.get(elem, 100.0)
-        mass = ATOMIC_MASS.get(elem, 50.0)
-        node_features.append([valence, debye, mass])
-    x = torch.tensor(node_features, dtype=torch.float)
-    # Edge indices using VoronoiNN
-    vnn = VoronoiNN()
-    edge_index = [[], []]
-    for i, site in enumerate(structure.sites):
-        neighbors = vnn.get_nn_info(structure, i)
-        for neighbor in neighbors:
-            j = neighbor['site_index']
-            if i != j:
-                edge_index[0].append(i)
-                edge_index[1].append(j)
-    # If no edges (single atom), add self-loop
-    if len(edge_index[0]) == 0:
-        edge_index = [[0], [0]]
-    edge_index = torch.tensor(edge_index, dtype=torch.long)
-    return Data(x=x, edge_index=edge_index)
-
 def predict_tc_mcmillan_allen_dynes(theta_D: float, lambda_: float, mu_star: float = 0.13, omega_log: float = None) -> float:
     """
     Predict Tc using the McMillan-Allen-Dynes equation.
@@ -1031,7 +957,9 @@ def main_screening():
     predictions = []
     for formula in candidates:
         feats = compute_features(formula)
-        tc_mean, tc_std = predict_with_uncertainty(model, [feats])
+        tree_preds = np.array([tree.predict([feats])[0] for tree in model.estimators_])
+        tc_mean = np.mean(tree_preds)
+        tc_std = np.std(tree_preds)
         predictions.append({'formula': formula, 'predicted_tc_K': round(tc_mean, 2), 'uncertainty_K': round(tc_std, 2)})
         print(f"{formula}: {tc_mean:.2f} K ± {tc_std:.2f} K")
 
@@ -1044,29 +972,6 @@ def main_screening():
 
 
 
-
-
-def generate_candidates(num_candidates=10):
-    """Generate candidate A15 materials for prediction."""
-    candidates = [
-        'Nb3Sn', 'Nb3Al', 'Nb3Ge', 'V3Si', 'V3Ga',
-        'Nb3Ga', 'Nb3In', 'Mo3Os', 'Mo3Ir', 'Ta3Sn',
-        'Nb3Sb', 'V3Ge', 'Ta3Ge', 'Nb3Pt', 'V3Pt',
-    ]
-    return candidates[:num_candidates]
-
-
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser(description='Predict Tc for superconducting materials.')
-    parser.add_argument('--candidates', type=int, default=10, help='Number of candidate materials to generate')
-    parser.add_argument('--output', type=str, help='Output JSON file for predictions')
-    parser.add_argument('--pinn', action='store_true', help='Use BCSPINN model instead of Random Forest')
-    args = parser.parse_args()
-    if args.pinn:
-        main_pinn(args)
-    else:
-        main_screening()
 
 
 def compute_tc_allen_dynes(lambda_ep, omega_log, mu_star):
@@ -1090,17 +995,6 @@ def compute_tc_allen_dynes(lambda_ep, omega_log, mu_star):
     exponent = -numerator / denominator
     tc = (omega_log / 1.2) * math.exp(exponent)
     return tc
-
-
-def predict_with_uncertainty(model, X):
-    """
-    Predict target and uncertainty (standard deviation) using a Random Forest model.
-    Uncertainty is estimated as the standard deviation of predictions across all trees.
-    """
-    tree_preds = np.array([tree.predict(X) for tree in model.estimators_])
-    mean = np.mean(tree_preds, axis=0)
-    std = np.std(tree_preds, axis=0)
-    return mean[0], std[0]
 
 
 # Hydride database for PINN training (Tc values from literature)
@@ -1820,11 +1714,14 @@ def benchmark():
 
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Predict Tc for superconducting materials.')
     parser.add_argument('--model', choices=['rf', 'gp'], default='rf', help='Model type: rf (Random Forest) or gp (Gaussian Process)')
     parser.add_argument('--benchmark', action='store_true', help='Run benchmark instead of training')
     parser.add_argument('--predict', type=str, help='Predict Tc for a composition (e.g., Nb3Sn). Requires trained model.')
     parser.add_argument('--composition', type=str, help='Alternative to --predict, same usage.')
+    parser.add_argument('--candidates', type=int, default=10, help='Number of candidate materials to generate')
+    parser.add_argument('--output', type=str, help='Output JSON file for predictions')
+    parser.add_argument('--pinn', action='store_true', help='Use BCSPINN model instead of Random Forest')
     args = parser.parse_args()
     if args.benchmark:
         benchmark()
@@ -1863,6 +1760,8 @@ if __name__ == '__main__':
             except:
                 print(f"Predicted Tc: {y_pred:.2f} K")
                 print("Confidence interval not available for Random Forest without tree predictions.")
+    elif args.pinn:
+        main_pinn(args)
     elif args.model == 'gp':
         train_gp_model()
     else:

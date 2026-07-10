@@ -2485,5 +2485,131 @@
       "prediction_method": "first-principles + Eliashberg",
       "confidence_score": 0.85
     }
+  },
+  {
+    "name": "Mg4Pt3H6",
+    "Tc": 2.9,
+    "pressure": 0,
+    "structure": "bcc, Im-3m",
+    "reference": "Lu et al., arXiv:2505.22546 (2025)",
+    "doi": "10.48550/arXiv.2505.22546",
+    "synthesis_method": "laser-heated diamond anvil cell, quenched to ambient",
+    "synthesis_parameters": "pressure 8-25 GPa, temperature 2000 K, recovered to ambient",
+    "lambda": null,
+    "omega_log": null,
+    "mu_star": null,
+    "Tc_error": 0.5,
+    "pressure_error": 0,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": [
+        "Mg",
+        "Pt",
+        "H2"
+      ],
+      "sample_quality": "polycrystalline, recovered to ambient"
+    },
+    "external_database": {
+      "source_database": "arXiv",
+      "database_id": "2505.22546",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
+  },
+  {
+    "name": "Li2NaH17",
+    "Tc": 340,
+    "pressure": 300,
+    "structure": "clathrate, Fd-3m (type-II clathrate)",
+    "reference": "An et al., arXiv:2303.09805 (2023)",
+    "doi": "10.48550/arXiv.2303.09805",
+    "synthesis_method": "predicted (high-throughput screening + structural search)",
+    "synthesis_parameters": "pressure 300 GPa (theoretical)",
+    "lambda": null,
+    "omega_log": null,
+    "mu_star": null,
+    "Tc_error": 20,
+    "pressure_error": 10,
+    "measurement_method": "predicted (Eliashberg)",
+    "composition_uncertainty": "predicted, not yet experimentally synthesized",
+    "synthesis_conditions": {
+      "precursor_materials": [
+        "Li",
+        "Na",
+        "H2"
+      ],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "arXiv",
+      "database_id": "2303.09805",
+      "predicted_Tc": 340,
+      "prediction_method": "first-principles + Eliashberg",
+      "confidence_score": 0.7
+    }
+  },
+  {
+    "name": "LiNa3H23",
+    "Tc": 310,
+    "pressure": 350,
+    "structure": "clathrate, Pm-3n (type-I clathrate)",
+    "reference": "An et al., arXiv:2303.09805 (2023)",
+    "doi": "10.48550/arXiv.2303.09805",
+    "synthesis_method": "predicted (high-throughput screening + structural search)",
+    "synthesis_parameters": "pressure 350 GPa (theoretical)",
+    "lambda": null,
+    "omega_log": null,
+    "mu_star": null,
+    "Tc_error": 20,
+    "pressure_error": 10,
+    "measurement_method": "predicted (Eliashberg)",
+    "composition_uncertainty": "predicted, not yet experimentally synthesized",
+    "synthesis_conditions": {
+      "precursor_materials": [
+        "Li",
+        "Na",
+        "H2"
+      ],
+      "sample_quality": "predicted"
+    },
+    "external_database": {
+      "source_database": "arXiv",
+      "database_id": "2303.09805",
+      "predicted_Tc": 310,
+      "prediction_method": "first-principles + Eliashberg",
+      "confidence_score": 0.7
+    }
+  },
+  {
+    "name": "Hg-1223 (PQP)",
+    "Tc": 151,
+    "pressure": 0,
+    "structure": "tetragonal, P4/mmm",
+    "reference": "Deng et al., PNAS 123, e2536178123 (2026)",
+    "doi": "10.1073/pnas.2536178123",
+    "synthesis_method": "pressure-quench protocol (PQP)",
+    "synthesis_parameters": "pressure 10-30 GPa, quenched to ambient at 4.2 K",
+    "lambda": null,
+    "omega_log": null,
+    "mu_star": null,
+    "Tc_error": 5,
+    "pressure_error": 0,
+    "measurement_method": "four-probe resistance",
+    "composition_uncertainty": null,
+    "synthesis_conditions": {
+      "precursor_materials": [
+        "HgBa2Ca2Cu3O8+delta"
+      ],
+      "sample_quality": "polycrystalline, pressure-quenched metastable phase"
+    },
+    "external_database": {
+      "source_database": "PNAS",
+      "database_id": "Hg-1223-PQP-2026",
+      "predicted_Tc": null,
+      "prediction_method": null,
+      "confidence_score": null
+    }
   }
 ]

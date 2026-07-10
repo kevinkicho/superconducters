@@ -11,7 +11,10 @@
 - **Ternary hydride predictions**: Computational searches identify Li2MgH4 (predicted Tc ~200 K at 200 GPa) and other systems. Doping with light elements (C, N, O) enhances Tc by modifying electronic structure. [Source](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.107.134512)
 - **LaSc₂H₂₄ (lanthanum-scandium hydride)**: First reproducible room-temperature superconductor with Tc 271–298 K at 195–266 GPa (Song, Ma, Wang et al., arXiv:2510.01273, 2025). Hexagonal clathrate structure; Sc substitution unifies the electronic gap, stabilizing the clathrate framework. 13 reproducible runs confirm zero resistance and perfect diamagnetism. [Source](https://arxiv.org/abs/2510.01273)
 
-### Doped Cuprates
+### Alkali-Metal Clathrate Hydrides (Li-Na-H)
+- **Li₂NaH₁₇**: Predicted Tc ~340 K at 300 GPa (An, Duan et al., arXiv:2303.09805, 2023; Adv. Funct. Mater. 2025). Uses only abundant alkali metals (Li, Na); thermodynamically stable at synthesis conditions — no rapid quench needed. The clathrate framework is built from H-cages with mixed Li/Na occupancy at the host sites, enabling strong electron-phonon coupling via light-mass cations.
+- **LiNa₃H₂₃**: Predicted Tc ~310 K at 350 GPa (An, Duan et al., 2023/2025). Also composed solely of Li and Na; thermodynamically stable. Slightly lower Tc than Li₂NaH₁₇ but uses even more abundant Na, potentially lowering raw-material cost.
+- **Manufacturing advantage**: Both compounds are predicted to be thermodynamically stable at their synthesis pressure, meaning they do not require rapid quenching to retain the superconducting phase. This is a decisive advantage over metastable hydrides (LaH₁₀, YH₁₀, LaSc₂H₂₄) that must be pressure-quenched. Combined with the low cost and abundance of Li and Na, Li₂NaH₁₇ and LiNa₃H₂₃ represent the most promising targets for scalable, low-cost room-temperature superconductor manufacturing. [Source](https://arxiv.org/abs/2303.09805)### Doped Cuprates
 - **Bilayer cuprates**: Maximum Tc >150 K under high pressure (Science, 2021). Hole and electron doping via chemical substitution and oxygen stoichiometry control. [Source](https://www.science.org/doi/10.1126/science.abh2273)
 - **Doping strategies**: Review of chemical substitution in cuprates (Annual Review of Condensed Matter Physics). [Source](https://www.annualreviews.org/doi/10.1146/annurev-conmatphys-031620-104207)
 
@@ -28,7 +31,13 @@
 
 ## 2. Physical Mechanisms
 
-### Electron-Phonon Coupling (Hydrides)
+### Conventional Phonon-Mediated (BCS) Mechanism
+- **Hydride superconductors** achieve high Tc via strong electron-phonon coupling and high Debye temperature from light hydrogen atoms. The BCS theory extended to strong coupling (Eliashberg) predicts Tc proportional to the electron-phonon coupling constant λ and the logarithmic average phonon frequency ω_log. Hydrogen-rich compounds under high pressure exhibit λ > 2 and ω_log ~ 1000 K, enabling Tc > 200 K.
+- **Key experimental evidence:**
+  - H₃S: Tc ~203 K at 155 GPa (Drozdov et al., *Nature* 525, 73, 2015).
+  - LaH₁₀: Tc ~250–260 K at 170–200 GPa (Somayazulu et al., *PRL* 122, 027001, 2019; Drozdov et al., *Nature* 569, 528, 2019).
+  - Carbonaceous sulfur hydride (C-S-H): Tc ~287.7 K at 267 GPa (Snider et al., *Nature* 586, 373, 2020; note retraction concerns).
+- **Isotope effect:** Replacement of H with D shifts Tc, confirming phonon-mediated pairing.
 - Strong electron-phonon coupling drives high Tc in hydrides under pressure. Eliashberg formalism and McMillan-Allen-Dynes equation used to estimate Tc. [Source](https://arxiv.org/abs/2301.12345) (arXiv review)
 - Doping with light elements increases density of states at Fermi level, enhancing coupling.
 
@@ -39,6 +48,27 @@
 ### Unconventional Pairing
 - Nickelates exhibit similar antiferromagnetic spin fluctuations, suggesting a common mechanism with cuprates. [Source](https://www.science.org/doi/10.1126/science.abb7554)
 - Open question: whether hydrides and cuprates share any underlying physics or are fundamentally different.
+
+### Excitonic Mechanism
+- Proposed by Little (1964) and Ginzburg (1965): pairing via virtual excitons in organic polymers or layered materials. Excitonic pairing can in principle yield higher Tc than phonon-mediated because exciton energies are larger than phonon energies.
+- **Excitonic pairing formula (Little, 1964):** The critical temperature follows a BCS-like form: **T_c ~ ω_exc · exp(-1/λ_exc)**, where ω_exc is the characteristic exciton frequency (~0.1–1 eV, i.e., 10³–10⁴ K) and λ_exc is the dimensionless exciton-mediated coupling constant. Because ω_exc >> ω_D (phonon frequencies ~10–100 meV), the prefactor is dramatically larger than in conventional BCS, potentially enabling room-temperature superconductivity even for modest λ_exc. [Source: Little, *Phys. Rev.* 134, A1416 (1964); URL: https://link.aps.org/doi/10.1103/PhysRev.134.A1416]
+- **Candidate systems:**
+  - Doped semiconductors (e.g., SrTiO₃, CuCl) – Tc limited to ~100 K.
+  - Organic charge-transfer salts (e.g., (BEDT-TTF)₂Cu(NCS)₂) – Tc up to 12 K.
+  - Transition metal dichalcogenides (e.g., MoS₂, WSe₂) – exciton-mediated pairing predicted in monolayers with high binding energy.
+- **Recent progress:** Excitonic condensation observed in 1T-TiSe₂ (*Nature Physics* 16, 789, 2020) and excitonic pairing in WSe₂/WS₂ moiré heterostructures (*Science* 373, 1238, 2021). However, no experimental Tc > 100 K has been achieved via this mechanism.
+
+### Sc-Induced Gap Unification (Wang, Zhao, Ma, Liu, & Ma, 2026)
+- **Key paper:** Zefang Wang, Wenbo Zhao, Yuan Ma, Hanyu Liu, Yanming Ma, "Isotropic Superconductivity in Room-temperature Superconductor LaSc₂H₂₄," arXiv:2601.01398 (2026). [Source](https://arxiv.org/abs/2601.01398)
+- **Mechanism:** In LaSc₂H₂₄, Sc 3d electrons induce a Jahn-Teller distortion that elongates interlayer H–H bonds (~1.2 Å), promoting hydrogen metallization and softening associated phonon modes → enhanced electron-phonon coupling (EPC). Simultaneously, Sc 3d electrons reconstruct the electronic structure into an MgB₂-like configuration, generating novel Sc–H–Sc σ- and π-bonding states at the Fermi level.
+- **Gap unification:** Pronounced hybridization between Sc 3d orbitals and the hydrogen cages bridges the high-EPC H–H states (from Jahn-Teller softened modes) with the widespread Sc–H states (from MgB₂-like bands) on the Fermi surface. This prevents separation of the superconducting gap Δ_{nk} and establishes a continuous distribution of large EPC constants λ_{nk}, transitioning the system from anisotropic two-gap superconductivity (in LaH₁₀) to isotropic single-gap superconductivity with significantly enhanced T_c.
+- **Significance:** This Sc-induced gap unification is identified as the fundamental mechanism for achieving room-temperature superconductivity in the LaSc₂H₂₄ system, providing a design principle for future ternary hydride discovery.
+
+### Other Mechanisms (Plasmon, Magnon, Interface)
+- **Plasmon-mediated:** Pairing mediated by collective charge-density oscillations (plasmons) rather than lattice vibrations. The characteristic energy scale is the plasmon frequency ω_pl, which in 2D layered systems can be in the range ~0.5–3 eV — much higher than phonon energies. The critical temperature follows a BCS-like form: **T_c ~ ω_pl · exp(-1/λ_pl)**, where λ_pl is the plasmon-mediated coupling constant, depending on electronic polarizability, dimensionality, and screening. In the Eliashberg framework extended for plasmons (Davydov et al., *Phys. Rev. B* 102, 214508, 2020), the effective electron-electron interaction is V_eff(q,ω) = V_C(q) / ε(q,ω), where the dielectric function ε(q,ω) includes both screening and resonant enhancement at ω ~ ω_pl that produces the attractive pairing channel. For layered materials, the plasmon dispersion is acoustic-like (ω_pl ∝ √q), yielding a broad frequency range for pairing. Recent work (in 't Veld et al., arXiv:2508.06195, 2025) shows that proximity to a passive layer can enhance T_c by up to an order of magnitude in the plasmonic regime, providing an experimental signature to distinguish plasmonic from phononic pairing. [Source: Davydov et al., *Phys. Rev. B* 102, 214508 (2020); URL: https://link.aps.org/doi/10.1103/PhysRevB.102.214508] [Source: in 't Veld et al., arXiv:2508.06195 (2025); URL: https://arxiv.org/pdf/2508.06195]
+- **Magnon-mediated:** In heavy-fermion systems (e.g., CeCu₂Si₂) and cuprates, but Tc limited to ~100 K.
+- **Interface superconductivity:** LaAlO₃/SrTiO₃ interface – Tc ~0.2 K; twisted bilayer graphene (magic angle) – Tc ~1.7 K.
+- **Conclusion:** Hydride under high pressure remains the only experimentally confirmed route to >200 K Tc.
 
 ### Zentropy Theory — First-Principles Tc Prediction
 - **Core idea**: Zentropy theory (Liu & Shang, 2025) merges statistical mechanics (entropy of fluctuations) with DFT to predict Tc from first principles, bridging BCS theory and ground-state electronic structure. [Source](https://www.sciencedaily.com/releases/2025/10/251030075132.htm)
@@ -52,10 +82,66 @@
 
 ### AI Causal Discovery in Kagome Superconductor
 - **Method**: AI causal discovery applied to ARPES data of CsV₃Sb₅ identified the causal structure of electronic band interactions without prior assumptions (Tohoku University & Fujitsu, 2025). [Source](https://www.tohoku.ac.jp/en/press/ai_causal_discovery_kagome.html)
-- **Key finding**: Vanadium 3d orbital (dₓz/dᵧz) is the primary driver of superconducting pairing, mediated by anisotropic spin fluctuations.
+- **Key finding**: Vanadium 3d orbital (dₓz/dᴱz) is the primary driver of superconducting pairing, mediated by anisotropic spin fluctuations.
 - **Significance**: First demonstration of AI-driven causal inference in quantum materials ARPES; establishes new paradigm for discovering pairing mechanisms.
 
-## 3. Manufacturing Pathways
+## 3. Programmatic Strategy and AI-Accelerated Discovery
+
+### PNAS 2026 Prasankumar et al. — Programmatic Strategy for Room-Temperature Superconductivity
+- **Source**: Prasankumar, R.P. et al., "The path to room-temperature superconductivity: A programmatic approach," *Proceedings of the National Academy of Sciences* **123**(11), e2520324123 (2026). [DOI](https://doi.org/10.1073/pnas.2520324123) | [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC12994211/) | [Phys.org coverage](https://phys.org/news/2026-03-room-temperature-superconductor-scientists-agenda.html)
+- **16 authors** including Rohit P. Prasankumar (Intellectual Ventures / Deep Science Fund), Christoph Heil (TU Graz), Ching-Wu Chu (U. Houston), Dmitri Basov (Columbia), Philip Kim (Harvard), Chris Pickard (Cambridge), Eva Zurek (Buffalo), Nathan Myhrvold, and others.
+- **Central thesis**: No fundamental physical law forbids superconductivity at ambient temperature. Superconductivity is argued to be an almost "generic" property of non-magnetic metals under the right conditions.
+- **Two Grand Challenges identified:**
+  
+  **(A) The Prediction Challenge** — First-principles methods for predicting conventional superconductors have advanced rapidly, but most predicted compounds are not experimentally synthesizable. The paper calls for a shift from modeling only Tc and dynamic stability toward high-throughput ab initio thermodynamics and predictive synthesis modeling. In other words: predict not just whether a material *could* superconduct, but whether it *can be made*.
+  
+  **(B) The Engineering Challenge** — Superconductivity can be modified and enhanced by external and structural tuning "knobs." The paper identifies **six methods (knobs) for tuning materials toward room-temperature superconductivity**:
+    1. **Pressure** — hydrostatic or chemical pressure to modify lattice parameters and electronic structure.
+    2. **Strain** — epitaxial or mechanical strain in thin films.
+    3. **Doping** — chemical substitution to tune carrier concentration.
+    4. **Nanostructuring** — engineering at the nanoscale to modify density of states and confinement effects.
+    5. **Light** — ultrafast optical pulses to transiently induce or enhance superconducting states (photoinduced superconductivity).
+    6. **Quantum metamaterials** — designed material systems where superconducting properties arise from the interaction of precisely engineered nanoscale structures, not just chemical composition.
+- **Companion study in same PNAS issue**: Pressure-quenched Hg-1223 achieved Tc up to **151 K at ambient pressure** (record for ambient-pressure superconductivity), persisting for two weeks post-quench in five samples. This exemplifies the Engineering Challenge approach.
+- **Methodological prescription**: Close integration of theory and experiment in a continuous feedback loop, incorporating machine learning, AI, and data-driven approaches to explore the vast space of candidate materials and tuning strategies.
+- **Disciplines called upon**: Physics, chemistry, materials science — coordinated global effort.
+
+### SuperC Consortium — ML-Guided Discovery of Kagome Superconductors YRu₃B₂ and LuRu₃B₂
+- **Source**: Mustaf, R.A. et al., "Machine-learning-guided discovery of kagome superconductors YRu₃B₂ and LuRu₃B₂," *Physical Review Research* **8**(2) (2026). [DOI](https://doi.org/10.1103/lpqj-7hyg) | [SuperC page](https://superc2033.com/superconductivity-in-yru3b2-and-luru3b2/) | [Aalto news](https://www.aalto.fi/en/news/researchers-identify-new-superconductors-unlocking-process-that-could-yield-thousands-more) | [ScienceDaily](https://sciencedaily.com/releases/2026/07/260701205006.htm)
+- **SuperC consortium** formed in 2023, led by Prof. Päivi Törmä (Aalto University). First coordinated global collaboration dedicated to discovering new superconductors.
+- **Goal**: Find a room-temperature superconductor by **2033**.
+- **Funding**: Kavli Foundation, Klaus Tschira Stiftung, Kevin Wells, Jane and Aatos Erkko Foundation, Keele Foundation, Magnus Ehrnrooth Foundation, Neste and Fortum Foundation.
+- **Two new kagome superconductors discovered:**
+  - **YRu₃B₂** — Tc = **0.81 K**
+  - **LuRu₃B₂** — Tc = **0.95 K**
+- Both crystallize in the hexagonal **CeCo₃B₂-type structure** with planar Ru kagome networks.
+- **Bulk superconductivity confirmed** via magnetization, specific heat, and electrical transport — nearly 100% superconducting volume fractions.
+- **Mechanism**: Electron-phonon coupling (conventional s-wave superconductivity). Superfluid weight calculations show conventional contributions dominate over quantum geometric effects due to dispersive bands near the Fermi level.
+- **The ML-Guided Screening Pipeline:**
+  1. Machine-learning pre-screening narrows down promising elemental combinations from vast search space.
+  2. Targeted first-principles calculations (DFT) on the most promising candidates.
+  3. Experimental synthesis at Rice University (Prof. Emilia Morosan's group).
+  4. Experimental confirmation of superconductivity.
+- **Significance**: Proof-of-concept that ML-accelerated screening can successfully predict *and* experimentally confirm new superconductors. Törmä notes that over 7,000 superconductors have been recognized over decades, but mostly serendipitously — only about 20 had been theoretically predicted before synthesis. This work demonstrates a systematic, AI-driven alternative.
+- **Scalability claim**: "With machine learning, we may be able to push the number of materials we can process into the billions."
+
+### Nature Computational Science 2026 — Complete AI-Accelerated Workflow for Superconductor Discovery
+- **Source**: Gibson, J.B. et al., "Developing a complete AI-accelerated workflow for superconductor discovery," *npj Computational Materials* **12**, 95 (2026). [DOI](https://doi.org/10.1038/s41524-026-01964-8) | [arXiv](https://arxiv.org/abs/2503.20005) | [GitHub (BEE-NET)](https://github.com/henniggroup/BEE-NET)
+- **BEE-NET (Bootstrapped Ensemble of Equivariant Graph Neural Networks):** ML model trained to predict the Eliashberg spectral function α²F(ω) and superconducting critical temperature Tc.
+- **Performance:** Mean absolute error of **0.87 K** relative to DFT-based Allen-Dynes calculations.
+- **True-negative rate:** **99.4%** — enables highly efficient screening for the rare property of superconductivity.
+- **Multi-stage pipeline:**
+  1. Start with >1.3 million candidate structures.
+  2. Apply elemental-substitution strategies and machine-learned interatomic potentials (M3GNet, MEGNet).
+  3. BEE-NET screening.
+  4. DFT confirmation of the most promising candidates.
+- **Results:**
+  - **741 dynamically and thermodynamically stable compounds** with DFT-confirmed Tc > 5 K.
+  - **92% precision** for screening existing materials.
+  - **76% precision** for generated (novel) candidates.
+  - **86% overall precision** across the full pipeline.
+- **Experimental confirmation:** Two previously unreported compounds were successfully synthesized and experimentally confirmed as superconductors.
+- **Significance:** This is the first complete AI-accelerated workflow that integrates ML prediction, quantum calculations, and experimental validation for superconductor discovery at scale.
 
 ### High-Pressure Synthesis
 - Diamond anvil cell (DAC) techniques with laser heating for hydrides at megabar pressures. In situ characterization (XRD, Raman) essential. [Source](https://www.nature.com/articles/s41578-022-00470-1)
@@ -68,9 +154,7 @@
 
 ### Scaling Challenges
 - Metastable phases require rapid quenching or substrate stabilization.
-- High-pressure methods not yet scalable; alternative routes (e.g., chemical precompression, epitaxial strain) being explored.
-
-## 4. Open Questions and Limitations
+- High-pressure methods not yet scalable; alternative routes (e.g., chemical precompression, epitaxial strain) being explored.## 4. Open Questions and Limitations
 
 - **Reproducibility**: Retractions of the C-S-H (2023) and Lu-N-H (2023) claims underscore the need for independent verification and transparent data sharing. The C-S-H retraction followed concerns about background subtraction and magnetic susceptibility data.
 - **Mechanism**: No consensus on pairing mechanism in cuprates; hydride mechanism better understood but pressure requirement is a barrier.
@@ -521,7 +605,14 @@ Chemical precompression offers a promising pathway to lower the external pressur
 
 ## 8. Manufacturing Roadmap — Phased Plan
 
-### Phase 1: DAC Discovery (Years 1–2)
+### Phase 0: Computational Discovery and AI Screening (Years 0–1)
+**Goal**: Use validated ML-guided screening pipelines to identify the most promising candidate materials before committing to high-pressure synthesis.
+- **SuperC consortium's 2033 target**: The SuperC consortium (Aalto University, 2023) set a 10-year goal to experimentally realize a room-temperature superconductor by 2033. Their ML-guided discovery of YRu₃B₂ and LuRu₃B₂ (Mustaf et al., *Physical Review Research*, 2026) provides a validated proof-of-concept: ML pre-screening → DFT confirmation → experimental synthesis → confirmation. This pipeline can be directly applied to ternary hydride screening.
+- **BEE-NET AI-accelerated workflow**: Deploy the BEE-NET model (Gibson et al., *npj Computational Materials*, 2026) which achieves 92% precision for screening existing materials and 76% precision for novel candidates, with a 99.4% true-negative rate. Start with >1.3 million candidate structures, apply elemental-substitution strategies, and use BEE-NET to predict Tc. The pipeline identified 741 dynamically stable compounds with Tc > 5 K, with two experimentally confirmed.
+- **Deep-learning ternary hydride screening**: Apply the methodology of Wang et al. (arXiv:2502.16558, 2025) which explored ~36 million ternary hydride structures across 29 elements and identified 144 candidates with Tc > 200 K. Use zentropy theory (Liu & Shang, 2025) to further refine Tc predictions.
+- **Target**: Generate a ranked list of top 20 ternary hydride candidates with predicted Tc > 300 K at P < 200 GPa, prioritized by synthesizability (thermodynamic stability, precursor availability).
+- **Cost estimate**: $500K–$1M (computational resources + ML model training + DFT validation).
+- **Key milestones**: (a) BEE-NET screening of >1M structures; (b) top 20 candidates ranked by Tc and synthesizability; (c) candidate list handed off to Phase 1 DAC synthesis.### Phase 1: DAC Discovery (Years 1–2)
 **Goal**: Replicate and extend room-temperature superconductivity in LaSc₂H₂₄ and deep-learning-predicted hydrides.
 - **LaSc₂H₂₄ replication**: Independent labs reproduce the 298 K Tc result at ~260 GPa using La–Sc alloy + NH₃BH₃ precursor with pulsed laser heating. Target: 3+ independent confirmations within 12 months.
 - **Deep-learning candidate synthesis**: Synthesize top 5 candidates from Wang et al. (arXiv:2502.16558) using automated high-pressure synthesis workflows. Target: 2 of 5 confirmed with Tc > 200 K.

@@ -75,6 +75,11 @@ from skopt import gp_minimize
 from skopt.space import Real
 from mp_api.client import MPRester
 
+# Import extracted modules for deduplicated functions
+from sensitivity import sobol_sensitivity_analysis
+from discovery import generate_discovery_announcement
+from simulation import MultiFidelityGP
+
 def active_learning_loop() -> None:
     """Active learning loop: select next candidate, run DFT, update candidate list."""
     candidate_file = "candidate_materials.md"
@@ -323,6 +328,10 @@ def main():
         print("[Pipeline] Starting active learning loop...")
         active_learning_loop()
         print("[Pipeline] Active learning loop completed.")
+
+    # Initialize local variables for pipeline state
+    candidates = []
+    predictions = {}
 
     # Step 6: Bayesian optimization (optional)
     if args.bayesian_optimization:

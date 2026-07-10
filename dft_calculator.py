@@ -13,14 +13,9 @@ import json
 from typing import Dict, List, Optional, Tuple
 from sklearn.ensemble import RandomForestRegressor
 import torch
-import torch_geometric
-from torch_geometric.data import Data
-import shap
 import numpy as np
 from scipy.integrate import quad
 from ase import Atoms
-from ase.calculators.espresso import Espresso
-from ase.dft.dos import DOS
 
 # Cache for DFT results: keyed by structure hash (tuple of cell, positions, etc.)
 _dft_cache = {}
@@ -311,51 +306,53 @@ def run_full_dft_calculation(
     Returns:
         Dictionary with keys 'phonon_frequencies' (list) and 'elph' (dict from extract_lambda).
     """
+    orig_cwd = os.getcwd()
     os.makedirs(workdir, exist_ok=True)
-    os.chdir(workdir)
+    try:
+        os.chdir(workdir)
 
-    # Generate SCF input
-    scf_input = generate_scf_input(structure, prefix=prefix, ecutwfc=ecutwfc, ecutrho=ecutrho, kpoints=kpoints)
-    with open(f"{prefix}.scf.in", "w") as f:
-        f.write(scf_input)
-    run_pw(f"{prefix}.scf.in", f"{prefix}.scf.out")
+        # Generate SCF input
+        scf_input = generate_scf_input(structure, prefix=prefix, ecutwfc=ecutwfc, ecutrho=ecutrho, kpoints=kpoints)
+        with open(f"{prefix}.scf.in", "w") as f:
+            f.write(scf_input)
+        run_pw(f"{prefix}.scf.in", f"{prefix}.scf.out")
 
-    # Generate phonon input
-    ph_input = generate_ph_input(prefix, nq1=nq1, nq2=nq2, nq3=nq3, tr2_ph=tr2_ph)
-    with open(f"{prefix}.ph.in", "w") as f:
-        f.write(ph_input)
-    run_ph(f"{prefix}.ph.in", f"{prefix}.ph.out")
+        # Generate phonon input
+        ph_input = generate_ph_input(prefix, nq1=nq1, nq2=nq2, nq3=nq3, tr2_ph=tr2_ph)
+        with open(f"{prefix}.ph.in", "w") as f:
+            f.write(ph_input)
+        run_ph(f"{prefix}.ph.in", f"{prefix}.ph.out")
 
-    # Extract phonon frequencies
-    phonon_freqs = extract_phonon_frequencies(f"{prefix}.ph.out")
+        # Extract phonon frequencies
+        phonon_freqs = extract_phonon_frequencies(f"{prefix}.ph.out")
 
-    # Generate q2r input (simple, for force constants)
-    q2r_input = f"&input\n  fildyn='{prefix}.dyn'\n  flfrc='{prefix}.fc'\n/\n"
-    with open(f"{prefix}.q2r.in", "w") as f:
-        f.write(q2r_input)
-    run_q2r(f"{prefix}.q2r.in", f"{prefix}.q2r.out")
+        # Generate q2r input (simple, for force constants)
+        q2r_input = f"&input\n  fildyn='{prefix}.dyn'\n  flfrc='{prefix}.fc'\n/\n"
+        with open(f"{prefix}.q2r.in", "w") as f:
+            f.write(q2r_input)
+        run_q2r(f"{prefix}.q2r.in", f"{prefix}.q2r.out")
 
-    # Generate matdyn input for phonon DOS (optional, but needed for lambda)
-    matdyn_input = f"&input\n  asr='crystal'\n  flfrc='{prefix}.fc'\n  flfrq='{prefix}.freq'\n  dos=.true.\n  fldos='{prefix}.dos'\n  nk1={nq1}\n  nk2={nq2}\n  nk3={nq3}\n/\n"
-    with open(f"{prefix}.matdyn.in", "w") as f:
-        f.write(matdyn_input)
-    run_matdyn(f"{prefix}.matdyn.in", f"{prefix}.matdyn.out")
+        # Generate matdyn input for phonon DOS (optional, but needed for lambda)
+        matdyn_input = f"&input\n  asr='crystal'\n  flfrc='{prefix}.fc'\n  flfrq='{prefix}.freq'\n  dos=.true.\n  fldos='{prefix}.dos'\n  nk1={nq1}\n  nk2={nq2}\n  nk3={nq3}\n/\n"
+        with open(f"{prefix}.matdyn.in", "w") as f:
+            f.write(matdyn_input)
+        run_matdyn(f"{prefix}.matdyn.in", f"{prefix}.matdyn.out")
 
-    # Generate lambda input
-    elph_input = generate_elph_input(prefix, nq1=nq1, nq2=nq2, nq3=nq3, nk1=kpoints[0], nk2=kpoints[1], nk3=kpoints[2])
-    with open(f"{prefix}.lambda.in", "w") as f:
-        f.write(elph_input)
-    run_lambda(f"{prefix}.lambda.in", f"{prefix}.lambda.out")
+        # Generate lambda input
+        elph_input = generate_elph_input(prefix, nq1=nq1, nq2=nq2, nq3=nq3, nk1=kpoints[0], nk2=kpoints[1], nk3=kpoints[2])
+        with open(f"{prefix}.lambda.in", "w") as f:
+            f.write(elph_input)
+        run_lambda(f"{prefix}.lambda.in", f"{prefix}.lambda.out")
 
-    # Extract lambda
-    elph_result = extract_lambda(f"{prefix}.lambda.out")
+        # Extract lambda
+        elph_result = extract_lambda(f"{prefix}.lambda.out")
 
-    os.chdir("..")
-    return {
-        "phonon_frequencies": phonon_freqs,
-        "elph": elph_result,
-    }
-
+        return {
+            "phonon_frequencies": phonon_freqs,
+            "elph": elph_result,
+        }
+    finally:
+        os.chdir(orig_cwd)
 
 def compute_tc_mcmillan_allen_dynes(lambda_val, omega_log, mu_star=0.1):
     """
@@ -407,6 +404,10 @@ class MLTcPredictor:
         return self.rf_model.predict([[lambda_val, omega_log, mu_star]])[0]
     def _structure_to_graph(self, structure):
         """Convert a crystal structure dictionary to a PyTorch Geometric Data object."""
+        try:
+            from torch_geometric.data import Data
+        except ImportError:
+            raise ImportError("torch_geometric is required for graph conversion. Install with: pip install torch_geometric")
         # Extract atomic positions and species
         positions = []
         atomic_numbers = []
@@ -606,6 +607,10 @@ def compute_shap_values(model, X, feature_names=None):
         shap_values: SHAP values array.
         expected_value: Base value (expected model output).
     """
+    try:
+        import shap
+    except ImportError:
+        raise ImportError("shap is required for SHAP analysis. Install with: pip install shap")
     # Use DeepExplainer for PyTorch models, otherwise fallback to KernelExplainer
     if isinstance(model, torch.nn.Module):
         explainer = shap.DeepExplainer(model, X)
@@ -640,8 +645,9 @@ def compute_ab_initio_tc(structure, pinn_model=None):
     """
     # Run DFT calculation to get phonon frequencies and lambda
     dft_result = run_full_dft_calculation(structure)
-    lam = dft_result.get('lambda', 0.5)  # placeholder; real extraction needed
-    omega_log = dft_result.get('omega_log', 500.0)  # placeholder
+    elph = dft_result.get('elph', {})
+    lam = elph.get('lambda', 0.5)
+    omega_log = elph.get('omega_log', 500.0)
 
     # Allen-Dynes formula: Tc = (omega_log / 1.2) * exp(-1.04*(1+lam)/(lam - mu_star*(1+0.62*lam)))
     mu_star = 0.1  # Coulomb pseudopotential
@@ -660,7 +666,7 @@ def compute_ab_initio_tc(structure, pinn_model=None):
         device = get_device()
         pinn_model = pinn_model.to(device)
         # Assume pinn_model has a predict method
-        graph = structure_to_graph(structure)  # need to implement or use existing
+        graph = MLTcPredictor()._structure_to_graph(structure)  # use MLTcPredictor instance method
         graph = graph.to(device)
         with torch.no_grad():
             pinn_tc = pinn_model(graph).item()
@@ -722,8 +728,9 @@ def compute_phonon_tc_for_candidates(candidates: List[Dict], prefix_base: str = 
     for i, struct in enumerate(candidates):
         prefix = f"{prefix_base}_{i}"
         dft_result = run_full_dft_calculation(struct, prefix=prefix, workdir=workdir)
-        lam = dft_result.get('lambda', 0.5)
-        omega_log = dft_result.get('omega_log', 500.0)
+        elph = dft_result.get('elph', {})
+        lam = elph.get('lambda', 0.5)
+        omega_log = elph.get('omega_log', 500.0)
         mu_star = 0.1
         numerator = 1.04 * (1 + lam)
         denominator = lam - mu_star * (1 + 0.62 * lam)
@@ -741,7 +748,7 @@ def compute_phonon_tc_for_candidates(candidates: List[Dict], prefix_base: str = 
     return results
 
 
-def fine_tune_pinn_on_real_data(pinn_model: torch.nn.Module, real_data: List[Tuple[Data, float]], epochs: int = 10, lr: float = 1e-4, device: Optional[torch.device] = None) -> torch.nn.Module:
+def fine_tune_pinn_on_real_data(pinn_model: torch.nn.Module, real_data: List[Tuple['Data', float]], epochs: int = 10, lr: float = 1e-4, device: Optional[torch.device] = None) -> torch.nn.Module:
     """
     Fine-tune a pre-trained PINN (simulation-trained) on real experimental data
     using sim-to-real transfer learning.
@@ -797,9 +804,12 @@ def compute_dos_at_fermi(structure_index: int = 0, db_path: str = None) -> float
     cache_key = (structure_index, db_path)
     if cache_key in _dft_cache:
         return _dft_cache[cache_key]
-    from ase import Atoms
-    from ase.calculators.espresso import Espresso
-    from ase.dft.dos import DOS
+    try:
+        from ase import Atoms
+        from ase.calculators.espresso import Espresso
+        from ase.dft.dos import DOS
+    except ImportError:
+        raise ImportError("ASE and Quantum ESPRESSO calculator are required for DOS calculation. Install with: pip install ase")
     import numpy as np
 
     cell = structure['cell_parameters']
