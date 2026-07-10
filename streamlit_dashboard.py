@@ -231,42 +231,41 @@ def main():
 
     placeholder = st.empty()
 
-    while True:
-        with placeholder.container():
-            with tab1:
-                st.subheader("Pipeline Status")
+    with placeholder.container():
+        with tab1:
+            st.subheader("Pipeline Status")
                 df = fetch_pipeline_status()
                 if df is not None and not df.empty:
                     st.dataframe(df, use_container_width=True)
                 else:
                     st.info("No pipeline status data available.")
 
-            with tab2:
-                st.subheader("Top Candidate Metrics")
+        with tab2:
+            st.subheader("Top Candidate Metrics")
                 df = fetch_top_candidates()
                 if df is not None and not df.empty:
                     st.dataframe(df, use_container_width=True)
                 else:
                     st.info("No top candidate data available.")
 
-            with tab3:
-                st.subheader("Experimental Results")
+        with tab3:
+            st.subheader("Experimental Results")
                 df = fetch_experimental_results()
                 if df is not None and not df.empty:
                     st.dataframe(df, use_container_width=True)
                 else:
                     st.info("No experimental results data available.")
 
-            with tab4:
-                st.subheader("Manufacturing Progress")
+        with tab4:
+            st.subheader("Manufacturing Progress")
                 df = fetch_manufacturing_progress()
                 if df is not None and not df.empty:
                     st.dataframe(df, use_container_width=True)
                 else:
                     st.info("No manufacturing progress data available.")
 
-            with tab5:
-                st.subheader("Experiment Status")
+        with tab5:
+            st.subheader("Experiment Status")
                 df = fetch_experiment_status()
                 if df is not None and not df.empty:
                     required_cols = ["timestamp", "current_step", "errors"]
@@ -277,8 +276,8 @@ def main():
                 else:
                     st.info("No experiment data available.")
 
-            with tab6:
-                st.subheader("Live Monitoring")
+        with tab6:
+            st.subheader("Live Monitoring")
                 validation_data = live_external_validation()
                 if validation_data is not None:
                     if isinstance(validation_data, pd.DataFrame):
@@ -288,8 +287,8 @@ def main():
                 else:
                     st.info("No live validation data available.")
 
-            with tab7:
-                st.subheader("What-If Analysis")
+        with tab7:
+            st.subheader("What-If Analysis")
                 temperature = st.slider("Temperature (K)", min_value=0, max_value=500, value=300, step=1)
                 pressure = st.slider("Pressure (GPa)", min_value=0.0, max_value=100.0, value=1.0, step=0.1)
                 doping = st.slider("Doping Level (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
@@ -303,8 +302,8 @@ def main():
                             st.json(result)
                     else:
                         st.error("What-if analysis failed.")
-            with tab8:
-                st.subheader("Research Literature")
+        with tab8:
+            st.subheader("Research Literature")
                 df = fetch_research_literature()
                 if df is not None and not df.empty:
                     st.dataframe(df, use_container_width=True)
@@ -320,46 +319,41 @@ def main():
 
 
 
-            with st.expander("Synthesis Planner", expanded=False):
-                st.subheader("Synthesis Planner")
-                col_a, col_b, col_c, col_d = st.columns(4)
-                with col_a:
-                    candidate_material = st.text_input("Candidate Material", "LaH10")
-                with col_b:
-                    pressure = st.number_input("Pressure (GPa)", min_value=0.0, max_value=500.0, value=150.0, step=1.0)
-                with col_c:
-                    temperature = st.number_input("Temperature (K)", min_value=0.0, max_value=500.0, value=200.0, step=1.0)
-                with col_d:
-                    composition = st.text_input("Composition", "LaH10")
-                if st.button("Predict Tc"):
-                    # Placeholder for prediction logic
-                    predicted_tc = 250.0  # Example value
-                    uncertainty = 15.0
-                    st.metric("Predicted Tc (K)", f"{predicted_tc} ± {uncertainty}")
-                    st.info("Recommended next steps: Synthesize at 150 GPa and 200 K using diamond anvil cell. Measure resistivity and magnetic susceptibility.")
-                else:
-                    st.info("Enter parameters and click 'Predict Tc' to see results.")
-                status = fetch_status_panel()
-                if status is not None:
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        st.metric("Last Arxiv Scrape", status.get("last_arxiv_scrape", "N/A"))
-                    with col2:
-                        st.metric("Validation Metrics", status.get("validation_metrics", "N/A"))
-                    with col3:
-                        st.metric("Active Learning Iteration", status.get("active_learning_iteration", "N/A"))
-                    st.json(status)
-                else:
-                    st.info("No status panel data available.")
+        with st.expander("Synthesis Planner", expanded=False):
+            st.subheader("Synthesis Planner")
+            col_a, col_b, col_c, col_d = st.columns(4)
+            with col_a:
+                candidate_material = st.text_input("Candidate Material", "LaH10")
+            with col_b:
+                pressure = st.number_input("Pressure (GPa)", min_value=0.0, max_value=500.0, value=150.0, step=1.0)
+            with col_c:
+                temperature = st.number_input("Temperature (K)", min_value=0.0, max_value=500.0, value=200.0, step=1.0)
+            with col_d:
+                composition = st.text_input("Composition", "LaH10")
+            if st.button("Predict Tc"):
+                # Placeholder for prediction logic
+                predicted_tc = 250.0  # Example value
+                uncertainty = 15.0
+                st.metric("Predicted Tc (K)", f"{predicted_tc} ± {uncertainty}")
+                st.info("Recommended next steps: Synthesize at 150 GPa and 200 K using diamond anvil cell. Measure resistivity and magnetic susceptibility.")
+            else:
+                st.info("Enter parameters and click 'Predict Tc' to see results.")
+            status = fetch_status_panel()
+            if status is not None:
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Last Arxiv Scrape", status.get("last_arxiv_scrape", "N/A"))
+                with col2:
+                    st.metric("Validation Metrics", status.get("validation_metrics", "N/A"))
+                with col3:
+                    st.metric("Active Learning Iteration", status.get("active_learning_iteration", "N/A"))
+                st.json(status)
+            else:
+                st.info("No status panel data available.")
 
-            if st.button("Refresh Now"):
-                st.rerun()
-
-        if auto_refresh:
-            time.sleep(refresh_interval)
-            st.rerun()
-        else:
-            break
+    if auto_refresh:
+        time.sleep(refresh_interval)
+        st.rerun()
 
 def fetch_pareto_front() -> Optional[pd.DataFrame]:
     """Fetch Pareto front data (Tc vs. synthesis pressure/cost) from the API."""
