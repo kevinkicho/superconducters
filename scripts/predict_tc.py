@@ -989,15 +989,14 @@ def main_screening():
     parser.add_argument('--output', type=str, default=None, help='Output file to save predictions (JSON format)')
     args = parser.parse_args()
 
-    # Load the embedded database (assumed to be a list of dicts with 'formula' and 'tc')
+    # Load the database from data/superconductor_database.json
+    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
     try:
-        database = globals().get('DATABASE', None)
-        if database is None:
-            # Fallback: try to load from a known variable name
-            database = globals().get('known_compounds', None)
-        if database is None:
-            print("Error: No embedded database found. Please ensure DATABASE or known_compounds is defined.")
-            sys.exit(1)
+        with open(db_path, 'r') as f:
+            database = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: Database file '{db_path}' not found.")
+        sys.exit(1)
     except Exception as e:
         print(f"Error loading database: {e}")
         sys.exit(1)
