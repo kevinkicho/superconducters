@@ -217,7 +217,38 @@ Synthesis notes: Thin films are essential; bulk synthesis is challenging due to 
 - **Hydrogen-rich compounds under pressure**: Beyond hydrides, e.g., PH3, SiH4, etc., are predicted to have high Tc but not yet confirmed.
 - **Graphene-based systems**: Predicted Tc up to 30 K under specific doping and strain. Synthesis feasibility: requires exfoliation or CVD growth. Stability: sensitive to environment.
 
-## Summary
+## ML-Predicted Kagome Superconductors (2026)
+
+The following compounds were discovered via machine-learning-accelerated high-throughput screening by the SuperC Consortium (led by Prof. Päivi Törmä, Aalto University) and experimentally synthesized at Rice University (Prof. Emilia Morosan's group). They are the first kagome superconductors predicted by ML and independently confirmed, validating the ML-driven approach to superconductor discovery. Although their Tc values are low (<1 K), they demonstrate that ML can successfully narrow down from billions of possible combinations to synthesizable superconductors.
+
+### YRu₃B₂ (Yttrium Ruthenium Boride)
+- **Tc**: 0.81 K (confirmed via magnetization, specific heat, electrical transport)
+- **Crystal structure**: Hexagonal CeCo₃B₂-type (space group P6/mmm), with planar kagome networks formed by Ru atoms and honeycomb boron networks capping Ru₃ triangles
+- **Synthesis**: Polycrystalline samples via arc-melting or solid-state reaction of elemental precursors (Y, Ru, B) at Rice University
+- **Electronic structure**: Ru local d_{x²−y²} quasi-flat band near Fermi level; reduced DOS at EF compared to isostructural LaRu₃Si₂; overall hardening of phonon spectrum
+- **Electron-phonon coupling**: EPC constant λ lowered due to DOS reduction + phonon hardening; dominant real-space EPC between Ru d_{x²−y²} states and low-frequency Ru in-plane local x branch remains nearly unchanged
+- **Superfluid weight**: Conventional contributions dominate over quantum geometric effects
+- **Independent confirmation**: Winiarski et al. (arXiv:2512.08514, 2025) independently synthesized YRu₃B₂ and reported Tc = 0.63 K, μ₀Hc₂(0) = 0.11 T, weakly coupled superconductor. The slight Tc difference (0.63 vs 0.81 K) may reflect sample quality differences.
+- **Key References**:
+  - Mustaf et al., *Physical Review Research* (2026). DOI: 10.1103/lpqj-7hyg. arXiv:2512.16945.
+  - Winiarski et al., arXiv:2512.08514 (2025).
+
+### LuRu₃B₂ (Lutetium Ruthenium Boride)
+- **Tc**: 0.95 K (confirmed via magnetization, specific heat, electrical transport)
+- **Crystal structure**: Hexagonal CeCo₃B₂-type (space group P6/mmm), isostructural to YRu₃B₂, with planar kagome networks of Ru atoms
+- **Synthesis**: Polycrystalline samples via arc-melting or solid-state reaction of elemental precursors (Lu, Ru, B) at Rice University
+- **Bulk superconductivity**: Nearly 100% superconducting volume fractions confirmed for both YRu₃B₂ and LuRu₃B₂
+- **Key References**:
+  - Mustaf et al., *Physical Review Research* (2026). DOI: 10.1103/lpqj-7hyg. arXiv:2512.16945.
+
+### Significance for Room-Temperature Superconductor Discovery
+- These compounds validate the ML-accelerated screening pipeline: from billions of candidates to ~20 theoretically predicted before synthesis, with YRu₃B₂ and LuRu₃B₂ being among the first ML-predicted kagome superconductors.
+- The SuperC Consortium (formed 2023) aims for room-temperature superconductor by 2033, funded by Kavli Foundation, Klaus Tschira Stiftung, Kevin Wells, Jane and Aatos Erkko Foundation, Keele Foundation, Magnus Ehrnrooth Foundation, Neste and Fortum Foundation.
+- Partners: Aalto University, Rice University, Princeton University, TU Graz, and others.
+- The kagome lattice motif (planar Ru networks) produces flat bands from quantum destructive interference of electronic wavefunctions — a design principle that can be exploited for higher-Tc materials by tuning the flat band to the chemical potential via doping, pressure, or chemical substitution.
+- **Challenge**: Flat bands also promote competing orders (charge density waves, magnetism), which must be suppressed to achieve high Tc.
+
+## Summary## Summary## Summary
 
 No material has yet achieved confirmed room temperature superconductivity at ambient pressure. The highest Tc at ambient pressure is ~135 K (Hg-1223). Under high pressure, LaH10 and YH9 approach 250 K. The search continues for a material that is stable at ambient conditions with Tc > 300 K.
 
