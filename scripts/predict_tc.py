@@ -218,8 +218,10 @@ _training_targets = [tc for _, tc in TRAINING_DATA]
 _coefficients = train_linear_regression(_training_features, _training_targets)
 _rf_model = train_random_forest(_training_features, _training_targets)
 
-def predict_tc(formula, pressure=0):
-    """Predict Tc using the Allen-Dynes equation with parameters from the database."""
+def predict_tc_from_db(formula, pressure=0):
+    """Predict Tc using the Allen-Dynes equation with parameters from the database.
+    Falls back to estimating lambda/omega_log from Debye temperature if missing.
+    """
     db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
     try:
         with open(db_path, 'r') as f:
@@ -231,7 +233,17 @@ def predict_tc(formula, pressure=0):
             lam = entry.get('lambda')
             omega_log = entry.get('omega_log')
             if lam is None or omega_log is None:
-                raise ValueError(f"Database entry for {formula} missing lambda or omega_log.")
+                # Fallback: estimate from Debye temperature and average valence
+                try:
+                    elements = parse_formula(formula)
+                    avg_deb = average_debye(elements)
+                    avg_val = average_valence(elements)
+                    lam = 0.5 + 0.1 * (avg_val - 4.0)
+                    omega_log = avg_deb * 0.8
+                except Exception:
+                    # Skip gracefully if estimation fails
+                    print(f"Warning: Cannot estimate lambda/omega_log for {formula}, skipping.")
+                    return None
             mu_star = 0.1
             numerator = 1.04 * (1.0 + lam)
             denominator = lam - mu_star * (1.0 + 0.62 * lam)
@@ -241,7 +253,8 @@ def predict_tc(formula, pressure=0):
             if tc < 0:
                 tc = 0.0
             return tc
-    raise ValueError(f"Material {formula} not found in database.")
+    print(f"Warning: Material {formula} not found in database, skipping.")
+    return None
 
 def predict_tc_rf(formula: str) -> float:
     """
@@ -351,7 +364,7 @@ def main():
         try:
             tc_bcs = mcmillan_tc(formula)
             tc_eliashberg = eliashberg_tc(formula)
-            tc_ml_linear = predict_tc(formula)
+            tc_ml_linear = predict_tc_from_db(formula)
             tc_ml_rf = predict_tc_rf(formula)
             print(f"Predicted Tc for {formula}:")
             print(f"  BCS (McMillan): {tc_bcs:.2f} K")
@@ -1057,9 +1070,9 @@ if __name__ == '__main__':
         main_screening()
 
 
-def predict_tc(lambda_ep, omega_log, mu_star):
+def compute_tc_allen_dynes(lambda_ep, omega_log, mu_star):
     """
-    Predict superconducting critical temperature (Tc) using the McMillan-Allen-Dynes equation.
+    Compute superconducting critical temperature (Tc) using the McMillan-Allen-Dynes equation.
 
     Parameters:
     lambda_ep (float): Electron-phonon coupling constant (lambda).
@@ -1505,7 +1518,7 @@ class ModelEnsemble:
                 for name in model_names}
 
 
-def predict_tc():
+def predict_tc_interactive():
     """Predict Tc for all entries in data/superconductor_database.json using McMillan-Allen-Dynes equation."""
     db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'superconductor_database.json')
     with open(db_path, 'r') as f:
