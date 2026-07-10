@@ -192,8 +192,8 @@ def train(model, dataloader, epochs=100, lr=1e-3, beta=1.0):
         for x, c in dataloader:
             optimizer.zero_grad()
             recon_x, mu, logvar = model(x, c)
-            # Reconstruction loss (cross-entropy for softmax output)
-            recon_loss = nn.functional.cross_entropy(recon_x, x.argmax(dim=-1), reduction='sum')
+            # Reconstruction loss (MSE on full element fraction vector)
+            recon_loss = nn.functional.mse_loss(recon_x, x, reduction='sum')
             # KL divergence
             kl_loss = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
             loss = recon_loss + beta * kl_loss
@@ -389,13 +389,12 @@ def generate_conditional_ddpm_candidates(model, conditions, num_per_condition=10
                 else:
                     noise = 0
                 x = (1 / torch.sqrt(alpha_t)) * (x - (1 - alpha_t) / torch.sqrt(1 - alpha_bar_t) * noise_pred) + torch.sqrt(beta_t) * noise
-            # Convert to formula (simplified: take argmax over elements)
+            # Convert to formula using proper vector_to_formula decoding
             for i in range(num_per_condition):
                 vec = x[i].numpy()
-                idx = np.argmax(vec)
-                element = ELEMENTS[idx]
-                formula = f"{element}H10"  # placeholder, should be more sophisticated
-                candidates.append((formula, cond))
+                formula = vector_to_formula(vec)
+                if formula:
+                    candidates.append((formula, cond))
     return candidates
 
 
