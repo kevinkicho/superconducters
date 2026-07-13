@@ -1,23 +1,16 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    g++ \
-    make \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+COPY pyproject.toml README.md LICENSE ./
+COPY superconductors ./superconductors
+COPY run_pipeline.py app.py ./
+COPY data ./data
 
-# Copy environment file and install Python dependencies
-COPY environment.yml .
-RUN pip install --no-cache-dir conda && \
-    conda env create -f environment.yml && \
-    echo "conda activate superconductor" >> ~/.bashrc
+RUN python -m pip install --no-cache-dir ".[api]"
 
-# Copy the rest of the code
-COPY . .
-
-# Default command
-CMD ["python", "run_pipeline.py", "--help"]
+ENTRYPOINT ["superconductors"]
+CMD ["--help"]

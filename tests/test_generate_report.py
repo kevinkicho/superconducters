@@ -1,67 +1,22 @@
-import pytest
-from scripts.generate_report import generate_report, format_candidate_table, write_pdf
+from superconductors.reporting import format_candidate_table, generate_report, write_markdown
 
-def test_generate_report_returns_string():
-    candidates = [{"formula": "H3S", "tc": 203, "pressure": 150}]
-    report = generate_report(candidates)
-    assert isinstance(report, str)
+
+def test_report_includes_candidates_and_provenance_warning():
+    report = generate_report([{"formula": "H3S", "tc": 203, "pressure": 155, "source": "measured"}])
     assert "H3S" in report
-
-def test_format_candidate_table_contains_headers():
-    candidates = [
-        {"formula": "A", "tc": 100, "pressure": 50},
-        {"formula": "B", "tc": 200, "pressure": 100},
-    ]
-    table = format_candidate_table(candidates)
-    assert "Formula" in table
-    assert "Tc (K)" in table
-    assert "Pressure (GPa)" in table
-
-def test_format_candidate_table_handles_empty():
-    table = format_candidate_table([])
-    assert table == ""
-
-def test_write_pdf_creates_file(tmp_path):
-    content = "Test report content"
-    output_path = tmp_path / "report.pdf"
-    write_pdf(content, str(output_path))
-    assert output_path.exists()
-    assert output_path.stat().st_size > 0
+    assert "experimental confirmation" in report
 
 
-def test_generate_report_empty_list():
-    """Test generate_report with empty candidate list."""
-    report = generate_report([])
-    assert isinstance(report, str)
-    assert "No candidates" in report or report == ""
+def test_empty_report_is_explicit():
+    assert "No candidates" in generate_report([])
+    assert format_candidate_table([]) == ""
 
 
-def test_write_pdf_invalid_path():
-    """Test write_pdf raises exception for invalid path."""
-    with pytest.raises(Exception):
-        write_pdf("content", "/nonexistent/dir/report.pdf")
+def test_markdown_table_has_stable_headers():
+    table = format_candidate_table([{"formula": "MgB2", "tc": 39, "pressure": 0}])
+    assert "| Formula | Tc (K) | Pressure (GPa) | Source |" in table
 
 
-def test_generate_report_multiple_candidates():
-    candidates = [
-        {"formula": "H3S", "tc": 203, "pressure": 150},
-        {"formula": "LaH10", "tc": 250, "pressure": 170},
-    ]
-    report = generate_report(candidates)
-    assert "H3S" in report
-    assert "LaH10" in report
-    assert "203" in report
-    assert "250" in report
-
-
-def test_format_candidate_table_with_special_chars():
-    candidates = [{"formula": "YBa2Cu3O7", "tc": 93, "pressure": 0}]
-    table = format_candidate_table(candidates)
-    assert "YBa2Cu3O7" in table
-
-
-def test_write_pdf_empty_content(tmp_path):
-    content = ""
-    output_path = tmp_path / "empty.pdf"
-    write_pdf(content, str(output_path))
-    assert output_path.exists()
+def test_write_markdown_creates_parent_directory(tmp_path):
+    path = write_markdown("report", tmp_path / "nested" / "report.md")
+    assert path.read_text(encoding="utf-8") == "report"

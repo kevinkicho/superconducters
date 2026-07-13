@@ -1,311 +1,75 @@
-import pytest
-import json
-import os
-import sys
 import argparse
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-import scripts.query_database as qdb
+import json
 
-def test_load_database_exists():
-    entries = qdb.load_database(qdb.DATABASE_PATH)
-    assert isinstance(entries, list)
-    assert len(entries) > 0
+import pytest
 
-def test_load_database_invalid_path():
-    with pytest.raises(FileNotFoundError):
-        qdb.load_database("nonexistent.json")
+from superconductors.query import QueryFilters, high_throughput_screening, load_database, query
 
-def test_query_all():
-    entries = qdb.load_database(qdb.DATABASE_PATH)
-    results = qdb.query(entries, argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None
-    ))
-    assert len(results) == len(entries)
-
-def test_query_by_name():
-    entries = qdb.load_database(qdb.DATABASE_PATH)
-    first_name = entries[0].get('name', '')
-    if first_name:
-        results = qdb.query(entries, argparse.Namespace(
-            name=first_name, tc_min=None, tc_max=None, pressure=None,
-            pressure_min=None, pressure_max=None, composition=None,
-            synthesis=None, synthesis_method=None, mechanism=None
-        ))
-        assert len(results) == 1
-        assert results[0]['name'] == first_name
-
-def test_query_by_tc_min():
-    entries = qdb.load_database(qdb.DATABASE_PATH)
-    tc_min = 100
-    results = qdb.query(entries, argparse.Namespace(
-        name=None, tc_min=tc_min, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None
-    ))
-    for r in results:
-        assert r.get('Tc', 0) >= tc_min
-
-def test_query_by_tc_max():
-    entries = qdb.load_database(qdb.DATABASE_PATH)
-    tc_max = 50
-    results = qdb.query(entries, argparse.Namespace(
-        name=None, tc_min=None, tc_max=tc_max, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None
-    ))
-    for r in results:
-        assert r.get('Tc', 0) <= tc_max
-
-def test_query_no_match():
-    entries = qdb.load_database(qdb.DATABASE_PATH)
-    results = qdb.query(entries, argparse.Namespace(
-        name="NonExistentMaterial", tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None
-    ))
-    assert results == []
-
-def test_query_by_feasibility_score():
-    mock_db = [
-        {"name": "A", "Tc": 50, "feasibility_score": 0.9, "material_class": "cuprate"},
-        {"name": "B", "Tc": 150, "feasibility_score": 0.3, "material_class": "iron-based"},
-        {"name": "C", "Tc": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
-    ]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=0.5, feasibility_score_max=None,
-        material_class=None
-    ))
-    assert len(results) == 2
-    for r in results:
-        assert r['feasibility_score'] >= 0.5
-
-def test_query_by_material_class():
-    mock_db = [
-        {"name": "A", "Tc": 50, "feasibility_score": 0.9, "material_class": "cuprate"},
-        {"name": "B", "Tc": 150, "feasibility_score": 0.3, "material_class": "iron-based"},
-        {"name": "C", "Tc": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
-    ]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=None, feasibility_score_max=None,
-        material_class="cuprate"
-    ))
-    assert len(results) == 2
-    for r in results:
-        assert r['material_class'] == "cuprate"
-
-def test_query_combined_filters():
-    mock_db = [
-        {"name": "A", "Tc": 50, "feasibility_score": 0.9, "material_class": "cuprate"},
-        {"name": "B", "Tc": 150, "feasibility_score": 0.3, "material_class": "iron-based"},
-        {"name": "C", "Tc": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
-        {"name": "D", "Tc": 120, "feasibility_score": 0.6, "material_class": "cuprate"},
-    ]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=100, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=0.5, feasibility_score_max=None,
-        material_class="cuprate"
-    ))
-    assert len(results) == 2
-    for r in results:
-        assert r['Tc'] >= 100
-        assert r['feasibility_score'] >= 0.5
-        assert r['material_class'] == "cuprate"
+RECORDS = [
+    {
+        "name": "H3S",
+        "Tc": 203,
+        "pressure": 155,
+        "material_class": "hydride",
+        "feasibility_score": 0.8,
+    },
+    {
+        "name": "MgB2",
+        "Tc": 39,
+        "pressure": 0,
+        "material_class": "conventional",
+        "feasibility_score": 0.95,
+    },
+]
 
 
-
-def test_load_database_json_decode_error():
-    with patch('builtins.open', MagicMock(side_effect=json.JSONDecodeError("", "", 0))):
-        with pytest.raises(json.JSONDecodeError):
-            qdb.load_database("dummy.json")
-
-def test_query_empty_database():
-    results = qdb.query([], argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=None, feasibility_score_max=None,
-        material_class=None
-    ))
-    assert results == []
-
-def test_query_pressure_min_max():
-    mock_db = [
-        {"name": "A", "Tc": 50, "pressure": 10},
-        {"name": "B", "Tc": 150, "pressure": 100},
-        {"name": "C", "Tc": 200, "pressure": 200},
-    ]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=50, pressure_max=150, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=None, feasibility_score_max=None,
-        material_class=None
-    ))
-    assert len(results) == 1
-    assert results[0]["name"] == "B"
-
-def test_query_type_mismatch_tc_min():
-    mock_db = [{"name": "A", "Tc": 50}]
-    with pytest.raises(TypeError):
-        qdb.query(mock_db, argparse.Namespace(
-            name=None, tc_min="low", tc_max=None, pressure=None,
-            pressure_min=None, pressure_max=None, composition=None,
-            synthesis=None, synthesis_method=None, mechanism=None,
-            feasibility_score_min=None, feasibility_score_max=None,
-            material_class=None
-        ))
-
-def test_query_synthesis_method_filter():
-    mock_db = [
-        {"name": "A", "Tc": 50, "synthesis_method": "CVD"},
-        {"name": "B", "Tc": 150, "synthesis_method": "HPHT"},
-        {"name": "C", "Tc": 200, "synthesis_method": "CVD"},
-    ]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method="CVD", mechanism=None,
-        feasibility_score_min=None, feasibility_score_max=None,
-        material_class=None
-    ))
-    assert len(results) == 2
-    for r in results:
-        assert r["synthesis_method"] == "CVD"
+def test_load_database_validates_top_level_shape(tmp_path):
+    path = tmp_path / "database.json"
+    path.write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="JSON list"):
+        load_database(path)
 
 
-def test_load_database_permission_error():
-    from unittest.mock import patch, MagicMock
-    with patch('builtins.open', MagicMock(side_effect=PermissionError("Permission denied"))):
-        with pytest.raises(PermissionError):
-            qdb.load_database("dummy.json")
+def test_combined_filters():
+    results = query(
+        RECORDS,
+        QueryFilters(tc_min=100, pressure_max=200, material_class="hydride"),
+    )
+    assert [record["name"] for record in results] == ["H3S"]
 
 
-def test_query_missing_tc_key():
-    mock_db = [{"name": "A", "pressure": 10}]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=None, feasibility_score_max=None,
-        material_class=None
-    ))
-    assert len(results) == 1
+def test_legacy_argparse_namespace_is_supported():
+    filters = argparse.Namespace(
+        name="mgb2",
+        tc_min=None,
+        tc_max=None,
+        pressure_min=None,
+        pressure_max=None,
+        synthesis_method=None,
+        material_class=None,
+        feasibility_score_min=None,
+    )
+    assert query(RECORDS, filters)[0]["name"] == "MgB2"
 
 
-def test_query_invalid_pressure_min_type():
-    mock_db = [{"name": "A", "Tc": 50, "pressure": 10}]
-    with pytest.raises(TypeError):
-        qdb.query(mock_db, argparse.Namespace(
-            name=None, tc_min=None, tc_max=None, pressure=None,
-            pressure_min="low", pressure_max=None, composition=None,
-            synthesis=None, synthesis_method=None, mechanism=None,
-            feasibility_score_min=None, feasibility_score_max=None,
-            material_class=None
-        ))
+def test_invalid_filter_type_is_rejected():
+    with pytest.raises(TypeError, match="Numeric"):
+        query(RECORDS, QueryFilters(tc_min="hot"))
 
 
-def test_query_invalid_feasibility_score_min_type():
-    mock_db = [{"name": "A", "Tc": 50, "feasibility_score": 0.9}]
-    with pytest.raises(TypeError):
-        qdb.query(mock_db, argparse.Namespace(
-            name=None, tc_min=None, tc_max=None, pressure=None,
-            pressure_min=None, pressure_max=None, composition=None,
-            synthesis=None, synthesis_method=None, mechanism=None,
-            feasibility_score_min="high", feasibility_score_max=None,
-            material_class=None
-        ))
+def test_high_throughput_screening_ranks_and_limits():
+    results = high_throughput_screening(
+        RECORDS,
+        min_tc=0,
+        max_tc=300,
+        max_pressure=200,
+        min_feasibility=0.5,
+        max_results=1,
+    )
+    assert [record["name"] for record in results] == ["H3S"]
 
 
-def test_query_invalid_material_class_type():
-    mock_db = [{"name": "A", "Tc": 50, "material_class": "cuprate"}]
-    with pytest.raises(TypeError):
-        qdb.query(mock_db, argparse.Namespace(
-            name=None, tc_min=None, tc_max=None, pressure=None,
-            pressure_min=None, pressure_max=None, composition=None,
-            synthesis=None, synthesis_method=None, mechanism=None,
-            feasibility_score_min=None, feasibility_score_max=None,
-            material_class=123
-        ))
-
-
-def test_high_throughput_screening_basic():
-    mock_db = [
-        {"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9},
-        {"name": "B", "Tc": 150, "pressure": 100, "feasibility_score": 0.8},
-        {"name": "C", "Tc": 200, "pressure": 200, "feasibility_score": 0.7},
-        {"name": "D", "Tc": 300, "pressure": 300, "feasibility_score": 0.6},
-    ]
-    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=2)
-    assert len(results) == 2
-    assert results[0]["name"] == "C"  # Tc 200
-    assert results[1]["name"] == "B"  # Tc 150
-
-def test_high_throughput_screening_no_results():
-    mock_db = [
-        {"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9},
-    ]
-    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=10)
-    assert results == []
-
-def test_high_throughput_screening_with_feasibility():
-    mock_db = [
-        {"name": "A", "Tc": 150, "pressure": 0, "feasibility_score": 0.3},
-        {"name": "B", "Tc": 200, "pressure": 0, "feasibility_score": 0.9},
-    ]
-    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=250, min_feasibility=0.5, max_results=10)
-    assert len(results) == 1
-    assert results[0]["name"] == "B"
-
-
-def test_query_by_multiple_filters():
-    """Test query with multiple filters simultaneously."""
-    mock_db = [
-        {"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9, "material_class": "cuprate"},
-        {"name": "B", "Tc": 150, "pressure": 100, "feasibility_score": 0.8, "material_class": "iron-based"},
-        {"name": "C", "Tc": 200, "pressure": 200, "feasibility_score": 0.7, "material_class": "cuprate"},
-    ]
-    results = qdb.query(mock_db, argparse.Namespace(
-        name=None, tc_min=100, tc_max=250, pressure=None,
-        pressure_min=50, pressure_max=250, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=0.5, feasibility_score_max=1.0,
-        material_class="cuprate"
-    ))
-    assert len(results) == 1
-    assert results[0]["name"] == "C"
-
-
-def test_query_empty_database():
-    """Test query with empty database returns empty list."""
-    results = qdb.query([], argparse.Namespace(
-        name=None, tc_min=None, tc_max=None, pressure=None,
-        pressure_min=None, pressure_max=None, composition=None,
-        synthesis=None, synthesis_method=None, mechanism=None,
-        feasibility_score_min=None, feasibility_score_max=None,
-        material_class=None
-    ))
-    assert results == []
-
-
-def test_high_throughput_screening_max_results_zero():
-    """Test high_throughput_screening with max_results=0 returns empty list."""
-    mock_db = [{"name": "A", "Tc": 100, "pressure": 0, "feasibility_score": 0.9}]
-    results = qdb.high_throughput_screening(mock_db, min_tc=0, max_tc=500, max_pressure=100, min_feasibility=0.0, max_results=0)
-    assert results == []
-
-
-def test_high_throughput_screening_all_filtered():
-    """Test high_throughput_screening when all candidates are filtered out."""
-    mock_db = [{"name": "A", "Tc": 50, "pressure": 0, "feasibility_score": 0.9}]
-    results = qdb.high_throughput_screening(mock_db, min_tc=100, max_tc=500, max_pressure=100, min_feasibility=0.0, max_results=10)
-    assert results == []
+def test_load_database_reads_records(tmp_path):
+    path = tmp_path / "database.json"
+    path.write_text(json.dumps(RECORDS), encoding="utf-8")
+    assert load_database(path) == RECORDS

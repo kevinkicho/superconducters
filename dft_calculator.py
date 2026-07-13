@@ -47,7 +47,7 @@ def generate_scf_input(
     pseudo_dir: str = PSEUDO_DIR,
     ecutwfc: float = 60.0,
     ecutrho: float = 240.0,
-    kpoints: List[int] = [4, 4, 4, 0, 0, 0],
+    kpoints: Optional[List[int]] = None,
     occupations: str = "smearing",
     smearing: str = "gaussian",
     degauss: float = 0.01,
@@ -74,6 +74,7 @@ def generate_scf_input(
     Returns:
         String containing the input file content.
     """
+    kpoints = kpoints or [4, 4, 4, 0, 0, 0]
     lines = []
     lines.append(f"&control")
     lines.append(f"    calculation = 'scf'")
@@ -688,26 +689,6 @@ def compute_ab_initio_tc(structure, pinn_model=None):
     }
 
 
-if __name__ == "__main__":
-    # Example: simple cubic hydrogen (H) at high pressure (placeholder)
-    # This is a dummy structure; real usage requires proper lattice parameters.
-    example_structure = {
-        "cell_parameters": [
-            [2.0, 0.0, 0.0],
-            [0.0, 2.0, 0.0],
-            [0.0, 0.0, 2.0],
-        ],
-        "atomic_species": [
-            {"element": "H", "mass": 1.00794, "pseudo": "H.pbe-rrkjus_psl.1.0.0.UPF"},
-        ],
-        "atomic_positions": [
-            {"element": "H", "x": 0.0, "y": 0.0, "z": 0.0},
-        ],
-    }
-    result = run_full_dft_calculation(example_structure, prefix="test_H", workdir="./test_H_work")
-    print(json.dumps(result, indent=2))
-
-
 def compute_phonon_tc_for_candidates(candidates: List[Dict], prefix_base: str = "candidate", workdir: str = "./phonon_work") -> Dict[str, Dict]:
     """
     Run DFT phonon calculations for a list of candidate structures (top 3) and compute
@@ -1049,7 +1030,7 @@ def run_dft_pipeline(
     pseudo_dir: str = PSEUDO_DIR,
     ecutwfc: float = 60.0,
     ecutrho: float = 240.0,
-    kpoints: List[int] = [4, 4, 4, 0, 0, 0],
+    kpoints: Optional[List[int]] = None,
     q_grid: Tuple[int, int, int] = (4, 4, 4),
     mu_star: float = 0.1,
 ) -> Optional[Dict]:
@@ -1068,6 +1049,7 @@ def run_dft_pipeline(
     Returns:
         Dictionary with keys 'lambda', 'omega_log', 'tc' if successful, else None.
     """
+    kpoints = kpoints or [4, 4, 4, 0, 0, 0]
     # Run full DFT calculation (SCF + phonon + electron-phonon coupling)
     try:
         result = run_full_dft_calculation(
@@ -1115,3 +1097,30 @@ def run(compound: Dict, **kwargs) -> Optional[Dict]:
         Dictionary with keys 'lambda', 'omega_log', 'tc' if successful, else None.
     """
     return run_dft_pipeline(compound, **kwargs)
+
+
+def main(argv=None) -> int:
+    """Run an explicitly authorized Quantum ESPRESSO calculation from JSON."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run the Quantum ESPRESSO DFT workflow")
+    parser.add_argument("structure", help="Path to a JSON structure description")
+    parser.add_argument("--prefix", default="dft")
+    parser.add_argument("--workdir", default="./dft_work")
+    parser.add_argument(
+        "--execute",
+        action="store_true",
+        help="Confirm execution of external Quantum ESPRESSO binaries",
+    )
+    args = parser.parse_args(argv)
+    if not args.execute:
+        parser.error("DFT execution requires the explicit --execute flag")
+    with open(args.structure, "r", encoding="utf-8") as handle:
+        structure = json.load(handle)
+    result = run_full_dft_calculation(structure, prefix=args.prefix, workdir=args.workdir)
+    print(json.dumps(result, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

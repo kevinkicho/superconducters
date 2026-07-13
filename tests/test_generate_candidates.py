@@ -1,66 +1,31 @@
 import pytest
-from scripts.generate_candidates import generate_candidates, filter_candidates, rank_candidates
 
-def test_generate_candidates_returns_list():
-    result = generate_candidates()
-    assert isinstance(result, list)
+from superconductors.generation import filter_candidates, generate_candidates, rank_candidates
 
-def test_generate_candidates_non_empty():
-    result = generate_candidates()
-    assert len(result) > 0
 
-def test_filter_candidates_removes_invalid():
+def test_generated_candidates_have_provenance():
+    candidates = generate_candidates(2)
+    assert len(candidates) == 2
+    assert all(candidate["source"] == "curated-template" for candidate in candidates)
+    assert all("prediction_method" in candidate for candidate in candidates)
+
+
+def test_negative_limit_is_rejected():
+    with pytest.raises(ValueError, match="negative"):
+        generate_candidates(-1)
+
+
+def test_filter_removes_invalid_and_applies_thresholds():
     candidates = [
-        {"formula": "H3S", "tc": 203, "pressure": 150},
-        {"formula": "LaH10", "tc": 250, "pressure": 170},
-        {"formula": "", "tc": 0, "pressure": 0},
+        {"formula": "A", "tc": 200, "pressure": 50},
+        {"formula": "B", "tc": 100, "pressure": 10},
+        {"formula": "", "tc": 300, "pressure": 0},
     ]
-    filtered = filter_candidates(candidates)
-    assert len(filtered) == 2
-    assert all(c["formula"] for c in filtered)
+    assert filter_candidates(candidates, min_tc=150, max_pressure=100) == [candidates[0]]
 
-def test_rank_candidates_orders_by_tc():
-    candidates = [
-        {"formula": "A", "tc": 100},
-        {"formula": "B", "tc": 200},
-        {"formula": "C", "tc": 150},
-    ]
+
+def test_rank_candidates_orders_descending_without_mutating_input():
+    candidates = [{"formula": "A", "tc": 100}, {"formula": "B", "tc": 200}]
     ranked = rank_candidates(candidates)
-    assert ranked[0]["tc"] == 200
-    assert ranked[1]["tc"] == 150
-    assert ranked[2]["tc"] == 100
-
-def test_generate_candidates_includes_required_keys():
-    result = generate_candidates()
-    for c in result:
-        assert "formula" in c
-        assert "tc" in c
-        assert "pressure" in c
-
-def test_filter_candidates_all_valid():
-    candidates = [
-        {"formula": "H3S", "tc": 203, "pressure": 150},
-        {"formula": "LaH10", "tc": 250, "pressure": 170},
-    ]
-    filtered = filter_candidates(candidates)
-    assert filtered == candidates
-
-
-def test_rank_candidates_ties():
-    candidates = [
-        {"formula": "A", "tc": 100},
-        {"formula": "B", "tc": 100},
-    ]
-    ranked = rank_candidates(candidates)
-    assert ranked[0]["tc"] == 100
-    assert ranked[1]["tc"] == 100
-
-
-def test_filter_candidates_handles_none_formula():
-    candidates = [
-        {"formula": None, "tc": 0, "pressure": 0},
-        {"formula": "H3S", "tc": 203, "pressure": 150},
-    ]
-    filtered = filter_candidates(candidates)
-    assert len(filtered) == 1
-    assert filtered[0]["formula"] == "H3S"
+    assert [candidate["formula"] for candidate in ranked] == ["B", "A"]
+    assert [candidate["formula"] for candidate in candidates] == ["A", "B"]

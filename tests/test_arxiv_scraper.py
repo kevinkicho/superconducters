@@ -1,101 +1,60 @@
 import pytest
-import sys
-import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from unittest.mock import patch, MagicMock
-import scripts.arxiv_scraper as arx
+
+from superconductors.integrations import (
+    IntegrationError,
+    fetch_paper_details,
+    parse_arxiv_feed,
+    search_arxiv,
+)
+
+ATOM_FEED = b"""<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <id>https://arxiv.org/abs/1234.5678</id>
+    <published>2026-01-02T00:00:00Z</published>
+    <title>  Test   superconductor paper </title>
+    <summary> A useful abstract. </summary>
+    <author><name>Ada Researcher</name></author>
+  </entry>
+</feed>
+"""
 
 
-def test_search_arxiv_success():
-    """Test that search_arxiv returns parsed results."""
-    mock_entry = MagicMock()
-    mock_entry.title = "Test Title"
-    mock_entry.authors = [MagicMock(name="Author1")]
-    mock_entry.summary = "Test abstract"
-    mock_entry.entry_id = "http://arxiv.org/abs/1234.56789v1"
-    with patch('scripts.arxiv_scraper.arxiv.Search') as mock_search:
-        mock_search.return_value.results.return_value = [mock_entry]
-        results = arx.search_arxiv("superconductor", max_results=1)
-        assert len(results) == 1
-        assert results[0]['title'] == "Test Title"
-        assert results[0]['authors'] == ["Author1"]
-        assert results[0]['abstract'] == "Test abstract"
-        assert results[0]['url'] == "http://arxiv.org/abs/1234.56789v1"
+def test_parse_arxiv_feed_normalizes_entry():
+    paper = parse_arxiv_feed(ATOM_FEED)[0]
+    assert paper["title"] == "Test superconductor paper"
+    assert paper["authors"] == ["Ada Researcher"]
+    assert paper["url"].endswith("1234.5678")
 
 
-def test_search_arxiv_no_results():
-    """Test that search_arxiv returns empty list when no results."""
-    with patch('scripts.arxiv_scraper.arxiv.Search') as mock_search:
-        mock_search.return_value.results.return_value = []
-        results = arx.search_arxiv("nonexistent", max_results=10)
-        assert results == []
+def test_search_arxiv_uses_injected_transport():
+    urls = []
+
+    def transport(url):
+        urls.append(url)
+        return ATOM_FEED
+
+    assert len(search_arxiv("superconductor", max_results=1, transport=transport)) == 1
+    assert "max_results=1" in urls[0]
 
 
-def test_search_arxiv_network_error():
-    """Test that search_arxiv raises exception on network error."""
-    with patch('scripts.arxiv_scraper.arxiv.Search', side_effect=Exception("Network error")):
-        with pytest.raises(Exception):
-            arx.search_arxiv("superconductor")
+def test_empty_search_does_not_call_transport():
+    assert search_arxiv("", transport=lambda _: pytest.fail("transport called")) == []
 
 
-def test_fetch_paper_details_success():
-    """Test fetch_paper_details returns parsed details."""
-    mock_entry = MagicMock()
-    mock_entry.title = "Detail Title"
-    mock_entry.authors = [MagicMock(name="Author2")]
-    mock_entry.summary = "Detail abstract"
-    mock_entry.entry_id = "http://arxiv.org/abs/5678.12345v2"
-    with patch('scripts.arxiv_scraper.arxiv.Search') as mock_search:
-        mock_search.return_value.results.return_value = [mock_entry]
-        details = arx.fetch_paper_details("5678.12345")
-        assert details['title'] == "Detail Title"
-        assert details['authors'] == ["Author2"]
-        assert details['abstract'] == "Detail abstract"
-        assert details['url'] == "http://arxiv.org/abs/5678.12345v2"
+def test_transport_errors_have_stable_exception():
+    def failed_transport(_):
+        raise OSError("offline")
+
+    with pytest.raises(IntegrationError, match="arXiv request failed"):
+        search_arxiv("superconductor", transport=failed_transport)
 
 
-def test_fetch_paper_details_not_found():
-    """Test fetch_paper_details returns None or raises when not found."""
-    with patch('scripts.arxiv_scraper.arxiv.Search') as mock_search:
-        mock_search.return_value.results.return_value = []
-        result = arx.fetch_paper_details("0000.00000")
-        assert result is None
+def test_fetch_paper_details_returns_first_result():
+    paper = fetch_paper_details("1234.5678", transport=lambda _: ATOM_FEED)
+    assert paper["title"] == "Test superconductor paper"
 
 
-def test_parse_arxiv_entry():
-    """Test parse_arxiv_entry returns correct dict."""
-    mock_entry = MagicMock()
-    mock_entry.title = "Parsed Title"
-    mock_entry.authors = [MagicMock(name="Author3"), MagicMock(name="Author4")]
-    mock_entry.summary = "Parsed abstract"
-    mock_entry.entry_id = "http://arxiv.org/abs/9999.88888v3"
-    result = arx.parse_arxiv_entry(mock_entry)
-    assert result['title'] == "Parsed Title"
-    assert result['authors'] == ["Author3", "Author4"]
-    assert result['abstract'] == "Parsed abstract"
-    assert result['url'] == "http://arxiv.org/abs/9999.88888v3"
-
-
-def test_parse_arxiv_entry_empty_authors():
-    """Test parse_arxiv_entry handles empty authors list."""
-    mock_entry = MagicMock()
-    mock_entry.title = "No Authors"
-    mock_entry.authors = []
-    mock_entry.summary = "Abstract"
-    mock_entry.entry_id = "http://arxiv.org/abs/1111.22222"
-    result = arx.parse_arxiv_entry(mock_entry)
-    assert result['authors'] == []
-
-
-def test_search_arxiv_handles_invalid_query():
-    """Test search_arxiv returns empty list for invalid query."""
-    with patch('scripts.arxiv_scraper.arxiv.Search', side_effect=Exception("Invalid query")):
-        with pytest.raises(Exception):
-            arx.search_arxiv("")
-
-
-def test_fetch_paper_details_network_error():
-    """Test fetch_paper_details raises exception on network error."""
-    with patch('scripts.arxiv_scraper.arxiv.Search', side_effect=Exception("Network error")):
-        with pytest.raises(Exception):
-            arx.fetch_paper_details("1234.56789")
+def test_fetch_paper_details_returns_none_for_empty_feed():
+    empty_feed = b'<feed xmlns="http://www.w3.org/2005/Atom" />'
+    assert fetch_paper_details("1234.5678", transport=lambda _: empty_feed) is None

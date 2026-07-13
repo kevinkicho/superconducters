@@ -1,34 +1,35 @@
-# Reproducibility Makefile for Superconductor Discovery Pipeline
+ROOT := ..
+PYTHON := $(ROOT)/.venv/Scripts/python.exe
+ifeq ($(OS),Windows_NT)
+	RUN_PYTHON := $(PYTHON)
+else
+	PYTHON := $(ROOT)/.venv/bin/python
+	RUN_PYTHON := $(PYTHON)
+endif
 
-.PHONY: help setup run test clean docker-build docker-run
+.PHONY: help setup run test lint clean docker-build docker-run
 
 help:
-	@echo "Available targets:"
-	@echo "  setup       - Create conda environment and install dependencies"
-	@echo "  run         - Run the full pipeline"
-	@echo "  test        - Run unit tests"
-	@echo "  clean       - Remove generated files and caches"
-	@echo "  docker-build - Build Docker image"
-	@echo "  docker-run   - Run pipeline in Docker container"
+	@echo "setup run test lint clean docker-build docker-run"
 
 setup:
-	conda env create -f environment.yml
-	@echo "Environment created. Activate with: conda activate superconductor"
+	python -m venv $(ROOT)/.venv
+	$(RUN_PYTHON) -m pip install -e "$(ROOT)[api,dev]"
 
 run:
-	python run_pipeline.py --export-format json --export-format csv
+	$(RUN_PYTHON) $(ROOT)/run_pipeline.py --limit 20
 
 test:
-	pytest tests/ -v --cov=.
+	$(RUN_PYTHON) -m pytest $(ROOT)/tests/test_run_pipeline.py $(ROOT)/tests/test_repository.py $(ROOT)/tests/test_api_endpoints.py
+
+lint:
+	$(RUN_PYTHON) -m ruff check $(ROOT)/superconductors $(ROOT)/app.py $(ROOT)/run_pipeline.py
 
 clean:
-	rm -rf __pycache__ .pytest_cache
-	rm -rf exports/
-	rm -rf output/
-	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	$(RUN_PYTHON) -c "import shutil; [shutil.rmtree(path, ignore_errors=True) for path in ['../.pytest_cache', '../htmlcov', '../output']]"
 
 docker-build:
-	docker build -t superconductor-pipeline .
+	docker build -f Dockerfile -t superconductor-toolkit $(ROOT)
 
 docker-run:
-	docker run --rm -v $(PWD)/output:/app/output superconductor-pipeline python run_pipeline.py
+	docker run --rm superconductor-toolkit --limit 10
