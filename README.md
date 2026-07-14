@@ -26,6 +26,9 @@ python run_pipeline.py --min-tc 100 --max-pressure 200 --limit 10
 python run_pipeline.py --min-tc 200 --json
 python run_pipeline.py --validate
 python run_pipeline.py --evidence-audit unclassified --limit 20 --json
+python scripts/review_evidence.py 76 --reviewer "Name" --primary-source "doi:..." \
+  --evidence-type calculated --verification-status unverified \
+  --rationale "Primary source reports an Eliashberg calculation."
 python run_pipeline.py --objective ambient-room-temperature --json
 ```
 
@@ -74,6 +77,7 @@ superconductors/
   cli.py          command-line interface
   config.py       environment-based settings
   evidence.py     evidence classification and quarantine
+  evidence_reviews.py source-reviewed classification overlays
   experiments.py  raw-data manifests and replication checks
   dft/
     inputs.py     pure Quantum ESPRESSO input rendering
@@ -87,6 +91,7 @@ superconductors/
   objectives.py   explicit success gates and Pareto screening
   pipeline.py     deterministic screening workflow
   prediction.py   bounded benchmark lookup and opt-in heuristic
+  prediction_audit.py prospective prediction and calibration ledger
   query.py        raw-record filtering
   reporting.py    Markdown and optional PDF reports
   repository.py   validated, atomic JSON persistence

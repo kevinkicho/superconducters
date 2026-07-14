@@ -30,10 +30,22 @@ a citation without an explicit physical measurement method remains
 `unclassified`, while computational method metadata is classified as
 `calculated`. Explicit classifications should be added only after reviewing the
 source and its underlying evidence.
+Manual decisions belong in the separate `EvidenceReviewLedger`, with a named
+reviewer, primary source, rationale, timestamp, and source-record hash. Applying
+the ledger creates classified copies; it never rewrites the legacy database and
+fails if a reviewed source record has changed.
 
 The default predictor is a benchmark lookup for a small set of known materials.
 It rejects unsupported formulas and pressure regimes. The historical
 formula-only heuristic requires explicit opt-in and returns zero confidence.
+Predictions intended for evaluation can be registered before experiments in the
+append-only `PredictionLedger`. Outcomes require an experiment reference, and
+calibration reports retain an explicit minimum-sample warning; retrospective
+fits are not presented as prospective validation.
+Calibration excludes textual-only outcome references by default. The verified
+feedback path resolves an outcome only from an intact `ExperimentLedger` record
+whose formula and pressure match the registered prediction and whose electrical
+or magnetic record contains the corresponding physical signature.
 
 ## Required discovery gates
 
