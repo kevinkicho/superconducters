@@ -15,7 +15,7 @@ required.
 | 6 | Missing phonon, anharmonic, and EPC proof | Partial | Stability and EPC gates reject missing or tampered artifacts. | Production DFPT/SSCHA, convergence studies, uncertainty bounds, and expert review. |
 | 7 | Weak uncertainty and applicability controls | Partial | Unsupported predictions fail closed; multi-fidelity modeling is isolated. | Calibrated uncertainty, leakage-resistant splits, applicability metrics, and prospective error tracking. |
 | 8 | No closed experimental feedback loop | Partial | Raw-data hashes, calibration, sample identity, and electrical/magnetic evidence are supported. | Instrument adapters, laboratory SOPs, automated QC, and a governed training dataset. |
-| 9 | No independent replication pathway | Partial | The gate requires zero resistance and Meissner evidence from at least two labs. | Partner labs, blinded sample exchange, preregistration, and public raw-data deposition. |
+| 9 | No independent replication pathway | Partial | The gate enforces preregistration, distinct blinded specimens, intact raw data, paired electrical/magnetic evidence, and interlab Tc/pressure agreement. | Partner labs, governed sample exchange, and public raw-data deposition. |
 
 ## Current priority order
 

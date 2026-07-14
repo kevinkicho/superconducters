@@ -13,6 +13,11 @@ The default objective requires all of the following:
 - measured electrical and magnetic evidence;
 - independent replication by at least two laboratories.
 
+Replication additionally requires preregistered protocols, distinct blinded
+specimens, intact raw-data artifacts, paired zero-resistance and Meissner
+measurements within each laboratory, and interlaboratory agreement within
+declared temperature and pressure tolerances.
+
 No record currently satisfies all four gates.
 
 ## Evidence policy

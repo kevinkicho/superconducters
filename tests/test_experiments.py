@@ -34,6 +34,12 @@ def test_experiment_ingestion_hashes_raw_data_and_persists(tmp_path):
 def test_replication_requires_two_labs_with_electrical_and_magnetic_evidence(tmp_path):
     ledger = ExperimentLedger(tmp_path / "ledger.json")
     for laboratory in ("Lab A", "Lab B"):
+        shared = {
+            "protocol_id": "protocol-1",
+            "preregistration_uri": "https://registry.example/protocol-1",
+            "blinded_sample_code": f"blind-{laboratory}",
+            "observed_transition_k": 203 if laboratory == "Lab A" else 204,
+        }
         ledger.ingest(
             sample_id=f"{laboratory}-resistance",
             formula="H3S",
@@ -43,6 +49,7 @@ def test_replication_requires_two_labs_with_electrical_and_magnetic_evidence(tmp
             raw_data_path=_raw(tmp_path, f"{laboratory}-r.csv"),
             calibration_reference="resistance-calibration",
             zero_resistance=True,
+            **shared,
         )
         ledger.ingest(
             sample_id=f"{laboratory}-magnetic",
@@ -53,8 +60,46 @@ def test_replication_requires_two_labs_with_electrical_and_magnetic_evidence(tmp
             raw_data_path=_raw(tmp_path, f"{laboratory}-m.csv"),
             calibration_reference="susceptibility-calibration",
             meissner_effect=True,
+            **shared,
         )
     assert ledger.replication_summary("H3S")["independently_replicated"] is True
+
+
+def test_replication_rejects_unregistered_or_disagreeing_results(tmp_path):
+    ledger = ExperimentLedger(tmp_path / "ledger.json")
+    for laboratory, transition in (("Lab A", 200), ("Lab B", 220)):
+        shared = {
+            "protocol_id": "protocol-1",
+            "preregistration_uri": "https://registry.example/protocol-1",
+            "blinded_sample_code": f"blind-{laboratory}",
+            "observed_transition_k": transition,
+        }
+        ledger.ingest(
+            sample_id=f"{laboratory}-r",
+            formula="H3S",
+            laboratory=laboratory,
+            pressure_gpa=155,
+            measurement_type="resistivity",
+            raw_data_path=_raw(tmp_path, f"{laboratory}-r.csv"),
+            calibration_reference="cal-r",
+            zero_resistance=True,
+            **shared,
+        )
+        ledger.ingest(
+            sample_id=f"{laboratory}-m",
+            formula="H3S",
+            laboratory=laboratory,
+            pressure_gpa=155,
+            measurement_type="susceptibility",
+            raw_data_path=_raw(tmp_path, f"{laboratory}-m.csv"),
+            calibration_reference="cal-m",
+            meissner_effect=True,
+            **shared,
+        )
+    summary = ledger.replication_summary("H3S")
+    assert summary["qualified_laboratories"] == ["Lab A", "Lab B"]
+    assert summary["interlaboratory_agreement"] is False
+    assert summary["independently_replicated"] is False
 
 
 def test_experiment_ingestion_rejects_missing_raw_data_and_duplicates(tmp_path):

@@ -24,6 +24,9 @@ def main(argv: list[str] | None = None) -> int:
         choices=["resistivity", "susceptibility", "specific-heat", "xrd"],
     )
     parser.add_argument("--calibration-reference", required=True)
+    parser.add_argument("--protocol-id")
+    parser.add_argument("--preregistration-uri")
+    parser.add_argument("--blinded-sample-code")
     parser.add_argument("--transition-k", type=float)
     parser.add_argument("--zero-resistance", action="store_true")
     parser.add_argument("--meissner-effect", action="store_true")
@@ -37,6 +40,9 @@ def main(argv: list[str] | None = None) -> int:
         measurement_type=args.measurement_type,
         raw_data_path=args.raw_data,
         calibration_reference=args.calibration_reference,
+        protocol_id=args.protocol_id,
+        preregistration_uri=args.preregistration_uri,
+        blinded_sample_code=args.blinded_sample_code,
         observed_transition_k=args.transition_k,
         zero_resistance=args.zero_resistance,
         meissner_effect=args.meissner_effect,
