@@ -153,11 +153,37 @@ class Prediction:
     formula: str
     tc: float
     uncertainty: float
-    method: str = "Allen-Dynes heuristic"
+    method: str
+    confidence: float
+    applicability: str
+    reference_pressure: float | None = None
+    citation: str | None = None
 
-    @property
-    def confidence(self) -> float:
-        return 0.5
+
+@dataclass(frozen=True, slots=True)
+class TcBenchmark:
+    tc: float
+    pressure: float
+    uncertainty: float
+    citation: str
+    evidence: str
+
+
+class OutOfDomainError(ValueError):
+    """Raised when no validated prediction model covers the request."""
+
+
+TC_BENCHMARKS: dict[str, TcBenchmark] = {
+    "H3S": TcBenchmark(203, 155, 5, "Drozdov et al., Nature 525, 73 (2015)", "measured"),
+    "LaH10": TcBenchmark(250, 170, 5, "Drozdov et al., Nature 569, 528 (2019)", "measured"),
+    "YH6": TcBenchmark(224, 166, 10, "Kong et al., Nat. Commun. 12, 5075 (2021)", "measured"),
+    "CeH9": TcBenchmark(150, 200, 15, "Peng et al., Phys. Rev. B 96, 100501 (2017)", "calculated"),
+    "ThH10": TcBenchmark(
+        200, 200, 20, "Sanna et al., Phys. Rev. B 100, 024511 (2019)", "calculated"
+    ),
+    "MgB2": TcBenchmark(39, 0, 1, "Nagamatsu et al., Nature 410, 63 (2001)", "measured"),
+    "Nb3Sn": TcBenchmark(18.3, 0, 1, "Matthias et al., Phys. Rev. 95, 1435 (1954)", "measured"),
+}
 
 
 def parse_formula(formula: str) -> dict[str, float]:
@@ -217,21 +243,57 @@ def allen_dynes_tc(formula: str, mu_star: float = 0.1) -> float:
     return _tc_equation(_estimated_coupling(formula), omega_log, 1.2, mu_star)
 
 
-def predict(formula: str) -> Prediction:
+def predict(formula: str, pressure: float | None = None) -> Prediction:
+    normalized = formula.strip() if isinstance(formula, str) else formula
+    parse_formula(normalized)
+    benchmark = TC_BENCHMARKS.get(normalized)
+    if benchmark is None:
+        raise OutOfDomainError(
+            f"No validated Tc model covers {normalized}; "
+            "use DFT or explicit unvalidated_heuristic()"
+        )
+    if pressure is not None:
+        if not isinstance(pressure, (int, float)) or not math.isfinite(pressure) or pressure < 0:
+            raise ValueError("Pressure must be a finite non-negative number")
+        tolerance = max(5.0, benchmark.pressure * 0.15)
+        if abs(pressure - benchmark.pressure) > tolerance:
+            raise OutOfDomainError(
+                f"{normalized} benchmark applies near {benchmark.pressure:g} GPa, "
+                f"not {pressure:g} GPa"
+            )
+    return Prediction(
+        formula=normalized,
+        tc=benchmark.tc,
+        uncertainty=benchmark.uncertainty,
+        method=f"curated {benchmark.evidence} benchmark lookup",
+        confidence=1.0 if benchmark.evidence == "measured" else 0.5,
+        applicability="reference value; not a novel-material prediction",
+        reference_pressure=benchmark.pressure,
+        citation=benchmark.citation,
+    )
+
+
+def unvalidated_heuristic(formula: str) -> Prediction:
+    """Return the historical formula-only estimate with an explicit zero confidence."""
     tc = allen_dynes_tc(formula)
-    return Prediction(formula=formula, tc=tc, uncertainty=max(2.0, tc * 0.2))
+    return Prediction(
+        formula=formula,
+        tc=tc,
+        uncertainty=max(2.0, tc * 0.5),
+        method="unvalidated formula-only Allen-Dynes proxy",
+        confidence=0.0,
+        applicability="research diagnostic only; ignores pressure and crystal structure",
+    )
 
 
 def predict_tc(formula: str, pressure: float | None = None) -> float:
-    if pressure is not None and not isinstance(pressure, (int, float)):
-        raise TypeError("Pressure must be numeric")
-    return predict(formula).tc
+    return predict(formula, pressure).tc
 
 
 def predict_tc_with_uncertainty(
     formula: str, pressure: float | None = None
 ) -> tuple[float, tuple[float, float]]:
-    result = predict(formula)
+    result = predict(formula, pressure)
     lower = max(0.0, result.tc - result.uncertainty)
     return result.tc, (lower, result.tc + result.uncertainty)
 

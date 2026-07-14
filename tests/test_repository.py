@@ -48,3 +48,46 @@ def test_repository_rejects_non_list_database(tmp_path):
 
     with pytest.raises(ValueError, match="JSON list"):
         CandidateRepository(path).list()
+
+
+@pytest.mark.parametrize(
+    ("record", "message"),
+    [
+        ("not an object", "index 0 must be a JSON object"),
+        ({"tc": 100}, "index 0 must include a formula"),
+    ],
+)
+def test_repository_reports_invalid_record_index(tmp_path, record, message):
+    path = tmp_path / "database.json"
+    path.write_text(json.dumps([record]), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=message):
+        CandidateRepository(path).list()
+
+
+def test_append_rejects_non_list_database_without_overwriting_it(tmp_path):
+    path = tmp_path / "database.json"
+    path.write_text("{}", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="JSON list"):
+        CandidateRepository(path).append(Candidate(formula="H3S"))
+
+    assert path.read_text(encoding="utf-8") == "{}"
+
+
+@pytest.mark.parametrize("candidate", [Candidate(formula=""), Candidate(formula="   ")])
+def test_repository_does_not_persist_empty_formulas(tmp_path, candidate):
+    path = tmp_path / "database.json"
+    repository = CandidateRepository(path)
+
+    with pytest.raises(ValueError, match="formula must not be empty"):
+        repository.save([candidate])
+
+    assert not path.exists()
+
+
+def test_repository_rejects_non_candidate_writes(tmp_path):
+    repository = CandidateRepository(tmp_path / "database.json")
+
+    with pytest.raises(TypeError, match="Candidate instances"):
+        repository.append({"formula": "H3S"})

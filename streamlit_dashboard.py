@@ -4,8 +4,7 @@
 from __future__ import annotations
 
 from superconductors.config import Settings
-from superconductors.pipeline import run_pipeline
-from superconductors.prediction import predict
+from superconductors.dashboard import build_snapshot, estimate_formula
 from superconductors.repository import CandidateRepository
 
 
@@ -43,25 +42,22 @@ def main() -> None:
 
 
 def _overview(st, pd, px, repository: CandidateRepository) -> None:
-    result = run_pipeline(repository=repository, limit=20)
-    candidates = list(result.candidates)
-    measured = [candidate for candidate in candidates if candidate.tc is not None]
-    ambient = [
-        candidate
-        for candidate in candidates
-        if candidate.pressure is not None and candidate.pressure <= 1
-    ]
+    try:
+        snapshot = build_snapshot(repository, limit=20)
+    except (OSError, ValueError) as exc:
+        st.error(f"Candidate database is unavailable: {exc}")
+        return
 
     first, second, third = st.columns(3)
-    first.metric("Database candidates", result.candidates_loaded)
-    second.metric("Top candidates shown", result.candidates_selected)
-    third.metric("Near-ambient in top set", len(ambient))
+    first.metric("Database candidates", snapshot.result.candidates_loaded)
+    second.metric("Top candidates shown", snapshot.result.candidates_selected)
+    third.metric("Near-ambient in top set", len(snapshot.near_ambient))
 
-    if not measured:
+    if not snapshot.measured:
         st.info("No candidates with measured Tc values are available.")
         return
 
-    frame = pd.DataFrame([candidate.to_dict() for candidate in measured])
+    frame = pd.DataFrame([candidate.to_dict() for candidate in snapshot.measured])
     st.plotly_chart(
         px.scatter(
             frame,
@@ -85,16 +81,20 @@ def _candidates(st, pd, repository: CandidateRepository) -> None:
     )
     limit = st.slider("Maximum rows", min_value=5, max_value=100, value=25, step=5)
 
-    result = run_pipeline(
-        repository=repository,
-        min_tc=min_tc,
-        max_pressure=max_pressure if use_pressure_limit else None,
-        limit=limit,
-    )
-    if not result.candidates:
+    try:
+        snapshot = build_snapshot(
+            repository,
+            min_tc=min_tc,
+            max_pressure=max_pressure if use_pressure_limit else None,
+            limit=limit,
+        )
+    except (OSError, ValueError) as exc:
+        st.error(f"Candidate database is unavailable: {exc}")
+        return
+    if not snapshot.result.candidates:
         st.warning("No candidates match the selected criteria.")
         return
-    frame = pd.DataFrame([candidate.to_dict() for candidate in result.candidates])
+    frame = pd.DataFrame(snapshot.rows)
     st.dataframe(frame, use_container_width=True, hide_index=True)
     st.download_button(
         "Export filtered CSV",
@@ -110,7 +110,7 @@ def _prediction(st) -> None:
     if not st.button("Estimate"):
         return
     try:
-        result = predict(formula)
+        result = estimate_formula(formula)
     except ValueError as exc:
         st.error(str(exc))
         return

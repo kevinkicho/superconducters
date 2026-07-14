@@ -12,19 +12,31 @@ def format_candidate_table(candidates: Iterable[Mapping[str, Any]]) -> str:
     if not values:
         return ""
     rows = [
-        "| Formula | Tc (K) | Pressure (GPa) | Source |",
-        "|---|---:|---:|---|",
+        "| Formula | Tc (K) | Pressure (GPa) | Evidence | Verification | Source |",
+        "|---|---:|---:|---|---|---|",
     ]
     for candidate in values:
         rows.append(
-            "| {formula} | {tc} | {pressure} | {source} |".format(
-                formula=candidate.get("formula", candidate.get("name", "")),
-                tc=candidate.get("tc", candidate.get("Tc", "")),
-                pressure=candidate.get("pressure", ""),
-                source=candidate.get("source", "unspecified"),
+            "| {formula} | {tc} | {pressure} | {evidence} | {verification} | {source} |".format(
+                formula=_markdown_cell(candidate.get("formula", candidate.get("name", ""))),
+                tc=_markdown_cell(candidate.get("tc", candidate.get("Tc", ""))),
+                pressure=_markdown_cell(candidate.get("pressure", "")),
+                evidence=_markdown_cell(candidate.get("evidence_type", "unclassified")),
+                verification=_markdown_cell(candidate.get("verification_status", "unverified")),
+                source=_markdown_cell(candidate.get("source", "unspecified")),
             )
         )
     return "\n".join(rows)
+
+
+def _markdown_cell(value: Any) -> str:
+    """Keep supplied values inside one Markdown table cell."""
+    return (
+        str(value if value is not None else "")
+        .replace("|", "\\|")
+        .replace("\r", " ")
+        .replace("\n", " ")
+    )
 
 
 def generate_report(candidates: Iterable[Mapping[str, Any]]) -> str:

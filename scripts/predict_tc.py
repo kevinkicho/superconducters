@@ -16,6 +16,7 @@ from superconductors.prediction import (
     predict,
     predict_tc,
     predict_tc_with_uncertainty,
+    unvalidated_heuristic,
 )
 
 __all__ = [
@@ -29,6 +30,7 @@ __all__ = [
     "predict",
     "predict_tc",
     "predict_tc_with_uncertainty",
+    "unvalidated_heuristic",
 ]
 
 

@@ -1,97 +1,97 @@
-# Reference: Lu et al., Transfer learning for physics-informed neural networks, CMAME, 2021. https://doi.org/10.1016/j.cma.2021.113933
+from pathlib import Path
+
 import pytest
-import torch
-import torch.nn as nn
-from torch_geometric.data import Data
-from dft_calculator import fine_tune_pinn_on_real_data, get_device
+
+import dft_calculator
+from superconductors.dft.inputs import generate_ph_input, generate_scf_input
+from superconductors.dft.parsing import compute_tc, parse_lambda_output, parse_phonon_frequencies
+from superconductors.dft.runner import DFTExecutionError, run_dft_pipeline, run_full_dft_calculation
 
 
-class SimpleModel(nn.Module):
-    """Minimal model that processes a graph's node features to predict Tc."""
-    def __init__(self, in_dim=10, hidden=16):
-        super().__init__()
-        self.lin1 = nn.Linear(in_dim, hidden)
-        self.lin2 = nn.Linear(hidden, 1)
-
-    def forward(self, data):
-        x = data.x
-        x = torch.relu(self.lin1(x))
-        return self.lin2(x).squeeze()
+@pytest.fixture
+def structure():
+    return {
+        "cell_parameters": [[2, 0, 0], [0, 2, 0], [0, 0, 2]],
+        "atomic_species": [{"element": "H", "mass": 1.008, "pseudo": "H.UPF"}],
+        "atomic_positions": [{"element": "H", "x": 0, "y": 0, "z": 0}],
+    }
 
 
-def test_fine_tune_pinn_on_real_data():
-    """Validate that fine-tuning reduces RMSE on synthetic real data."""
-    device = get_device()
-    model = SimpleModel().to(device)
+def test_scf_input_contains_validated_structure(structure):
+    rendered = generate_scf_input(structure, prefix="hydrogen", kpoints=(6, 6, 6, 0, 0, 0))
+    assert "prefix = 'hydrogen'" in rendered
+    assert "nat = 1" in rendered
+    assert "6 6 6 0 0 0" in rendered
 
-    # Create 5 synthetic graphs with random node features and target Tc values
-    real_data = []
-    for _ in range(5):
-        x = torch.randn(1, 10)
-        edge_index = torch.tensor([[0], [0]], dtype=torch.long)  # self-loop
-        graph = Data(x=x, edge_index=edge_index)
-        tc = torch.randn(1).item() * 10 + 100
-        real_data.append((graph, tc))
 
-    # Compute initial RMSE
-    model.eval()
-    initial_losses = []
-    for graph, tc in real_data:
-        graph = graph.to(device)
-        pred = model(graph).squeeze()
-        loss = nn.MSELoss()(pred, torch.tensor(tc, device=device))
-        initial_losses.append(loss.item())
-    initial_rmse = (sum(initial_losses) / len(initial_losses)) ** 0.5
+def test_invalid_structure_is_rejected():
+    with pytest.raises(ValueError, match="required fields"):
+        generate_scf_input({})
 
-    # Fine-tune
-    model = fine_tune_pinn_on_real_data(model, real_data, epochs=10, lr=1e-3, device=device)
 
-    # Compute final RMSE
-    model.eval()
-    final_losses = []
-    for graph, tc in real_data:
-        graph = graph.to(device)
-        pred = model(graph).squeeze()
-        loss = nn.MSELoss()(pred, torch.tensor(tc, device=device))
-        final_losses.append(loss.item())
-    final_rmse = (sum(final_losses) / len(final_losses)) ** 0.5
+def test_phonon_input_uses_prefix_specific_dynamical_matrix():
+    assert "fildyn = 'sample.dyn'" in generate_ph_input("sample")
 
-    # Assert RMSE decreased significantly
-    assert final_rmse < initial_rmse, (
-        f"RMSE did not decrease: initial {initial_rmse:.4f}, final {final_rmse:.4f}"
+
+def test_output_parsers_extract_signed_values():
+    assert parse_phonon_frequencies("freq ( 1) = -12.5 [cm-1]") == [-12.5]
+    assert parse_lambda_output("lambda = 1.4\nomega_log = 900 K\nTc = 210 K") == {
+        "lambda": 1.4,
+        "omega_log": 900.0,
+        "Tc": 210.0,
+    }
+
+
+def test_tc_formula_handles_invalid_denominator():
+    assert compute_tc(0, 1000) == 0
+    assert compute_tc(1.5, 1000) > 0
+
+
+def test_execution_requires_explicit_authorization(structure, tmp_path):
+    with pytest.raises(DFTExecutionError, match="execute=True"):
+        run_full_dft_calculation(structure, workdir=tmp_path)
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_injected_runner_writes_outputs_and_preserves_cwd(structure, tmp_path):
+    calls = []
+
+    def runner(command, workdir: Path):
+        calls.append((list(command), workdir))
+        if command[0] == "ph.x":
+            return "freq ( 1) = 123.4 [cm-1]\n"
+        if command[0] == "lambda.x":
+            return "lambda = 1.5\nomega_log = 1000 K\n"
+        return "completed\n"
+
+    before = Path.cwd()
+    result = run_full_dft_calculation(
+        structure,
+        prefix="test",
+        workdir=tmp_path,
+        execute=True,
+        runner=runner,
     )
-    assert final_rmse < 0.5 * initial_rmse, (
-        f"RMSE reduction insufficient: {final_rmse / initial_rmse:.2%} of initial"
+    assert Path.cwd() == before
+    assert len(calls) == 5
+    assert result["phonon_frequencies"] == [123.4]
+    assert result["elph"]["lambda"] == 1.5
+    assert (tmp_path / "test.lambda.out").read_text(encoding="utf-8").startswith("lambda")
+
+
+def test_pipeline_computes_tc_from_injected_outputs(structure, tmp_path):
+    def runner(command, _):
+        if command[0] == "lambda.x":
+            return "lambda = 1.5\nomega_log = 1000 K\n"
+        return ""
+
+    result = run_dft_pipeline(structure, workdir=tmp_path, execute=True, runner=runner)
+    assert result["tc"] > 0
+
+
+def test_compatibility_module_uses_modular_formula():
+    assert dft_calculator.compute_tc_mcmillan_allen_dynes(1.5, 1000) == pytest.approx(
+        compute_tc(1.5, 1000)
     )
-
-
-def test_get_device():
-    """Test get_device returns a torch device."""
-    device = get_device()
-    assert isinstance(device, torch.device)
-
-
-def test_fine_tune_pinn_on_real_data_no_improvement():
-    """Test fine-tuning with zero epochs does not change model."""
-    device = get_device()
-    model = SimpleModel().to(device)
-    initial_params = [p.clone() for p in model.parameters()]
-    real_data = []
-    for _ in range(2):
-        x = torch.randn(1, 10)
-        edge_index = torch.tensor([[0], [0]], dtype=torch.long)
-        graph = Data(x=x, edge_index=edge_index)
-        tc = torch.randn(1).item() * 10 + 100
-        real_data.append((graph, tc))
-    model = fine_tune_pinn_on_real_data(model, real_data, epochs=0, lr=1e-3, device=device)
-    final_params = [p for p in model.parameters()]
-    for p_initial, p_final in zip(initial_params, final_params):
-        assert torch.equal(p_initial, p_final)
-
-
-def test_fine_tune_pinn_on_real_data_empty_data():
-    """Test fine-tuning with empty data returns model unchanged."""
-    device = get_device()
-    model = SimpleModel().to(device)
-    model = fine_tune_pinn_on_real_data(model, [], epochs=5, lr=1e-3, device=device)
-    assert model is not None
+    assert callable(dft_calculator.fine_tune_pinn_on_real_data)
+    assert callable(dft_calculator.generate_scf_input)

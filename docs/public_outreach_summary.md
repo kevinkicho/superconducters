@@ -1,8 +1,14 @@
 # Press Release: Breakthrough in Room-Temperature Superconductor Discovery
 
+> **Withdrawn draft — do not publish.** The maintained application has not
+> discovered a room-temperature superconductor and has not screened 30,000
+> compounds. This file is retained to document an unsupported legacy claim.
+
 **FOR IMMEDIATE RELEASE**
 
-**City, Date** — A collaborative research project combining machine learning, density functional theory (DFT), and high-pressure synthesis has identified several promising candidates for room-temperature superconductivity. The virtual discovery pipeline, detailed in the project's final report, screened over 30,000 compounds and prioritized top candidates such as Li₂MgH₆ and YH₆, with predicted critical temperatures (Tc) exceeding 200 K under high pressure.
+**Correction:** The maintained toolkit curates and screens a small
+literature-derived database. It has not performed the claimed 30,000-compound
+campaign, laboratory synthesis, or novel-material discovery.
 
 ## Key Metrics
 - **Candidates screened**: 30,000+ compounds

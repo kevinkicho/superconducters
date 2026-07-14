@@ -1,5 +1,9 @@
 # Technology Transfer Plan: Room-Temperature Superconductors
 
+> **Status: hypothetical business-planning archive.** There is no validated
+> room-temperature-superconductor technology, project invention, manufacturing
+> process, customer validation, or regulatory package to transfer.
+
 ## 1. Intellectual Property Strategy
 
 ### 1.1 Patent Portfolio
@@ -351,7 +355,9 @@ See [docs/manufacturing_scalability.md](docs/manufacturing_scalability.md) for d
 - **Technology risk**: Parallel development of alternative hydride candidates (e.g., Li₂MgH₆-x, Li-Mg-H-N systems).
 
 ### Conclusion
-Li₂MgH₆ offers a viable path to commercial room-temperature superconductivity with manageable supply chain risks and strong financial returns. The technology transfer plan should prioritize securing raw material contracts and scaling production.
+Li₂MgH₆ is a research hypothesis, not a demonstrated commercial technology.
+Supply-chain contracts, financial-return claims, and production scale-up are
+premature until calculations are reproduced and experiments succeed.
 
 
 ## 7. Regulatory Strategy

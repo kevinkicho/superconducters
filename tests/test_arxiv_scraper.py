@@ -50,6 +50,11 @@ def test_transport_errors_have_stable_exception():
         search_arxiv("superconductor", transport=failed_transport)
 
 
+def test_malformed_transport_payload_has_stable_exception():
+    with pytest.raises(IntegrationError, match="arXiv request failed"):
+        search_arxiv("superconductor", transport=lambda _: None)
+
+
 def test_fetch_paper_details_returns_first_result():
     paper = fetch_paper_details("1234.5678", transport=lambda _: ATOM_FEED)
     assert paper["title"] == "Test superconductor paper"

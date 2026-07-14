@@ -1,5 +1,9 @@
 # Theoretical Framework for Room Temperature Superconductivity
 
+> **Status: hypothesis survey.** Proposed mechanisms are not implemented or
+> validated by the maintained application unless linked to executable code and
+> tests. Tc values above 300 K are possibilities, not project discoveries.
+
 ## 1. Introduction
 Superconductivity, the phenomenon of zero electrical resistance below a critical temperature (Tc), has been a cornerstone of condensed matter physics since its discovery in 1911. The quest for room temperature superconductivity (RTSC) — materials that superconduct at or above 300 K — promises transformative technological applications. This document outlines the key theoretical principles from physics and chemistry that guide the understanding and prediction of RTSC.
 

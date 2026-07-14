@@ -30,11 +30,13 @@ def screen_candidates(
     min_tc: float | None = None,
     max_pressure: float | None = None,
     limit: int = 20,
+    include_quarantined: bool = False,
 ) -> list[Candidate]:
     selected = [
         candidate
         for candidate in candidates
-        if (min_tc is None or (candidate.tc is not None and candidate.tc >= min_tc))
+        if (include_quarantined or candidate.verification_status not in {"disputed", "retracted"})
+        and (min_tc is None or (candidate.tc is not None and candidate.tc >= min_tc))
         and (
             max_pressure is None
             or (candidate.pressure is not None and candidate.pressure <= max_pressure)
@@ -58,6 +60,7 @@ def run_pipeline(
     min_tc: float | None = None,
     max_pressure: float | None = None,
     limit: int = 20,
+    include_quarantined: bool = False,
 ) -> PipelineResult:
     settings = settings or Settings.from_env()
     repository = repository or CandidateRepository(settings.database_path)
@@ -67,5 +70,6 @@ def run_pipeline(
         min_tc=min_tc,
         max_pressure=max_pressure,
         limit=limit,
+        include_quarantined=include_quarantined,
     )
     return PipelineResult(len(candidates), len(selected), tuple(selected))

@@ -14,11 +14,17 @@ class Settings:
     data_dir: Path = PROJECT_ROOT / "data"
     output_dir: Path = PROJECT_ROOT / "output"
     api_key: str | None = None
+    admin_username: str | None = None
+    admin_password: str | None = None
     cloud_lab_url: str | None = None
 
     @property
     def database_path(self) -> Path:
         return self.data_dir / "superconductor_database.json"
+
+    @property
+    def state_database_path(self) -> Path:
+        return self.output_dir / "application.sqlite3"
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -26,5 +32,7 @@ class Settings:
             data_dir=Path(os.getenv("DATA_DIR", PROJECT_ROOT / "data")),
             output_dir=Path(os.getenv("OUTPUT_DIR", PROJECT_ROOT / "output")),
             api_key=os.getenv("SUPERCONDUCTOR_API_KEY"),
+            admin_username=os.getenv("SUPERCONDUCTOR_ADMIN_USERNAME"),
+            admin_password=os.getenv("SUPERCONDUCTOR_ADMIN_PASSWORD"),
             cloud_lab_url=os.getenv("CLOUD_LAB_API_URL"),
         )

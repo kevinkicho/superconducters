@@ -42,7 +42,7 @@ def search_arxiv(
     fetch = transport or _fetch_bytes
     try:
         return parse_arxiv_feed(fetch(f"{ARXIV_API_URL}?{parameters}"))
-    except (OSError, ET.ParseError) as exc:
+    except (OSError, TypeError, ET.ParseError) as exc:
         raise IntegrationError(f"arXiv request failed: {exc}") from exc
 
 
@@ -57,7 +57,7 @@ def fetch_paper_details(
     fetch = transport or _fetch_bytes
     try:
         papers = parse_arxiv_feed(fetch(f"{ARXIV_API_URL}?{parameters}"))
-    except (OSError, ET.ParseError) as exc:
+    except (OSError, TypeError, ET.ParseError) as exc:
         raise IntegrationError(f"arXiv request failed: {exc}") from exc
     return papers[0] if papers else None
 
@@ -77,8 +77,9 @@ def fetch_materials_project(
 ) -> list[dict[str, Any]]:
     if not _valid_formula(formula) or max_results <= 0:
         return []
-    if not api_key:
+    if not isinstance(api_key, str) or not api_key.strip():
         raise ValueError("Materials Project API key is required")
+    api_key = api_key.strip()
     factory = client_factory or _materials_project_client
     try:
         with factory(api_key) as client:
@@ -86,9 +87,13 @@ def fetch_materials_project(
                 formula=formula,
                 fields=["material_id", "formula_pretty", "band_gap", "energy_above_hull"],
             )
+        if not isinstance(documents, list):
+            raise IntegrationError("Materials Project response must contain a list")
+        return [_material_document(document) for document in documents[:max_results]]
+    except IntegrationError:
+        raise
     except Exception as exc:
         raise IntegrationError(f"Materials Project request failed: {exc}") from exc
-    return [_material_document(document) for document in list(documents)[:max_results]]
 
 
 def fetch_icsd(
@@ -102,10 +107,12 @@ def fetch_icsd(
     if not _valid_formula(formula) or max_results <= 0:
         return []
     endpoint = endpoint or os.getenv("ICSD_API_URL")
-    if not endpoint:
+    if not isinstance(endpoint, str) or not endpoint.strip():
         raise IntegrationError("ICSD_API_URL is not configured")
-    if not api_key:
+    if not isinstance(api_key, str) or not api_key.strip():
         raise ValueError("ICSD API key is required")
+    endpoint = endpoint.strip()
+    api_key = api_key.strip()
     fetch = transport or _fetch_json
     try:
         parameters = urllib.parse.urlencode({"formula": formula, "limit": max_results})
@@ -118,7 +125,12 @@ def fetch_icsd(
     records = payload.get("data", payload) if isinstance(payload, dict) else payload
     if not isinstance(records, list):
         raise IntegrationError("ICSD response must contain a list")
-    return [dict(record) for record in records[:max_results] if isinstance(record, dict)]
+    normalized = []
+    for index, record in enumerate(records[:max_results]):
+        if not isinstance(record, dict):
+            raise IntegrationError(f"ICSD record at index {index} must be an object")
+        normalized.append(dict(record))
+    return normalized
 
 
 def _parse_arxiv_entry(entry: ET.Element, namespace: dict[str, str]) -> dict[str, Any]:

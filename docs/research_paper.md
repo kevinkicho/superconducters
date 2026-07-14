@@ -1,5 +1,9 @@
 # Room-Temperature Superconductivity: A Comprehensive Review and Proposed Pathways for Discovery and Manufacturing
 
+> **Status: narrative review draft.** Literature statements require independent
+> checking. Proposed pathways are research directions, not results of the
+> maintained software or evidence of room-temperature superconductivity.
+
 ## Abstract
 
 Room-temperature superconductivity (RTSC) remains one of the most sought-after goals in condensed matter physics and materials science. This paper reviews the current state of the field, including recent breakthroughs in hydride superconductors under high pressure, cuprate and nickelate systems, and the controversial LK-99 claim. We synthesize findings from over 20 primary sources and propose a multi-pronged strategy combining computational crystal structure prediction, high-pressure synthesis, chemical doping, and scalable thin-film manufacturing to discover and produce room-temperature superconducting compounds. Key challenges—reproducibility, ambient-pressure stability, and large-scale fabrication—are addressed with specific mitigation strategies.
@@ -111,7 +115,11 @@ The 2023 claim of room-temperature superconductivity in Pb10-xCux(PO4)6O (LK-99)
 
 ## 5. Conclusion
 
-Room-temperature superconductivity has been achieved under high pressure in hydride systems, but ambient-pressure RTSC remains elusive. The most promising path forward combines computational prediction, high-pressure synthesis, chemical doping, and scalable thin-film manufacturing. Reproducibility and stability are critical hurdles that require community-wide standards and open data. With the advent of machine learning and autonomous laboratories, the discovery of an ambient-pressure room-temperature superconductor may be within reach in the next decade.
+Hydrides have produced accepted near-room-temperature results under extreme
+pressure, while prominent room-temperature claims have been disputed or
+retracted. Ambient-pressure RTSC remains unverified. Computational prediction,
+high-pressure synthesis, and automation are tools, not a basis for a discovery
+timeline.
 
 ## References
 

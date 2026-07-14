@@ -24,13 +24,15 @@ def generate_candidates(limit: int = 5) -> list[dict[str, Any]]:
         raise ValueError("Limit cannot be negative")
     candidates = []
     for formula, pressure in HYDRIDE_TEMPLATES[:limit]:
-        estimate = predict(formula)
+        estimate = predict(formula, pressure)
         candidates.append(
             {
                 "formula": formula,
                 "tc": round(estimate.tc, 2),
                 "pressure": pressure,
                 "source": "curated-template",
+                "evidence_type": "calculated",
+                "verification_status": "unverified",
                 "prediction_method": estimate.method,
             }
         )

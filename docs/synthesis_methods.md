@@ -1,5 +1,9 @@
 # Synthesis Methods for Candidate Materials
 
+> **Status: literature-derived planning notes, not validated operating
+> procedures.** Do not execute these protocols without qualified high-pressure
+> laboratory review, facility safety controls, and verified primary sources.
+
 This document outlines techniques for producing candidate materials, including high-pressure synthesis, chemical doping, thin-film deposition, and flux methods. Each section provides step-by-step procedures and safety considerations.
 
 ## 1. High-Pressure Synthesis
@@ -438,7 +442,9 @@ Ternary hydrides (e.g., La–Y–H, C–S–H) are promising for room‑temperat
 
 ## 5. Diamond Anvil Cell Synthesis of Carbon-Sulfur-Hydride (C-S-H)
 
-Carbon-sulfur-hydride (C-S-H) has been reported as a room-temperature superconductor at pressures around 267 GPa (Snider et al., Nature 586, 373, 2020). The following protocol is adapted from the original synthesis.
+Carbon-sulfur-hydride was reported as a room-temperature superconductor near
+267 GPa, but that Nature paper was retracted. These legacy notes are not a
+validated synthesis or replication protocol.
 
 ### Procedure
 1. **Precursor preparation**: Mix carbon (graphite powder, 99.999%) and sulfur (99.999%) in a 1:1 molar ratio. Grind in an agate mortar for 15 minutes. Alternatively, use a pre-synthesized carbon sulfide (CS₂) as a precursor.

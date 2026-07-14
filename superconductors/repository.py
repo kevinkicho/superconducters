@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 import tempfile
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from pathlib import Path
 from threading import RLock
 
@@ -21,32 +21,45 @@ class CandidateRepository:
 
     def list(self) -> list[Candidate]:
         with self._lock:
-            if not self.path.exists():
-                return []
-            with self.path.open("r", encoding="utf-8") as handle:
-                values = json.load(handle)
-            if not isinstance(values, list):
-                raise ValueError(f"Candidate database must contain a JSON list: {self.path}")
-            return [
-                candidate for item in values if (candidate := Candidate.from_mapping(item)).formula
-            ]
+            values = self._read_values()
+            candidates = []
+            for index, item in enumerate(values):
+                if not isinstance(item, Mapping):
+                    raise ValueError(f"Candidate at index {index} must be a JSON object")
+                candidate = Candidate.from_mapping(item)
+                if not candidate.formula:
+                    raise ValueError(f"Candidate at index {index} must include a formula")
+                candidates.append(candidate)
+            return candidates
 
     def save(self, candidates: Iterable[Candidate]) -> None:
-        values = [candidate.to_dict() for candidate in candidates]
+        values = [self._serialize(candidate) for candidate in candidates]
         self._write_values(values)
 
     def append(self, candidate: Candidate) -> None:
         """Append without discarding fields belonging to existing raw records."""
+        value = self._serialize(candidate)
         with self._lock:
-            if self.path.exists():
-                with self.path.open("r", encoding="utf-8") as handle:
-                    values = json.load(handle)
-                if not isinstance(values, list):
-                    raise ValueError(f"Candidate database must contain a JSON list: {self.path}")
-            else:
-                values = []
-            values.append(candidate.to_dict())
+            values = self._read_values()
+            values.append(value)
             self._write_values(values)
+
+    @staticmethod
+    def _serialize(candidate: Candidate) -> dict[str, object]:
+        if not isinstance(candidate, Candidate):
+            raise TypeError("CandidateRepository accepts Candidate instances")
+        if not candidate.formula.strip():
+            raise ValueError("Candidate formula must not be empty")
+        return candidate.to_dict()
+
+    def _read_values(self) -> list[object]:
+        if not self.path.exists():
+            return []
+        with self.path.open("r", encoding="utf-8") as handle:
+            values = json.load(handle)
+        if not isinstance(values, list):
+            raise ValueError(f"Candidate database must contain a JSON list: {self.path}")
+        return values
 
     def _write_values(self, values: list[object]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)

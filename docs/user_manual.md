@@ -1,5 +1,10 @@
 # User Manual: Room-Temperature Superconductor Discovery Pipeline
 
+> **Legacy manual.** The maintained project is an evidence-aware candidate
+> toolkit with optional DFT execution boundaries. It is not an autonomous lab,
+> does not silently fall back to simulation, and has not discovered or
+> manufactured a room-temperature superconductor. See the root README.
+
 ## Introduction
 
 This manual describes the installation, configuration, and operation of the autonomous materials discovery pipeline for room-temperature superconductors. The pipeline integrates machine learning, density functional theory (DFT) calculations, cloud lab integration, and continuous learning to accelerate the discovery and manufacturing of novel superconducting compounds.

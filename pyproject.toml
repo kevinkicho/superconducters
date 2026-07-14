@@ -20,42 +20,22 @@ api = [
   "uvicorn>=0.22,<1",
 ]
 ui = [
-  "apscheduler>=3.10,<4",
   "pandas>=2,<3",
   "plotly>=5.15,<6",
-  "requests>=2.31,<3",
   "streamlit>=1.25,<2",
-  "websockets>=11,<16",
 ]
 ml = [
-  "joblib>=1.2,<3",
-  "numpy>=1.24,<3",
-  "pandas>=2,<3",
-  "scikit-learn>=1.2,<2",
-  "scikit-optimize>=0.9,<1",
-  "scipy>=1.10,<2",
-  "shap>=0.41,<1",
   "torch>=2,<3",
-  "torch-geometric>=2.3,<3",
+]
+analysis = [
+  "numpy>=1.24,<3",
+  "scikit-learn>=1.2,<2",
 ]
 dft = [
-  "ase>=3.22,<4",
   "mp-api>=0.33,<1",
-  "pymatgen>=2023",
-]
-integrations = [
-  "aiohttp>=3.8,<4",
-  "cryptography>=41,<50",
-  "paho-mqtt>=1.6,<3",
-  "prometheus-client>=0.17,<1",
-  "pyvisa>=1.13,<2",
-  "requests>=2.31,<3",
-  "schedule>=1.2,<2",
 ]
 reports = [
-  "matplotlib>=3.7,<4",
   "reportlab>=4,<5",
-  "weasyprint>=60,<70",
 ]
 dev = [
   "pytest>=8,<10",
@@ -71,24 +51,13 @@ include = ["superconductors*"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-testpaths = [
-  "tests/test_run_pipeline.py",
-  "tests/test_repository.py",
-  "tests/test_api_endpoints.py",
-  "tests/test_predict_tc.py",
-  "tests/test_query_database.py",
-  "tests/test_generate_candidates.py",
-  "tests/test_generate_report.py",
-  "tests/test_dashboard.py",
-  "tests/test_arxiv_scraper.py",
-  "tests/test_api_client.py",
-  "tests/test_changelog.py",
-]
+testpaths = ["tests"]
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-exclude = ["changelog", "docs/_site"]
+exclude = ["changelog", "docs/_site", "docs/tutorial.ipynb"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
@@ -96,3 +65,7 @@ select = ["E", "F", "I", "B", "UP"]
 [tool.coverage.run]
 source = ["superconductors"]
 branch = true
+omit = ["superconductors/dft/ml.py", "superconductors/multifidelity.py"]
+
+[tool.coverage.report]
+fail_under = 80

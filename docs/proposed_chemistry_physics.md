@@ -1,5 +1,9 @@
 # Proposed Chemistry and Physics for Room-Temperature Superconductivity
 
+> **Status: research hypotheses, not project results.** Candidate mechanisms and
+> literature values require source verification. They do not establish a
+> discovery, calculation, synthesis, or measurement by this repository.
+
 ## 1. Chemical Systems
 
 ### Ternary Hydrides

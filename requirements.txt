@@ -1,3 +1,3 @@
 # Full application environment. For a smaller installation, select only the
 # extras you need, for example: pip install -e ".[api,dev]"
--e .[api,ui,ml,dft,integrations,reports]
+-e .[api,ui,ml,analysis,dft,reports]

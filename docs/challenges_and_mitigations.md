@@ -1,5 +1,10 @@
 # Challenges and Mitigations for Manufacturing Room-Temperature Superconductors
 
+> **Status: speculative planning archive.** This document contains hypothetical
+> scenarios, unverified assumptions, and legacy patent/business text. It is not
+> evidence that this project discovered, measured, or owns intellectual property
+> for a room-temperature superconductor.
+
 ## Metastability
 Room-temperature superconductors (RTS) often exist in metastable phases that require precise synthesis conditions. The high-pressure phases that exhibit superconductivity at ambient pressure may degrade over time or under thermal cycling.
 - **Mitigation**: Develop stabilization techniques such as chemical doping, strain engineering, or encapsulation in protective matrices to lock in the desired phase. Use rapid quenching or epitaxial growth to preserve metastable structures.
@@ -161,7 +166,9 @@ A systematic Failure Mode and Effects Analysis (FMEA) for the manufacturing of r
 
 ## Patent Application Draft
 
-A provisional patent application has been drafted for a novel room-temperature superconductor composition and its synthesis method. The draft is based on recent advances in hydride superconductors and machine-learning-guided materials discovery [12,13].
+The following is an unvalidated patent-writing exercise. No enabling
+composition, supporting calculation, synthesis result, measurement, invention
+determination, or freedom-to-operate review exists in this repository.
 
 ### Title
 "Room-Temperature Superconducting Ternary Hydride Compound and Method of Synthesis"
@@ -170,7 +177,10 @@ A provisional patent application has been drafted for a novel room-temperature s
 [To be determined — list of researchers from the collaborative project]
 
 ### Abstract
-A room-temperature superconducting compound having the formula A_xB_yH_z, where A is an alkali or alkaline earth metal (e.g., Li, Na, K, Mg, Ca), B is a transition metal or lanthanide (e.g., Y, La, Ce, Th), and H is hydrogen. The compound is synthesized under high-pressure high-temperature (HPHT) conditions in a multi-anvil press at pressures between 50 and 150 GPa and temperatures between 1000 and 3000 K, followed by rapid quenching to ambient conditions. The resulting material exhibits superconductivity with a critical temperature (Tc) above 290 K as measured by four-probe resistivity and magnetic susceptibility. The composition is stabilized by chemical precompression from the A and B elements, reducing the required synthesis pressure compared to binary hydrides. The method further includes a step of doping with a small amount of carbon or nitrogen to enhance the electron-phonon coupling and raise Tc.
+Hypothetical concept only: explore A_xB_yH_z compositions under high pressure
+and test whether chemical precompression or doping changes phase stability or
+electron-phonon coupling. No Tc above 290 K, successful quench, four-probe
+result, or magnetic-susceptibility result has been produced here.
 
 ### Claims (Preliminary)
 1. A room-temperature superconducting compound of formula A_xB_yH_z, wherein A is selected from the group consisting of Li, Na, K, Mg, and Ca; B is selected from the group consisting of Y, La, Ce, and Th; x is between 0.1 and 0.5; y is between 0.1 and 0.5; and z is between 1 and 5.
